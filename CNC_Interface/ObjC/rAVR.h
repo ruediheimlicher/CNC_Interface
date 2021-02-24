@@ -435,7 +435,7 @@
    
    @end
 
-
+/*
 @interface rAVR : NSWindowController <NSTableViewDataSource,NSTableViewDelegate>
 {
    NSMutableDictionary*		CNC_PList;
@@ -804,3 +804,4 @@
 
 - (int)saveStepperDic:(id)sender;
 @end
+*/

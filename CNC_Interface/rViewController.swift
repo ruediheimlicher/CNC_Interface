@@ -181,6 +181,10 @@ class rViewController: NSViewController, NSWindowDelegate
    // var usbzugang:
    var usbstatus: Int32 = 0
    
+   var boardindex:Int = 0
+   
+   var teensyboardarray:[[String:Any]] = []
+   
    var teensy = usb_teensy()
    
    var servoPfad = rServoPfad()
@@ -232,8 +236,18 @@ class rViewController: NSViewController, NSWindowDelegate
       formatter.minimumIntegerDigits = 1
       //formatter.roundingMode = .down
 
-      
-      
+      /*
+       let TEENSY3_TITLE = "Teensy 3.x"
+       let TEENSY3_VID = 0x16C0
+       let TEENSY3_PID = 0x0486
+
+       let TEENSY2_TITLE = "Teensy 2"
+       let TEENSY2_VID = 0x16C0
+       let TEENSY2_PID = 0x0480
+
+       */
+ 
+ 
       //USB_OK.backgroundColor = NSColor.greenColor()
       // Do any additional setup after loading the view.
       let newdataname = Notification.Name("newdata")
@@ -968,7 +982,7 @@ class rViewController: NSViewController, NSWindowDelegate
       let hidstatus = teensy.status()
       let nc = NotificationCenter.default
       var userinformation:[String : Any]
-     // print("USBOpen usbstatus vor check: \(usbstatus) hidstatus: \(hidstatus) present: \(present)")
+     print("USBOpen usbstatus vor check: \(usbstatus) hidstatus: \(hidstatus) present: \(present)")
       if (usbstatus > 0) // already open
       {
          print("USB-Device ist schon da")
@@ -1166,8 +1180,8 @@ class rViewController: NSViewController, NSWindowDelegate
       warnung.addButton(withTitle: "cancel")
       let devicereturn:Int = warnung.runModal().rawValue
       print("devicereturn: \(devicereturn)")
-      BoardPop.selectItem(withTag:devicereturn)
-      
+     BoardPop.selectItem(withTag:devicereturn)
+  //    BoardPop.selectItem(at:boardindex)
    }
    
    @IBAction func report_BoardPop(_ sender: NSPopUpButton) 

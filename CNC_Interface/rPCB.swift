@@ -11,129 +11,9 @@ import Cocoa
 class rPCB: rViewController 
 {
    
-  // var servoPfad = rServoPfad()
- //  var usbstatus: Int32 = 0
-   
- //  var teensy = usb_teensy()
-   /*
-   @IBOutlet weak var manufactorer: NSTextField!
-   @IBOutlet weak var Counter: NSTextField!
-
-    @IBOutlet weak var Device_Pop: NSPopUpButton!
-   @IBOutlet weak var Start_Knopf: NSButton!
-   @IBOutlet weak var Stop_Knopf: NSButton!
-   @IBOutlet weak var Send_Knopf: NSButton!
-   @IBOutlet weak var Start_Read_Knopf: NSButton!
-   
-   @IBOutlet weak var Anzeige: NSTextField!
-   
-   @IBOutlet weak var USB_OK: NSOutlineView!
-   
-   @IBOutlet weak var check_USB_Knopf: NSButton!
-
-   
-   @IBOutlet weak var codeFeld: NSTextField!
-   
-   @IBOutlet weak var dataFeld: NSTextField!
-   
-   @IBOutlet weak var schrittweiteFeld: NSTextField!
-   
-   @IBOutlet weak var Pot0_Feld: NSTextField!
-   @IBOutlet weak var Pot0_Slider: NSSlider!
-   @IBOutlet weak var Pot0_Stepper_H: NSStepper!
-   @IBOutlet weak var Pot0_Stepper_L: NSStepper!
-   @IBOutlet weak var Pot0_Stepper_L_Feld: NSTextField!
-   @IBOutlet weak var Pot0_Stepper_H_Feld: NSTextField!
-   
-   @IBOutlet weak var joystick_x: NSTextField!
-   @IBOutlet weak var joystick_y: NSTextField!
-   
-   @IBOutlet weak var goto_x: NSTextField!
-   @IBOutlet weak var goto_x_Stepper: NSStepper!
-   @IBOutlet weak var goto_y: NSTextField!
-   @IBOutlet weak var goto_y_Stepper: NSStepper!
-   
-   @IBOutlet weak var Pot1_Feld: NSTextField!
-   @IBOutlet weak var Pot1_Slider: NSSlider!
-   @IBOutlet weak var Pot1_Stepper_H: NSStepper!
-   @IBOutlet weak var Pot1_Stepper_L: NSStepper!
-   @IBOutlet weak var Pot1_Stepper_L_Feld: NSTextField!
-   @IBOutlet weak var Pot1_Stepper_H_Feld: NSTextField!
-   
-   
-   
-   @IBOutlet weak var Pot2_Feld: NSTextField!
-   @IBOutlet weak var Pot2_Slider: NSSlider!
-   @IBOutlet weak var Pot2_Stepper: NSStepper!
-   @IBOutlet weak var Pot2_Stepper_H: NSStepper!
-   @IBOutlet weak var Pot2_Stepper_L: NSStepper!
-   @IBOutlet weak var Pot2_Stepper_L_Feld: NSTextField!
-   @IBOutlet weak var Pot2_Stepper_H_Feld: NSTextField!
-   
-   @IBOutlet weak var Pot3_Feld: NSTextField!
-   @IBOutlet weak var Pot3_Slider: NSSlider!
-   @IBOutlet weak var Pot3_Stepper: NSStepper!
-   @IBOutlet weak var Pot3_Stepper_H: NSStepper!
-   @IBOutlet weak var Pot3_Stepper_L: NSStepper!
-   @IBOutlet weak var Pot3_Stepper_L_Feld: NSTextField!
-   @IBOutlet weak var Pot3_Stepper_H_Feld: NSTextField!
-   
-   @IBOutlet weak var Joystickfeld: rJoystickView!
-   @IBOutlet weak var clear_Ring: NSButton!
     
-   var formatter = NumberFormatter()
-   
-   
-   var achse0_start:UInt16  = ACHSE0_START;
-   var achse0_max:UInt16   = ACHSE0_MAX;
-   
-   
-   
-   // const fuer USB
-   let SET_0:UInt8 = 0xA1
-   let SET_1:UInt8 = 0xB1
-   
-   let SET_2:UInt8 = 0xC1
-   let SET_3:UInt8 = 0xD1
-   
-   let SET_ROB:UInt8 = 0xA2
-   
-   let SET_P:UInt8 = 0xA3
-   let GET_P:UInt8 = 0xB3
-   
-   let SIN_START:UInt8 = 0xE0
-   let SIN_END:UInt8 = 0xE1
-   
-   
-   
-   
-   let U_DIVIDER:Float = 9.8
-   let ADC_REF:Float = 3.26
-   
-   let ACHSE0_BYTE_H = 4
-   let ACHSE0_BYTE_L = 5
-   
-   let ACHSE1_BYTE_H = 6
-   let ACHSE1_BYTE_L = 7
-   
-   
-   let ACHSE2_BYTE_H = 16
-   let ACHSE2_BYTE_L = 17
-   
-   
-   let ACHSE3_BYTE_H = 18
-   let ACHSE3_BYTE_L = 19
-   
-   let HYP_BYTE_H = 22 // Hypotenuse
-   let HYP_BYTE_L = 23
-   
-   let INDEX_BYTE_H = 24
-   let INDEX_BYTE_L = 25
-   
-   let STEPS_BYTE_H = 26
-   let STEPS_BYTE_L = 27
-*/
-   
+ //  var teensy = usb_teensy()
+    
    
    
    
@@ -167,6 +47,13 @@ class rPCB: rViewController
       formatter.minimumFractionDigits = 2
       formatter.minimumIntegerDigits = 1
       //formatter.roundingMode = .down
+      
+       print("teensyboardarray vor: \(teensyboardarray)")
+      teensyboardarray.append(["Titel":TEENSY2_TITLE,"PID":TEENSY2_PID,"VID":TEENSY2_VID])
+      teensyboardarray.append(["Titel":TEENSY3_TITLE,"PID":TEENSY3_PID,"VID":TEENSY3_VID])
+
+      print("teensyboardarray: \(teensyboardarray)")
+
       
       let sup = self.view.superview
       //print("DeviceTab superview: \(String(describing: sup)) ident: \(String(describing: sup?.identifier))")

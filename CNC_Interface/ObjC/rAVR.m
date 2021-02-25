@@ -547,9 +547,20 @@ float det(float v0[],float v1[])
     return self;
 }
 
+- (void) awakeFromNib
+{
+}
 
+- (void)drawRect:(NSRect)dirtyRect 
+{
+   // https://stackoverflow.com/questions/2962790/best-way-to-change-the-background-color-for-an-nsview
+    // set any NSColor for filling, say white:
+   NSColor* bgcolor = [NSColor colorWithCalibratedRed:0.2 green:0.5 blue:0.2 alpha:0.1f];
 
-@end
+    [bgcolor setFill];
+    NSRectFill(dirtyRect);
+    [super drawRect:dirtyRect];
+}@end
 
 @implementation rAVRview
 

@@ -63,7 +63,7 @@
 {
    NSMutableDictionary*      CNC_PList;
    
-   IBOutlet id             BoardPop;
+//   IBOutlet id             BoardPop;
    
    IBOutlet id               StepperTab;
    IBOutlet   id               ProfilFeld;
@@ -315,6 +315,8 @@
    
    }
    @property (nonatomic)  int    Kote;
+   @property (nonatomic) BOOL wantsLayer;
+
 - (instancetype)init;
    - (void)setAVR;
    - (NSMutableDictionary*)readCNC_PList;

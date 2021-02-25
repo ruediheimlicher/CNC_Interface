@@ -435,6 +435,11 @@ float det(float v0[],float v1[])
    //richtung=1;
 //- (void)setPeriodicDelay:(float)delay interval:(float)interval
    //[self setPeriodicDelay:1 interval:1];
+  
+ //  self.view.window?.acceptsMouseMovedEvents = true;
+    //let view = view[0] as! NSView
+ 
+
 }
 
 - (void)mouseUp:(NSEvent *)event
@@ -533,6 +538,164 @@ float det(float v0[],float v1[])
 @implementation rAVRview
 
 @synthesize Kote = KoteWert;
+
+//@synthesize self;.wantsLayer = YES;
+
+- (void)awakeFromNib
+{
+   NSLog(@"AVR awakeFromNib");
+    NSColor* bgcolor = [NSColor colorWithCalibratedRed:0.3 green:0.5 blue:0.8 alpha:1.0f];
+    //self = [super initWithWindowNibName:@"AVR"];
+   // self.layer.backgroundcolor = bgcolor;
+    self.wantsLayer = YES;
+    [ self.view.layer setBackgroundColor:(__bridge CGColorRef _Nullable)(bgcolor)];
+
+   NSNotificationCenter * nc;
+    nc=[NSNotificationCenter defaultCenter];
+    
+       [nc addObserver:self
+          selector:@selector(MausGraphAktion:)
+             name:@"mauspunkt"
+           object:nil];
+
+    
+    
+       [nc addObserver:self
+          selector:@selector(MausDragAktion:)
+             name:@"mausdrag"
+           object:nil];
+
+    
+       [nc addObserver:self
+          selector:@selector(MausKlickAktion:)
+             name:@"mausklick"
+           object:nil];
+
+    
+       [nc addObserver:self
+          selector:@selector(PfeiltasteAktion:)
+             name:@"pfeiltaste"
+           object:nil];
+
+
+    
+    [nc addObserver:self
+          selector:@selector(ModifierAktion:)
+             name:@"Modifier"
+           object:nil];
+
+    [nc addObserver:self
+          selector:@selector(ReportHandlerCallbackAktion:)
+             name:@"ReportHandlerCallback"
+           object:nil];
+
+    [nc addObserver:self
+          selector:@selector(I2CAktion:)
+             name:@"i2c"
+           object:nil];
+           
+    [nc addObserver:self
+          selector:@selector(WriteStandardAktion:)
+             name:@"WriteStandard"
+           object:nil];
+           
+    [nc addObserver:self
+          selector:@selector(WriteModifierAktion:)
+             name:@"WriteModifier"
+           object:nil];
+           
+    [nc addObserver:self
+           selector:@selector(USBReadAktion:)
+               name:@"usbread"
+             object:nil];
+    
+    
+    [nc addObserver:self
+           selector:@selector(MausAktion:)
+               name:@"mausdaten"
+             object:nil];
+    
+    
+    [nc addObserver:self
+           selector:@selector(PfeilAktion:)
+               name:@"Pfeil"
+             object:nil];
+    
+    [nc addObserver:self
+           selector:@selector(ElementeingabeAktion:)
+               name:@"Elementeingabe"
+             object:nil];
+    
+    [nc addObserver:self
+           selector:@selector(LibElementeingabeAktion:)
+               name:@"LibElementeingabe"
+             object:nil];
+    
+     
+    [nc addObserver:self
+           selector:@selector(LibProfileingabeAktion:)
+               name:@"LibProfileingabe"
+             object:nil];
+        
+    [nc addObserver:self
+           selector:@selector(FormeingabeAktion:)
+               name:@"Formeingabe"
+             object:nil];
+    
+    
+    [nc addObserver:self
+           selector:@selector(BlockeingabeAktion:)
+               name:@"Blockeingabe"
+             object:nil];
+    
+    [nc addObserver:self
+           selector:@selector(FigElementeingabeAktion:)
+               name:@"FigElementeingabe"
+             object:nil];
+    
+
+    
+
+    CNCdataPfad=[NSHomeDirectory() stringByAppendingPathComponent:@"documents/CNCData"];
+    //NSLog(@"CNCdataPfad: %@",CNCdataPfad);
+    //CNC_PList = [[NSMutableDictionary alloc]initWithCapacity:0];
+    
+    
+    n=0;
+    aktuellerTag=0;
+    IOW_busy=0;
+    aktuelleMark=(uint8_t)NSNotFound;
+    //NSLog(@"HomebusAnlegen 2");
+    
+    
+    AnschlagDic = [[NSMutableDictionary alloc]initWithCapacity:0];
+    CNCDatenArray= [[NSMutableArray alloc]initWithCapacity:0];
+    KoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
+    UndoKoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
+    //BlockKoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
+    SchnittdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
+    GraphEnd=0;
+    CNC=[[rCNC alloc]init];
+    ProfilDatenOA=[[NSArray alloc]init];
+    ProfilDatenUA=[[NSArray alloc]init];
+    
+    mitOberseite =1;
+    mitUnterseite=1;
+    mitEinlauf=1;
+    mitAuslauf=1;
+    flipV=0;
+    flipH=0;
+    reverse=0;
+    
+    startwert=0;
+    cncstatus=0;
+    cncposition=0;
+    
+    AVR_USBStatus=0;
+    
+    BlockKoordinatenTabelle=[[NSMutableArray alloc]initWithCapacity:0];
+    
+}
 
 - (IBAction)reportBoardPop:(id)sender;
 {
@@ -894,12 +1057,18 @@ return returnInt;
    return NULL;
 }
 
+
 - (instancetype)init
 {
     //if ((self = [super init]))
-   self = [super init];
-   //self = [super initWithWindowNibName:@"AVR"];
+ //  self = [super init];
    
+   
+   NSColor* bgcolor = [NSColor colorWithCalibratedRed:0.3 green:0.5 blue:0.8 alpha:1.0f];
+   //self = [super initWithWindowNibName:@"AVR"];
+  // self.layer.backgroundcolor = bgcolor;
+   self.wantsLayer = YES;
+   [ self.view.layer setBackgroundColor:(__bridge CGColorRef _Nullable)(bgcolor)];
    NSNotificationCenter * nc;
    nc=[NSNotificationCenter defaultCenter];
    

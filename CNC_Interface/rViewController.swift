@@ -135,9 +135,16 @@ class rServoPfad
 //MARK: TABVIEW
 class rDeviceTabViewController: NSTabViewController 
 {
+   override func viewDidLoad() {
+      print("rDeviceTabViewController viewdidload")
+      super.viewDidLoad()
+      self.tabView.tabViewItem(at:1).color = NSColor.red
+     // self.TabViewBorderType = 1;
    
+   }
    override func tabView(_ tabView: NSTabView, didSelect tabViewItem: NSTabViewItem?) 
    {
+     // 
       let identifier:String = tabViewItem?.identifier as! String
     //  print("DeviceTab identifier: \(String(describing: identifier)) usbstatus: \(globalusbstatus)")
     // let sup = self.view.superview

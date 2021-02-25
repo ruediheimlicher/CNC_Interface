@@ -535,6 +535,22 @@ float det(float v0[],float v1[])
 @end
 
 
+@implementation rCNCview
+- (id)initWithFrame:(NSRect)frame 
+
+{
+    self = [super initWithFrame:frame];
+    if (self) 
+    {
+     }
+   
+    return self;
+}
+
+
+
+@end
+
 @implementation rAVRview
 
 @synthesize Kote = KoteWert;
@@ -2043,7 +2059,7 @@ return returnInt;
 
 - (IBAction)reportDC_Stepper:(id)sender
 {
-   //NSLog(@"reportDC_Stepper Wert: %d ",[sender intValue]); 
+   NSLog(@"reportDC_Stepper Wert: %d ",[sender intValue]); 
    
    [DC_PWM setIntValue:[sender intValue]];
    if (CNC_busy == 0) // Weiterleiten an AVRController nur im Stillstand

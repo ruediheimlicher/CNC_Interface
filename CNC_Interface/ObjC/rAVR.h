@@ -58,6 +58,11 @@
 - (int)Tastestatus;
 @end
 
+@interface rCNCview:NSView
+{
+   
+}
+@end
 
 @interface rAVRview:NSViewController
 {

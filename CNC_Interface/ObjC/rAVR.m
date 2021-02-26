@@ -795,7 +795,7 @@ float det(float v0[],float v1[])
       [ProfilGraph addSubview:Titelfeld];
 
    //   [[self window]makeKeyAndOrderFront:self];
-  //    [[self window]makeFirstResponder:ProfilGraph];
+      [[[self view] window]makeFirstResponder:ProfilGraph];
       NSString* logString=[NSString string];
       logString=[logString stringByAppendingString:[NSString stringWithFormat:@"%02X ",0x02]];
       logString=[logString stringByAppendingString:[NSString stringWithFormat:@"%02X ",161]];
@@ -872,14 +872,103 @@ float det(float v0[],float v1[])
     r.size.width = r.size.height+5;
     [WertBXStepper setNeedsDisplay:YES];
 
+   [PWMFeld setAlignment:NSTextAlignmentCenter];
+   
+   UndoSet = [NSMutableIndexSet indexSet];
+   
+   [DC_PWM setDelegate:self];
+   [SpeedFeld setDelegate:self];
+   [PWMFeld setDelegate:self];
+
+
+   [Blockoberkante setIntValue:50];
+   [OberkantenStepper setIntValue:[Blockoberkante intValue]];
+   [Blockbreite setIntValue:100];
+   [Blockdicke setIntValue:40];;
+   
+   
+   einlauflaenge = 15;
+   einlauftiefe = 15;
+   einlaufrand = 15;
+   
+   auslauflaenge = 15;
+   auslauftiefe = 15;
+   auslaufrand = 15;
+   
+   [Einlaufrand setIntValue:einlaufrand];
+   [Auslaufrand setIntValue:auslaufrand];
+   
+   //[[NSColor redColor]set];
+   
+   [AnschlagLinksIndikator setBoxType: NSBoxCustom];
+   [AnschlagLinksIndikator setBorderType: NSLineBorder];
+   [AnschlagLinksIndikator setFillColor:[NSColor redColor]];
+   [AnschlagLinksIndikator setTransparent:YES];
+   
+   [AnschlagUntenIndikator setBoxType: NSBoxCustom];
+   [AnschlagUntenIndikator setBorderType: NSLineBorder];
+   [AnschlagUntenIndikator setFillColor:[NSColor redColor]];
+   [AnschlagUntenIndikator setTransparent:YES];
+   
+   [RechtsLinksRadio setSelectedSegment:0];
+   [ProfilWrenchEinheitRadio setState:1 atRow:0 column:0];
+   
+   [AbbrandFeld setFormatter:SimpleFormatter];
+   [AbbrandFeld setDelegate:self];
+   
+   [red_pwmFeld setFormatter:SimpleFormatter];
+   [red_pwmFeld setDelegate:self];
+   
+   [MinimaldistanzFeld setFormatter:SimpleFormatter];
+   [MinimaldistanzFeld setDelegate:self];
+   
+   int motorstatus=0;
+   int i = 0;
+   for (i=0;i<4;i++)
+   {
+      int motor=i;
+      int aktuellermotor = motor;
+      
+      //motorstatus |= (1<<4);
+      //aktuellermotor <<=6;
+      //motorstatus |= aktuellermotor;
+      int neuermotor = aktuellermotor;
+      //neuermotor >>=6;
+      // motor += aktuellermotor;
+      
+      
+      //
+      //NSLog(@"i: %d motor: %d aktuellermotor: %d neuermotor: %d motorstatus: %d",i,motor, aktuellermotor,neuermotor,motorstatus);
+      
+   }
+
    
    [ProfilPop removeAllItems];
    [ProfilPop addItemWithTitle:@"Profil waehlen"];
    NSArray* ProfilnamenArray = [self readProfilLib];
    [ProfilPop addItemsWithTitles:ProfilnamenArray];
 
-
    
+    motorstatus |= (1<<2);
+    motorstatus |= STEPEND_A;
+    //NSLog(@"motorstatus: %X",motorstatus);
+    motorstatus &= ~STEPEND_A;
+    motorstatus |= STEPEND_B;
+    //NSLog(@"motorstatus: %X",motorstatus);
+    motorstatus &= ~STEPEND_B;
+    motorstatus |= STEPEND_C;
+    //NSLog(@"motorstatus: %X",motorstatus);
+    motorstatus &= ~STEPEND_C;
+    motorstatus |= STEPEND_D;
+    //NSLog(@"motorstatus: %X",motorstatus);
+    motorstatus &= ~STEPEND_D;
+    
+    self.Kote = 5;
+    
+   [Schalendickefeld setFormatter:SimpleFormatter];
+   [Schalendickefeld setFloatValue:2.2];
+
+   [[self view] addSubview:ProfilGraph];
 }
 
 - (IBAction)reportBoardPop:(id)sender;
@@ -1254,110 +1343,7 @@ return returnInt;
   // self.layer.backgroundcolor = bgcolor;
    self.wantsLayer = YES;
    [ self.view.layer setBackgroundColor:(__bridge CGColorRef _Nullable)(bgcolor)];
-   NSNotificationCenter * nc;
-   nc=[NSNotificationCenter defaultCenter];
-   
-      [nc addObserver:self
-         selector:@selector(MausGraphAktion:)
-            name:@"mauspunkt"
-          object:nil];
-
-   
-   
-      [nc addObserver:self
-         selector:@selector(MausDragAktion:)
-            name:@"mausdrag"
-          object:nil];
-
-   
-      [nc addObserver:self
-         selector:@selector(MausKlickAktion:)
-            name:@"mausklick"
-          object:nil];
-
-   
-      [nc addObserver:self
-         selector:@selector(PfeiltasteAktion:)
-            name:@"pfeiltaste"
-          object:nil];
-
-
-   
-   [nc addObserver:self
-         selector:@selector(ModifierAktion:)
-            name:@"Modifier"
-          object:nil];
-
-   [nc addObserver:self
-         selector:@selector(ReportHandlerCallbackAktion:)
-            name:@"ReportHandlerCallback"
-          object:nil];
-
-   [nc addObserver:self
-         selector:@selector(I2CAktion:)
-            name:@"i2c"
-          object:nil];
-          
-   [nc addObserver:self
-         selector:@selector(WriteStandardAktion:)
-            name:@"WriteStandard"
-          object:nil];
-          
-   [nc addObserver:self
-         selector:@selector(WriteModifierAktion:)
-            name:@"WriteModifier"
-          object:nil];
-          
-   [nc addObserver:self
-          selector:@selector(USBReadAktion:)
-              name:@"usbread"
-            object:nil];
-   
-   
-   [nc addObserver:self
-          selector:@selector(MausAktion:)
-              name:@"mausdaten"
-            object:nil];
-   
-   
-   [nc addObserver:self
-          selector:@selector(PfeilAktion:)
-              name:@"Pfeil"
-            object:nil];
-   
-   [nc addObserver:self
-          selector:@selector(ElementeingabeAktion:)
-              name:@"Elementeingabe"
-            object:nil];
-   
-   [nc addObserver:self
-          selector:@selector(LibElementeingabeAktion:)
-              name:@"LibElementeingabe"
-            object:nil];
-   
-    
-   [nc addObserver:self
-          selector:@selector(LibProfileingabeAktion:)
-              name:@"LibProfileingabe"
-            object:nil];
-       
-   [nc addObserver:self
-          selector:@selector(FormeingabeAktion:)
-              name:@"Formeingabe"
-            object:nil];
-   
-   
-   [nc addObserver:self
-          selector:@selector(BlockeingabeAktion:)
-              name:@"Blockeingabe"
-            object:nil];
-   
-   [nc addObserver:self
-          selector:@selector(FigElementeingabeAktion:)
-              name:@"FigElementeingabe"
-            object:nil];
-   
-
+ 
    
 
    CNCdataPfad=[NSHomeDirectory() stringByAppendingPathComponent:@"documents/CNCData"];
@@ -3628,7 +3614,7 @@ return returnInt;
       [ProfilGraph setNeedsDisplay:YES];
       
       [CNCTable reloadData];
- //     [[self superView]window]makeFirstResponder: ProfilGraph];
+ //     [[[self view] superView]window]makeFirstResponder: ProfilGraph];
       
    }
 }
@@ -3691,10 +3677,11 @@ return returnInt;
 #pragma mark "Graph"
 - (void)MausGraphAktion:(NSNotification*)note
 {
-   //NSLog(@"MausGraphAktion note: %@",[[note userInfo]description]);
+   NSLog(@"MausGraphAktion note: %@",[[note userInfo]description]);
    //NSLog(@"MausGraphAktion note: %@",[[note userInfo]objectForKey:@"mauspunkt"]);
    [CNCTable deselectAll:NULL];
-//   [[self window]makeFirstResponder: ProfilGraph];
+   
+//   [[[self view]window]makeFirstResponder: ProfilGraph];
    NSPoint MausPunkt = NSPointFromString([[note userInfo]objectForKey:@"mauspunkt"]);
 
    [WertAXFeld setFloatValue:MausPunkt.x];
@@ -3865,6 +3852,7 @@ return returnInt;
 
    [ProfilGraph setDatenArray:KoordinatenTabelle];
    [ProfilGraph setNeedsDisplay:YES];
+   [Profilfeld setNeedsDisplay:YES];
    //[ProfilTable reloadData];
    [CNCTable reloadData];
    if ([KoordinatenTabelle count] > 0)
@@ -3877,7 +3865,7 @@ return returnInt;
 
 - (void)MausDragAktion:(NSNotification*)note
 {
-   //NSLog(@"MausDragAktion note: %@",[[note userInfo]description]);
+   NSLog(@"MausDragAktion note: %@",[[note userInfo]description]);
    
    NSPoint MausPunkt = NSPointFromString([[note userInfo]objectForKey:@"mauspunkt"]);
    int klickIndex= [[[note userInfo] objectForKey:@"klickpunkt"]intValue];
@@ -4005,8 +3993,9 @@ return returnInt;
 
 - (void)MausKlickAktion:(NSNotification*)note
 {
- //  [[self window]makeFirstResponder: ProfilGraph];
-   //NSLog(@"MausKlickAktion note: %@",[[note userInfo]description]);
+   NSLog(@"MausKlickAktion note: %@",[[note userInfo]description]);
+  [[[self view] window]makeFirstResponder: ProfilGraph];
+   
    
    //NSPoint MausPunkt = NSPointFromString([[note userInfo]objectForKey:@"mauspunkt"]);
    int klickIndex= [[[note userInfo] objectForKey:@"klickpunkt"]intValue];
@@ -8958,7 +8947,7 @@ return returnInt;
       {
          //NSLog(@"DC-wert 1001: %d",[[note object]intValue]);
          [DC_Stepper setIntValue:[[note object]intValue]];
- //        [[self window]makeFirstResponder: ProfilGraph];
+         [[[self view] window]makeFirstResponder: ProfilGraph];
          //[self savePWM];
          
       }break;
@@ -8967,7 +8956,7 @@ return returnInt;
       {
          //NSLog(@"Speed 1002: %d",[[note object]intValue]);
          [SpeedStepper setIntValue:[[note object]intValue]];
-//         [[self window]makeFirstResponder: ProfilGraph];
+          [[[self view] window]makeFirstResponder: ProfilGraph];
          [CNC setSpeed:[[note object] intValue]];
          //[self saveSpeed];
          

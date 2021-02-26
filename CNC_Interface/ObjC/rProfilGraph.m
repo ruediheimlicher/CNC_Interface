@@ -246,7 +246,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 {
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 
-	//NSLog(@"mouseDown: %@",[derEvent description]);
+	NSLog(@"mouseDown: %@",[derEvent description]);
    //NSLog(@"mouseDown: modifierFlags: %d NSShiftKeyMask: %d",[derEvent modifierFlags],NSShiftKeyMask);
    unsigned int shift =[derEvent modifierFlags] & NSEventModifierFlagShift;
    if (shift)
@@ -426,7 +426,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 
 - (void)mouseUp:(NSEvent*)derEvent
 {
-  // NSLog(@"mouseUp:");
+   NSLog(@"mouseUp:");
    NSMutableDictionary* MausDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [MausDic setObject:[NSNumber numberWithInt:0] forKey:@"mausistdown"];
    [MausDic setObject:[NSNumber numberWithInt:GraphOffset] forKey:@"graphoffset"];
@@ -585,7 +585,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 
 - (void)mouseDragged:(NSEvent *)derEvent
 {
-	//NSLog(@"mouseDragged: %@",[derEvent description]);
+	NSLog(@"mouseDragged: %@",[derEvent description]);
 	NSPoint location = [derEvent locationInWindow];
 	NSPoint local_point = [self convertPoint:location fromView:nil];
 	float x=local_point.x;
@@ -647,7 +647,7 @@ int (^add)(int,int) = ^(int number1, int number2){
       scale = 4;
    }
    int abbbranddelay=0;
-	//NSLog(@"ProfilGraph drawRect start");
+	NSLog(@"ProfilGraph drawRect start");
    
    int screen=0;
    if ([[NSGraphicsContext currentContext]isDrawingToScreen])

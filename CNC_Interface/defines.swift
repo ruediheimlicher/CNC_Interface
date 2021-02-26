@@ -8,14 +8,15 @@
 
 import Foundation
 
+let VERSION = "21.0"
 
 let TEENSY3_TITLE = "Teensy 3.x"
-let TEENSY3_VID = 0x16C0
-let TEENSY3_PID = 0x0486
+let TEENSY3_VID:Int32 = 0x16C0
+let TEENSY3_PID:Int32 = 0x0486
 
 let TEENSY2_TITLE = "Teensy 2"
-let TEENSY2_VID = 0x16C0
-let TEENSY2_PID = 0x0480
+let TEENSY2_VID:Int32 = 0x16C0
+let TEENSY2_PID:Int32 = 0x0480
 
 
 let GOTO_0:UInt8  =  0xA7

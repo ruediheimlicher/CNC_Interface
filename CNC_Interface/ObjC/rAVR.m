@@ -721,7 +721,165 @@ float det(float v0[],float v1[])
     AVR_USBStatus=0;
     
     BlockKoordinatenTabelle=[[NSMutableArray alloc]initWithCapacity:0];
+    // end von init
+   
+   CNC_PList = [[NSMutableDictionary alloc]initWithDictionary:[self readCNC_PList]];
+   NSRect RaumViewFeld;
+   RaumViewFeld=[ProfilFeld  frame]; 
+   ProfilGraph =[[rProfilGraph alloc] initWithFrame:RaumViewFeld];   
+   
+   NSRect RaumScrollerFeld=RaumViewFeld;   //   Feld fuer Scroller, in dem der RaumView liegt
+   
+   // Feld im Scroller ist abhaengig von Anzahl Tagbalken
+   RaumViewFeld.size.height -=10; // Hoehe vergroessern
+   //   NSLog(@"RaumTagplanAbstand: %d   ",RaumTagplanAbstand);
+   
+   NSScrollView* RaumScroller = [[NSScrollView alloc] initWithFrame:RaumScrollerFeld];
+   
+   
+   //NSView* ProfilView=[[NSView alloc] initWithFrame:RaumScrollerFeld];
+   //[[[StepperTab tabViewItemAtIndex:0]view]addSubview:ProfilView];
+   // View-Hierarchie    
+   
+   [RaumScroller setDocumentView:ProfilGraph];
+   [RaumScroller setBorderType:NSLineBorder];
+   [RaumScroller setHasVerticalScroller:NO];
+   [RaumScroller setHasHorizontalScroller:NO];
+   [RaumScroller setLineScroll:10.0];
+   [RaumScroller setAutohidesScrollers:YES];
+   //[RaumTabView addSubview:RaumScroller];
+   [[[StepperTab tabViewItemAtIndex:0]view]addSubview:RaumScroller];
+   
+   NSPoint   newRaumScrollOrigin=NSMakePoint(0.0,NSMaxY([[RaumScroller documentView] frame])
+                                             -NSHeight([[RaumScroller contentView] bounds]));
+   [[RaumScroller documentView] scrollPoint:newRaumScrollOrigin];
+   //[RaumScroller addSubview:ProfilTable];
+
+   [CNC_Starttaste setState:0];
+   [CNC_Stoptaste setState:0];
+   
+   NSNumberFormatter* SimpleFormatter=[[NSNumberFormatter alloc] init];;
+    [SimpleFormatter setFormat:@"###0.0;0.0;(##0.0)"];
+
+   ProfilDaten = [[NSMutableArray alloc]initWithCapacity:0];
+   
+   
+   NSRect SegFeld=RaumViewFeld;
+   SegFeld.origin.y-=40;
+   SegFeld.size.height=50;
+   NSSegmentedControl* ObjektSeg=[[NSSegmentedControl alloc]initWithFrame:SegFeld];
+   [ObjektSeg setSegmentCount:8];
+   [[ObjektSeg cell] setTrackingMode:1];
+   NSFont* SegFont=[NSFont fontWithName:@"Helvetica" size: 10];
+   [[ObjektSeg cell] setFont:SegFont];
+   [[ObjektSeg cell] setControlSize:NSControlSizeMini];
+   [ObjektSeg setTarget:self];
+   [ObjektSeg setAction:@selector(ObjektSegAktion:)];
+   
+   [ProfilGraph setScale:[[ScalePop selectedItem]tag]];
+   [ProfilGraph setGraphOffset:0];
+
+
+      NSRect Titelrect = [ProfilGraph bounds];
+      Titelrect.origin.y += Titelrect.size.height -40;
+      Titelrect.origin.x += 10;
+      Titelrect.size.height = 20;
+      Titelrect.size.width = 200;
+      NSTextField* Titelfeld = [[NSTextField alloc]initWithFrame:Titelrect];
+      NSFont* TitelFont=[NSFont fontWithName:@"Helvetica" size: 14];
+      [Titelfeld setFont:TitelFont];
+      [Titelfeld setBordered:NO];
+      [Titelfeld setDrawsBackground:NO];
+      [Titelfeld setTag:1001];
+      [Titelfeld setStringValue:@""];
+      [ProfilGraph addSubview:Titelfeld];
+
+   //   [[self window]makeKeyAndOrderFront:self];
+  //    [[self window]makeFirstResponder:ProfilGraph];
+      NSString* logString=[NSString string];
+      logString=[logString stringByAppendingString:[NSString stringWithFormat:@"%02X ",0x02]];
+      logString=[logString stringByAppendingString:[NSString stringWithFormat:@"%02X ",161]];
+      //NSLog(@"logString: %@",logString);
+      
+       //NSLog(@"Bitschieber");
+       uint16_t StepCounterA;
+       uint8_t dataL=0;
+       uint8_t dataH=0;
+       
+       dataL=164;
+       dataH=4;
+       
+       StepCounterA= (dataH<<8) + dataL;
+       
+       //NSLog(@"StepCounterA hex: %X int: %d",StepCounterA,StepCounterA);
+       
+       NSString* VersionString=[NSString stringWithUTF8String:VERSION];
+       
+       [VersionFeld setStringValue:[NSString stringWithFormat:@"%@ %@",@"Stepperversion:",VersionString]];
+       NSString* DatumString=[NSString stringWithUTF8String:DATUM];
+       [DatumFeld setStringValue:[NSString stringWithFormat:@"%@ %@",@"Datum:",DatumString]];
+       NSLog(@"Stepperversion: %@ Datum: %@",VersionString,DatumString);
+       cncposition =0;
+       [WertFeld setIntValue:10];
+       quelle=0; // line
+      
+   NSNumberFormatter* Koordinatenformatter=[[NSNumberFormatter alloc] init];;
+   [Koordinatenformatter setFormat:@"###.00;0.00;(##0.00)"];
+
+   [CNCTable setDataSource: self];
+   [CNCTable setDelegate: self];
+   [CNCTable setRowHeight:13];
+   [CNCTable setGridStyleMask:NSTableViewSolidVerticalGridLineMask];
+   [[[CNCTable tableColumnWithIdentifier:@"index"]dataCell]setAlignment:NSTextAlignmentCenter];
+   [[[CNCTable tableColumnWithIdentifier:@"ax"]dataCell]setAlignment:NSTextAlignmentRight];
+   [[[CNCTable tableColumnWithIdentifier:@"ay"]dataCell]setAlignment:NSTextAlignmentRight];
+   [[[CNCTable tableColumnWithIdentifier:@"bx"]dataCell]setAlignment:NSTextAlignmentRight];
+   [[[CNCTable tableColumnWithIdentifier:@"by"]dataCell]setAlignment:NSTextAlignmentRight];
+   
+   
+   [[[CNCTable tableColumnWithIdentifier:@"ax"] dataCell]
+    setFormatter:Koordinatenformatter];
+   [[[CNCTable tableColumnWithIdentifier:@"ay"] dataCell]
+    setFormatter:Koordinatenformatter];
+   
+   [[[CNCTable tableColumnWithIdentifier:@"bx"] dataCell]
+    setFormatter:Koordinatenformatter];
+   [[[CNCTable tableColumnWithIdentifier:@"by"] dataCell]
+    setFormatter:Koordinatenformatter];
+      
+   [CNCTable setDataSource:self];
+
+   [WertAXFeld setFormatter:Koordinatenformatter];
+   [WertAXFeld setAlignment:NSTextAlignmentRight];
+   [WertAXFeld setDelegate:self];
+   //   [WertAXFeld setFloatValue:220];
+   [WertAYFeld setFormatter:Koordinatenformatter];
+   [WertAYFeld setAlignment:NSTextAlignmentRight];
+   [WertAYFeld setDelegate:self];
+   //   [WertAYFeld setFloatValue:50];
+   NSRect r=[WertAXStepper frame];
+   r.size.width = r.size.height+5;
+   [WertAXStepper setNeedsDisplay:YES];
+
+   [WertBXFeld setFormatter:Koordinatenformatter];
+   [WertBXFeld setAlignment:NSTextAlignmentRight];
+    [WertBXFeld setDelegate:self];
+    [WertBYFeld setFormatter:Koordinatenformatter];
+   [WertBYFeld setAlignment:NSTextAlignmentRight];
+    [WertBYFeld setDelegate:self];
     
+    r=[WertBXStepper frame];
+    r.size.width = r.size.height+5;
+    [WertBXStepper setNeedsDisplay:YES];
+
+   
+   [ProfilPop removeAllItems];
+   [ProfilPop addItemWithTitle:@"Profil waehlen"];
+   NSArray* ProfilnamenArray = [self readProfilLib];
+   [ProfilPop addItemsWithTitles:ProfilnamenArray];
+
+
+   
 }
 
 - (IBAction)reportBoardPop:(id)sender;
@@ -3416,6 +3574,24 @@ return returnInt;
    NSLog(@"reportKreis SchnittdatenArray: %@",[SchnittdatenArray description]);
 
 }
+
+- (void)updateIndex
+{
+   if ([KoordinatenTabelle count])
+   {
+      int i=0;
+      for (i=0;i<[KoordinatenTabelle count];i++)
+      {
+         NSMutableDictionary* tempDic=[NSMutableDictionary dictionaryWithDictionary:[KoordinatenTabelle objectAtIndex:i]];
+         [tempDic setObject:[NSNumber numberWithInt:i] forKey:@"index"];
+         [KoordinatenTabelle replaceObjectAtIndex:i withObject:tempDic];
+      }
+      [ProfilGraph setNeedsDisplay:YES];
+      [CNCTable reloadData];
+      [IndexStepper setMaxValue:[KoordinatenTabelle count]-1];
+   }
+}
+
 
 - (IBAction)reportNeueZeile:(id)sender // Neuen Punkt einfügen
 {
@@ -7995,7 +8171,14 @@ return returnInt;
    else
    {
       
-      NSString* Profil1Name = [[ProfilNameFeldA stringValue]stringByAppendingPathExtension:@"txt"];
+      NSString* Profil1Name = [ProfilNameFeldA stringValue];
+      if ([Profil1Name length] == 0)
+      {
+         return;
+      }
+      Profil1Name = [Profil1Name stringByAppendingPathExtension:@"txt"];
+      
+      
       profilpopindex = [[ProfilPop itemTitles]indexOfObject:Profil1Name];
       
       //NSLog(@"reportProfilOberseiteTask profilpopindex: %d Profil aus ProfilNameFeldA: %@",profilpopindex,Profil1Name);
@@ -8245,6 +8428,9 @@ return returnInt;
 
 
 }
+
+
+
 
 
 #pragma mark USB_Aktion

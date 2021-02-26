@@ -44,11 +44,19 @@ open class usb_teensy: NSObject
       super.init()
    }
    
-   open func USBOpen()->Int32
+   open func USBOpen(board:[String:Any])->Int32
    {
       var r:Int32 = 0
       
-      let    out = rawhid_open(1, 0x16C0, 0x0486, 0xFFAB, 0x0200)
+      let PID:Int32 = Int32(board["PID"] as! Int32)//
+      let VID:Int32 = Int32(board["VID"] as! Int32)//
+      print("func usb_teensy.USBOpen PID: \(PID) VID: \(VID)")
+      // rawhid_open(int max, int vid, int pid, int usage_page, int usage)
+      var    out = rawhid_open(1,  VID, PID, 0xFFAB, 0x0200)
+      
+    //  out = rawhid_open(1, 5824, 1152, 0xFFAB, 0x0200)
+      
+      
       print("func usb_teensy.USBOpen out: \(out)")
       
       hid_usbstatus = out as Int32;
@@ -70,13 +78,20 @@ open class usb_teensy: NSObject
          }
          else
          {
-            manustring = String(cString: UnsafePointer<CChar>(manustr))
+            manustring = manustr
+            //manustring = String(cString: UnsafePointer<CChar>(manustr))
          }
          
          
          
          
          let prod = get_prod();
+         if (prod == nil)
+         {
+            prodstring = "-"
+         }
+         else 
+         {
          //fprintf(stderr,"prod: %s\n",prod);
          let prodstr:String = String(cString: prod!)
          if (prodstr == nil)
@@ -86,6 +101,7 @@ open class usb_teensy: NSObject
          else
          {
             prodstring = String(cString: UnsafePointer<CChar>(prod!))
+         }
          }
          var USBDatenDic = ["prod": prod, "manu":manu]
          

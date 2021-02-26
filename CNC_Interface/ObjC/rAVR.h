@@ -24,8 +24,8 @@
 
 #define CNC_STOP              1
 
-#define VERSIONSLAVE "SLAVE.12.502"
-//#define VERSIONSLAVE "USB.405"
+#define VERSION "CNC_Interface 21.0"
+#define DATUM  "26.02.2021"
 /*
 @interface rPfeiltasteCell : NSButtonCell 
 {
@@ -64,7 +64,7 @@
 }
 @end
 
-@interface rAVRview:NSViewController
+@interface rAVRview:NSViewController <NSTableViewDataSource,NSTableViewDelegate>
 {
    NSMutableDictionary*      CNC_PList;
    
@@ -447,7 +447,7 @@
 {
    NSMutableDictionary*		CNC_PList;
    
-   IBOutlet id             BoardPop;
+   //IBOutlet id             BoardPop;
    
    IBOutlet id					StepperTab;
    IBOutlet	id					ProfilFeld;

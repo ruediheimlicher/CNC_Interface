@@ -299,6 +299,7 @@ int rawhid_open(int max, int vid, int pid, int usage_page, int usage)
    mach_port_t             masterPort;
    CFMutableDictionaryRef  matchingDict = NULL;
    CFRunLoopSourceRef      runLoopSource;
+    fprintf(stderr,"fprintf rawhid_open vid: %d pid: %d\n");
    
    
    //Create a master port for communication with the I/O Kit
@@ -321,7 +322,9 @@ int rawhid_open(int max, int vid, int pid, int usage_page, int usage)
    IOReturn ret;
 	hid_t *p;
 	int count=0;
-   //fprintf(stderr,"fprintf rawhid_open\n");
+  
+   
+   
 	if (first_hid) free_all_hid();
 	//printf("rawhid_open, max=%d\n", max);
    //fflush (stdout); 

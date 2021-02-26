@@ -636,6 +636,12 @@ int (^add)(int,int) = ^(int number1, int number2){
 
 - (void)drawRect:(NSRect)dirtyRect 
 {
+   NSColor* bgcolor = [NSColor colorWithCalibratedRed:1.0 green:1.0 blue:1.0 alpha:1.0f];
+
+    [bgcolor setFill];
+    NSRectFill(dirtyRect);
+    [super drawRect:dirtyRect];
+
    if (scale == 0)
    {
       scale = 4;

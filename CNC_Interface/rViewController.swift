@@ -302,57 +302,7 @@ class rViewController: NSViewController, NSWindowDelegate
          print(preferences.webserviceURL)
       }
       
-      // servoPfad
-      servoPfad?.setStartposition(x: 0x800, y: 0x800, z: 0)
-      
-      // Pot 0
-     /* 
-      Pot0_Slider.integerValue = Int(ACHSE0_START)
-      Pot0_Feld.integerValue = Int(ACHSE0_START)
-      let intpos0 = UInt16(Float(ACHSE0_START) * FAKTOR0)
-      Pot0_Feld.integerValue = Int(UInt16(Float(ACHSE0_START) * FAKTOR0))
-      Pot0_Stepper_L.integerValue = 0
-      Pot0_Stepper_L_Feld.integerValue = 0
-      Pot0_Stepper_H.integerValue = Int(Pot0_Slider.maxValue)
-      Pot0_Stepper_H_Feld.integerValue = Int(Pot0_Slider.maxValue)
-      
-      // Pot 1
-      Pot1_Slider.integerValue = Int(ACHSE1_START)
-      //Pot1_Feld.integerValue = Int(ACHSE1_START)
-      let intpos1 = UInt16(Float(ACHSE1_START) * FAKTOR1)
-      Pot1_Feld.integerValue = Int(UInt16(Float(ACHSE1_START) * FAKTOR1))
-      //Pot1_Feld.integerValue = Int(intpos1)
-      Pot1_Stepper_L.integerValue = 0
-      Pot1_Stepper_L_Feld.integerValue = 0 
-      Pot1_Stepper_H.integerValue = Int(Pot1_Slider.maxValue)
-      Pot1_Stepper_H_Feld.integerValue = Int(Pot1_Slider.maxValue)
-      print("intpos0: \(intpos0) intpos1: \(intpos1)")
-      // Pot 2
-      Pot2_Slider.integerValue = Int(ACHSE2_START)
-      Pot2_Feld.integerValue = Int(ACHSE2_START)
-      Pot2_Stepper_L.integerValue = 0
-      Pot2_Stepper_L_Feld.integerValue = 0 
-      Pot2_Stepper_H.integerValue = Int(Pot2_Slider.maxValue)
-      Pot2_Stepper_H_Feld.integerValue = Int(Pot2_Slider.maxValue)
-      
-      // Pot 3
-      Pot3_Slider.integerValue = Int(ACHSE3_START)
-      Pot3_Feld.integerValue = Int(ACHSE3_START)
-      Pot3_Stepper_L.integerValue = 0
-      Pot3_Stepper_L_Feld.integerValue = 0 
-      Pot3_Stepper_H.integerValue = Int(Pot3_Slider.maxValue)
-      Pot3_Stepper_H_Feld.integerValue = Int(Pot3_Slider.maxValue)
-      
-        
-      teensy.write_byteArray[ACHSE0_BYTE_H] = UInt8(((ACHSE0_START) & 0xFF00) >> 8) // hb
-      teensy.write_byteArray[ACHSE0_BYTE_L] = UInt8(((ACHSE0_START) & 0x00FF) & 0xFF) // lb
-
-      teensy.write_byteArray[ACHSE1_BYTE_H] = UInt8(((ACHSE1_START) & 0xFF00) >> 8) // hb
-      teensy.write_byteArray[ACHSE1_BYTE_L] = UInt8(((ACHSE1_START) & 0x00FF) & 0xFF) // lb
-      
-      teensy.write_byteArray[0] = SET_0
-     */
-   }
+    }
    
    @objc func beendenAktion(_ notification:Notification) 
    {
@@ -1001,7 +951,8 @@ class rViewController: NSViewController, NSWindowDelegate
         // return
 
       }
-      let erfolg = teensy.USBOpen()
+      let device = teensyboardarray[boardindex]
+      let erfolg = teensy.USBOpen(board:device)
       usbstatus = erfolg
       globalusbstatus = Int(erfolg)
    //   print("USBOpen erfolg: \(erfolg) usbstatus: \(usbstatus)")
@@ -1173,6 +1124,20 @@ class rViewController: NSViewController, NSWindowDelegate
    // https://nabtron.com/quit-cocoa-app-window-close/
    override func viewDidAppear() 
    {
+      teensyboardarray.append(["titel":TEENSY2_TITLE,"PID":TEENSY2_PID,"VID":TEENSY2_VID])
+      teensyboardarray.append(["titel":TEENSY3_TITLE,"PID":TEENSY3_PID,"VID":TEENSY3_VID])
+
+      print("teensyboardarray: \(teensyboardarray)")
+
+      BoardPop.removeAllItems()
+       var popindex = 0
+       for boarditem in teensyboardarray
+       {
+          let temptitel = teensyboardarray[popindex]["titel"] as! String
+          BoardPop.addItem(withTitle: teensyboardarray[popindex]["titel"] as! String)
+          popindex += 1
+       }
+
       print("viewDidAppear")
       self.view.window?.delegate = self as? NSWindowDelegate 
       USB_OK_Feld.image = notokimage
@@ -1186,8 +1151,9 @@ class rViewController: NSViewController, NSWindowDelegate
       }
       warnung.addButton(withTitle: "cancel")
       let devicereturn:Int = warnung.runModal().rawValue
+      boardindex = devicereturn-1000
       print("devicereturn: \(devicereturn)")
-     BoardPop.selectItem(withTag:devicereturn)
+      BoardPop.selectItem(at:devicereturn-1000)
   //    BoardPop.selectItem(at:boardindex)
    }
    

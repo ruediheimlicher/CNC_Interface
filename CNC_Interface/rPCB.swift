@@ -48,13 +48,8 @@ class rPCB: rViewController
       formatter.minimumIntegerDigits = 1
       //formatter.roundingMode = .down
       
-       print("teensyboardarray vor: \(teensyboardarray)")
-      teensyboardarray.append(["Titel":TEENSY2_TITLE,"PID":TEENSY2_PID,"VID":TEENSY2_VID])
-      teensyboardarray.append(["Titel":TEENSY3_TITLE,"PID":TEENSY3_PID,"VID":TEENSY3_VID])
 
-      print("teensyboardarray: \(teensyboardarray)")
-
-      
+       
       let sup = self.view.superview
       //print("DeviceTab superview: \(String(describing: sup)) ident: \(String(describing: sup?.identifier))")
       
@@ -648,4 +643,4 @@ class rPCB: rViewController
    
    
     
-} // ViewController
+} // rPCB

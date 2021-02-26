@@ -138,6 +138,14 @@ class rBasis: rViewController
    override func viewDidAppear() 
    {
       print ("Basis viewDidAppear selectedDevice: \(selectedDevice)")
+            var popindex = 0
+             for boarditem in teensyboardarray
+             {
+                let temptitel = teensyboardarray[popindex]
+                BoardPop.addItem(withTitle: teensyboardarray[popindex]["titel"] as! String)
+                popindex += 1
+             }
+
    }
    
    override func viewDidLoad() 

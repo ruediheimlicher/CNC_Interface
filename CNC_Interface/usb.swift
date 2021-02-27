@@ -20,7 +20,7 @@ var new_Data:ObjCBool = false
 
 
 
-open class usb_teensy: NSObject
+ @objc class usb_teensy: NSObject
 {
    var hid_usbstatus: Int32 = 0
    
@@ -64,7 +64,7 @@ open class usb_teensy: NSObject
       if (out <= 0)
       {
          NSLog("USBOpen: no rawhid device found");
-         //[AVR setUSB_Device_Status:0];
+         //AVR.setUSB_Device_Status:0
       }
       else
       {
@@ -372,7 +372,7 @@ open class usb_teensy: NSObject
          {
             //new_Data = false
             datafalsecounter += 1
-            //print("--- \(read_byteArray[0])\t\(datafalsecounter)")
+            print("--- \(read_byteArray[0])\t\(datafalsecounter)")
          }
          //println("*read_USB in Timer result: \(result)")
          

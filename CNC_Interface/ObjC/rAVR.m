@@ -9,6 +9,8 @@
 #import "rAVR.h"
 #import "rElement.h"
 
+#import "hid.h"
+
 extern int usbstatus;
 
 
@@ -29,7 +31,7 @@ extern int usbstatus;
 #define STEPEND_C          0x20
 #define STEPEND_D          0x30
 
-#define DATUM "16.03.2013"
+//#define DATUM "16.03.2013"
 
 #define FIRST_BIT       0 // in 'position' von reportStopKnopf: Abschnitt ist first
 #define LAST_BIT        1 // in 'position' von reportStopKnopf: Abschnitt ist last
@@ -579,7 +581,12 @@ float det(float v0[],float v1[])
 
    NSNotificationCenter * nc;
     nc=[NSNotificationCenter defaultCenter];
-    
+  
+   [nc addObserver:self
+            selector:@selector(USBStatusAktion:)
+               name:@"usb_status"
+             object:nil];
+   
        [nc addObserver:self
           selector:@selector(MausGraphAktion:)
              name:@"mauspunkt"
@@ -971,6 +978,13 @@ float det(float v0[],float v1[])
    [[self view] addSubview:ProfilGraph];
 }
 
+
+- (void)USBStatusAktion:(NSNotification*)note
+{
+   NSLog(@"USBStatusAktion note: %@",[[note userInfo]description]);
+   AVR_USBStatus = [[[note userInfo]objectForKey:@"usbstatus"]intValue];
+
+}
 - (IBAction)reportBoardPop:(id)sender;
 {
    NSLog(@"reportBoardPop tag: %d", [sender indexOfSelectedItem]);
@@ -2270,6 +2284,18 @@ return returnInt;
    [nc postNotificationName:@"DC_pwm" object:self userInfo:DCDic];
    
 }
+- (int)pwm
+{
+   if ([DC_Taste state])
+   {
+      return [DC_PWM intValue];
+   }
+   else
+   {
+      return 0;
+   }
+}
+
 
 - (void)setPWM:(int)pwm
 {
@@ -8422,7 +8448,437 @@ return returnInt;
 
 
 
-#pragma mark USB_Aktion
+#pragma mark CNC Task
+
+/*******************************************************************/
+// CNC
+/*******************************************************************/
+- (void)USB_SchnittdatenAktion:(NSNotification*)note
+{
+   //NSLog(@"USB_SchnittdatenAktion usbstatus: %d usb_present: %d",usbstatus,usb_present());
+   int antwort=0;
+   int delayok=0;
+   
+   /*
+   int usb_da=usb_present();
+   //NSLog(@"usb_da: %d",usb_da);
+   
+   const char* manu = get_manu();
+   //fprintf(stderr,"manu: %s\n",manu);
+   NSString* Manu = [NSString stringWithUTF8String:manu];
+   
+   const char* prod = get_prod();
+   //fprintf(stderr,"prod: %s\n",prod);
+   NSString* Prod = [NSString stringWithUTF8String:prod];
+   //NSLog(@"Manu: %@ Prod: %@",Manu, Prod);
+   */
+   if (AVR_USBStatus == 0)
+   {
+      NSAlert *Warnung = [[NSAlert alloc] init];
+      [Warnung addButtonWithTitle:@"Einstecken und einschalten"];
+      [Warnung addButtonWithTitle:@"Zurück"];
+      //   [Warnung addButtonWithTitle:@""];
+      //[Warnung addButtonWithTitle:@"Abbrechen"];
+      [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"CNC Schnitt starten"]];
+      
+      NSString* s1=@"USB_SchnittdatenAktion: USB ist noch nicht eingesteckt.";
+      NSString* s2=@"";
+      NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
+      [Warnung setInformativeText:InformationString];
+      [Warnung setAlertStyle:NSAlertStyleWarning];
+      
+      antwort=[Warnung runModal];
+      [self DC_ON:0];
+      [self setStepperstrom:0];
+
+      // return;
+      // NSLog(@"antwort: %d",antwort);
+      switch (antwort)
+      {
+         case NSAlertFirstButtonReturn: // Einschalten
+         {
+        //    int r = rawhid_open(1, 0x16C0, 0x0480, 0xFFAB, 0x0200);
+            int erfolg = [self USBOpen:1];
+      //      [usb USBOpen]:1;
+            
+            /*
+            int  r;
+            
+            r = rawhid_open(1, 0x16C0, 0x0480, 0xFFAB, 0x0200);
+            if (r <= 0) 
+            {
+               NSLog(@"USBAktion: no rawhid device found");
+               [AVR setUSB_Device_Status:0];
+               return;
+            }
+            else
+            {
+               
+               NSLog(@"USBAktion: found rawhid device %d",usbstatus);
+               [AVR setUSB_Device_Status:1];
+            }
+            usbstatus=r;
+            */
+         }break;
+            
+         case NSAlertSecondButtonReturn: // Ignorieren
+         {
+            return;
+         }break;
+            
+         case NSAlertThirdButtonReturn: // Abbrechen
+         {
+            return;
+         }break;
+      }
+
+   }
+   [SchnittdatenArray setArray:[NSArray array]];
+   //NSLog(@"USB_SchnittdatenAktion SchnittDatenArray vor: %@",[SchnittDatenArray description]);
+   //NSLog(@"USB_SchnittdatenAktion SchnittDatenArray Stepperposition: %d",Stepperposition);
+   //NSLog(@"USB_SchnittdatenAktion note: %@",[[note userInfo]description]);
+   pwm = 0;
+   
+   if ([[note userInfo]objectForKey:@"pwm"])
+   {
+      pwm = [[[note userInfo]objectForKey:@"pwm"]intValue];
+     // NSLog(@"USB_SchnittdatenAktion pwm: %d",pwm);
+   }
+   
+   
+   if ([[note userInfo]objectForKey:@"schnittdatenarray"])
+    {
+
+       int home = 0;
+       if ([[note userInfo]objectForKey:@"home"])
+       {
+          home = [[[note userInfo]objectForKey:@"home"]intValue];
+       
+       }
+       
+       //NSLog(@"USB_SchnittdatenAktion Object 0 aus SchnittDatenArray aus note: %@",[[[[note userInfo]objectForKey:@"schnittdatenarray"]objectAtIndex:0] description]);
+       [SchnittdatenArray setArray:[[note userInfo]objectForKey:@"schnittdatenarray"]];
+       //NSLog(@"USB_SchnittdatenAktion SchnittDatenArray %@",[[SchnittDatenArray objectAtIndex:0] description]);
+       //NSLog(@"USB_SchnittdatenAktion SchnittDatenArray: %@",[SchnittDatenArray description]);
+
+       Stepperposition=0;
+       [self setBusy:1];
+       
+       if (sizeof(newsendbuffer))
+           {
+              free(newsendbuffer);
+           }
+       
+       newsendbuffer=malloc(32);
+       
+       NSMutableArray* tempSchnittdatenArray=(NSMutableArray*)[SchnittdatenArray objectAtIndex:Stepperposition];
+       //[tempSchnittdatenArray addObject:[NSNumber numberWithInt:[AVR pwm]]];
+       NSScanner *theScanner;
+       unsigned     value;
+       //NSLog(@"writeCNCAbschnitt tempSchnittdatenArray count: %d",[tempSchnittdatenArray count]);
+       //NSLog(@"tempSchnittdatenArray object 20: %d",[[tempSchnittdatenArray objectAtIndex:20]intValue]);
+       //NSLog(@"loop start");
+       int i=0;
+       for (i=0;i<[tempSchnittdatenArray count];i++)
+       {
+          //NSLog(@"i: %d tempString: %@",i,tempString);
+          int tempWert=[[tempSchnittdatenArray objectAtIndex:i]intValue];
+          //           fprintf(stderr,"%d\t",tempWert);
+          NSString*  tempHexString=[NSString stringWithFormat:@"%x",tempWert];
+          
+          //theScanner = [NSScanner scannerWithString:[[tempSchnittdatenArray objectAtIndex:i]stringValue]];
+          theScanner = [NSScanner scannerWithString:tempHexString];
+          if ([theScanner scanHexInt:&value])
+          {
+             newsendbuffer[i] = (char)value;
+             //NSLog(@"writeCNCAbschnitt: index: %d   string: %@   hexstring: %@ value: %X   buffer: %x",i,tempString,tempHexString, value,sendbuffer[i]);
+             //NSLog(@"writeCNC i: %d   Hexstring: %@ value: %d",i,tempHexString,value);
+          }
+          else
+          {
+             NSAlert *alert = [[NSAlert alloc] init];
+             alert.messageText = @"Invalid data format";
+             alert.informativeText = @"Please only use hex values between 00 and FF.";
+            // [alert runModal];
+             [alert beginSheetModalForWindow:self->window completionHandler:^(NSModalResponse returnCode) {
+                if (returnCode == NSAlertSecondButtonReturn) {
+                   NSLog(@"Delete was cancelled!");
+                   return;
+                }
+                
+                NSLog(@"This project was deleted!");
+             }];
+ //            NSRunAlertPanel (@"Invalid data format", @"Please only use hex values between 00 and FF.", @"OK", nil, nil);
+             return;
+          }
+       }
+      
+       
+       
+       [self writeCNCAbschnitt];
+       //NSLog(@"readUSB Start Timer");
+       
+       // home ist 1 wenn homebutton gedrückt ist
+       NSMutableDictionary* timerDic =[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:home],@"home", nil];
+       /*
+       
+       if (readTimer)
+       {
+          if ([readTimer isValid])
+          {
+             NSLog(@"USB_SchnittdatenAktion laufender timer inval");
+             [readTimer invalidate];
+             
+          }
+          [readTimer release];
+          readTimer = NULL;
+          
+       }
+       
+       readTimer = [NSTimer scheduledTimerWithTimeInterval:0.05 
+                                                    target:self 
+                                                  selector:@selector(readUSB:) 
+                                                  userInfo:timerDic repeats:YES];
+       */
+    }
+  // Kopfzeile fuer readUSB
+//   fprintf(stderr,"dauer2 bis vor switch:\tdauer3 bis nach switch:\tdauer4 vor writeCNCAbschnitt:\tdauer5 nach writeCNCAbschnitt:\tdauer6 nach if endindex:\tdauer7 nach notific:\ttotal:\n");
+
+   // Kopfzeile fuer writeCNCAbschnitt
+   //fprintf(stderr,"dauer1 vor scanner-loop:\tdauer2 nach scanner-loop:\tdauer3 vor rawhid_send:\tdauer4 nach rawhid_send:\tdauer6:\tdauer7:\ttotal:\n");
+
+}
+- (void)SlaveResetAktion:(NSNotification*)note
+
+{
+   //NSLog(@"***");
+   //NSLog(@"SlaveResetAktion");
+   
+   char*      sendbuffer;
+   sendbuffer=malloc(32);
+   int i;
+   for (i=0;i<32;i++)
+   {
+      sendbuffer[i] = 0;
+   }
+//   NSMutableDictionary* timerDic =[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1],@"reset", nil];
+
+   /*
+   readTimer = [[NSTimer scheduledTimerWithTimeInterval:0.1
+                                                 target:self 
+                                               selector:@selector(readUSB:) 
+                                               userInfo:timerDic repeats:YES]retain];
+*/
+   sendbuffer[16] = 0xF1;
+   sendbuffer[20] = 0x00;
+//   int senderfolg= rawhid_send(0, sendbuffer, 32, 50);
+
+   free(sendbuffer);
+   
+   [HomeAnschlagSet removeAllIndexes];
+
+}
+
+- (void)writeCNCAbschnitt
+{
+   //NSLog(@"writeCNCAbschnitt Start Stepperposition: %d count: %d",Stepperposition,[SchnittDatenArray count]);
+   //NSLog(@"writeCNCAbschnitt SchnittDatenArray anz: %d\n SchnittDatenArray: %@",[SchnittDatenArray count],[SchnittDatenArray description]);
+   
+   /*
+   double dauer0 = 0;
+   double dauer1 = 0;
+   double dauer2 = 0;
+   double dauer3 = 0;
+   double dauer4 = 0;
+   double dauer5 = 0;
+   double dauer6 = 0;
+   double dauer7 = 0;
+   double dauer8 = 0;
+  */
+
+
+   if (Stepperposition < [SchnittdatenArray count])
+   {   
+        NSDate* dateA=[NSDate date];
+      //dauer1 = [dateA timeIntervalSinceNow]*1000;
+      // HALT
+      //if ([AVR halt])
+            
+      if (self.halt)
+      {
+         NSLog(@"writeCNCAbschnitt HALT");
+         [self setBusy:0];
+// TODO         [self DC_Aktion:NULL];
+/*
+         if (readTimer)
+         {
+            if ([readTimer isValid])
+            {
+               NSLog(@"writeCNCAbschnitt HALT timer inval");
+               [readTimer invalidate];
+            }
+            [readTimer release];
+            readTimer = NULL;
+            
+         }
+      */   
+      }
+      else 
+      {
+         char*      sendbuffer;
+         sendbuffer=malloc(32);
+         //
+         int i;
+         
+ //        pwm = [AVR pwm];
+         
+         
+         NSMutableArray* tempSchnittdatenArray=(NSMutableArray*) [SchnittdatenArray objectAtIndex:Stepperposition];
+         //[tempSchnittdatenArray addObject:[NSNumber numberWithInt:[AVR pwm]]];
+         NSScanner *theScanner;
+         unsigned     value;
+         //NSLog(@"writeCNCAbschnitt tempSchnittdatenArray count: %d",[tempSchnittdatenArray count]);
+         //NSLog(@"tempSchnittdatenArray object 20: %d",[[tempSchnittdatenArray objectAtIndex:20]intValue]);
+         //NSLog(@"loop start");
+         //NSDate *anfang = [NSDate date];
+         //dauer1 = [dateA timeIntervalSinceNow]*1000;
+         for (i=0;i<[tempSchnittdatenArray count];i++)
+         {
+            
+
+             int tempWert=[[tempSchnittdatenArray objectAtIndex:i]intValue];
+ //           fprintf(stderr,"%d\t",tempWert);
+             NSString*  tempHexString=[NSString stringWithFormat:@"%x",tempWert];
+            theScanner = [NSScanner scannerWithString:tempHexString];
+            if ([theScanner scanHexInt:&value])
+            {
+               sendbuffer[i] = (char)value;
+             }
+            else
+            {
+               NSAlert *alert = [[NSAlert alloc] init];
+               [alert setMessageText:@"Invalid data format"];
+               [alert setInformativeText:@"Please only use hex values between 00 and FF."];
+               [alert addButtonWithTitle:@"OK"];
+              // [alert addButtonWithTitle:@"Cancel"];
+               [alert setAlertStyle:NSWarningAlertStyle];
+               
+               
+               
+               [alert beginSheetModalForWindow:self->window completionHandler:^(NSModalResponse returnCode) {
+                  if (returnCode == NSAlertSecondButtonReturn) {
+                     NSLog(@"Umnumerieren erfolglos!");
+                     return;
+                  }
+                  
+                  NSLog(@"Invalid data format");
+                  return;
+               }];
+                return;
+            }
+            
+            //sendbuffer[i]=(char)[[tempSchnittdatenArray objectAtIndex:i]UTF8String];
+         }
+         
+          /*
+         fprintf(stderr,"%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
+                 sendbuffer[0],(sendbuffer[1]& 0x80),sendbuffer[2],(sendbuffer[3]&0x80),
+                 sendbuffer[4],sendbuffer[5],sendbuffer[6],sendbuffer[7],
+                 sendbuffer[8],sendbuffer[9],sendbuffer[10],sendbuffer[11],
+                 sendbuffer[12],sendbuffer[13],sendbuffer[14],sendbuffer[15],
+                 sendbuffer[16],sendbuffer[17],sendbuffer[18],sendbuffer[19],
+                 sendbuffer[20],sendbuffer[21],sendbuffer[22],sendbuffer[23]);
+          */
+          
+         
+         int senderfolg= rawhid_send(0, sendbuffer, 32, 50);
+         
+         
+  //       NSLog(@"writeCNCAbschnitt  Stepperposition: %d senderfolg: %d",Stepperposition,senderfolg);
+         
+         Stepperposition++;
+         
+  
+         free (sendbuffer);
+      }
+   }
+   else
+   {
+      NSLog(@"writeCNCAbschnitt >count\n*\n\n");
+      //NSLog(@"writeCNCAbschnitt timer inval");
+      [self setBusy:0];
+ //     [self DC_Aktion:NULL];
+
+            /*
+      if (readTimer)
+      {
+         if ([readTimer isValid])
+         {
+            NSLog(@"writeCNCAbschnitt timer inval");
+            [readTimer invalidate];
+         }
+         [readTimer release];
+         readTimer = NULL;
+
+      }
+*/
+      
+   }
+   
+   /*
+   fprintf(stderr,"%f\t", dauer1*-1);
+   fprintf(stderr,"%f\t", dauer2*-1);
+   fprintf(stderr,"%f\t", dauer3*-1);
+   fprintf(stderr,"%f\t", dauer4*-1);
+   fprintf(stderr,"%f\t", dauer5*-1);
+   fprintf(stderr,"%f\t", dauer6*-1);
+   fprintf(stderr,"%f\t", dauer7*-1);
+   fprintf(stderr,"%f\n", dauer8*-1);
+    */
+}
+
+#pragma mark USB_Task
+
+- (int)USBOpen:(int)board
+{
+
+   int  r=0;
+  
+   
+  r = rawhid_open(1, 0x16C0, 0x0480, 0xFFAB, 0x0200);
+//   r = rawhid_open(1, 0x16C0, 0x0486, 0xFFAB, 0x0200);
+   
+   if (r <= 0) 
+   {
+      //NSLog(@"USBOpen: no rawhid device found");
+      [self setUSB_Device_Status:0];
+   }
+   else
+   {
+      //NSLog(@"USBOpen: found rawhid device %d",usbstatus);
+      [self setUSB_Device_Status:1];
+      const char* manu = get_manu();
+      //fprintf(stderr,"manu: %s\n",manu);
+      NSString* Manu = [NSString stringWithUTF8String:manu];
+      
+      const char* prod = get_prod();
+      prod="1234\0";
+      //fprintf(stderr,"prod: %s\n",prod);
+      NSString* Prod = [NSString stringWithUTF8String:prod];
+      //NSLog(@"Manu: %@ Prod: %@",Manu, Prod);
+      NSDictionary* USBDatenDic = [NSDictionary dictionaryWithObjectsAndKeys:Prod,@"prod",Manu,@"manu", nil];
+      [self setUSBDaten:USBDatenDic];
+    //  NSNotificationCenter *nc=[NSNotificationCenter defaultCenter];
+      
+    //  [nc postNotificationName:@"usbopen" object:NULL userInfo:NotDic];
+
+      
+   }
+   AVR_USBStatus=r;
+   
+   return r;
+}
+
 - (IBAction)reportUSB_sendArray:(id)sender
 {
    if ([SchnittdatenArray count]==0)
@@ -8454,7 +8910,7 @@ return returnInt;
       return;
 
    }
-   //NSLog(@"SchnittdatenArray 0: %@",[SchnittdatenArray description]);
+   NSLog(@"SchnittdatenArray 0: %@",[SchnittdatenArray description]);
    
    if (AVR_USBStatus)
    {
@@ -8554,7 +9010,7 @@ return returnInt;
       //   [nc postNotificationName:@"usbschnittdaten" object:self userInfo:SchnittdatenDic];
       //NSLog(@"reportUSB_SendArray delayok: %d",delayok);
       [SchnittdatenDic setObject:[NSNumber numberWithInt:delayok] forKey:@"delayok"];
-      
+      NSLog(@"reportUSB_SendArray SchnittdatenDic: %@",SchnittdatenDic);
       if (delayok)
       {
          NSLog(@"mit delay");
@@ -8563,6 +9019,7 @@ return returnInt;
       else 
       {
          NSLog(@"ohne delay");
+         
          [nc postNotificationName:@"usbschnittdaten" object:self userInfo:SchnittdatenDic];
       }
       [self saveSpeed];

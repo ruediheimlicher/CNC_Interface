@@ -183,6 +183,10 @@
    NSMutableArray*         CNCDatenArray;
    NSMutableArray*         SchnittdatenArray;
    
+    char*      newsendbuffer;
+   int               Stepperposition;
+   NSMutableIndexSet* HomeAnschlagSet;
+   
    NSTimer*                  IOWTimer;
    int                     AnzahlDaten;
    int                     n;
@@ -286,7 +290,7 @@
    IBOutlet   id               AbmessungY;
    
    IBOutlet   id               red_pwmFeld;
-   
+   int pwm;
    IBOutlet id               RechtsLinksRadio;
 
    NSMutableDictionary*      AnschlagDic;

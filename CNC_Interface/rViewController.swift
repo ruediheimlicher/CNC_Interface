@@ -264,6 +264,11 @@ class rViewController: NSViewController, NSWindowDelegate
       NotificationCenter.default.addObserver(self, selector:#selector(tabviewAktion(_:)),name:NSNotification.Name(rawValue: "tabview"),object:nil)
       NotificationCenter.default.addObserver(self, selector: #selector(beendenAktion), name:NSNotification.Name(rawValue: "beenden"), object: nil)
 
+      NotificationCenter.default.addObserver(self, selector: #selector(usbsendAktion), name:NSNotification.Name(rawValue: "usbsend"), object: nil)
+      NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
+      NotificationCenter.default.addObserver(self, selector: #selector(usbschnittdatenAktion), name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
+
+     
       
       
       defaults.set(25, forKey: "Age")
@@ -305,14 +310,80 @@ class rViewController: NSViewController, NSWindowDelegate
       
     }
    
-   @objc func beendenAktion(_ notification:Notification) 
+    // https://nabtron.com/quit-cocoa-app-window-close/
+    override func viewDidAppear() 
+    {
+      
+
+       teensyboardarray.append(["titel":TEENSY2_TITLE,"PID":TEENSY2_PID,"VID":TEENSY2_VID])
+       teensyboardarray.append(["titel":TEENSY3_TITLE,"PID":TEENSY3_PID,"VID":TEENSY3_VID])
+
+       print("teensyboardarray: \(teensyboardarray)")
+
+       BoardPop.removeAllItems()
+        var popindex = 0
+        for boarditem in teensyboardarray
+        {
+           let temptitel = teensyboardarray[popindex]["titel"] as! String
+           BoardPop.addItem(withTitle: teensyboardarray[popindex]["titel"] as! String)
+           popindex += 1
+        }
+
+       print("viewDidAppear")
+       self.view.window?.delegate = self as? NSWindowDelegate 
+       USB_OK_Feld.image = notokimage
+       let warnung = NSAlert.init()
+       warnung.messageText = "Welches Board?"
+       let boardarray = BoardPop.itemTitles 
+       for titel in boardarray
+       {
+          let buttonstring = titel
+          warnung.addButton(withTitle: titel)
+       }
+       warnung.addButton(withTitle: "cancel")
+       let devicereturn:Int = warnung.runModal().rawValue
+       boardindex = devicereturn-1000
+       print("devicereturn: \(devicereturn)")
+       BoardPop.selectItem(at:devicereturn-1000)
+   //    BoardPop.selectItem(at:boardindex)
+    }
+    
+   
+   @objc func usbsendAktion(_ notification:Notification) 
    {
-      
-      print("beendenAktion")
-      
-      
-      
+      print("usbsendAktion: \(notification)")
    }
+   
+    
+   
+    @objc func usbschnittdatenAktion(_ notification:Notification) 
+    {
+       
+       print("viewcontroller usbschnittdatenAktion")
+      let info = notification.userInfo
+      let usb_pwm =  info?["pwm"] 
+      let usb_delayok =  info?["delayok"]
+      let usb_home =  info?["home"]
+      let usb_art =  info?["art"]
+      let usb_cncposition =  info?["cncposition"]
+      
+      print("usb_pwm: \(usb_pwm) usb_delayok: \(usb_delayok) usb_home: \(usb_home) usb_art: \(usb_art) usb_cncposition: \(usb_cncposition) ")
+      let usb_schnittdatenarray = info?["schnittdatenarray"] 
+      print("usb_schnittdatenarray: \(usb_schnittdatenarray ?? [])")
+      
+    }
+   
+   
+   @objc func beendenAktion(_ notification:Notification) 
+    {
+       
+       print("beendenAktion")
+       
+       
+       
+    }
+
+   
    @objc func tabviewAktion(_ notification:Notification) 
    {
       let info = notification.userInfo
@@ -505,6 +576,7 @@ class rViewController: NSViewController, NSWindowDelegate
       let theStringToPrint = timer.userInfo as! String
       print(theStringToPrint)
    }
+   
    
    @IBAction func report_Slider0(_ sender: NSSlider)
    {
@@ -1122,42 +1194,7 @@ class rViewController: NSViewController, NSWindowDelegate
       
    }
    
-   // https://nabtron.com/quit-cocoa-app-window-close/
-   override func viewDidAppear() 
-   {
-      teensyboardarray.append(["titel":TEENSY2_TITLE,"PID":TEENSY2_PID,"VID":TEENSY2_VID])
-      teensyboardarray.append(["titel":TEENSY3_TITLE,"PID":TEENSY3_PID,"VID":TEENSY3_VID])
 
-      print("teensyboardarray: \(teensyboardarray)")
-
-      BoardPop.removeAllItems()
-       var popindex = 0
-       for boarditem in teensyboardarray
-       {
-          let temptitel = teensyboardarray[popindex]["titel"] as! String
-          BoardPop.addItem(withTitle: teensyboardarray[popindex]["titel"] as! String)
-          popindex += 1
-       }
-
-      print("viewDidAppear")
-      self.view.window?.delegate = self as? NSWindowDelegate 
-      USB_OK_Feld.image = notokimage
-      let warnung = NSAlert.init()
-      warnung.messageText = "Welches Board?"
-      let boardarray = BoardPop.itemTitles 
-      for titel in boardarray
-      {
-         let buttonstring = titel
-         warnung.addButton(withTitle: titel)
-      }
-      warnung.addButton(withTitle: "cancel")
-      let devicereturn:Int = warnung.runModal().rawValue
-      boardindex = devicereturn-1000
-      print("devicereturn: \(devicereturn)")
-      BoardPop.selectItem(at:devicereturn-1000)
-  //    BoardPop.selectItem(at:boardindex)
-   }
-   
    @IBAction func report_BoardPop(_ sender: NSPopUpButton) 
    {
       let board = sender.titleOfSelectedItem

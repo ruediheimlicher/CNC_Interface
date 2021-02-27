@@ -143,27 +143,7 @@ var new_Data:ObjCBool = false
     }
     */
    
-   /*
-    open func start_read_USB()-> NSDictionary
-    {
-    
-    read_OK = true
-    let timerDic:NSMutableDictionary  = ["count": 0]
-    
-    
-    let result = rawhid_recv(0, &read_byteArray, 32, 50);
-    
-    print("*start_read_USB result: \(result)")
-    print("lnread_byteArray nach: *\(read_byteArray)*")
-    
-    var somethingToPass = "It worked in teensy_send_USB"
-    
-    var timer : Timer? = nil
-    timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(usb_teensy.cont_read_USB(_:)), userInfo: timerDic, repeats: true)
-    
-    return timerDic as NSDictionary
-    }
-    */
+ 
    
    open func getlastDataRead()->Data
    {
@@ -196,72 +176,6 @@ var new_Data:ObjCBool = false
       return Int(result) //
    }
    
-   /*   
-    open func cont_read_USB(_ timer: Timer)
-    {
-    if (read_OK).boolValue
-    {
-    var tempbyteArray = [UInt8](repeating: 0x00, count: BUFFER_SIZE)
-    var result = rawhid_recv(0, &last_read_byteArray, 32, 50)
-    //println("tempbyteArray in Timer: *\(tempbyteArray)*")
-    // var timerdic: [String: Int]
-    
-    
-    // http://dev.iachieved.it/iachievedit/notifications-and-userinfo-with-swift-3-0/
-    let nc = NotificationCenter.default
-    nc.post(name:Notification.Name(rawValue:"newdata"),
-    object: nil,
-    userInfo: ["message":"neue Daten", "data":read_byteArray])
-    
-    if  let dic = timer.userInfo as? NSMutableDictionary
-    {
-    if var count:Int = timer.userInfo?["count"] as? Int
-    {
-    count = count + 1
-    dic["count"] = count
-    //dic["nr"] = count+2
-    //println(dic)
-    }
-    }
-    
-    let timerdic:Dictionary<String,Int?> = timer.userInfo as! Dictionary<String,Int?>
-    //let messageString = userInfo["message"]
-    var tempcount = timerdic["count"]!
-    
-    //timer.userInfo["count"] = tempcount + 1
-    
-    
-    
-    
-    
-    //timerdic["count"] = 2
-    
-    // var count:Int = timerdic["count"]
-    
-    //timer.userInfo["count"] = count+1
-    if !(last_read_byteArray == read_byteArray)
-    {
-    read_byteArray = last_read_byteArray
-    
-    print("+++ new read_byteArray in Timer:", terminator: "")
-    for  i in 0...4
-    {
-    print(" \(read_byteArray[i])", terminator: "")
-    }
-    print("")
-    
-    }
-    //println("*read_USB in Timer result: \(result)")
-    
-    //let theStringToPrint = timer.userInfo as String
-    //println(theStringToPrint)
-    }
-    else
-    {
-    timer.invalidate()
-    }
-    }
-    */
    
    @objc open func cont_read_USB(_ timer: Timer)
    {
@@ -327,17 +241,17 @@ var new_Data:ObjCBool = false
             datatruecounter += 1
             let codehex = read_byteArray[0]
             
-            print("+++ new read_byteArray in Timer:", terminator: "")
-            for  i in 0...16
+            print("+++ new read_byteArray in Timer:\n")
+            for  i in 0...31
             {
                print(" \(read_byteArray[i])", terminator: "")
             }
-            print("32-36")
-            for  i in 32...36
+            print("\n32-36")
+            for  i in 32...63
             {
                print(" \(read_byteArray[i])", terminator: "")
             }
-            print("")
+            print("\n")
 
             // http://dev.iachieved.it/iachievedit/notifications-and-userinfo-with-swift-3-0/
             

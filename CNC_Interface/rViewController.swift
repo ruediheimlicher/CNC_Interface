@@ -264,9 +264,9 @@ class rViewController: NSViewController, NSWindowDelegate
       NotificationCenter.default.addObserver(self, selector:#selector(tabviewAktion(_:)),name:NSNotification.Name(rawValue: "tabview"),object:nil)
       NotificationCenter.default.addObserver(self, selector: #selector(beendenAktion), name:NSNotification.Name(rawValue: "beenden"), object: nil)
 
-      NotificationCenter.default.addObserver(self, selector: #selector(usbsendAktion), name:NSNotification.Name(rawValue: "usbsend"), object: nil)
-      NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
-      NotificationCenter.default.addObserver(self, selector: #selector(usbschnittdatenAktion), name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
+//      NotificationCenter.default.addObserver(self, selector: #selector(usbsendAktion), name:NSNotification.Name(rawValue: "usbsend"), object: nil)
+//      NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
+//      NotificationCenter.default.addObserver(self, selector: #selector(usbschnittdatenAktion), name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
 
      
       
@@ -348,7 +348,7 @@ class rViewController: NSViewController, NSWindowDelegate
    //    BoardPop.selectItem(at:boardindex)
     }
     
-   
+  /* 
    @objc func usbsendAktion(_ notification:Notification) 
    {
       print("usbsendAktion: \(notification)")
@@ -372,7 +372,7 @@ class rViewController: NSViewController, NSWindowDelegate
       print("usb_schnittdatenarray: \(usb_schnittdatenarray ?? [])")
       
     }
-   
+   */
    
    @objc func beendenAktion(_ notification:Notification) 
     {
@@ -995,14 +995,8 @@ class rViewController: NSViewController, NSWindowDelegate
          warnung.runModal()
          Start_Knopf.isEnabled = false
          Stop_Knopf.isEnabled = false
-
       }
       
-      //teensy.start_teensy_Timer()
-      
-      //     var somethingToPass = "It worked"
-      
-      //      let timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("tester:"), userInfo: somethingToPass, repeats: true)
       
    }
    
@@ -1360,7 +1354,57 @@ class rViewController: NSViewController, NSWindowDelegate
    
    
 }
+protocol UIntToBytesConvertable {
+    var toBytes: [UInt8] { get }
+}
 
+extension UIntToBytesConvertable {
+    func toByteArr<T: BinaryInteger>(endian: T, count: Int) -> [UInt8] {
+        var _endian = endian
+        let bytePtr = withUnsafePointer(to: &_endian) {
+            $0.withMemoryRebound(to: UInt8.self, capacity: count) {
+                UnsafeBufferPointer(start: $0, count: count)
+            }
+        }
+        return [UInt8](bytePtr)
+    }
+}
+
+extension UInt16: UIntToBytesConvertable {
+    var toBytes: [UInt8] {
+        if CFByteOrderGetCurrent() == Int(CFByteOrderLittleEndian.rawValue) {
+            return toByteArr(endian: self.littleEndian,
+                         count: MemoryLayout<UInt16>.size)
+        } else {
+            return toByteArr(endian: self.bigEndian,
+                             count: MemoryLayout<UInt16>.size)
+        }
+    }
+}
+
+extension UInt32: UIntToBytesConvertable {
+    var toBytes: [UInt8] {
+        if CFByteOrderGetCurrent() == Int(CFByteOrderLittleEndian.rawValue) {
+        return toByteArr(endian: self.littleEndian,
+                         count: MemoryLayout<UInt32>.size)
+        } else {
+            return toByteArr(endian: self.bigEndian,
+                             count: MemoryLayout<UInt32>.size)
+        }
+    }
+}
+
+extension UInt64: UIntToBytesConvertable {
+    var toBytes: [UInt8] {
+        if CFByteOrderGetCurrent() == Int(CFByteOrderLittleEndian.rawValue) {
+        return toByteArr(endian: self.littleEndian,
+                         count: MemoryLayout<UInt64>.size)
+        } else {
+            return toByteArr(endian: self.bigEndian,
+                             count: MemoryLayout<UInt64>.size)
+        }
+    }
+}
 extension NSBezierPath
 {
    func rotateAroundCenter(angle: CGFloat)
@@ -1401,4 +1445,5 @@ extension NSBezierPath
       transform.translateX(by: -center.x, yBy: -center.y)
       self.transform(using:transform as AffineTransform)
    }
+
 }

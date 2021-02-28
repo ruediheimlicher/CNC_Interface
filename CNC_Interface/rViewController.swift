@@ -981,7 +981,8 @@ class rViewController: NSViewController, NSWindowDelegate
       //myUSBController.startRead(1)
       if teensy.dev_present() > 0
       {
-         var start_read_USB_erfolg = teensy.start_read_USB(true)
+         var timerdic = [String:Any]()
+         var start_read_USB_erfolg = teensy.start_read_USB(true,dic:timerdic)
          Start_Knopf.isEnabled = false
          Stop_Knopf.isEnabled = true
 

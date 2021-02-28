@@ -150,14 +150,14 @@ var new_Data:ObjCBool = false
       return lastDataRead
    }
    
-   open func start_read_USB(_ cont: Bool)-> Int
+   @objc func start_read_USB(_ cont: Bool, dic:[String:Any])-> Int
    {
       read_OK = ObjCBool(cont)
       var timerDic:NSMutableDictionary  = ["count": 0]
       
       let result = rawhid_recv(0, &read_byteArray, Int32(BUFFER_SIZE), 50);
       
-      print("\n*report_start_read_USB result: \(result) cont: \(cont)")
+    //  print("\ result: \(result) cont: \(cont)")
       //print("usb.swift start_read_byteArray start: *\n\(read_byteArray)*")
       
       let nc = NotificationCenter.default
@@ -175,6 +175,7 @@ var new_Data:ObjCBool = false
       }
       return Int(result) //
    }
+   
    
    
    @objc open func cont_read_USB(_ timer: Timer)

@@ -647,7 +647,7 @@ int (^add)(int,int) = ^(int number1, int number2){
       scale = 4;
    }
    int abbbranddelay=0;
-	NSLog(@"ProfilGraph drawRect start");
+	//NSLog(@"ProfilGraph drawRect start");
    
    int screen=0;
    if ([[NSGraphicsContext currentContext]isDrawingToScreen])

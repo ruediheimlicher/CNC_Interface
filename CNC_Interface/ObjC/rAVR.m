@@ -2116,7 +2116,6 @@ return returnInt;
       
       
       [CNCDatenArray addObject:tempSteuerdatenDic];
-      //NSArray* tempSchnittdatenArray = [CNC SchnittdatenVonDic:tempSteuerdatenDic];
       //NSLog(@"tempSchnittdatenArray: %@",[tempSchnittdatenArray description]);
       
       [SchnittdatenArray addObject:[CNC SchnittdatenVonDic:tempSteuerdatenDic]];
@@ -8910,7 +8909,7 @@ return returnInt;
       return;
 
    }
-   NSLog(@"SchnittdatenArray 0: %@",[SchnittdatenArray description]);
+   //NSLog(@"SchnittdatenArray 0: %@",[SchnittdatenArray description]);
    
    if (AVR_USBStatus)
    {
@@ -8991,6 +8990,16 @@ return returnInt;
       [SchnittdatenDic setObject:[NSNumber numberWithInt:[self pwm]] forKey:@"pwm"];
       
       [SchnittdatenDic setObject:SchnittdatenArray forKey:@"schnittdatenarray"];
+      NSMutableArray* SchnittdatenStringArray = [[NSMutableArray alloc]initWithCapacity:0];
+      
+      int k = 0;
+      for(k=0;k<[SchnittdatenArray count];k++)
+      {
+         NSString* tempzeilenstring = [[SchnittdatenArray objectAtIndex:k] componentsJoinedByString:@","] ;
+         NSLog(@"k: %d String: %@",k,tempzeilenstring);
+         [SchnittdatenStringArray addObject:tempzeilenstring];
+      }
+      [SchnittdatenDic setObject:SchnittdatenStringArray forKey:@"schnittdatenstringarray"];
       [SchnittdatenDic setObject:[NSNumber numberWithInt:cncposition] forKey:@"cncposition"];
       
       if ([HomeTaste state])
@@ -9010,7 +9019,7 @@ return returnInt;
       //   [nc postNotificationName:@"usbschnittdaten" object:self userInfo:SchnittdatenDic];
       //NSLog(@"reportUSB_SendArray delayok: %d",delayok);
       [SchnittdatenDic setObject:[NSNumber numberWithInt:delayok] forKey:@"delayok"];
-      NSLog(@"reportUSB_SendArray SchnittdatenDic: %@",SchnittdatenDic);
+      //NSLog(@"reportUSB_SendArray SchnittdatenDic: %@",SchnittdatenDic);
       if (delayok)
       {
          NSLog(@"mit delay");

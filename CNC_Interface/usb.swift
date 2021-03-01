@@ -194,8 +194,8 @@ class rTimerInfo {
    
    @objc open func cont_read_USB(_ timer: Timer)
    {
-      print("\n*** cont_read_USB\n")
-      print("*read_OK: \(read_OK)")
+   //   print("\n*** cont_read_USB\n")
+    //  print("*read_OK: \(read_OK)")
       if (read_OK).boolValue
       {
          //var tempbyteArray = [UInt8](count: 32, repeatedValue: 0x00)
@@ -210,7 +210,7 @@ class rTimerInfo {
          guard let timerInfo = timer.userInfo as? rTimerInfo else { return }
 
              timerInfo.count += 1
-             print("cont_read_USB timerInfo: \(timerInfo.count)")
+    //         print("cont_read_USB timerInfo: \(timerInfo.count)")
       
          /*
           if  var dic = timer.userInfo as? NSMutableDictionary
@@ -312,7 +312,7 @@ class rTimerInfo {
          {
             //new_Data = false
             
-            print("---nix neues  \(read_byteArray[0])\t\(datafalsecounter)")
+          //  print("---nix neues  \(read_byteArray[0])\t\(datafalsecounter)")
             datafalsecounter += 1
             //stop_read_USB()
          }
@@ -385,7 +385,8 @@ class rTimerInfo {
       print("")
   */    
       
-         let senderfolg = rawhid_send(0,&write_byteArray, Int32(BUFFER_SIZE), 50)
+     //    let senderfolg = rawhid_send(0,&write_byteArray, Int32(BUFFER_SIZE), 50)
+let senderfolg = rawhid_send(0,&write_byteArray, 32, 50)
          
          if hid_usbstatus == 0
          {

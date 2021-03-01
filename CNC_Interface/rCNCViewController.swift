@@ -196,7 +196,7 @@ class rCNCViewController:rViewController
             {
                teensy.write_byteArray.append(wert)
             }
-            
+            print("write_byteArray: \(teensy.write_byteArray)")
             if (globalusbstatus > 0)
              {
                 let senderfolg = teensy.send_USB()
@@ -296,7 +296,7 @@ class rCNCViewController:rViewController
                print("newDataAktion NotificationDic: \(NotificationDic)")
             } // if data
             
-   //         writeCNCAbschnitt()
+            writeCNCAbschnitt()
             //print("dic end\n")
          } // if count > 0
          

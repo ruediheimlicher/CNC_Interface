@@ -246,7 +246,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 {
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 
-	NSLog(@"mouseDown: %@",[derEvent description]);
+	//NSLog(@"mouseDown: %@",[derEvent description]);
    //NSLog(@"mouseDown: modifierFlags: %d NSShiftKeyMask: %d",[derEvent modifierFlags],NSShiftKeyMask);
    unsigned int shift =[derEvent modifierFlags] & NSEventModifierFlagShift;
    if (shift)
@@ -585,7 +585,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 
 - (void)mouseDragged:(NSEvent *)derEvent
 {
-	NSLog(@"mouseDragged: %@",[derEvent description]);
+	//NSLog(@"mouseDragged: %@",[derEvent description]);
 	NSPoint location = [derEvent locationInWindow];
 	NSPoint local_point = [self convertPoint:location fromView:nil];
 	float x=local_point.x;

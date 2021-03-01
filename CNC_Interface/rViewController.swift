@@ -174,7 +174,7 @@ class rDeviceTabViewController: NSTabViewController
 //MARK: ViewController
 class rViewController: NSViewController, NSWindowDelegate
 {
-   let notokimage :NSImage = NSImage(named:NSImage.Name(rawValue: "notok_image"))!
+    let notokimage :NSImage = NSImage(named:NSImage.Name(rawValue: "notok_image"))!
    let okimage :NSImage = NSImage(named:NSImage.Name(rawValue: "ok_image"))!
    // Robot
    var z0:Float = 30 // Hoehe Drehpunkt 0
@@ -259,7 +259,7 @@ class rViewController: NSViewController, NSWindowDelegate
       //USB_OK.backgroundColor = NSColor.greenColor()
       // Do any additional setup after loading the view.
       let newdataname = Notification.Name("newdata")
-      NotificationCenter.default.addObserver(self, selector:#selector(newDataAktion(_:)),name:newdataname,object:nil)
+  //    NotificationCenter.default.addObserver(self, selector:#selector(newDataAktion(_:)),name:newdataname,object:nil)
       NotificationCenter.default.addObserver(self, selector:#selector(joystickAktion(_:)),name:NSNotification.Name(rawValue: "joystick"),object:nil)
       NotificationCenter.default.addObserver(self, selector:#selector(tabviewAktion(_:)),name:NSNotification.Name(rawValue: "tabview"),object:nil)
       NotificationCenter.default.addObserver(self, selector: #selector(beendenAktion), name:NSNotification.Name(rawValue: "beenden"), object: nil)
@@ -571,6 +571,7 @@ class rViewController: NSViewController, NSWindowDelegate
       //print("dic: \(dic ?? ["a":[123]])\n")
 
    }
+   
    func tester(_ timer: Timer)
    {
       let theStringToPrint = timer.userInfo as! String

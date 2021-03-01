@@ -496,23 +496,6 @@ float det(float v0[],float v1[])
 }
 
 
-/*
-- (void)mouseUp:(NSEvent *)theEvent
-{
-   richtung=[self tag];
-   NSLog(@"Pfeiltaste mouseUp richtung: %d",richtung);
-   [self setState:NSOffState];
-   
-   NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
-	[NotificationDic setObject:[NSNumber numberWithInt:richtung] forKey:@"richtung"];
-	[NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"push"];
-	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	[nc postNotificationName:@"Pfeil" object:self userInfo:NotificationDic];
-   [super mouseDown:theEvent];
-   
-}
- */
-
 
 
 - (void)setRichtung:(int)dieRichtung
@@ -1347,59 +1330,14 @@ return returnInt;
 
 
 - (instancetype)init
-{
-    //if ((self = [super init]))
- //  self = [super init];
-   
-   
-   NSColor* bgcolor = [NSColor colorWithCalibratedRed:0.3 green:0.5 blue:0.8 alpha:1.0f];
-   //self = [super initWithWindowNibName:@"AVR"];
-  // self.layer.backgroundcolor = bgcolor;
-   self.wantsLayer = YES;
-   [ self.view.layer setBackgroundColor:(__bridge CGColorRef _Nullable)(bgcolor)];
- 
-   
 
-   CNCdataPfad=[NSHomeDirectory() stringByAppendingPathComponent:@"documents/CNCData"];
-   //NSLog(@"CNCdataPfad: %@",CNCdataPfad);
-   //CNC_PList = [[NSMutableDictionary alloc]initWithCapacity:0];
+{
    
-   
-   n=0;
-   aktuellerTag=0;
-   IOW_busy=0;
-   aktuelleMark=(uint8_t)NSNotFound;
-   //NSLog(@"HomebusAnlegen 2");
-   
-   
-   AnschlagDic = [[NSMutableDictionary alloc]initWithCapacity:0];
-   CNCDatenArray= [[NSMutableArray alloc]initWithCapacity:0];
-   KoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
-   UndoKoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
-   //BlockKoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
-   SchnittdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
-   GraphEnd=0;
-   CNC=[[rCNC alloc]init];
-   ProfilDatenOA=[[NSArray alloc]init];
-   ProfilDatenUA=[[NSArray alloc]init];
-   
-   mitOberseite =1;
-   mitUnterseite=1;
-   mitEinlauf=1;
-   mitAuslauf=1;
-   flipV=0;
-   flipH=0;
-   reverse=0;
-   
-   startwert=0;
-   cncstatus=0;
-   cncposition=0;
-   
-   AVR_USBStatus=0;
-   
-   BlockKoordinatenTabelle=[[NSMutableArray alloc]initWithCapacity:0];
-   
-   return self;
+    if ((self = [super init]))
+    {
+       return self;
+    }
+    return self;
 }
 
 // transfer
@@ -8454,6 +8392,7 @@ return returnInt;
 /*******************************************************************/
 - (void)USB_SchnittdatenAktion:(NSNotification*)note
 {
+   NSLog(@"USB_SchnittdatenAktion note: %@",note);
    //NSLog(@"USB_SchnittdatenAktion usbstatus: %d usb_present: %d",usbstatus,usb_present());
    int antwort=0;
    int delayok=0;
@@ -8998,7 +8937,7 @@ return returnInt;
          NSString* tempzeilenstring = [[SchnittdatenArray objectAtIndex:k] componentsJoinedByString:@","] ;
          NSLog(@"k: %d String: %@",k,tempzeilenstring);
          [SchnittdatenStringArray addObject:tempzeilenstring];
-      }
+       }
       [SchnittdatenDic setObject:SchnittdatenStringArray forKey:@"schnittdatenstringarray"];
       [SchnittdatenDic setObject:[NSNumber numberWithInt:cncposition] forKey:@"cncposition"];
       

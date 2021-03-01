@@ -165,7 +165,7 @@ class rTimerInfo {
       //print("usb.swift start_read_byteArray start: *\n\(read_byteArray)*")
   //    let usbData = Data(bytes:read_byteArray)
   //    print("\n+++ new read_byteArray in start_read_USB:")
-  //     for  i in 0...63
+  //     for  i in 0..<BUFFER_SIZE
   //     {
   //        print(" \(read_byteArray[i])", terminator: "")
   //     }
@@ -268,7 +268,7 @@ class rTimerInfo {
             let codehex = read_byteArray[0]
             print("cont_read_USB codehex: \(codehex)")
             print("+++ new read_byteArray in Timer:\n")
-            for  i in 0...63
+            for  i in 0..<BUFFER_SIZE
             {
                print(" \(read_byteArray[i])", terminator: "")
             }
@@ -409,7 +409,7 @@ let senderfolg = rawhid_send(0,&write_byteArray, 32, 50)
       var result:Int32  = 0;
       var reportSize:Int = 32;   
       var buffer = [UInt8]();
-      result = rawhid_recv(0, &buffer, 64, 50);
+      result = rawhid_recv(0, &buffer, Int32(BUFFER_SIZE), 50);
       
       var dataRead:Data = Data(bytes:buffer)
       if (dataRead != lastDataRead)

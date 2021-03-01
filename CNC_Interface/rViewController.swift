@@ -9,7 +9,7 @@
 
 import Cocoa
 
- public var lastDataRead = Data.init(count:64)
+ public var lastDataRead = Data.init(count:BUFFER_SIZE)
 
 
 var globalusbstatus = 0

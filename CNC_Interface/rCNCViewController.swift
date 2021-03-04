@@ -20,6 +20,8 @@ class rCNCViewController:rViewController
    var home = 0
 
    var pwm = 0
+   
+   var HomeAnschlagSet = IndexSet()
     // end IOWarriorWindowController
 
    var usb_schnittdatenarray:[[UInt8]] = [[]]
@@ -27,11 +29,16 @@ class rCNCViewController:rViewController
    //var readTimer:Timer
    var readTimer : Timer? = nil
    
- //  var AVR = rAVRview()
+   var AVR = rAVRview()
+   
+   var Einstellungen = rEinstellungen()
    
    override  func viewDidLoad()
    {
       super.viewDidLoad()
+      
+      NotificationCenter.default.addObserver(self, selector: #selector(beendenAktion), name:NSNotification.Name(rawValue: "beenden"), object: nil)
+
       NotificationCenter.default.addObserver(self, selector: #selector(usbsendAktion), name:NSNotification.Name(rawValue: "usbsend"), object: nil)
        NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
        NotificationCenter.default.addObserver(self, selector: #selector(usbschnittdatenAktion), name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
@@ -45,7 +52,15 @@ class rCNCViewController:rViewController
        print("usbsendAktion: \(notification)")
     }
     
-     
+    override func windowWillClose(_ aNotification: Notification) {
+        print("windowWillClose cnc")
+        let nc = NotificationCenter.default
+        nc.post(name:Notification.Name(rawValue:"beenden"),
+                object: nil,
+                userInfo: nil)
+        
+     }
+
     
      @objc func usbschnittdatenAktion(_ notification:Notification) 
      {
@@ -87,11 +102,12 @@ class rCNCViewController:rViewController
         print("cncviewcontroller usbschnittdatenAktion")
        usb_schnittdatenarray.removeAll()
        let info = notification.userInfo
-       let usb_pwm =  info?["pwm"] as! UInt8
-       let usb_delayok =  info?["delayok"] as! UInt8
-       let usb_home =  info?["home"] as! UInt8
-       let usb_art =  info?["art"] as! UInt8
-       let usb_cncposition =  info?["cncposition"]
+   //    let usb_pwm =  info?["pwm"] as! UInt8
+   //    let usb_delayok =  info?["delayok"] as! UInt8
+       
+      let usb_home =  info?["home"] as! UInt8
+   //    let usb_art =  info?["art"] as! UInt8
+   //    let usb_cncposition =  info?["cncposition"]
        
        //print("usb_pwm: \(usb_pwm) usb_delayok: \(usb_delayok) usb_home: \(usb_home) usb_art: \(usb_art) usb_cncposition: \(usb_cncposition) ")
       
@@ -163,7 +179,7 @@ class rCNCViewController:rViewController
       writeCNCAbschnitt()
       
       var timerdic:[String:Any] = [String:Any]()
-      timerdic["home"] = usb_home
+      timerdic["home"] = home
       
       teensy.start_read_USB(true, dic:timerdic)
       
@@ -175,7 +191,7 @@ class rCNCViewController:rViewController
     @objc func writeCNCAbschnitt()
     {
       //N
-      print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
+      //print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
      teensy.write_byteArray.removeAll()
       if Stepperposition < usb_schnittdatenarray.count
       {
@@ -191,12 +207,12 @@ class rCNCViewController:rViewController
          else
          {
             let aktuellezeile = usb_schnittdatenarray[Stepperposition]
-            print("aktuellezeile: \(aktuellezeile)")
+            //print("aktuellezeile: \(aktuellezeile)")
             for wert in aktuellezeile
             {
                teensy.write_byteArray.append(wert)
             }
-            print("write_byteArray: \(teensy.write_byteArray)")
+            //print("write_byteArray: \(teensy.write_byteArray)")
             if (globalusbstatus > 0)
              {
                 let senderfolg = teensy.send_USB()
@@ -224,12 +240,13 @@ class rCNCViewController:rViewController
    }
    
   
-   @objc override func newDataAktion(_ notification:Notification) 
+   @objc override func newDataAktion(_ notification:Notification)  // entspricht readUSB
    {
       // N
       var lastData = teensy.getlastDataRead()
       let lastDataArray = [UInt8](lastData)
       print("newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")       
+      
       var ii = 0
       while ii < 10
       {
@@ -260,9 +277,9 @@ class rCNCViewController:rViewController
       {
          var usbdata = info!["data"] as! [UInt8]
          
-   //      let stringFromByteArray = String(data: Data(bytes: usbdata), encoding: .utf8)         
+         //      let stringFromByteArray = String(data: Data(bytes: usbdata), encoding: .utf8)         
          
-   //      print("usbdata: \(usbdata)\n")
+         //      print("usbdata: \(usbdata)\n")
          
          //if  usbdata = info!["data"] as! [String] // Data vornanden
          if  usbdata.count > 0 // Data vornanden
@@ -271,15 +288,17 @@ class rCNCViewController:rViewController
             var NotificationDic = [String:Int]()
             
             let abschnittfertig:UInt8 =   usbdata[0]
-            
-            print("abschnittfertig: \(abschnittfertig)\n")
+            //printhex(wert: abschnittfertig)
+            // https://useyourloaf.com/blog/swift-string-cheat-sheet/
+            //print("abschnittfertig: \(String(abschnittfertig, radix:16, uppercase:true))\n")
+            print("abschnittfertig: \(hex(abschnittfertig))\n")
             if usbdata != nil
             {
-               print("usbdata not nil\n")
+               //print("usbdata not nil\n")
                var i = 0
                while i < 10
                {
-                  print("i: \(i)  wert: \(usbdata[i])\t")
+                  //print("i: \(i)  wert: \(usbdata[i])\t")
                   i = i+1
                }
                
@@ -287,17 +306,202 @@ class rCNCViewController:rViewController
             
             if abschnittfertig >= 0xA0 // Code fuer Fertig: AD
             {
+               //print("abschnittfertig > A0")
                let Abschnittnummer = Int(usbdata[5])
                NotificationDic["inposition"] = Int(Abschnittnummer)
                let ladePosition = Int(usbdata[6])
                NotificationDic["outposition"] = ladePosition
                NotificationDic["stepperposition"] = Stepperposition
                NotificationDic["mausistdown"] = mausistdown
-               print("newDataAktion NotificationDic: \(NotificationDic)")
-            } // if data
+               
+               /*
+                let nc = NotificationCenter.default
+                nc.post(name:Notification.Name(rawValue:"usbread"),
+                object: nil,
+                userInfo: NotificationDic)
+                */
+               //[NotificationDic setObject:abschnittfertig forKey:@"abschnittfertig"];
+               //print("newDataAktion NotificationDic: \(NotificationDic)")
+               //NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+               //[nc postNotificationName:@"usbread" object:self userInfo:NotificationDic];
+               
+               
+               var AnschlagSet = IndexSet()
+               
+               switch abschnittfertig
+               {
+               case 0xE1:// Antwort auf Mouseup 0xE0 HALT
+                  print("newDataAktion E1 mouseup")
+                  usb_schnittdatenarray.removeAll()
+                  AVR?.setBusy(0)
+                  teensy.read_OK = false
+                  break
+                  
+               case 0xEA: // home
+                  print("newDataAktion EA home gemeldet")
+                  break
+                  
+               // Anschlag first
+               case 0xA5:
+                  print("Anschlag A0")
+                  AnschlagSet.insert(0) // schritteax lb
+                  AnschlagSet.insert(1) // schritteax hb
+                  AnschlagSet.insert(4) // delayax lb
+                  AnschlagSet.insert(5) // delayax lb
+                  break;
+                  
+               case 0xA6:
+                  print("Anschlag B0")
+                  AnschlagSet.insert(2) // schritteax lb
+                  AnschlagSet.insert(3) // schritteax hb
+                  AnschlagSet.insert(6) // delayax lb
+                  AnschlagSet.insert(7) // delayax lb
+                  break;
+                  
+               case 0xA7:
+                  print("Anschlag C0")
+                  AnschlagSet.insert(8) // schrittebx lb
+                  AnschlagSet.insert(9) // schrittebx hb
+                  AnschlagSet.insert(12) // delayabx lb
+                  AnschlagSet.insert(13) // delaybx lb
+                  break;
+                  
+               case 0xA8:
+                  print("Anschlag D0")
+                  AnschlagSet.insert(10) // schritteby lb
+                  AnschlagSet.insert(11) // schritteby hb
+                  AnschlagSet.insert(14) // delayby lb
+                  AnschlagSet.insert(15) // delayby lb
+                  break;
+                  
+               // Anschlag home first
+               case 0xB5:
+                  print("Anschlag A home first")
+                  HomeAnschlagSet.insert(0xB5)
+                  break
+               case 0xB6:
+                  print("Anschlag B home first")
+                  HomeAnschlagSet.insert(0xB6)
+                  break
+               case 0xB7:
+                  print("Anschlag C home first")
+                  HomeAnschlagSet.insert(0xB7)
+                  break
+               case 0xB8:
+                  print("Anschlag D home first")
+                  HomeAnschlagSet.insert(0xB8)
+                  break
+                  
+               // Anschlag Second  
+               case 0xC5:
+                  print("Anschlag A home  second")
+                  break              
+               case 0xC6:
+                  print("Anschlag B home  second")
+                  break
+               case 0xC7:
+                  print("Anschlag C home  second")
+                  break
+               case 0xC8:
+                  print("Anschlag D home  second")
+                  break
+                  
+               case 0xD0:
+                  print("Letzter Abschnitt")
+                   print("HomeAnschlagSet: \(HomeAnschlagSet)")
+                  NotificationDic["abschnittfertig"] = Int(abschnittfertig)
+                  let nc = NotificationCenter.default
+                  nc.post(name:Notification.Name(rawValue:"usbread"),
+                          object: nil,
+                          userInfo: NotificationDic)
+                  return
+                  break
+                  
+               default:
+                  break
+               }// switch abschnittfertig
+               
+               if AnschlagSet.count > 0
+               {
+                  print("AnschlagSet count 0")
+                  //var i=0
+                  for i in Stepperposition-1..<usb_schnittdatenarray.count
+                  {
+                     var tempZeilenArray = usb_schnittdatenarray[i]
+                     for k in 0..<tempZeilenArray.count
+                     {
+                        if AnschlagSet.contains(k)
+                        {
+                           tempZeilenArray[k] = 0
+                        }
+                     }
+                  }
+               } // if AnschlagSet count
+               
+               if mausistdown == 2
+               {
+                  print("mausistdown = 2")
+                  Stepperposition = 0
+               }
+               
+               var EndIndexSet = IndexSet(integersIn:0xAA...0xAD)
+               EndIndexSet.insert(integersIn:0xA5...0xA8)
+               
+               var HomeIndexSet = IndexSet(integersIn:0xAA...0xAD)
+               EndIndexSet.insert(integersIn:0xB5...0xB8)
+               
+               print("EndIndexSet: \(EndIndexSet)")
+                print("HomeIndexSet: \(HomeIndexSet)")
+
+               
+               if EndIndexSet.contains(Int(abschnittfertig))
+               {
+                  print("EndIndexSet contains abschnittfertig")
+                  //teensy.DC_pwm(0)
+                  AVR?.setBusy(0)
+                  teensy.read_OK = false
+               }
+               else
+               {
+                  if HomeIndexSet.contains(Int(abschnittfertig))
+                  {
+                     print("HomeIndexSet contains abschnittfertig")
+                     if HomeAnschlagSet.count == 1
+                     {
+                        print("HomeAnschlagSet.count == 1")
+                     }
+                     else if HomeAnschlagSet.count == 4
+                     {
+                        print("HomeAnschlagSet.count == 4")
+                     }
+                     else if home == 2
+                     {
+                        print("home == 2")
+                     }
+                  }
+                  else
+                  {
+                     print("WriteCNCAbschnitt ")
+                     writeCNCAbschnitt()
+                  }
+               }
+                  print("HomeAnschlagSet: \(HomeAnschlagSet)")
+                  NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
+                  NotificationDic["home"] = home
+                  NotificationDic["abschnittfertig"] = Int(abschnittfertig)
+                  
+                  
+                   let nc = NotificationCenter.default
+                   nc.post(name:Notification.Name(rawValue:"usbread"),
+                   object: nil,
+                   userInfo: NotificationDic)
+                   
+               
+            } // if abschnittfertig > A0
             
-            writeCNCAbschnitt()
+            //writeCNCAbschnitt()
             //print("dic end\n")
+            
          } // if count > 0
          
       } // if d
@@ -306,7 +510,12 @@ class rCNCViewController:rViewController
       
    }
    
-   
+    
+   @objc func DC_pwm(_ dcpwm:Int)
+    {
+       print("DC_pwm pwm: \(dcpwm)")
+    }
+
     @objc  func contDataAktion(_ notification:Notification) 
     {
        let lastData = teensy.getlastDataRead()
@@ -370,6 +579,10 @@ class rCNCViewController:rViewController
        //let dic = notification.userInfo as? [String:[UInt8]]
        //print("dic: \(dic ?? ["a":[123]])\n")
        
+   @objc @IBAction  func showEinstellungen(_ sender: Any)
+   {
+      AVR?.showEinstellungen()
+   }
     
 } // end rCNCViewController
 

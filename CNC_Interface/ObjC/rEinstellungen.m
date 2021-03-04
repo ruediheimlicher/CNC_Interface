@@ -2112,7 +2112,7 @@
 {
    
    //NSLog(@"reportClose");
-   
+   /*
    NSString* StartpunktString = NSStringFromPoint(NSMakePoint(startx,starty));
    float endx = [EndpunktX floatValue];
    
@@ -2138,7 +2138,8 @@
    [ErgebnisDic setObject:@"Schliessen"  forKey:@"quelle"];
    //[nc postNotificationName:@"Elementeingabe" object:self userInfo:ErgebnisDic];
    [self clearProfilGraphDaten];
-   [FlipHTaste setState:0];
+   */
+    [FlipHTaste setState:0];
    [FlipVTaste setState:0];
    [ReverseTaste setState:0];
 
@@ -3392,7 +3393,7 @@
 
 - (IBAction)reportFigElementEinfuegen:(id)sender
 {
-   //NSLog(@"reportFigElementEinfuegen name: %@",LibElementName);
+   NSLog(@"reportFigElementEinfuegen name: %@",LibElementName);
    NSMutableDictionary* ElementDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [ElementDic setObject:@"FigElement"  forKey:@"quelle"];
 	//[ElementDic setObject:FigElementName forKey:@"elementname"];
@@ -3446,10 +3447,12 @@
    NSPoint Endpunkt = NSMakePoint([[[FigElementArray lastObject]objectForKey:@"x"]floatValue]*zoom, [[[FigElementArray lastObject]objectForKey:@"y"]floatValue]*zoom);
    [datenDic setObject:NSStringFromPoint(Startpunkt) forKey:@"startpunkt"];
    [datenDic setObject:NSStringFromPoint(Endpunkt) forKey:@"endpunkt"];
-
-   [datenDic setObject:FigElementArray forKey:@"elementarray"];
-   [FigGraph setDaten:datenDic];
-   [FigGraph setNeedsDisplay:YES];
+   if (FigElementArray.count)
+   {
+      [datenDic setObject:FigElementArray forKey:@"elementarray"];
+      [FigGraph setDaten:datenDic];
+      [FigGraph setNeedsDisplay:YES];
+   }
 }
 
 

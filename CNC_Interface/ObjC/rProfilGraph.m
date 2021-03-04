@@ -119,9 +119,11 @@ int (^add)(int,int) = ^(int number1, int number2){
 
 - (void)setStepperposition:(int)pos
 {
+   NSLog(@"setStepperposition pos: %d",pos);
    stepperposition = pos;
-   if ([DatenArray count] && pos< [DatenArray count])
+   if ([DatenArray count] && pos < [DatenArray count])
    {
+      NSLog(@"setStepperposition ok");
       NSPoint PunktA=NSMakePoint([[[DatenArray objectAtIndex:pos]objectForKey:@"ax"]floatValue]*scale,[[[DatenArray objectAtIndex:pos]objectForKey:@"ay"]floatValue]*scale);
       //NSLog(@"i: %d Punkt.x: %.4f Punkt.y: %.4f",i,Punkt.x,Punkt.y);
       NSRect tempMarkARect=NSMakeRect(PunktA.x-4.1, PunktA.y-4.1, 8.2, 8.2);
@@ -657,7 +659,7 @@ int (^add)(int,int) = ^(int number1, int number2){
    }
    else
    {
-      //NSLog(@"ProfilGraph drawRect print");
+      NSLog(@"ProfilGraph drawRect print");
    }
    
    
@@ -775,7 +777,7 @@ int (^add)(int,int) = ^(int number1, int number2){
       
       //
       
-      //NSLog(@"klickpunkt: %d",klickpunkt);
+   //   NSLog(@"*** klickpunkt: %d",Klickpunkt);
 		for (i=0;i<anz;i++)
 		{
 			NSPoint PunktA=NSMakePoint([[[DatenArray objectAtIndex:i]objectForKey:@"ax"]floatValue]*scale,[[[DatenArray objectAtIndex:i]objectForKey:@"ay"]floatValue]*scale);
@@ -795,7 +797,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 				[[NSColor redColor]set];
 				[tempMarkB stroke];
            
-				//NSLog(@"klickpunkt i: %d",i);
+			//	NSLog(@"i=klickpunkt i: %d",i);
 				NSRect tempMarkARect=NSMakeRect(PunktA.x-4.1, PunktA.y-4.1, 8.1, 8.1);
 				tempMarkA=[NSBezierPath bezierPathWithOvalInRect:tempMarkARect];
 				[[NSColor grayColor]set];
@@ -805,36 +807,36 @@ int (^add)(int,int) = ^(int number1, int number2){
             
          }
 			else 
-			{            
+         {            
             NSRect tempMarkBRect=NSMakeRect(PunktB.x-1.5, PunktB.y-1.5, 3.1, 3.1);
-				tempMarkB=[NSBezierPath bezierPathWithOvalInRect:tempMarkBRect];
-				[[NSColor grayColor]set];
-				[tempMarkB stroke];
-
-				NSRect tempMarkARect=NSMakeRect(PunktA.x-2.5, PunktA.y-2.5, 5.1, 5.1);
-				tempMarkA=[NSBezierPath bezierPathWithOvalInRect:tempMarkARect];
-				
+            tempMarkB=[NSBezierPath bezierPathWithOvalInRect:tempMarkBRect];
+            [[NSColor grayColor]set];
+            [tempMarkB stroke];
+          //  NSLog(@"not klickpunkt i: %d",i);
+            NSRect tempMarkARect=NSMakeRect(PunktA.x-2.5, PunktA.y-2.5, 5.1, 5.1);
+            tempMarkA=[NSBezierPath bezierPathWithOvalInRect:tempMarkARect];
+            
             if (screen)
             {
-            if (i>stepperposition ) // nur auf Screen farbig
-            {
-               [[NSColor blueColor]set];
-               [tempMarkA stroke];
-            }
-				
-            else
-            {
+               if (i>stepperposition ) // nur auf Screen farbig
+               {
+                  [[NSColor blueColor]set];
+                  [tempMarkA stroke];
+               }
                
-               [[NSColor redColor]set];
-               //[tempMarkA fill];
-               //[tempMarkA stroke];
-               [NSBezierPath strokeLineFromPoint:NSMakePoint(PunktA.x-4.1, PunktA.y-4.1)toPoint:NSMakePoint(PunktA.x+4.1, PunktA.y+4.1)];
-               [NSBezierPath strokeLineFromPoint:NSMakePoint(PunktA.x+4.1, PunktA.y-4.1) toPoint:NSMakePoint(PunktA.x-4.1, PunktA.y+4.1)];
-
-            }
+               else
+               {
+                  
+                  [[NSColor redColor]set];
+                  //[tempMarkA fill];
+                  //[tempMarkA stroke];
+                  [NSBezierPath strokeLineFromPoint:NSMakePoint(PunktA.x-4.1, PunktA.y-4.1)toPoint:NSMakePoint(PunktA.x+4.1, PunktA.y+4.1)];
+                  [NSBezierPath strokeLineFromPoint:NSMakePoint(PunktA.x+4.1, PunktA.y-4.1) toPoint:NSMakePoint(PunktA.x-4.1, PunktA.y+4.1)];
+                  
+               }
             } // if screen
             
-			}
+         }
 			//NSLog(@"in klickset i: %d Desc: %@",i,[klickset description]);
          
          if ([KlicksetA count] && screen)

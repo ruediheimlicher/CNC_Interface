@@ -3055,10 +3055,10 @@ PortA=vs[n & 3]; warte10ms(); n++;
          [tempDic setObject:[NSNumber numberWithFloat:bx+abbrandb[0]] forKey:@"abrbx"];
          [tempDic setObject:[NSNumber numberWithFloat:by+abbrandb[1]] forKey:@"abrby"];
          
-         float hypa = hypotf(ax, ay);
-         float hypb = hypotf(bx, by);
-         float abrhypa = hypotf(ax+abbranda[0], ay+abbranda[1]);
-         float abrhypb = hypotf(bx+abbrandb[0], by+abbrandb[1]);
+  //       float hypa = hypotf(ax, ay);
+  //       float hypb = hypotf(bx, by);
+  //       float abrhypa = hypotf(ax+abbranda[0], ay+abbranda[1]);
+  //       float abrhypb = hypotf(bx+abbrandb[0], by+abbrandb[1]);
          
          if (i<25)
          {

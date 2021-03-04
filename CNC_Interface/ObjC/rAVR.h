@@ -256,7 +256,7 @@
 
    IBOutlet id               AbbrandFeld;
     
-   IBOutlet   id               GleichesProfilRadioKnopf;
+   IBOutlet  id               GleichesProfilRadioKnopf;
    IBOutlet id               WertFeld;
    
    IBOutlet id               PositionFeld;
@@ -441,7 +441,7 @@
 - (int)saveStepperDic:(id)sender;
 
 
-   
+- (void)showEinstellungen;
    
    
    @end

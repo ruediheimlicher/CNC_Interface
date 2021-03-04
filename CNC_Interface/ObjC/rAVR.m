@@ -563,8 +563,9 @@ float det(float v0[],float v1[])
     [ self.view.layer setBackgroundColor:(__bridge CGColorRef _Nullable)(bgcolor)];
 
    NSNotificationCenter * nc;
-    nc=[NSNotificationCenter defaultCenter];
-  
+    nc=[NSNotificationCenter defaultCenter]; // alles weg, wegen doppeltem awake
+  // [nc removeObserver:self name:@"FigElementeingabe" object:nil];
+   [nc removeObserver:self];
    [nc addObserver:self
             selector:@selector(USBStatusAktion:)
                name:@"usb_status"
@@ -1335,6 +1336,7 @@ return returnInt;
    
     if ((self = [super init]))
     {
+       NSLog(@"AVR init");
        return self;
     }
     return self;
@@ -1396,6 +1398,28 @@ return returnInt;
    [CNC_Eingabe showWindow:NULL];
    
 }
+
+- (void)showEinstellungen
+{
+   NSLog(@"showEinstellungenFenster");
+   if (!CNC_Eingabe)
+   {
+      //[self Alert:@"showEinstellungenFenster vor init"];
+      NSLog(@"showEinstellungenFenster neu");
+      
+      CNC_Eingabe=[[rEinstellungen alloc]init];
+      
+      //[EinstellungenFenster showWindow:self];
+      
+      //[self Alert:@"showEinstellungenFenster nach init"];
+   }
+   
+   [CNC_Eingabe showWindow:NULL];
+   
+}
+
+
+
 
 - (NSArray*)readLib
 {
@@ -6162,6 +6186,7 @@ return returnInt;
    [AbmessungY setIntValue:maxY - minY];
    
    float abbranda = [AbbrandFeld floatValue];
+   
    float abbrandb = [AbbrandFeld floatValue]/[ProfilTiefeFeldB floatValue]*[ProfilTiefeFeldA floatValue]; // groesser bei groesserem Unterschied
    int von = 0;
    int bis = [KoordinatenTabelle  count];
@@ -8935,7 +8960,7 @@ return returnInt;
       for(k=0;k<[SchnittdatenArray count];k++)
       {
          NSString* tempzeilenstring = [[SchnittdatenArray objectAtIndex:k] componentsJoinedByString:@","] ;
-         NSLog(@"k: %d String: %@",k,tempzeilenstring);
+         //NSLog(@"k: %d String: %@",k,tempzeilenstring);
          [SchnittdatenStringArray addObject:tempzeilenstring];
        }
       [SchnittdatenDic setObject:SchnittdatenStringArray forKey:@"schnittdatenstringarray"];
@@ -9008,19 +9033,20 @@ return returnInt;
 - (void)USBReadAktion:(NSNotification*)note
 {
    NSLog(@"AVR  USBReadAktion note: %@",[[note userInfo]description]);
+   
    if ([[note userInfo]objectForKey:@"inposition"])
    {
       if ([[[note userInfo]objectForKey:@"outposition"]intValue] > [PositionFeld intValue])
       {
          [PositionFeld setIntValue:[[[note userInfo]objectForKey:@"outposition"]intValue]];
          [ProfilGraph setStepperposition:[[[note userInfo]objectForKey:@"outposition"]intValue]];
-         //[ProfilGraph setNeedsDisplay:YES];
+         [ProfilGraph setNeedsDisplay:YES];
       }
        if ([[[note userInfo]objectForKey:@"stepperposition"]intValue] > [CNCPositionFeld intValue])
        {
-         [CNCPositionFeld setIntValue:[[[note userInfo]objectForKey:@"stepperposition"]intValue]];
-          //[ProfilGraph setStepperposition:[[[note userInfo]objectForKey:@"stepperposition"]intValue]];
-          //[ProfilGraph setNeedsDisplay:YES];
+         [PositionFeld setIntValue:[[[note userInfo]objectForKey:@"stepperposition"]intValue]];
+          [ProfilGraph setStepperposition:[[[note userInfo]objectForKey:@"stepperposition"]intValue]];
+          [ProfilGraph setNeedsDisplay:YES];
        }
    }
    
@@ -9035,9 +9061,11 @@ return returnInt;
    int homeanschlagCount=0;
    if ([[note userInfo]objectForKey:@"homeanschlagset"])
    {
-      homeanschlagCount = [[[note userInfo]objectForKey:@"homeanschlagset"]count];
+      
+      homeanschlagCount = [[[note userInfo]objectForKey:@"homeanschlagset"]intValue];
+   
    }
-
+   NSLog(@"homeanschlagCount: %d",homeanschlagCount);
    //if([[note userInfo]objectForKey:@"abschnittcode"])
    if([[note userInfo]objectForKey:@"abschnittcode"])
    {

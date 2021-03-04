@@ -14,6 +14,15 @@ import Cocoa
 
 var globalusbstatus = 0
 
+func printhex(wert:UInt8)
+{
+   print(String(wert, radix:16, uppercase:true))
+}
+
+func hex(_ wert:UInt8)->String
+{
+   return String(wert, radix:16, uppercase:true) 
+}
 
 class rZeigerView:NSView
 {
@@ -221,11 +230,11 @@ class rViewController: NSViewController, NSWindowDelegate
    }
 
    func windowWillClose(_ aNotification: Notification) {
-      print("windowWillClose")
+      print("windowWillClose ViewC")
       let nc = NotificationCenter.default
-      nc.post(name:Notification.Name(rawValue:"beenden"),
-              object: nil,
-              userInfo: nil)
+      //nc.post(name:Notification.Name(rawValue:"beenden"),
+      //        object: nil,
+      //        userInfo: nil)
       
    }
    
@@ -262,7 +271,7 @@ class rViewController: NSViewController, NSWindowDelegate
   //    NotificationCenter.default.addObserver(self, selector:#selector(newDataAktion(_:)),name:newdataname,object:nil)
       NotificationCenter.default.addObserver(self, selector:#selector(joystickAktion(_:)),name:NSNotification.Name(rawValue: "joystick"),object:nil)
       NotificationCenter.default.addObserver(self, selector:#selector(tabviewAktion(_:)),name:NSNotification.Name(rawValue: "tabview"),object:nil)
-      NotificationCenter.default.addObserver(self, selector: #selector(beendenAktion), name:NSNotification.Name(rawValue: "beenden"), object: nil)
+//      NotificationCenter.default.addObserver(self, selector: #selector(beendenAktion), name:NSNotification.Name(rawValue: "beenden"), object: nil)
 
 //      NotificationCenter.default.addObserver(self, selector: #selector(usbsendAktion), name:NSNotification.Name(rawValue: "usbsend"), object: nil)
 //      NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
@@ -378,12 +387,16 @@ class rViewController: NSViewController, NSWindowDelegate
     {
        
        print("beendenAktion")
-       
+        NSApplication.shared.terminate(self)
        
        
     }
 
-   
+   @objc @IBAction func showEinstellunge(_ sender: Any)
+    {
+       print("showEinstellungen")
+    }
+
    @objc func tabviewAktion(_ notification:Notification) 
    {
       let info = notification.userInfo
@@ -1200,7 +1213,7 @@ class rViewController: NSViewController, NSWindowDelegate
       
    }
    
-   @nonobjc func windowShouldClose(_ sender: Any) 
+   @nonobjc  func windowShouldClose(_ sender: Any) 
    {
       print("windowShouldClose")
       NSApplication.shared.terminate(self)
@@ -1354,6 +1367,7 @@ class rViewController: NSViewController, NSWindowDelegate
    
    @IBOutlet weak var clear_Ring: NSButton!
    
+   @IBOutlet weak var ObjekteMenu: NSMenu!
    
 }
 protocol UIntToBytesConvertable {

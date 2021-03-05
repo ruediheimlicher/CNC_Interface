@@ -47,6 +47,55 @@ class rCNCViewController:rViewController
 
    }
    
+   override func keyDown(with theEvent: NSEvent)
+   {
+      Swift.print( "Key Pressed" )
+   }
+/*
+   - (void)keyDown:(NSEvent*)derEvent
+   {
+      //NSLog(@"keyDown: %@",[derEvent description]);
+      NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      [NotificationDic setObject:[NSNumber  numberWithInt:[derEvent keyCode]]forKey:@"pfeiltaste"];
+      /*
+      [NotificationDic setObject:[NSNumber  numberWithInt:Klickpunkt]forKey:@"klickpunkt"];
+      [NotificationDic setObject:[NSNumber  numberWithInt:Klickseite]forKey:@"klickseite"];
+      [NotificationDic setObject:[NSNumber numberWithInt:GraphOffset] forKey:@"graphoffset"];
+      */
+      
+      NSLog(@"WC keyDown: %d",[derEvent keyCode]);
+      
+      switch ([derEvent keyCode]) 
+      {
+         case 123:
+            NSLog(@"links");
+            
+            break;
+            
+         case 124:
+            NSLog(@"rechts");
+            break;
+            
+         case 125:
+            NSLog(@"down");
+            break;
+            
+         case 126:
+            NSLog(@"up");
+            break;
+            
+            
+            
+         default:
+            break;
+      }
+      
+      NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+      [nc postNotificationName:@"pfeiltaste" object:self userInfo:NotificationDic];
+      
+   }
+ 
+ */
    @objc func usbsendAktion(_ notification:Notification) 
     {
        print("usbsendAktion: \(notification)")
@@ -99,9 +148,10 @@ class rCNCViewController:rViewController
        */
       
       Stepperposition = 0
-        print("cncviewcontroller usbschnittdatenAktion")
+      print("cncviewcontroller usbschnittdatenAktion")
        usb_schnittdatenarray.removeAll()
        let info = notification.userInfo
+      print("info: \(info)")
    //    let usb_pwm =  info?["pwm"] as! UInt8
    //    let usb_delayok =  info?["delayok"] as! UInt8
        
@@ -135,7 +185,7 @@ class rCNCViewController:rViewController
       }
       
       
-        //print("usb_schnittdatenarray: \(usb_schnittdatenarray )")
+        print("usbschnittdatenAktion usb_schnittdatenarray: \(usb_schnittdatenarray )")
        
       
       //teensy.write_byteArray[0] = UInt8((0x00FF) & 0xFF) // lb
@@ -150,7 +200,7 @@ class rCNCViewController:rViewController
          warnung.addButton(withTitle: "Zurück")
 
  //        AVR?.dc_(on: 0)
- //        AVR?.setStepperstrom(0)
+ //        AVR?.setStepperstrom(0)66
          
          
          var openerfolg = 0
@@ -191,7 +241,7 @@ class rCNCViewController:rViewController
     @objc func writeCNCAbschnitt()
     {
       //N
-      //print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
+      print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
      teensy.write_byteArray.removeAll()
       if Stepperposition < usb_schnittdatenarray.count
       {
@@ -216,7 +266,7 @@ class rCNCViewController:rViewController
             if (globalusbstatus > 0)
              {
                 let senderfolg = teensy.send_USB()
-                
+                print("writeCNCAbschnitt senderfolg: \(senderfolg)")
              }
 
            // readTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(usb_teensy.cont_read_USB(_:)), userInfo: timerDic, repeats: true)

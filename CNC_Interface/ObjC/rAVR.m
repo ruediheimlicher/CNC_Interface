@@ -2918,8 +2918,19 @@ return returnInt;
       
       NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
       [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
+      NSMutableArray* SchnittdatenStringArray = [[NSMutableArray alloc]initWithCapacity:0];
+      
+      int k = 0;
+      for(k=0;k<[HomeSchnittdatenArray count];k++)
+      {
+         NSString* tempzeilenstring = [[HomeSchnittdatenArray objectAtIndex:k] componentsJoinedByString:@","] ;
+         //NSLog(@"k: %d String: %@",k,tempzeilenstring);
+         [SchnittdatenStringArray addObject:tempzeilenstring];
+       }
+      [HomeSchnittdatenDic setObject:SchnittdatenStringArray forKey:@"schnittdatenstringarray"];
+
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
-      //NSLog(@"AVR  reportManLeft HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
+      NSLog(@"AVR  reportManLeft HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
       
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"home"]; // 
       
@@ -3037,6 +3048,18 @@ return returnInt;
       
       NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
       [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
+      
+      NSMutableArray* SchnittdatenStringArray = [[NSMutableArray alloc]initWithCapacity:0];
+      int k = 0;
+      for(k=0;k<[HomeSchnittdatenArray count];k++)
+      {
+         NSString* tempzeilenstring = [[SchnittdatenArray objectAtIndex:k] componentsJoinedByString:@","] ;
+         //NSLog(@"k: %d String: %@",k,tempzeilenstring);
+         [SchnittdatenStringArray addObject:tempzeilenstring];
+       }
+      [HomeSchnittdatenDic setObject:SchnittdatenStringArray forKey:@"schnittdatenstringarray"];
+
+      
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
       //NSLog(@"AVR  reportManLeft HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
       
@@ -3131,6 +3154,17 @@ return returnInt;
    
    NSMutableDictionary* SchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [SchnittdatenDic setObject:PfeilSchnittdatenArray forKey:@"schnittdatenarray"];
+   
+   NSMutableArray* SchnittdatenStringArray = [[NSMutableArray alloc]initWithCapacity:0];
+   int k = 0;
+   for(k=0;k<[SchnittdatenArray count];k++)
+   {
+      NSString* tempzeilenstring = [[SchnittdatenArray objectAtIndex:k] componentsJoinedByString:@","] ;
+      //NSLog(@"k: %d String: %@",k,tempzeilenstring);
+      [SchnittdatenStringArray addObject:tempzeilenstring];
+    }
+   [SchnittdatenDic setObject:SchnittdatenStringArray forKey:@"schnittdatenstringarray"];
+
    [SchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
    
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -3220,6 +3254,17 @@ return returnInt;
    
    NSMutableDictionary* SchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [SchnittdatenDic setObject:PfeilSchnittdatenArray forKey:@"schnittdatenarray"];
+   
+   NSMutableArray* SchnittdatenStringArray = [[NSMutableArray alloc]initWithCapacity:0];
+   int k = 0;
+   for(k=0;k<[SchnittdatenArray count];k++)
+   {
+      NSString* tempzeilenstring = [[SchnittdatenArray objectAtIndex:k] componentsJoinedByString:@","] ;
+      //NSLog(@"k: %d String: %@",k,tempzeilenstring);
+      [SchnittdatenStringArray addObject:tempzeilenstring];
+    }
+   [SchnittdatenDic setObject:SchnittdatenStringArray forKey:@"schnittdatenstringarray"];
+
    [SchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
    
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -3304,6 +3349,16 @@ return returnInt;
    
    NSMutableDictionary* SchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [SchnittdatenDic setObject:PfeilSchnittdatenArray forKey:@"schnittdatenarray"];
+   NSMutableArray* SchnittdatenStringArray = [[NSMutableArray alloc]initWithCapacity:0];
+   int k = 0;
+   for(k=0;k<[SchnittdatenArray count];k++)
+   {
+      NSString* tempzeilenstring = [[SchnittdatenArray objectAtIndex:k] componentsJoinedByString:@","] ;
+      //NSLog(@"k: %d String: %@",k,tempzeilenstring);
+      [SchnittdatenStringArray addObject:tempzeilenstring];
+    }
+   [SchnittdatenDic setObject:SchnittdatenStringArray forKey:@"schnittdatenstringarray"];
+
    [SchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
    
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -3368,7 +3423,7 @@ return returnInt;
    //NSLog(@"AVR_SchnittdatenArray: %@",[AVR_SchnittdatenArray description]);
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
    NSMutableDictionary* SchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
-   [SchnittdatenDic setObject:AVR_SchnittdatenArray forKey:@"schnittdatenarray"];
+
    [SchnittdatenDic setObject:[NSNumber numberWithInt:cncposition] forKey:@"cncposition"];
    // [nc postNotificationName:@"usbschnittdaten" object:self userInfo:SchnittdatenDic];
    
@@ -3539,6 +3594,7 @@ return returnInt;
    
    NSMutableDictionary* writeInfoDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [writeInfoDic setObject:AVR_SchnittdatenArray forKey:@"schnittdatenarray"];
+   
    
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
    //[nc postNotificationName:@"writeschnittdatenarray" object:self userInfo:writeInfoDic];
@@ -7910,8 +7966,21 @@ return returnInt;
    } // for i
    
    [CNC setSpeed:lastSpeed];
-
+   
+   NSMutableArray* SchnittdatenStringArray = [[NSMutableArray alloc]initWithCapacity:0];
+    
+    int k = 0;
+    for(k=0;k<[HomeSchnittdatenArray count];k++)
+    {
+       NSString* tempzeilenstring = [[HomeSchnittdatenArray objectAtIndex:k] componentsJoinedByString:@","] ;
+       //NSLog(@"k: %d String: %@",k,tempzeilenstring);
+       [SchnittdatenStringArray addObject:tempzeilenstring];
+     }
+ 
    NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+   [HomeSchnittdatenDic setObject:SchnittdatenStringArray forKey:@"schnittdatenstringarray"];
+
+
    [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
    //NSLog(@"AVR  reportHome HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
@@ -8644,7 +8713,7 @@ return returnInt;
 
 - (void)writeCNCAbschnitt
 {
-   //NSLog(@"writeCNCAbschnitt Start Stepperposition: %d count: %d",Stepperposition,[SchnittDatenArray count]);
+   NSLog(@"writeCNCAbschnitt Start Stepperposition: %d count: %d",Stepperposition,[SchnittdatenArray count]);
    //NSLog(@"writeCNCAbschnitt SchnittDatenArray anz: %d\n SchnittDatenArray: %@",[SchnittDatenArray count],[SchnittDatenArray description]);
    
    /*
@@ -8964,6 +9033,7 @@ return returnInt;
          [SchnittdatenStringArray addObject:tempzeilenstring];
        }
       [SchnittdatenDic setObject:SchnittdatenStringArray forKey:@"schnittdatenstringarray"];
+      
       [SchnittdatenDic setObject:[NSNumber numberWithInt:cncposition] forKey:@"cncposition"];
       
       if ([HomeTaste state])

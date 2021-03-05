@@ -7,6 +7,9 @@
 //
 // Bridging-Header: https://stackoverflow.com/questions/24146677/swift-bridging-header-import-issue/31717280#31717280
 
+// https://stackoverflow.com/questions/46193109/hide-warnings-simultaneous-accesses-to-but-modification-requires-exclusive
+
+
 import Cocoa
 
  public var lastDataRead = Data.init(count:BUFFER_SIZE)
@@ -365,7 +368,7 @@ class rViewController: NSViewController, NSWindowDelegate
    
     
    
-    @objc func usbschnittdatenAktion(_ notification:Notification) 
+    @objc func usbschnittdatenAktion(_ notification:Notification)  > CNCViewController
     {
        
        print("viewcontroller usbschnittdatenAktion")

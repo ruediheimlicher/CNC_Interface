@@ -16,8 +16,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMenuDele
    func applicationDidFinishLaunching(_ aNotification: Notification) {
       // Insert code here to initialize your application
        //self.window.acceptsMouseMovedEvents = true
-   }
+      NSEvent.addLocalMonitorForEvents(matching: NSEvent.EventTypeMask.flagsChanged, handler: keyDown)
 
+   
+   }
+   
+   func keyDown(event: NSEvent!) -> NSEvent {
+       NSLog("key down is \(event.keyCode)");
+       return event
+   }
    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply
 
    {

@@ -33,6 +33,9 @@ class rCNCViewController:rViewController
    
    var Einstellungen = rEinstellungen()
    
+   override var acceptsFirstResponder : Bool {
+          return true
+   }
    override  func viewDidLoad()
    {
       super.viewDidLoad()
@@ -47,9 +50,41 @@ class rCNCViewController:rViewController
 
    }
    
+ 
    override func keyDown(with theEvent: NSEvent)
    {
-      Swift.print( "Key Pressed" )
+      super.keyDown(with: theEvent)
+      Swift.print( "CNCView Key Pressed" )
+   Swift.print(theEvent.keyCode)
+      // Apple Mouse, keyboard and Trackpad
+      let optionKeyPressed = theEvent.modifierFlags.contains(.option)
+      var arrowstep:Int32 = 100
+      if optionKeyPressed 
+      {
+          Swift.print("optionKeyPressed")
+         arrowstep = 10
+      }
+      
+      switch (theEvent.keyCode)
+      {
+         case 123:
+            print("left arrowstep: \(arrowstep)")
+            AVR?.manRichtung(3, pfeilstep: arrowstep) // left
+            break
+         case 124:
+             AVR?.manRichtung(1, pfeilstep: arrowstep) // right
+             break
+         case 125:
+             AVR?.manRichtung(4, pfeilstep: arrowstep) // down
+             break
+         case 126:
+             AVR?.manRichtung(2, pfeilstep: arrowstep) // up
+             break
+         
+         default:
+         return
+      }// switch keycode
+   
    }
 /*
    - (void)keyDown:(NSEvent*)derEvent

@@ -2784,7 +2784,7 @@ return returnInt;
 }
 
 #pragma mark "Richtung"
-- (void)ManRichtung:(int)richtung
+- (void)ManRichtung:(int)richtung  pfeilstep:(int)step
 {
    // 
    {
@@ -2815,29 +2815,29 @@ return returnInt;
       {
          case 1: // right
          {
-            PositionA.x += 500; // sicher ist sicher
-            PositionB.x += 500;
+            PositionA.x += step; // sicher ist sicher
+            PositionB.x += step;
 
          }break;
             
          case 2: // up
          {
-            PositionA.y += 500; // sicher ist sicher
-            PositionB.y += 500;
+            PositionA.y += step; // sicher ist sicher
+            PositionB.y += step;
 
          }break;
             
          case 3: // left
          {
-            PositionA.x -= 500; // sicher ist sicher
-            PositionB.x -= 500;
+            PositionA.x -= step; // sicher ist sicher
+            PositionB.x -= step;
             
          }break;
             
          case 4: // down
          {
-            PositionA.y -= 500; // sicher ist sicher
-            PositionB.y -= 500;
+            PositionA.y -= step; // sicher ist sicher
+            PositionB.y -= step;
 
          }break;
             
@@ -2958,7 +2958,7 @@ return returnInt;
    {
       NSLog(@"AVR  reportManLeft tag: %d",[sender tag]);
       
-      [self ManRichtung:3];
+      [self ManRichtung:3 pfeilstep:500];
       return;
       
       if ((cncstatus)|| !([CNC_Seite1Check state] || [CNC_Seite2Check state]))
@@ -3084,7 +3084,7 @@ return returnInt;
     left:   3
     down:   4
     */
-   [self ManRichtung:1];
+   [self ManRichtung:1  pfeilstep:500];
    [CNC_Lefttaste setEnabled:YES];
    [AnschlagLinksIndikator setTransparent:YES];
    NSLog(@"reportManRight");
@@ -3180,7 +3180,7 @@ return returnInt;
     left:   3
     down:   4
     */
-   [self ManRichtung:2];
+   [self ManRichtung:2 pfeilstep: 500];
    [CNC_Downtaste setEnabled:YES];
    [AnschlagUntenIndikator setTransparent:YES];
 
@@ -3281,7 +3281,7 @@ return returnInt;
     left:   3
     down:   4
     */
-   [self ManRichtung:4];
+   [self ManRichtung:4 pfeilstep: 500];
    return;
 
    if ((cncstatus)|| !([CNC_Seite1Check state] || [CNC_Seite2Check state]))
@@ -4623,7 +4623,7 @@ return returnInt;
 - (NSArray*)readFigur
 {
    NSMutableArray* FigurArray;
-   NSLog(@"readFigur start");
+   NSLog(@"AVR readFigur start");
    
    /*
     [ProfilOpenPanel beginWithCompletionHandler:^(NSInteger result)
@@ -7588,7 +7588,7 @@ return returnInt;
 
 - (IBAction)reportVertikalSpiegeln:(id)sender
 {
-   //NSLog(@"AVR  reportVertikalSpiegeln %d",[sender selectedSegment]);
+   NSLog(@"AVR  reportVertikalSpiegeln ");
    if ([KoordinatenTabelle count]==0)
    {
       return;

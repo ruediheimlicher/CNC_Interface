@@ -3380,7 +3380,7 @@
   // NSArray* FigurArray = [Utils readFigur];
    //NSLog(@"CNC_Eingbe readFigur FigurArray: \n%@",[FigurArray description]);
    FigElementArray= [NSMutableArray arrayWithArray:[Utils readFigur]]; // retain ist noetig
-   //NSLog(@"CNC_Eingbe readFigur FigElementArray: \n%@",[FigElementArray description]);
+   NSLog(@"CNC_Eingbe readFigur FigElementArray: \n%@",[FigElementArray description]);
    [self setFigGraphDaten];
    //NSLog(@"CNC_Eingbe readFigur A");
    [FigGraph setNeedsDisplay:YES];
@@ -3404,7 +3404,8 @@
    startx=0;
    starty=0;
    int i=0;
-   for (i=1;i<[FigElementArray count];i++) // Erstes Element ist Startpunkt und schon im Array
+   // bisher: for (i=1;i<[FigElementArray count];i++) // Erstes Element ist Startpunkt und schon im Array
+   for (i=0;i<[FigElementArray count];i++) // 
    {
       float tempx = [[[FigElementArray objectAtIndex:i]objectForKey:@"x"]floatValue] + startx;
       float tempy = [[[FigElementArray objectAtIndex:i]objectForKey:@"y"]floatValue] + starty;

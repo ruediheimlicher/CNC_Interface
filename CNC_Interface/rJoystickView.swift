@@ -228,6 +228,7 @@ class rJoystickView: NSView
    override func keyDown(with theEvent: NSEvent)
    {
       Swift.print( "Key Pressed" )
+      Swift.print(theEvent.keyCode)
    }
    
 } // rJoystickView

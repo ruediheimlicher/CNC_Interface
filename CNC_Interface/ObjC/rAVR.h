@@ -352,9 +352,8 @@
    - (int)saveSpeed;
    - (int)saveProfileinstellungen;
    - (void)setUSBDaten:(NSDictionary*)datendic;
-
-
-- (IBAction)reportSpeedStepper:(id)sender;
+   - (void)ManRichtung:(int)richtung  pfeilstep:(int)step;
+   - (IBAction)reportSpeedStepper:(id)sender;
 
 //- (IBAction)reportCNCKnopf:(id)sender;
 - (IBAction)reportOberseiteTaste:(id)sender;
@@ -408,6 +407,7 @@
 - (IBAction)reportLinkeRechteSeite:(id)sender;
 - (IBAction)reportLinkeRechteSeiteOffset:(id)sender;
 - (IBAction)reportAndereSeiteAnfahren:(id)sender;
+- (IBAction)reportVertikalSpiegeln:(id)sender;
 
 - (IBAction)reportProfilTask:(id)sender;
 - (IBAction)reportProfilOberseiteTask:(id)sender;

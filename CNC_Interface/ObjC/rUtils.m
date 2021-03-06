@@ -740,7 +740,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 	[ProfilOpenPanel setAllowsMultipleSelection:NO];
    [ProfilOpenPanel setAllowedFileTypes:[NSArray arrayWithObjects:@"txt",NULL]];
    */
-   NSLog(@"readFigur start");
+   NSLog(@"Utils readFigur start");
    NSOpenPanel *ProfilOpenPanel = [NSOpenPanel openPanel];
    NSLog(@"readFigur ProfilOpenPanel: %@",[ProfilOpenPanel description]);
    // Configure your panel the way you want it

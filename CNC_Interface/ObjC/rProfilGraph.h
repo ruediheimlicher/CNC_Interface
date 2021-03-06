@@ -30,7 +30,7 @@
    int         anzahlmaschen;
    
    int         graphstatus;
-   
+    int screen ;
    int GraphOffset;
    
 }

@@ -39,8 +39,9 @@ return sqrt(dX*dX + dY*dY);
        
        stepperposition = -1;
        GraphOffset = 0;
-       anzahlmaschen = 24;
+       anzahlmaschen = 28;
        graphstatus=0;
+       screen = 0;
     }
    
     return self;
@@ -492,7 +493,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 
 - (void)GitterZeichnen
 {
-   int screen=0;
+   
    
    float Gittermass = scale*10;
    
@@ -505,9 +506,10 @@ int (^add)(int,int) = ^(int number1, int number2){
    }
    else
    {
-      //NSLog(@"ProfilGraph drawRect print");
-      anzahlmaschen = 24;
+      NSLog(@"ProfilGraph GitterZeichnen print");
+      anzahlmaschen = 28;
       breite = anzahlmaschen * Gittermass;
+      screen=0;
       
    }
    
@@ -651,15 +653,16 @@ int (^add)(int,int) = ^(int number1, int number2){
    int abbbranddelay=0;
 	//NSLog(@"ProfilGraph drawRect start");
    
-   int screen=0;
+  
    if ([[NSGraphicsContext currentContext]isDrawingToScreen])
    {
-      //NSLog(@"ProfilGraph drawRect screen");
+      NSLog(@"ProfilGraph drawRect screen");
       screen=1;
    }
    else
    {
-      NSLog(@"ProfilGraph drawRect print");
+      NSLog(@"ProfilGraph drawRect print ");
+      screen=0;
    }
    
    
@@ -667,32 +670,40 @@ int (^add)(int,int) = ^(int number1, int number2){
    
     if (screen)
     {
+       [self GitterZeichnen];
        //anzahlmaschen = [self frame].size.width/Gittermass;
     }
     else
     {
-       anzahlmaschen = 28;
+       anzahlmaschen = 28; // war 28
     }
    {
-      [self GitterZeichnen];
+      // [self GitterZeichnen];
    }
 	if ([DatenArray count])
 	{
 		int anz=[DatenArray count];
 		StartPunktA=NSMakePoint([[[DatenArray objectAtIndex:0]objectForKey:@"ax"]floatValue]*scale,[[[DatenArray objectAtIndex:0]objectForKey:@"ay"]floatValue]*scale);
 		//NSLog(@"drawRect startpunkt x: %.2f  y: %.2f",[[[DatenArray objectAtIndex:0]objectForKey:@"ax"]floatValue],[[[DatenArray objectAtIndex:0]objectForKey:@"ay"]floatValue]);
-		EndPunktA=NSMakePoint([[[DatenArray objectAtIndex:anz-1]objectForKey:@"ax"]floatValue],[[[DatenArray objectAtIndex:anz-1]objectForKey:@"ay"]floatValue]);
+      int endpunktax = [[[DatenArray objectAtIndex:anz-1]objectForKey:@"ax"]floatValue];
+      
+      EndPunktA=NSMakePoint([[[DatenArray objectAtIndex:anz-1]objectForKey:@"ax"]floatValue],[[[DatenArray objectAtIndex:anz-1]objectForKey:@"ay"]floatValue]);
 		
+      
 		StartPunktB=NSMakePoint([[[DatenArray objectAtIndex:0]objectForKey:@"bx"]floatValue]*scale,([[[DatenArray objectAtIndex:0]objectForKey:@"by"]floatValue]+GraphOffset)*scale);
 		//NSLog(@"drawRect startpunkt x: %.2f  y: %.2f",[[[DatenArray objectAtIndex:0]objectForKey:@"ax"]floatValue],[[[DatenArray objectAtIndex:0]objectForKey:@"ay"]floatValue]);
+      int startpunktbx = [[[DatenArray objectAtIndex:0]objectForKey:@"bx"]floatValue];
 		EndPunktB=NSMakePoint([[[DatenArray objectAtIndex:anz-1]objectForKey:@"bx"]floatValue]*scale,([[[DatenArray objectAtIndex:anz-1]objectForKey:@"by"]floatValue]+GraphOffset)*scale);
-      
-      
+      int endpunktbx = [[[DatenArray objectAtIndex:anz-1]objectForKey:@"bx"]floatValue];
+
+      NSLog(@"endpunktax: %d endpunktbx: %d",endpunktax,endpunktbx);
       if (screen)
       {
          
          NSPoint AA=NSMakePoint(0, [[[DatenArray objectAtIndex:0]objectForKey:@"ay"]floatValue]*scale);
-         NSPoint AB=NSMakePoint([self frame].size.width, [[[DatenArray objectAtIndex:0]objectForKey:@"ay"]floatValue]*scale);
+        // NSPoint AB=NSMakePoint([self frame].size.width-2, [[[DatenArray objectAtIndex:0]objectForKey:@"ay"]floatValue]*scale);
+         NSPoint AB=NSMakePoint([self frame].size.width -AA.x - 4, [[[DatenArray objectAtIndex:0]objectForKey:@"ay"]floatValue]*scale);
+
          NSBezierPath* GrundLinieA=[NSBezierPath bezierPath];
          [GrundLinieA moveToPoint:AA];
          [GrundLinieA lineToPoint:AB];
@@ -702,18 +713,22 @@ int (^add)(int,int) = ^(int number1, int number2){
          
          
          NSPoint BA=NSMakePoint(0, ([[[DatenArray objectAtIndex:0]objectForKey:@"by"]floatValue]+GraphOffset)*scale);
-         NSPoint BB=NSMakePoint([self frame].size.width, ([[[DatenArray objectAtIndex:0]objectForKey:@"by"]floatValue]+GraphOffset)*scale);
+         NSPoint BB=NSMakePoint([self frame].size.width-BA.x - 4, ([[[DatenArray objectAtIndex:0]objectForKey:@"by"]floatValue]+GraphOffset)*scale);
          NSBezierPath* GrundLinieB=[NSBezierPath bezierPath];
          [GrundLinieB moveToPoint:BA];
          [GrundLinieB lineToPoint:BB];
          [GrundLinieB setLineWidth:0.3];
          [[NSColor blueColor]set];
          
-         [GrundLinieA stroke];
+        [GrundLinieA stroke];
          [GrundLinieB stroke];
           
       }
       
+      else
+      {
+         NSLog(@"screen=0");
+      }
       
       NSRect StartMarkBRect=NSMakeRect(StartPunktB.x-1.5, StartPunktB.y-1, 3, 3);
 		NSBezierPath* StartMarkB=[NSBezierPath bezierPathWithOvalInRect:StartMarkBRect];
@@ -837,6 +852,7 @@ int (^add)(int,int) = ^(int number1, int number2){
             } // if screen
             
          }
+         
 			//NSLog(@"in klickset i: %d Desc: %@",i,[klickset description]);
          
          if ([KlicksetA count] && screen)

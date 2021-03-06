@@ -442,7 +442,7 @@
 
 
 - (void)showEinstellungen;
-   
+- (void)printGraph;
    
    @end
 

@@ -958,7 +958,7 @@ float det(float v0[],float v1[])
     
    [Schalendickefeld setFormatter:SimpleFormatter];
    [Schalendickefeld setFloatValue:2.2];
-
+   //NSLog(@"AVR  awake ProfilGraph width: %f",ProfilGraph.frame.size.width); 
    [[self view] addSubview:ProfilGraph];
 }
 
@@ -1530,9 +1530,9 @@ return returnInt;
 
          
          NSDictionary* tempDic=[NSDictionary dictionaryWithObjectsAndKeys:KoordinateAX, @"ax",KoordinateAY,@"ay",KoordinateBX, @"bx",KoordinateBY,@"by" ,[NSNumber numberWithInt:nowpwm],@"pwm",[NSNumber numberWithInt:0],@"index", nil];
-         
+         //NSLog(@"reportStartKnopf tempDic: %@",tempDic);
          [KoordinatenTabelle addObject:tempDic];
-
+         //NSLog(@"reportStartKnopf KoordinatenTabelle: %@",KoordinatenTabelle);
            [CNCDatenArray removeAllObjects];
          [CNCTable reloadData];
          if ([KoordinatenTabelle count])
@@ -9281,15 +9281,16 @@ return returnInt;
 
 #pragma mark "Print"
 
-- (IBAction)reportPrint:(id)sender
+- (void)printGraph
 {
    //schliessencounter++;
-   NSLog(@"AVR  reportPrint");
+   NSLog(@"AVR  printGraph");
    //NSPageLayout *pageLayout = [NSPageLayout pageLayout];
    //  [pageLayout runModal];
    //[ProfilGraph setScale:[[ScalePop selectedItem]tag]];
 
    NSView* Druckfeld = [[NSView alloc]initWithFrame:[ProfilGraph frame]];
+   NSLog(@"AVR  printGraph Druckfeld width: %f",Druckfeld.frame.size.width); 
    //NSTextField* Titelfeld;
    
    
@@ -9308,7 +9309,112 @@ return returnInt;
    
    [Profilfeld setScale:[[ScalePop selectedItem]tag]/1.4];
    
-   [Profilfeld setAnzahlMaschen:24];
+   [Profilfeld setAnzahlMaschen:28];
+   [Profilfeld setGraphOffset:0];
+
+   [Profilfeld setTitel:[ProfilNameFeldA stringValue]];
+   if ([KoordinatenTabelle count])
+   {
+      
+      [Profilfeld setDatenArray:KoordinatenTabelle];
+      
+      [Profilfeld setNeedsDisplay:YES];
+   }
+   [Druckfeld addSubview:Profilfeld];
+   
+   
+   NSRect Titelrect =  NSMakeRect(30, 80, 60, 60);
+   Titelrect.origin.y =  30;
+   Titelrect.origin.x =  80;
+   Titelrect.size.height= 60;
+   Titelrect.size.width= 240;
+   NSString*titel = [NSString stringWithString:[ProfilNameFeldA stringValue]];
+
+  
+   NSTextField* Titelfeld = [[NSTextField alloc]initWithFrame:Titelrect];
+   NSFont* TitelFont=[NSFont fontWithName:@"Helvetica" size: 14];
+   [Titelfeld setFont:TitelFont];
+   [Titelfeld setStringValue:@""];
+//   [Druckfeld addSubview:Titelfeld];
+   
+   NSImageView* Bildfeld;
+   NSRect Bildrect = NSMakeRect(230, 80, 60, 60);
+   Bildfeld = [[NSImageView alloc]initWithFrame:Bildrect];
+   [Bildfeld setImage:[NSImage imageNamed:@"home"]];
+//   [Druckfeld addSubview:Bildfeld];
+   
+   
+   //   [Titelfeld setAllowsEditingTextAttributes:YES];
+//   NSLog(@"Titelfeld: %@",titel);
+//   [Titelfeld setFont:TitelFont];
+   //[Titelfeld setStringValue:titel];
+   //[Titelfeld setIntValue:1];
+//   NSLog(@"Titelfeld stringVal: %@",[Titelfeld stringValue]);
+   
+   //[Titelfeld print:NULL];
+   
+   
+   NSLog(@"printGraph nach add");
+
+//   [Titelfeld release];
+   NSLog(@"printGraph vor druck");
+   
+  // [[NSPrintOperation printOperationWithView:Druckfeld] runOperation];
+  // NSLog(@"nach druck");
+   //return;
+   
+   NSPrintInfo *printInfo;
+   NSPrintOperation *printOp;
+   printInfo = [NSPrintInfo sharedPrintInfo];
+   //[printInfo setHorizontalPagination: NSFitPagination];
+   
+   [printInfo setHorizontalPagination:  NSClipPagination];
+   //[printInfo setVerticalPagination: NSFitPagination];
+   [printInfo setVerticalPagination: NSAutoPagination];
+   [printInfo setVerticallyCentered:NO];
+   //printInfo.allPages = 0;
+   [printInfo setOrientation:NSPaperOrientationLandscape];
+   //NSLog(@"printInfo: %@",[printInfo dictionary]);
+   
+  // https://stackoverflow.com/questions/42319764/objective-c-cocoa-printing
+   printOp = [NSPrintOperation printOperationWithView:Druckfeld   printInfo:printInfo];
+   [printOp setShowsPrintPanel:YES];
+   BOOL printok = [printOp runOperation];
+   NSLog(@"printGraph print printok: %d",printok);
+    NSLog(@"print end");
+
+}
+
+
+- (IBAction)reportPrint:(id)sender
+{
+   //schliessencounter++;
+   NSLog(@"AVR  reportPrint");
+   //NSPageLayout *pageLayout = [NSPageLayout pageLayout];
+   //  [pageLayout runModal];
+   //[ProfilGraph setScale:[[ScalePop selectedItem]tag]];
+   [self printGraph];
+   return;
+   NSView* Druckfeld = [[NSView alloc]initWithFrame:[ProfilGraph frame]];
+   //NSTextField* Titelfeld;
+   
+   
+   if (!(Profilfeld))
+   {
+      NSRect Profilrect = [Druckfeld bounds];
+      Profilrect.origin.y =  10;
+      Profilrect.origin.x =  10;
+      Profilrect.size.height -= 60;
+      Profilrect.size.width -= 30;
+      
+      
+      Profilfeld = [[rProfildruckView alloc]initWithFrame:Profilrect];
+      
+   }
+//   NSLog(@"setScale: %d",[[ScalePop selectedItem]tag]);
+   [Profilfeld setScale:[[ScalePop selectedItem]tag]/1.4];
+   
+   [Profilfeld setAnzahlMaschen:28];
    [Profilfeld setGraphOffset:0];
 
    [Profilfeld setTitel:[ProfilNameFeldA stringValue]];
@@ -9367,17 +9473,17 @@ return returnInt;
    //[printInfo setVerticalPagination: NSFitPagination];
    [printInfo setVerticalPagination: NSAutoPagination];
    [printInfo setVerticallyCentered:NO];
+   [printInfo setOrientation:NSPaperOrientationLandscape];
    //NSLog(@"printInfo: %@",[printInfo dictionary]);
    
    printOp = [NSPrintOperation printOperationWithView:Druckfeld   printInfo:printInfo];
    [printOp setShowsPrintPanel:YES];
-   /*
-   [printOp   runOperationModalForWindow:[self window]
+   [printOp   runOperationModalForWindow: window
                                      delegate:self
                                didRunSelector:nil
-                           contextInfo:(__bridge void * _Nullable)([NSDictionary dictionaryWithObjectsAndKeys:@"PrintFromAVR",@"task", nil])];
-  */
-    NSLog(@"print end");
+                             contextInfo:nil];
+                             //contextInfo:(__bridge void * _Nullable)([NSDictionary dictionaryWithObjectsAndKeys:@"PrintFromAVR",@"task", nil])];
+   NSLog(@"print end");
 
 }
 

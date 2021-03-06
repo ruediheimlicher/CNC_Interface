@@ -25,6 +25,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMenuDele
        NSLog("key down is \(event.keyCode)");
        return event
    }
+   
    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply
 
    {

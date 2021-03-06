@@ -86,6 +86,9 @@ class rCNCViewController:rViewController
       }// switch keycode
    
    }
+   
+   
+   
 /*
    - (void)keyDown:(NSEvent*)derEvent
    {
@@ -131,6 +134,8 @@ class rCNCViewController:rViewController
    }
  
  */
+   
+   
    @objc func usbsendAktion(_ notification:Notification) 
     {
        print("usbsendAktion: \(notification)")
@@ -668,7 +673,22 @@ class rCNCViewController:rViewController
    {
       AVR?.showEinstellungen()
    }
+  
+   /*
+   @objc @IBAction func print(sender:Any)
+   {
+      AVR?.printGraph()
+   }
+*/
     
+   
+   
+   @objc @IBAction func printGraph(sender:Any)
+   {
+      Swift.print("print")
+   // AVR?.printGraph()
+   }
+
 } // end rCNCViewController
 
 

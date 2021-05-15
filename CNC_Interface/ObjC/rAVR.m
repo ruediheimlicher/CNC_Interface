@@ -556,163 +556,169 @@ float det(float v0[],float v1[])
 - (void)awakeFromNib
 {
    NSLog(@"AVR awakeFromNib");
-    NSColor* bgcolor = [NSColor colorWithCalibratedRed:0.3 green:0.5 blue:0.8 alpha:1.0f];
-    //self = [super initWithWindowNibName:@"AVR"];
+   NSColor* bgcolor = [NSColor colorWithCalibratedRed:0.3 green:0.5 blue:0.8 alpha:1.0f];
+   //self = [super initWithWindowNibName:@"AVR"];
    // self.layer.backgroundcolor = bgcolor;
-    self.wantsLayer = YES;
-    [ self.view.layer setBackgroundColor:(__bridge CGColorRef _Nullable)(bgcolor)];
-
-   NSNotificationCenter * nc;
-    nc=[NSNotificationCenter defaultCenter]; // alles weg, wegen doppeltem awake
-  // [nc removeObserver:self name:@"FigElementeingabe" object:nil];
-   [nc removeObserver:self];
-   [nc addObserver:self
-            selector:@selector(USBStatusAktion:)
-               name:@"usb_status"
-             object:nil];
+   self.wantsLayer = YES;
+   [ self.view.layer setBackgroundColor:(__bridge CGColorRef _Nullable)(bgcolor)];
    
-       [nc addObserver:self
+   NSNotificationCenter * nc;
+   nc=[NSNotificationCenter defaultCenter]; // alles weg, wegen doppeltem awake
+   // [nc removeObserver:self name:@"FigElementeingabe" object:nil];
+   [nc removeObserver:self];
+   
+   [nc addObserver:self
+          selector:@selector(usbattachAktion:)
+              name:@"usb_attach"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(USBStatusAktion:)
+              name:@"usb_status"
+            object:nil];
+   
+   [nc addObserver:self
           selector:@selector(MausGraphAktion:)
-             name:@"mauspunkt"
-           object:nil];
-
-    
-    
-       [nc addObserver:self
+              name:@"mauspunkt"
+            object:nil];
+   
+   
+   
+   [nc addObserver:self
           selector:@selector(MausDragAktion:)
-             name:@"mausdrag"
-           object:nil];
-
-    
-       [nc addObserver:self
+              name:@"mausdrag"
+            object:nil];
+   
+   
+   [nc addObserver:self
           selector:@selector(MausKlickAktion:)
-             name:@"mausklick"
-           object:nil];
-
-    
-       [nc addObserver:self
+              name:@"mausklick"
+            object:nil];
+   
+   
+   [nc addObserver:self
           selector:@selector(PfeiltasteAktion:)
-             name:@"pfeiltaste"
-           object:nil];
-
-
-    
-    [nc addObserver:self
+              name:@"pfeiltaste"
+            object:nil];
+   
+   
+   
+   [nc addObserver:self
           selector:@selector(ModifierAktion:)
-             name:@"Modifier"
-           object:nil];
-
-    [nc addObserver:self
+              name:@"Modifier"
+            object:nil];
+   
+   [nc addObserver:self
           selector:@selector(ReportHandlerCallbackAktion:)
-             name:@"ReportHandlerCallback"
-           object:nil];
-
-    [nc addObserver:self
+              name:@"ReportHandlerCallback"
+            object:nil];
+   
+   [nc addObserver:self
           selector:@selector(I2CAktion:)
-             name:@"i2c"
-           object:nil];
-           
-    [nc addObserver:self
+              name:@"i2c"
+            object:nil];
+   
+   [nc addObserver:self
           selector:@selector(WriteStandardAktion:)
-             name:@"WriteStandard"
-           object:nil];
-           
-    [nc addObserver:self
+              name:@"WriteStandard"
+            object:nil];
+   
+   [nc addObserver:self
           selector:@selector(WriteModifierAktion:)
-             name:@"WriteModifier"
-           object:nil];
-           
-    [nc addObserver:self
-           selector:@selector(USBReadAktion:)
-               name:@"usbread"
-             object:nil];
-    
-    
-    [nc addObserver:self
-           selector:@selector(MausAktion:)
-               name:@"mausdaten"
-             object:nil];
-    
-    
-    [nc addObserver:self
-           selector:@selector(PfeilAktion:)
-               name:@"Pfeil"
-             object:nil];
-    
-    [nc addObserver:self
-           selector:@selector(ElementeingabeAktion:)
-               name:@"Elementeingabe"
-             object:nil];
-    
-    [nc addObserver:self
-           selector:@selector(LibElementeingabeAktion:)
-               name:@"LibElementeingabe"
-             object:nil];
-    
-     
-    [nc addObserver:self
-           selector:@selector(LibProfileingabeAktion:)
-               name:@"LibProfileingabe"
-             object:nil];
-        
-    [nc addObserver:self
-           selector:@selector(FormeingabeAktion:)
-               name:@"Formeingabe"
-             object:nil];
-    
-    
-    [nc addObserver:self
-           selector:@selector(BlockeingabeAktion:)
-               name:@"Blockeingabe"
-             object:nil];
-    
-    [nc addObserver:self
-           selector:@selector(FigElementeingabeAktion:)
-               name:@"FigElementeingabe"
-             object:nil];
-    
-
-    
-
-    CNCdataPfad=[NSHomeDirectory() stringByAppendingPathComponent:@"documents/CNCData"];
-    //NSLog(@"CNCdataPfad: %@",CNCdataPfad);
-    //CNC_PList = [[NSMutableDictionary alloc]initWithCapacity:0];
-    
-    
-    n=0;
-    aktuellerTag=0;
-    IOW_busy=0;
-    aktuelleMark=(uint8_t)NSNotFound;
-    //NSLog(@"HomebusAnlegen 2");
-    
-    
-    AnschlagDic = [[NSMutableDictionary alloc]initWithCapacity:0];
-    CNCDatenArray= [[NSMutableArray alloc]initWithCapacity:0];
-    KoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
-    UndoKoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
-    //BlockKoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
-    SchnittdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
-    GraphEnd=0;
-    CNC=[[rCNC alloc]init];
-    ProfilDatenOA=[[NSArray alloc]init];
-    ProfilDatenUA=[[NSArray alloc]init];
-    
-    mitOberseite =1;
-    mitUnterseite=1;
-    mitEinlauf=1;
-    mitAuslauf=1;
-    flipV=0;
-    flipH=0;
-    reverse=0;
-    
-    startwert=0;
-    cncstatus=0;
-    cncposition=0;
-    
-    AVR_USBStatus=0;
-    
-    BlockKoordinatenTabelle=[[NSMutableArray alloc]initWithCapacity:0];
-    // end von init
+              name:@"WriteModifier"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(USBReadAktion:)
+              name:@"usbread"
+            object:nil];
+   
+   
+   [nc addObserver:self
+          selector:@selector(MausAktion:)
+              name:@"mausdaten"
+            object:nil];
+   
+   
+   [nc addObserver:self
+          selector:@selector(PfeilAktion:)
+              name:@"Pfeil"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(ElementeingabeAktion:)
+              name:@"Elementeingabe"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(LibElementeingabeAktion:)
+              name:@"LibElementeingabe"
+            object:nil];
+   
+   
+   [nc addObserver:self
+          selector:@selector(LibProfileingabeAktion:)
+              name:@"LibProfileingabe"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(FormeingabeAktion:)
+              name:@"Formeingabe"
+            object:nil];
+   
+   
+   [nc addObserver:self
+          selector:@selector(BlockeingabeAktion:)
+              name:@"Blockeingabe"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(FigElementeingabeAktion:)
+              name:@"FigElementeingabe"
+            object:nil];
+   
+   
+   
+   
+   CNCdataPfad=[NSHomeDirectory() stringByAppendingPathComponent:@"documents/CNCData"];
+   //NSLog(@"CNCdataPfad: %@",CNCdataPfad);
+   //CNC_PList = [[NSMutableDictionary alloc]initWithCapacity:0];
+   
+   
+   n=0;
+   aktuellerTag=0;
+   IOW_busy=0;
+   aktuelleMark=(uint8_t)NSNotFound;
+   //NSLog(@"HomebusAnlegen 2");
+   
+   
+   AnschlagDic = [[NSMutableDictionary alloc]initWithCapacity:0];
+   CNCDatenArray= [[NSMutableArray alloc]initWithCapacity:0];
+   KoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
+   UndoKoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
+   //BlockKoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
+   SchnittdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
+   GraphEnd=0;
+   CNC=[[rCNC alloc]init];
+   ProfilDatenOA=[[NSArray alloc]init];
+   ProfilDatenUA=[[NSArray alloc]init];
+   
+   mitOberseite =1;
+   mitUnterseite=1;
+   mitEinlauf=1;
+   mitAuslauf=1;
+   flipV=0;
+   flipH=0;
+   reverse=0;
+   
+   startwert=0;
+   cncstatus=0;
+   cncposition=0;
+   
+   AVR_USBStatus=0;
+   
+   BlockKoordinatenTabelle=[[NSMutableArray alloc]initWithCapacity:0];
+   // end von init
    
    CNC_PList = [[NSMutableDictionary alloc]initWithDictionary:[self readCNC_PList]];
    NSRect RaumViewFeld;
@@ -745,13 +751,13 @@ float det(float v0[],float v1[])
                                              -NSHeight([[RaumScroller contentView] bounds]));
    [[RaumScroller documentView] scrollPoint:newRaumScrollOrigin];
    //[RaumScroller addSubview:ProfilTable];
-
+   
    [CNC_Starttaste setState:0];
    [CNC_Stoptaste setState:0];
    
    NSNumberFormatter* SimpleFormatter=[[NSNumberFormatter alloc] init];;
-    [SimpleFormatter setFormat:@"###0.0;0.0;(##0.0)"];
-
+   [SimpleFormatter setFormat:@"###0.0;0.0;(##0.0)"];
+   
    ProfilDaten = [[NSMutableArray alloc]initWithCapacity:0];
    
    
@@ -769,54 +775,54 @@ float det(float v0[],float v1[])
    
    [ProfilGraph setScale:[[ScalePop selectedItem]tag]];
    [ProfilGraph setGraphOffset:0];
-
-
-      NSRect Titelrect = [ProfilGraph bounds];
-      Titelrect.origin.y += Titelrect.size.height -40;
-      Titelrect.origin.x += 10;
-      Titelrect.size.height = 20;
-      Titelrect.size.width = 200;
-      NSTextField* Titelfeld = [[NSTextField alloc]initWithFrame:Titelrect];
-      NSFont* TitelFont=[NSFont fontWithName:@"Helvetica" size: 14];
-      [Titelfeld setFont:TitelFont];
-      [Titelfeld setBordered:NO];
-      [Titelfeld setDrawsBackground:NO];
-      [Titelfeld setTag:1001];
-      [Titelfeld setStringValue:@""];
-      [ProfilGraph addSubview:Titelfeld];
-
+   
+   
+   NSRect Titelrect = [ProfilGraph bounds];
+   Titelrect.origin.y += Titelrect.size.height -40;
+   Titelrect.origin.x += 10;
+   Titelrect.size.height = 20;
+   Titelrect.size.width = 200;
+   NSTextField* Titelfeld = [[NSTextField alloc]initWithFrame:Titelrect];
+   NSFont* TitelFont=[NSFont fontWithName:@"Helvetica" size: 14];
+   [Titelfeld setFont:TitelFont];
+   [Titelfeld setBordered:NO];
+   [Titelfeld setDrawsBackground:NO];
+   [Titelfeld setTag:1001];
+   [Titelfeld setStringValue:@""];
+   [ProfilGraph addSubview:Titelfeld];
+   
    //   [[self window]makeKeyAndOrderFront:self];
-      [[[self view] window]makeFirstResponder:ProfilGraph];
-      NSString* logString=[NSString string];
-      logString=[logString stringByAppendingString:[NSString stringWithFormat:@"%02X ",0x02]];
-      logString=[logString stringByAppendingString:[NSString stringWithFormat:@"%02X ",161]];
-      //NSLog(@"logString: %@",logString);
-      
-       //NSLog(@"Bitschieber");
-       uint16_t StepCounterA;
-       uint8_t dataL=0;
-       uint8_t dataH=0;
-       
-       dataL=164;
-       dataH=4;
-       
-       StepCounterA= (dataH<<8) + dataL;
-       
-       //NSLog(@"StepCounterA hex: %X int: %d",StepCounterA,StepCounterA);
-       
-       NSString* VersionString=[NSString stringWithUTF8String:VERSION];
-       
-       [VersionFeld setStringValue:[NSString stringWithFormat:@"%@ %@",@"Stepperversion:",VersionString]];
-       NSString* DatumString=[NSString stringWithUTF8String:DATUM];
-       [DatumFeld setStringValue:[NSString stringWithFormat:@"%@ %@",@"Datum:",DatumString]];
-       NSLog(@"Stepperversion: %@ Datum: %@",VersionString,DatumString);
-       cncposition =0;
-       [WertFeld setIntValue:10];
-       quelle=0; // line
-      
+   [[[self view] window]makeFirstResponder:ProfilGraph];
+   NSString* logString=[NSString string];
+   logString=[logString stringByAppendingString:[NSString stringWithFormat:@"%02X ",0x02]];
+   logString=[logString stringByAppendingString:[NSString stringWithFormat:@"%02X ",161]];
+   //NSLog(@"logString: %@",logString);
+   
+   //NSLog(@"Bitschieber");
+   uint16_t StepCounterA;
+   uint8_t dataL=0;
+   uint8_t dataH=0;
+   
+   dataL=164;
+   dataH=4;
+   
+   StepCounterA= (dataH<<8) + dataL;
+   
+   //NSLog(@"StepCounterA hex: %X int: %d",StepCounterA,StepCounterA);
+   
+   NSString* VersionString=[NSString stringWithUTF8String:VERSION];
+   
+   [VersionFeld setStringValue:[NSString stringWithFormat:@"%@ %@",@"Stepperversion:",VersionString]];
+   NSString* DatumString=[NSString stringWithUTF8String:DATUM];
+   [DatumFeld setStringValue:[NSString stringWithFormat:@"%@ %@",@"Datum:",DatumString]];
+   NSLog(@"Stepperversion: %@ Datum: %@",VersionString,DatumString);
+   cncposition =0;
+   [WertFeld setIntValue:10];
+   quelle=0; // line
+   
    NSNumberFormatter* Koordinatenformatter=[[NSNumberFormatter alloc] init];;
    [Koordinatenformatter setFormat:@"###.00;0.00;(##0.00)"];
-
+   
    [CNCTable setDataSource: self];
    [CNCTable setDelegate: self];
    [CNCTable setRowHeight:13];
@@ -837,9 +843,9 @@ float det(float v0[],float v1[])
     setFormatter:Koordinatenformatter];
    [[[CNCTable tableColumnWithIdentifier:@"by"] dataCell]
     setFormatter:Koordinatenformatter];
-      
+   
    [CNCTable setDataSource:self];
-
+   
    [WertAXFeld setFormatter:Koordinatenformatter];
    [WertAXFeld setAlignment:NSTextAlignmentRight];
    [WertAXFeld setDelegate:self];
@@ -851,18 +857,18 @@ float det(float v0[],float v1[])
    NSRect r=[WertAXStepper frame];
    r.size.width = r.size.height+5;
    [WertAXStepper setNeedsDisplay:YES];
-
+   
    [WertBXFeld setFormatter:Koordinatenformatter];
    [WertBXFeld setAlignment:NSTextAlignmentRight];
-    [WertBXFeld setDelegate:self];
-    [WertBYFeld setFormatter:Koordinatenformatter];
+   [WertBXFeld setDelegate:self];
+   [WertBYFeld setFormatter:Koordinatenformatter];
    [WertBYFeld setAlignment:NSTextAlignmentRight];
-    [WertBYFeld setDelegate:self];
-    
-    r=[WertBXStepper frame];
-    r.size.width = r.size.height+5;
-    [WertBXStepper setNeedsDisplay:YES];
-
+   [WertBYFeld setDelegate:self];
+   
+   r=[WertBXStepper frame];
+   r.size.width = r.size.height+5;
+   [WertBXStepper setNeedsDisplay:YES];
+   
    [PWMFeld setAlignment:NSTextAlignmentCenter];
    
    UndoSet = [NSMutableIndexSet indexSet];
@@ -870,8 +876,8 @@ float det(float v0[],float v1[])
    [DC_PWM setDelegate:self];
    [SpeedFeld setDelegate:self];
    [PWMFeld setDelegate:self];
-
-
+   
+   
    [Blockoberkante setIntValue:50];
    [OberkantenStepper setIntValue:[Blockoberkante intValue]];
    [Blockbreite setIntValue:100];
@@ -932,36 +938,57 @@ float det(float v0[],float v1[])
       //NSLog(@"i: %d motor: %d aktuellermotor: %d neuermotor: %d motorstatus: %d",i,motor, aktuellermotor,neuermotor,motorstatus);
       
    }
-
+   
    
    [ProfilPop removeAllItems];
    [ProfilPop addItemWithTitle:@"Profil waehlen"];
    NSArray* ProfilnamenArray = [self readProfilLib];
    [ProfilPop addItemsWithTitles:ProfilnamenArray];
-
    
-    motorstatus |= (1<<2);
-    motorstatus |= STEPEND_A;
-    //NSLog(@"motorstatus: %X",motorstatus);
-    motorstatus &= ~STEPEND_A;
-    motorstatus |= STEPEND_B;
-    //NSLog(@"motorstatus: %X",motorstatus);
-    motorstatus &= ~STEPEND_B;
-    motorstatus |= STEPEND_C;
-    //NSLog(@"motorstatus: %X",motorstatus);
-    motorstatus &= ~STEPEND_C;
-    motorstatus |= STEPEND_D;
-    //NSLog(@"motorstatus: %X",motorstatus);
-    motorstatus &= ~STEPEND_D;
-    
-    self.Kote = 5;
-    
+   
+   motorstatus |= (1<<2);
+   motorstatus |= STEPEND_A;
+   //NSLog(@"motorstatus: %X",motorstatus);
+   motorstatus &= ~STEPEND_A;
+   motorstatus |= STEPEND_B;
+   //NSLog(@"motorstatus: %X",motorstatus);
+   motorstatus &= ~STEPEND_B;
+   motorstatus |= STEPEND_C;
+   //NSLog(@"motorstatus: %X",motorstatus);
+   motorstatus &= ~STEPEND_C;
+   motorstatus |= STEPEND_D;
+   //NSLog(@"motorstatus: %X",motorstatus);
+   motorstatus &= ~STEPEND_D;
+   
+   self.Kote = 5;
+   
    [Schalendickefeld setFormatter:SimpleFormatter];
    [Schalendickefeld setFloatValue:2.2];
    //NSLog(@"AVR  awake ProfilGraph width: %f",ProfilGraph.frame.size.width); 
    [[self view] addSubview:ProfilGraph];
 }
 
+- (void)usbattachAktion:(NSNotification*)note
+{
+   int status = [[[note userInfo]objectForKey:@"attach"]intValue];
+   NSLog(@"AVR usbattachAktion status: %d",status);
+   
+   if (status == USBREMOVED)
+   {
+     // USB_OK_Feld.image = notok_image;
+      [USBKontrolle setStringValue:@"USB OFF"];
+      NSLog(@"usbattachAktion USBREMOVED ");
+   }
+  else if (status == USBATTACHED)
+   {
+     // USB_OK_Feld.image = ok_image
+      [USBKontrolle setStringValue:@"USB ON"];
+      
+      NSLog(@"usbattachAktion USBATTACHED");
+   }
+   
+   
+}
 
 - (void)USBStatusAktion:(NSNotification*)note
 {
@@ -3863,7 +3890,7 @@ return returnInt;
    else 
    {
       
-      if (abs(MausPunkt.x - oldMauspunkt.x) > [CNC steps]*0x7F) // Groesser als int16_t
+      if (fabs(MausPunkt.x - oldMauspunkt.x) > [CNC steps]*0x7F) // Groesser als int16_t
       {
          NSLog(@"zu grosser Schritt X");
          
@@ -5403,7 +5430,7 @@ return returnInt;
 
 - (void)LibProfileingabeAktion:(NSNotification*)note
 {
-   NSLog(@"LibProfileingabeAktion");
+   NSLog(@"LibProfileingabeAktion note: %@",note.userInfo);
    //NSLog(@"LibProfileingabeAktion note: %@",[[note userInfo] description]);
    /*
    Werte fuer "teil":
@@ -5506,6 +5533,7 @@ return returnInt;
    if ([note userInfo])
    {
       ProfilDic = [note userInfo];
+      NSLog(@"Profildic aus userInfo: %@",ProfilDic);
    }
    else
    {

@@ -149,7 +149,9 @@
    NSMutableArray*         BlockrahmenArray;
 
    NSPoint                  oldMauspunkt;
+   
    rProfilGraph*            ProfilGraph;
+  
    int                     GraphEnd;
    IBOutlet   NSTableView*   CNCTable;
    IBOutlet   NSScrollView*   CNCScroller;

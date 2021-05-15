@@ -188,6 +188,9 @@ class rViewController: NSViewController, NSWindowDelegate
 {
     let notokimage :NSImage = NSImage(named:NSImage.Name(rawValue: "notok_image"))!
    let okimage :NSImage = NSImage(named:NSImage.Name(rawValue: "ok_image"))!
+   
+   @IBOutlet weak var USB_OK_Feld: NSImageView!
+   
    // Robot
    var z0:Float = 30 // Hoehe Drehpunkt 0
    var l0:Float = 1// laenge Arm 0
@@ -217,12 +220,13 @@ class rViewController: NSViewController, NSWindowDelegate
    
    var formatter = NumberFormatter()
    
-      
+  
    var achse0_start:UInt16  = ACHSE0_START;
    var achse0_max:UInt16   = ACHSE0_MAX;
 
    var robotPList = UserDefaults.standard 
    let defaults = UserDefaults.standard
+   
    
    // https://learnappmaking.com/plist-property-list-swift-how-to/
    struct Preferences: Codable {
@@ -234,7 +238,7 @@ class rViewController: NSViewController, NSWindowDelegate
 
    func windowWillClose(_ aNotification: Notification) {
       print("windowWillClose ViewC")
-      let nc = NotificationCenter.default
+      //let nc = NotificationCenter.default
       //nc.post(name:Notification.Name(rawValue:"beenden"),
       //        object: nil,
       //        userInfo: nil)
@@ -280,7 +284,6 @@ class rViewController: NSViewController, NSWindowDelegate
 //      NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
 //      NotificationCenter.default.addObserver(self, selector: #selector(usbschnittdatenAktion), name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
 
-     
       
       
       defaults.set(25, forKey: "Age")
@@ -325,7 +328,7 @@ class rViewController: NSViewController, NSWindowDelegate
     // https://nabtron.com/quit-cocoa-app-window-close/
     override func viewDidAppear() 
     {
-      
+      USB_OK_Feld.image = notokimage
 
        teensyboardarray.append(["titel":TEENSY2_TITLE,"PID":TEENSY2_PID,"VID":TEENSY2_VID])
        teensyboardarray.append(["titel":TEENSY3_TITLE,"PID":TEENSY3_PID,"VID":TEENSY3_VID])
@@ -343,7 +346,7 @@ class rViewController: NSViewController, NSWindowDelegate
 
        print("viewDidAppear")
        self.view.window?.delegate = self as? NSWindowDelegate 
-       USB_OK_Feld.image = notokimage
+       
        let warnung = NSAlert.init()
        warnung.messageText = "Welches Board?"
        let boardarray = BoardPop.itemTitles 
@@ -356,8 +359,24 @@ class rViewController: NSViewController, NSWindowDelegate
        let devicereturn:Int = warnung.runModal().rawValue
        boardindex = devicereturn-1000
        print("devicereturn: \(devicereturn)")
-       BoardPop.selectItem(at:devicereturn-1000)
-   //    BoardPop.selectItem(at:boardindex)
+      if boardindex < teensyboardarray.count
+      {
+         BoardPop.selectItem(at:devicereturn-1000)
+         
+         let device = teensyboardarray[boardindex]
+         let erfolg = teensy.USBOpen(board:device)
+         usbstatus = erfolg
+         globalusbstatus = Int(erfolg)
+         print("viewDidAppear erfolg: \(erfolg) usbstatus: \(usbstatus) rawhid_status: \(rawhid_status())")
+         if usbstatus == 1
+         {
+            USB_OK_Feld.image = okimage
+         }
+         else
+         {
+            USB_OK_Feld.image = notokimage
+         }
+      }
     }
     
   /* 
@@ -385,6 +404,8 @@ class rViewController: NSViewController, NSWindowDelegate
       
     }
    */
+   
+
    
    @objc func beendenAktion(_ notification:Notification) 
     {
@@ -1014,9 +1035,7 @@ class rViewController: NSViewController, NSWindowDelegate
          Start_Knopf.isEnabled = false
          Stop_Knopf.isEnabled = false
       }
-      
-      
-   }
+    }
    
    @IBAction func check_USB(_ sender: NSButton)
    {
@@ -1024,8 +1043,8 @@ class rViewController: NSViewController, NSWindowDelegate
       let hidstatus = teensy.status()
       let nc = NotificationCenter.default
       var userinformation:[String : Any]
-     print("USBOpen usbstatus vor check: \(usbstatus) hidstatus: \(hidstatus) present: \(present)")
-      if (usbstatus > 0) // already open
+      print("USBOpen usbstatus vor check: \(usbstatus) hidstatus: \(hidstatus) present: \(present)")
+      if (hidstatus > 0) // already open
       {
          print("USB-Device ist schon da")
          let warnung = NSAlert.init()
@@ -1033,36 +1052,56 @@ class rViewController: NSViewController, NSWindowDelegate
          warnung.messageText = "USB-Device ist schon da"
          warnung.addButton(withTitle: "OK")
          warnung.runModal()
-        // return
-
+         USB_OK_Feld.image = okimage
+         
+         //   return
+         
       }
-      let device = teensyboardarray[boardindex]
-      let erfolg = teensy.USBOpen(board:device)
-      usbstatus = erfolg
-      globalusbstatus = Int(erfolg)
-   //   print("USBOpen erfolg: \(erfolg) usbstatus: \(usbstatus)")
+      else
+      {
+         let warnung = NSAlert.init()
+         warnung.messageText = "Welches Board?"
+         let boardarray = BoardPop.itemTitles 
+         for titel in boardarray
+         {
+            let buttonstring = titel
+            warnung.addButton(withTitle: titel)
+         }
+         warnung.addButton(withTitle: "cancel")
+         let devicereturn:Int = warnung.runModal().rawValue
+         boardindex = devicereturn-1000
+         print("devicereturn: \(devicereturn)")
+         if boardindex >= teensyboardarray.count
+         {
+            return;
+         }
+         let device = teensyboardarray[boardindex]
+         let erfolg = teensy.USBOpen(board:device)
+         usbstatus = erfolg
+         globalusbstatus = Int(erfolg)
+         //   print("USBOpen erfolg: \(erfolg) usbstatus: \(usbstatus)")
+      }
+      
       
       if (rawhid_status()==1)
       {
          print("status 1")
-         //USB_OK.backgroundColor = NSColor.green
-         //USB_OK.stringValue = "+"
          USB_OK_Feld.image = okimage
          print("USB-Device da")
          /*
-         let warnung = NSAlert.init()
-         warnung.messageText = "USB"
-         warnung.messageText = "USB-Device ist da"
-         warnung.addButton(withTitle: "OK")
-         //warnung.runModal()
+          let warnung = NSAlert.init()
+          warnung.messageText = "USB"
+          warnung.messageText = "USB-Device ist da"
+          warnung.addButton(withTitle: "OK")
+          //warnung.runModal()
           */
          let manu = get_manu()
          //println(manu) // ok, Zahl
-//         var manustring = UnsafePointer<CUnsignedChar>(manu)
+         //         var manustring = UnsafePointer<CUnsignedChar>(manu)
          //println(manustring) // ok, Zahl
          
          let manufactorername = String(cString: UnsafePointer(manu!))
-       //  print("str: ", manufactorername)
+         //  print("str: ", manufactorername)
          manufactorer.stringValue = manufactorername
          
          //manufactorer.stringValue = "Manufactorer: " + teensy.manufactorer()!
@@ -1070,17 +1109,14 @@ class rViewController: NSViewController, NSWindowDelegate
          Send_Knopf.isEnabled = true
          
          userinformation = ["message":"usb", "usbstatus": 1] as [String : Any]
-         nc.post(name:Notification.Name(rawValue:"usb_status"),
-                 object: nil,
-                 userInfo: userinformation)
-
+         
       }
       else
-         
+      
       {
          print("status 0")
-        // USB_OK.backgroundColor = NSColor.yellow
-        // USB_OK.stringValue = "-"
+         // USB_OK.backgroundColor = NSColor.yellow
+         // USB_OK.stringValue = "-"
          USB_OK_Feld.image = notokimage
          let warnung = NSAlert.init()
          warnung.messageText = "USB"
@@ -1091,24 +1127,29 @@ class rViewController: NSViewController, NSWindowDelegate
          nc.post(name:Notification.Name(rawValue:"usb_status"),
                  object: nil,
                  userInfo: userinformation)
-
+         
          /*
-         if let taste = USB_OK
-         {
-            //print("Taste USB_OK ist nicht nil")
-            taste.backgroundColor = NSColor.red
-         //USB_OK.backgroundColor = NSColor.redColor()
-           
-         }
-         else
-         {
-            print("Taste USB_OK ist nil")
-         }*/ 
+          if let taste = USB_OK
+          {
+          //print("Taste USB_OK ist nicht nil")
+          taste.backgroundColor = NSColor.red
+          //USB_OK.backgroundColor = NSColor.redColor()
+          
+          }
+          else
+          {
+          print("Taste USB_OK ist nil")
+          }*/ 
          Start_Knopf.isEnabled = false
          Stop_Knopf.isEnabled = false
          Send_Knopf.isEnabled = false
-         return
+         
+         //return
       }
+      nc.post(name:Notification.Name(rawValue:"usb_status"),
+              object: nil,
+              userInfo: userinformation)
+      
       //print("antwort: \(teensy.status())")
    }
    
@@ -1308,7 +1349,7 @@ class rViewController: NSViewController, NSWindowDelegate
    @IBOutlet weak var Anzeige: NSTextField!
    
    //@IBOutlet weak var USB_OK: NSTextField!
-   @IBOutlet weak var USB_OK_Feld: NSImageView!
+  // @IBOutlet weak var USB_OK_Feld: NSImageView!
    
    @IBOutlet weak var check_USB_Knopf: NSButton!
    @IBOutlet weak var BoardPop:NSPopUpButton!

@@ -50,7 +50,7 @@ class rPCB: rViewController
       
 
        
-      let sup = self.view.superview
+      //let sup = self.view.superview
       //print("DeviceTab superview: \(String(describing: sup)) ident: \(String(describing: sup?.identifier))")
       
       //USB_OK.backgroundColor = NSColor.greenColor()

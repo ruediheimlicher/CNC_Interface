@@ -47,18 +47,22 @@ class rCNCViewController:rViewController
        NotificationCenter.default.addObserver(self, selector: #selector(usbschnittdatenAktion), name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
       NotificationCenter.default.addObserver(self, selector:#selector(newDataAktion(_:)),name:NSNotification.Name(rawValue: "newdata"),object:nil)
       NotificationCenter.default.addObserver(self, selector:#selector(contDataAktion(_:)),name:NSNotification.Name(rawValue: "contdata"),object:nil)
+      NotificationCenter.default.addObserver(self, selector:#selector(usbattachAktion(_:)),name:NSNotification.Name(rawValue: "usb_attach"),object:nil)
+
 
    }
    
  
    override func keyDown(with theEvent: NSEvent)
    {
-      super.keyDown(with: theEvent)
+      //self.window.makeFirstResponder(AVR?.Profilfeld)
+    //  super.keyDown(with: theEvent)
       Swift.print( "CNCView Key Pressed" )
-   Swift.print(theEvent.keyCode)
+     Swift.print(theEvent.keyCode)
       // Apple Mouse, keyboard and Trackpad
       let optionKeyPressed = theEvent.modifierFlags.contains(.option)
       var arrowstep:Int32 = 100
+      
       if optionKeyPressed 
       {
           Swift.print("optionKeyPressed")
@@ -72,17 +76,23 @@ class rCNCViewController:rViewController
             AVR?.manRichtung(3, pfeilstep: arrowstep) // left
             break
          case 124:
+            print("right arrowstep: \(arrowstep)")
              AVR?.manRichtung(1, pfeilstep: arrowstep) // right
              break
          case 125:
+            print("down arrowstep: \(arrowstep)")
              AVR?.manRichtung(4, pfeilstep: arrowstep) // down
              break
          case 126:
+            print("up arrowstep: \(arrowstep)")
              AVR?.manRichtung(2, pfeilstep: arrowstep) // up
              break
          
          default:
-         return
+            
+            //print("default")
+            return;
+         //super.keyDown(with: theEvent)
       }// switch keycode
    
    }
@@ -135,6 +145,29 @@ class rCNCViewController:rViewController
  
  */
    
+   @objc func usbattachAktion(_ note:Notification) 
+   {
+      let info = note.userInfo
+      let status = info?["attach"] as! Int
+      print("ViewController usbattachAktion status: \(status)");
+      
+      if (status == USBREMOVED)
+      {
+         USB_OK_Feld.image = notokimage
+         //USBKontrolle.stringValue="USB OFF"
+         print("usbattachAktion USBREMOVED ")
+      }
+     else if (status == USBATTACHED)
+      {
+         USB_OK_Feld.image = okimage
+        // [USBKontrolle setStringValue:@"USB ON"];
+         
+         print("usbattachAktion USBATTACHED")
+      }
+      
+      
+   }
+
    
    @objc func usbsendAktion(_ notification:Notification) 
     {

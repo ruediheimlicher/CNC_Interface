@@ -5,7 +5,7 @@
 //  Created by Ruedi Heimlicher on 30.Juli.11.
 //  Copyright 2011 Skype. All rights reserved.
 //
-
+#import <Cocoa/Cocoa.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -14,7 +14,10 @@
 #include <IOKit/hid/IOHIDLib.h>
 #include <IOKit/usb/IOUSBLib.h>
 #include <IOKit/hid/IOHIDBase.h>
-//#include "hid.h"
+#include "hid.h"
+
+#define USBATTACHED           5
+#define USBREMOVED            6
 
 #define BUFFER_SIZE 32
 
@@ -299,7 +302,7 @@ int rawhid_open(int max, int vid, int pid, int usage_page, int usage)
    mach_port_t             masterPort;
    CFMutableDictionaryRef  matchingDict = NULL;
    CFRunLoopSourceRef      runLoopSource;
-    fprintf(stderr,"fprintf rawhid_open vid: %d pid: %d\n");
+   fprintf(stderr,"fprintf rawhid_open vid: %d pid: %d\n");
    
    
    //Create a master port for communication with the I/O Kit
@@ -330,6 +333,12 @@ int rawhid_open(int max, int vid, int pid, int usage_page, int usage)
    //fflush (stdout); 
 	if (max < 1) return 0;
    // Start the HID Manager
+   if (hid_manager) 
+   {
+      CFRelease(hid_manager);
+      hid_manager = NULL;
+   }
+
    // http://developer.apple.com/technotes/tn2007/tn2187.html
 	if (!hid_manager)
    {
@@ -517,7 +526,11 @@ static void detach_callback(void *context, IOReturn r, void *hid_mgr, IOHIDDevic
       {
 			p->open = 0;
 			CFRunLoopStop(CFRunLoopGetCurrent());
-         
+         NSNotificationCenter *nc=[NSNotificationCenter defaultCenter];
+         NSDictionary* NotDic = [NSDictionary  dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:USBREMOVED],@"attach", nil];
+         [nc postNotificationName:@"usb_attach" object:NULL userInfo:NotDic];
+         fprintf(stderr,"detach notification\n");
+
 			return;
 		}
 	}
@@ -562,6 +575,10 @@ static void attach_callback(void *context, IOReturn r, void *hid_mgr, IOHIDDevic
       fprintf(stderr,"new rawhid device found\n");
    }
    */
+   NSNotificationCenter *nc=[NSNotificationCenter defaultCenter];
+   NSDictionary* NotDic = [NSDictionary  dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:USBATTACHED],@"attach", nil];
+   [nc postNotificationName:@"usb_attach" object:NULL userInfo:NotDic];
+   fprintf(stderr,"attach notification\n");
 
 }
 

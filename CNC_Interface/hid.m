@@ -300,7 +300,7 @@ int rawhid_open(int max, int vid, int pid, int usage_page, int usage)
    
    kern_return_t           result;
    mach_port_t             masterPort;
-   CFMutableDictionaryRef  matchingDict = NULL;
+   //CFMutableDictionaryRef  matchingDict = NULL;
    CFRunLoopSourceRef      runLoopSource;
    fprintf(stderr,"fprintf rawhid_open vid: %d pid: %d\n");
    

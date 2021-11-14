@@ -978,12 +978,13 @@ float det(float v0[],float v1[])
      // USB_OK_Feld.image = notok_image;
       [USBKontrolle setStringValue:@"USB OFF"];
       NSLog(@"usbattachAktion USBREMOVED ");
+      AVR_USBStatus = 0;
    }
   else if (status == USBATTACHED)
    {
      // USB_OK_Feld.image = ok_image
       [USBKontrolle setStringValue:@"USB ON"];
-      
+      AVR_USBStatus = 1;
       NSLog(@"usbattachAktion USBATTACHED");
    }
    
@@ -7887,7 +7888,7 @@ return returnInt;
    [nc postNotificationName:@"usbopen" object:self userInfo:tempDic];
 
    [nc postNotificationName:@"slavereset" object:self userInfo:NULL];
-
+#pragma mark HOME horizontal
    NSLog(@"Horizontal bis Anschlag");
    
    NSMutableArray* AnfahrtArray = [[NSMutableArray alloc]initWithCapacity:0];
@@ -8488,7 +8489,7 @@ return returnInt;
 
    // Zurueck zu Blockoberkante
    PositionA.y += (blockoberkante/2 - durchmesserA/2); // Oberkante Rumpfrohr
-   PositionB.y -= (blockoberkante/2 - durchmesserB/2);
+   PositionB.y += (blockoberkante/2 - durchmesserB/2);
    [KoordinatenTabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",[NSNumber numberWithFloat:aktuellepwm*red_pwm],@"pwm",nil]];
 
    
@@ -9076,7 +9077,7 @@ return returnInt;
       }
       
       [SchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"art"]; // 
-      //NSLog(@"reportUSB_SendArray SchnittdatenDic: %@",[SchnittdatenDic description]);
+      NSLog(@"reportUSB_SendArray SchnittdatenDic: %@",[SchnittdatenDic description]);
       
       //   [nc postNotificationName:@"usbschnittdaten" object:self userInfo:SchnittdatenDic];
       //NSLog(@"reportUSB_SendArray delayok: %d",delayok);

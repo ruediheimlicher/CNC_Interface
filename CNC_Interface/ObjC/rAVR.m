@@ -2820,6 +2820,7 @@ return returnInt;
       
       if ((cncstatus)|| !([CNC_Seite1Check state] || [CNC_Seite2Check state]))
       {
+         NSLog(@"AVR  manRichtung  return");
          return;
       }
       
@@ -2829,6 +2830,7 @@ return returnInt;
          aktpwm = [DC_PWM intValue];
       }
       NSLog(@"AVR  manRichtung aktpwm: %d",aktpwm);
+      
       [self setStepperstrom:aktpwm];
       NSMutableArray* ManArray = [[NSMutableArray alloc]initWithCapacity:0];
       
@@ -2939,9 +2941,9 @@ return returnInt;
          [tempDic setObject:[NSNumber numberWithInt:position] forKey:@"position"];
          
          NSDictionary* tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
-         //NSLog(@"D i: %d",i);
+         NSLog(@"D i: %d",i);
          [HomeSchnittdatenArray addObject:[CNC SchnittdatenVonDic:tempSteuerdatenDic]];
-         //NSLog(@"E i: %d",i);
+         NSLog(@"E i: %d",i);
       } // for i
       
       NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
@@ -2952,13 +2954,13 @@ return returnInt;
       for(k=0;k<[HomeSchnittdatenArray count];k++)
       {
          NSString* tempzeilenstring = [[HomeSchnittdatenArray objectAtIndex:k] componentsJoinedByString:@","] ;
-         //NSLog(@"k: %d String: %@",k,tempzeilenstring);
+         NSLog(@"k: %d String: %@",k,tempzeilenstring);
          [SchnittdatenStringArray addObject:tempzeilenstring];
        }
       [HomeSchnittdatenDic setObject:SchnittdatenStringArray forKey:@"schnittdatenstringarray"];
 
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
-      NSLog(@"AVR  reportManLeft HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
+ //     NSLog(@"AVR  ManRichtung HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
       
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"home"]; // 
       
@@ -4145,22 +4147,26 @@ return returnInt;
             {
                case MANDOWN:
                {
-                  //NSLog(@"AVR PfeilAktion mandown");
+                  NSLog(@"AVR PfeilAktion mandown");
                   [self reportManDown:NULL];
                }break;
                case MANUP:
                {
-                  //NSLog(@"AVR PfeilAktion manup");
-                  [self reportManUp:NULL];
+                  NSLog(@"AVR PfeilAktion manup");
+                  [self ManRichtung:2 pfeilstep: 500];
+                  [CNC_Downtaste setEnabled:YES];
+                  [AnschlagUntenIndikator setTransparent:YES];
+
+                 // [self reportManUp:NULL];
                }break;
                case MANLEFT:
                {
-                  //NSLog(@"AVR PfeilAktion manleft");
+                  NSLog(@"AVR PfeilAktion manleft");
                   [self reportManLeft:NULL];
                }break;
                case MANRIGHT:
                {
-                  //NSLog(@"AVR PfeilAktion manright");
+                  NSLog(@"AVR PfeilAktion manright");
                   [self reportManRight:NULL];
                }break;
                   
@@ -4172,7 +4178,7 @@ return returnInt;
          }
       }
    }
-    
+   NSLog(@"AVR PfeilAktion end");
 
 }
 

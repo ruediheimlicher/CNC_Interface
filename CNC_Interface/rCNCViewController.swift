@@ -224,7 +224,7 @@ class rCNCViewController:rViewController
       print("cncviewcontroller usbschnittdatenAktion")
        usb_schnittdatenarray.removeAll()
        let info = notification.userInfo
-      print("info: \(info)")
+   //   print("info: \(info)")
    //    let usb_pwm =  info?["pwm"] as! UInt8
    //    let usb_delayok =  info?["delayok"] as! UInt8
        
@@ -258,7 +258,7 @@ class rCNCViewController:rViewController
       }
       
       
-        print("usbschnittdatenAktion usb_schnittdatenarray: \(usb_schnittdatenarray )")
+        //print("usbschnittdatenAktion usb_schnittdatenarray: \(usb_schnittdatenarray )")
        
       
       //teensy.write_byteArray[0] = UInt8((0x00FF) & 0xFF) // lb
@@ -314,7 +314,7 @@ class rCNCViewController:rViewController
     @objc func writeCNCAbschnitt()
     {
       //N
-      print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
+     // print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
      teensy.write_byteArray.removeAll()
       if Stepperposition < usb_schnittdatenarray.count
       {

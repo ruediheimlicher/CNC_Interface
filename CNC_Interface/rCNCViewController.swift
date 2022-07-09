@@ -282,7 +282,7 @@ class rCNCViewController:rViewController
          {
          case NSApplication.ModalResponse.alertFirstButtonReturn: // Einschalten
                let device = teensyboardarray[boardindex]
-               openerfolg = Int(teensy.USBOpen(board: device))
+            openerfolg = Int(teensy.USBOpen(code: device, board: boardindex))
             break
             
          case NSApplication.ModalResponse.alertSecondButtonReturn:
@@ -312,10 +312,13 @@ class rCNCViewController:rViewController
      }
 
     @objc func writeCNCAbschnitt()
-    {
-      //N
-     // print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
-     teensy.write_byteArray.removeAll()
+   {
+      
+      //print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
+      let count = usb_schnittdatenarray.count
+      print("writeCNCAbschnitt Stepperposition: \(Stepperposition) count: \(count)")
+      teensy.write_byteArray.removeAll()
+      
       if Stepperposition < usb_schnittdatenarray.count
       {
          if halt > 0
@@ -330,32 +333,32 @@ class rCNCViewController:rViewController
          else
          {
             let aktuellezeile = usb_schnittdatenarray[Stepperposition]
-            //print("aktuellezeile: \(aktuellezeile)")
+            // print("aktuellezeile: \(aktuellezeile) 25: \(aktuellezeile[25])")
             for wert in aktuellezeile
             {
                teensy.write_byteArray.append(wert)
             }
             //print("write_byteArray: \(teensy.write_byteArray)")
             if (globalusbstatus > 0)
-             {
-                let senderfolg = teensy.send_USB()
-                print("writeCNCAbschnitt senderfolg: \(senderfolg)")
-             }
-
-           // readTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(usb_teensy.cont_read_USB(_:)), userInfo: timerDic, repeats: true)
+            {
+               let senderfolg = teensy.send_USB()
+               print("writeCNCAbschnitt senderfolg: \(senderfolg)")
+            }
+            
             
             Stepperposition += 1
          }// halt
       }
       else
       {
-         print("writeCNCAbschnitt HALT ")
+         print("writeCNCAbschnitt Fertig ")
          teensy.stop_read_USB()
          if readTimer?.isValid ?? false
          {
             print("writeCNCAbschnitt HALT readTimer inval")
             readTimer?.invalidate()
          }
+         return
          
       }
       
@@ -368,8 +371,8 @@ class rCNCViewController:rViewController
       // N
       var lastData = teensy.getlastDataRead()
       let lastDataArray = [UInt8](lastData)
-      print("newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")       
-      
+      //print("newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")       
+      print("newDataAktion start")
       var ii = 0
       while ii < 10
       {
@@ -377,11 +380,11 @@ class rCNCViewController:rViewController
          ii = ii+1
       }
       
-      let u = ((Int32(lastData[1])<<8) + Int32(lastData[2]))
+      //let u = ((Int32(lastData[1])<<8) + Int32(lastData[2]))
       //print("hb: \(lastData[1]) lb: \(lastData[2]) u: \(u)")
       let info = notification.userInfo
       
-      let data = "foo".data(using: .utf8)!      
+      //let data = "foo".data(using: .utf8)!      
       //print("info: \(String(describing: info))")
       //print("new Data")
       //let data = notification.userInfo?["data"]
@@ -398,6 +401,7 @@ class rCNCViewController:rViewController
       
       if let d = info!["contdata"] // Data vornanden
       {
+         print("newDataAktion if let d ok")
          var usbdata = info!["data"] as! [UInt8]
          
          //      let stringFromByteArray = String(data: Data(bytes: usbdata), encoding: .utf8)         
@@ -405,7 +409,7 @@ class rCNCViewController:rViewController
          //      print("usbdata: \(usbdata)\n")
          
          //if  usbdata = info!["data"] as! [String] // Data vornanden
-         if  usbdata.count > 0 // Data vornanden
+         if  usbdata.count > 0 // Data vorhanden
          {
             //print("usbdata: \(usbdata)\n") // d: [0, 9, 56, 0, 0,... 
             var NotificationDic = [String:Int]()
@@ -414,7 +418,7 @@ class rCNCViewController:rViewController
             //printhex(wert: abschnittfertig)
             // https://useyourloaf.com/blog/swift-string-cheat-sheet/
             //print("abschnittfertig: \(String(abschnittfertig, radix:16, uppercase:true))\n")
-            print("abschnittfertig: \(hex(abschnittfertig))\n")
+            print("newDataAktion abschnittfertig: \(hex(abschnittfertig))\n")
             if usbdata != nil
             {
                //print("usbdata not nil\n")
@@ -530,8 +534,8 @@ class rCNCViewController:rViewController
                   break
                   
                case 0xD0:
-                  print("Letzter Abschnitt")
-                   print("HomeAnschlagSet: \(HomeAnschlagSet)")
+                  print("***   ***   Letzter Abschnitt")
+                  //print("HomeAnschlagSet: \(HomeAnschlagSet)")
                   NotificationDic["abschnittfertig"] = Int(abschnittfertig)
                   let nc = NotificationCenter.default
                   nc.post(name:Notification.Name(rawValue:"usbread"),
@@ -573,8 +577,8 @@ class rCNCViewController:rViewController
                var HomeIndexSet = IndexSet(integersIn:0xAA...0xAD)
                EndIndexSet.insert(integersIn:0xB5...0xB8)
                
-               print("EndIndexSet: \(EndIndexSet)")
-                print("HomeIndexSet: \(HomeIndexSet)")
+               //print("EndIndexSet: \(EndIndexSet)")
+              //  print("HomeIndexSet: \(HomeIndexSet)")
 
                
                if EndIndexSet.contains(Int(abschnittfertig))
@@ -628,6 +632,10 @@ class rCNCViewController:rViewController
          } // if count > 0
          
       } // if d
+      else
+      {
+         print("*** newDataAktion if let d not ok")
+      }
       //let dic = notification.userInfo as? [String:[UInt8]]
       //print("dic: \(dic ?? ["a":[123]])\n")
       
@@ -705,6 +713,7 @@ class rCNCViewController:rViewController
    @objc @IBAction  func showEinstellungen(_ sender: Any)
    {
       AVR?.showEinstellungen()
+      
    }
   
    /*

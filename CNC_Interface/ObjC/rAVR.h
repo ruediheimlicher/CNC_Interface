@@ -435,7 +435,7 @@
 - (int)sendReport:(NSString*)derReport mitDaten:(NSArray*)dieDaten;
 - (NSString*)IntToBin:(int)dieZahl;
 - (int)halt;
-- (NSArray*)readLib;
+- (NSMutableArray*)readLib;
 - (void)Blockeinfuegen;
 - (IBAction)reportBlockkonfigurieren:(id)sender;
 - (IBAction)reportBlockanfuegen:(id)sender;

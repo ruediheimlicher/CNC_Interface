@@ -10,13 +10,7 @@ import Cocoa
 
 class rPCB: rViewController 
 {
-   
-    
- //  var teensy = usb_teensy()
-    
-   
-   
-   
+      
    var hintergrundfarbe:NSColor = NSColor()
    
    override func viewDidAppear() 

@@ -93,6 +93,7 @@ return NULL;
  // Oberseite
    int anzWerte=0;
    int anfangsindex=4;
+   // Bereich der Berechnung festlegen
    int endindex=7;
    int anzPunkte=5;
    for (i=anfangsindex;i<endindex;i++)
@@ -728,6 +729,15 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
    {
       [tempArray addObject:[NSNumber numberWithInt:1]];
    }
+   
+   // Zusaetzliche Objekte einfuegen bis 36
+   for (uint8_t addindex = 0;addindex < 14; addindex++)
+   {
+      [tempArray addObject:[NSNumber numberWithInt:0]];
+   }
+  // [tempArray replaceObjectAtIndex:24 withObject:[NSNumber numberWithInt:17]];
+
+   [tempArray replaceObjectAtIndex:32 withObject:[NSNumber numberWithInt:3]];
    
    //NSLog(@"tempArray indexl: %d",[[derDatenDic objectForKey:@"indexl"]intValue]);
    //NSLog(@"SchnittdatenVonDic tempArray: %@",[tempArray description]);

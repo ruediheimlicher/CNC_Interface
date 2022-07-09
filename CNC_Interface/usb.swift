@@ -27,7 +27,9 @@ class rTimerInfo {
 {
    var hid_usbstatus: Int32 = 0
    
-   var read_byteArray = [UInt8](repeating: 0x00, count: BUFFER_SIZE)
+    var boardindex:Int = 0 // 0: teensy++2  1: teensy3.xx
+   
+    var read_byteArray = [UInt8](repeating: 0x00, count: BUFFER_SIZE)
    var last_read_byteArray = [UInt8](repeating: 0x00, count: BUFFER_SIZE)
    var write_byteArray: Array<UInt8> = Array(repeating: 0x00, count: BUFFER_SIZE)
    // var testArray = [UInt8]()
@@ -48,12 +50,13 @@ class rTimerInfo {
       super.init()
    }
    
-   open func USBOpen(board:[String:Any])->Int32
+    open func USBOpen(code:[String:Any] , board: Int)->Int32
    {
+      boardindex = board
       var r:Int32 = 0
       
-      let PID:Int32 = Int32(board["PID"] as! Int32)//
-      let VID:Int32 = Int32(board["VID"] as! Int32)//
+      let PID:Int32 = Int32(code["PID"] as! Int32)//
+      let VID:Int32 = Int32(code["VID"] as! Int32)//
       print("func usb_teensy.USBOpen PID: \(PID) VID: \(VID)")
       // rawhid_open(int max, int vid, int pid, int usage_page, int usage)
       var    out = rawhid_open(1,  VID, PID, 0xFFAB, 0x0200)
@@ -125,7 +128,10 @@ class rTimerInfo {
       return prodstring
    }
    
-   
+    open func setboardindex(board:Int)
+    {
+       boardindex = board
+    }
    
    open func status()->Int32
    {
@@ -194,7 +200,7 @@ class rTimerInfo {
    
    @objc open func cont_read_USB(_ timer: Timer)
    {
-   //   print("\n*** cont_read_USB\n")
+     // print("\n*** cont_read_USB start")
     //  print("*read_OK: \(read_OK)")
       if (read_OK).boolValue
       {
@@ -207,44 +213,17 @@ class rTimerInfo {
          //print("tempbyteArray in Timer: *\(read_byteArray)*")
         // var timerdic: [String: Int]
          
-         guard let timerInfo = timer.userInfo as? rTimerInfo else { return }
-
+         guard let timerInfo = timer.userInfo as? rTimerInfo else 
+         { 
+            print("cont_read_USB timerinfo not OK")
+            return 
+            
+         }
+         
              timerInfo.count += 1
     //         print("cont_read_USB timerInfo: \(timerInfo.count)")
       
-         /*
-          if  var dic = timer.userInfo as? NSMutableDictionary
-          {
-            if var count:Int = dic["count"] as? Int 
-          {
-          count = count + 1
-          dic["count"] = count
-          //dic["nr"] = count+2
-          //println(dic)
-          //usb_count += 1
-          }
-          }
           
-         var timerdic:Dictionary<String,Int?> = timer.userInfo as! Dictionary<String,Int?>
-         //let messageString = userInfo["message"]
-         var tempcount = timerdic["count"]!
-         */
-         
-         //print("+++ new read_byteArray in Timer:")
-         /*
-          for  i in 0...12
-          {
-          print(" \(read_byteArray[i])")
-          }
-          println()
-          for  i in 0...12
-          {
-          print(" \(last_read_byteArray[i])")
-          }
-          println()
-          println()
-          */
-         
          
          
          //timerdic["count"] = 2
@@ -260,6 +239,8 @@ class rTimerInfo {
                         timerInfo.count += 1
                         print("cont_read_USB timerInfo: \(timerInfo.count)")
             */
+            
+            
             last_read_byteArray = read_byteArray
             lastDataRead = Data(bytes:read_byteArray)
             let usbData = Data(bytes:read_byteArray)
@@ -267,14 +248,17 @@ class rTimerInfo {
             datatruecounter += 1
             let codehex = read_byteArray[0]
             let codehexstring = String(codehex, radix:16, uppercase:true)
-            print("cont_read_USB codehex: \(codehex) codehexstring: \(codehexstring)")
-            print("+++ new read_byteArray in Timer:")
+            print("cont_read_USB new Data codehex: \(codehex) codehex: \(codehexstring)")
+            
+            /*
+            print("+++ new read_byteArray in Timer code: \(read_byteArray[0])")
+            
             for  i in 0..<BUFFER_SIZE
             {
                print(" \(read_byteArray[i])", terminator: "")
             }
             print("\n")
-
+*/
             // http://dev.iachieved.it/iachievedit/notifications-and-userinfo-with-swift-3-0/
             
             //let usbdic = ["message":"neue Daten", "data":read_byteArray] as [String : UInt8]
@@ -387,7 +371,16 @@ class rTimerInfo {
   */    
       
      //    let senderfolg = rawhid_send(0,&write_byteArray, Int32(BUFFER_SIZE), 50)
-let senderfolg = rawhid_send(0,&write_byteArray, 32, 50)
+      var senderfolg:Int32 = 0xFF
+      if  boardindex == 0 // teensy++2
+      {
+         senderfolg = rawhid_send(0,&write_byteArray, 32, 50)
+      }
+      else if boardindex == 1 // teensy3.xx
+      {
+         senderfolg = rawhid_send(0,&write_byteArray, 64, 50)
+      }
+      
          
          if hid_usbstatus == 0
          {

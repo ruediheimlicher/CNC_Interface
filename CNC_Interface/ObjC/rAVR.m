@@ -1381,7 +1381,7 @@ return returnInt;
    NSString*  ProfilLibPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@%@",@"/Documents",@"/CNCDaten",@"/ProfilLib"];
    //NSURL* LibURL=[NSURL fileURLWithPath:LibPfad];
    LibOK= ([Filemanager fileExistsAtPath:ProfilLibPfad isDirectory:&istOrdner]&&istOrdner);
-   //NSLog(@"readProfilLib:    LibPfad: %@ LibOK: %d",ProfilLibPfad, LibOK );
+   NSLog(@"readProfilLib:    LibPfad: %@ LibOK: %d",ProfilLibPfad, LibOK );
    if (LibOK)
    {
       ;
@@ -1438,7 +1438,7 @@ return returnInt;
       CNC_Eingabe=[[rEinstellungen alloc]init];
       
       //[EinstellungenFenster showWindow:self];
-      
+      [self reportNeueLinie:(NULL)];
       //[self Alert:@"showEinstellungenFenster nach init"];
    }
    
@@ -1449,7 +1449,7 @@ return returnInt;
 
 
 
-- (NSArray*)readLib
+- (NSMutableArray*)readLib
 {
    NSMutableArray* LibElementArray = [[NSMutableArray alloc]initWithCapacity:0];
    BOOL LibOK=NO;
@@ -2109,12 +2109,15 @@ return returnInt;
       //NSLog(@"tempSchnittdatenArray: %@",[tempSchnittdatenArray description]);
       
       [SchnittdatenArray addObject:[CNC SchnittdatenVonDic:tempSteuerdatenDic]];
+      
+      
+      
       //NSLog(@"tempSteuerdatenDic: %@",[tempSteuerdatenDic description]);
       cncindex++;
    }
-   //  NSLog(@"CNCDatenArray: %@",[[CNCDatenArray valueForKey:@"pwm"]description]);
    
-   
+   // NSLog(@"CNCDatenArray: %@",[[CNCDatenArray valueForKey:@"pwm"]description]);
+    
    //NSLog(@"wegaoben: %2.2f wegaunten: %2.2f wegboben: %2.2f wegbunten: %2.2f",wegaoben,wegaunten, wegboben, wegbunten);
    
    //anzaxminus,anzayminus ,anzbxminus, anzbyminus;
@@ -2174,7 +2177,7 @@ return returnInt;
    cncposition =0;
    if (i==0 || i==[KoordinatenTabelle count]-1)
    {
-      //NSLog(@"reportStopKnopf SchnittdatenArray: %@",[SchnittdatenArray description]);
+      NSLog(@"reportStopKnopf SchnittdatenArray: %@",[SchnittdatenArray description]);
    }
    
    //NSLog(@"reportStopKnopf CNCDatenArray: %@",[CNCDatenArray description]);
@@ -2206,9 +2209,9 @@ return returnInt;
    //NSLog(@"reportStopKnopf tempKoordinatenTabelle: %@ count: %d ",[tempKoordinatenTabelle description],[tempKoordinatenTabelle count]);
    //NSLog(@"reportStopKnopf tempKoordinatenTabelle count: %d ",[tempKoordinatenTabelle count]);
    //NSLog(@"reportStopKnopf KoordinatenTabelle count: %d",[KoordinatenTabelle count]);
-   NSLog(@"reportStopKnopf KoordinatenTabelle neu: %@",[KoordinatenTabelle description]);
+   //NSLog(@"reportStopKnopf KoordinatenTabelle neu: %@",[KoordinatenTabelle description]);
    int anzDaten=[KoordinatenTabelle count]-1;
-   NSLog(@"reportStopKnopf anzDaten: %d",anzDaten);
+   //NSLog(@"reportStopKnopf anzDaten: %d",anzDaten);
    //[PositionFeld setIntValue:[KoordinatenTabelle count]-1];
    [IndexFeld setIntValue:anzDaten];
    [IndexStepper setIntValue:anzDaten];
@@ -5437,7 +5440,7 @@ return returnInt;
 
 - (void)LibProfileingabeAktion:(NSNotification*)note
 {
-   NSLog(@"LibProfileingabeAktion note: %@",note.userInfo);
+   //NSLog(@"LibProfileingabeAktion note: %@",note.userInfo);
    //NSLog(@"LibProfileingabeAktion note: %@",[[note userInfo] description]);
    /*
    Werte fuer "teil":
@@ -5720,8 +5723,8 @@ return returnInt;
       float winkelA = [CNC EndleistenwinkelvonProfil:[ProfilDic objectForKey:@"profil1array"]];
      // NSLog(@"Endleistenwinkel A: %2.2f",winkelA*180/M_PI);
 
-      //float winkelB = [CNC EndleistenwinkelvonProfil:[ProfilDic objectForKey:@"profil2array"]];
-      float winkelB = [CNC EndleistenwinkelvonProfil:Profil2Array];
+      float winkelB = [CNC EndleistenwinkelvonProfil:[ProfilDic objectForKey:@"profil2array"]];
+      //float winkelB = [CNC EndleistenwinkelvonProfil:Profil2Array];
       //NSLog(@"Endleistenwinkel B: %2.2f",winkelB*180/M_PI);
 
      // if ([OberseiteCheckbox state]&& (![OberseiteCheckbox state]))
@@ -5792,7 +5795,7 @@ return returnInt;
       
    }
    
-   //NSLog(@"AVR KoordinatenTabelle: %@",[KoordinatenTabelle description]);
+   NSLog(@"AVR KoordinatenTabelle: %@",[KoordinatenTabelle description]);
 
    // Dic mit keys x,y,index, Werte mit wahrer laenge in mm proportional Profiltiefe
 /*
@@ -8192,7 +8195,6 @@ return returnInt;
 #pragma mark AutoTask
 - (IBAction)reportProfilTask:(id)sender
 {
-   //[self reportOberkanteAnfahren:NULL];
    [CNC_Stoptaste setState:0];
    [CNC_Neutaste performClick:NULL];
    [CNC_Starttaste performClick:NULL];
@@ -9067,6 +9069,7 @@ return returnInt;
          //NSLog(@"k: %d String: %@",k,tempzeilenstring);
          [SchnittdatenStringArray addObject:tempzeilenstring];
        }
+      
       [SchnittdatenDic setObject:SchnittdatenStringArray forKey:@"schnittdatenstringarray"];
       
       [SchnittdatenDic setObject:[NSNumber numberWithInt:cncposition] forKey:@"cncposition"];
@@ -9083,7 +9086,7 @@ return returnInt;
       }
       
       [SchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"art"]; // 
-      NSLog(@"reportUSB_SendArray SchnittdatenDic: %@",[SchnittdatenDic description]);
+      //NSLog(@"reportUSB_SendArray SchnittdatenDic: %@",[SchnittdatenDic description]);
       
       //   [nc postNotificationName:@"usbschnittdaten" object:self userInfo:SchnittdatenDic];
       //NSLog(@"reportUSB_SendArray delayok: %d",delayok);
@@ -9137,20 +9140,20 @@ return returnInt;
 
 - (void)USBReadAktion:(NSNotification*)note
 {
-   NSLog(@"AVR  USBReadAktion note: %@",[[note userInfo]description]);
+   //NSLog(@"AVR  USBReadAktion note: %@",[[note userInfo]description]);
    
    if ([[note userInfo]objectForKey:@"inposition"])
    {
       if ([[[note userInfo]objectForKey:@"outposition"]intValue] > [PositionFeld intValue])
       {
          [PositionFeld setIntValue:[[[note userInfo]objectForKey:@"outposition"]intValue]];
-         [ProfilGraph setStepperposition:[[[note userInfo]objectForKey:@"outposition"]intValue]];
+         [ProfilGraph setStepperposition:[[[note userInfo]objectForKey:@"outposition"]intValue]-1];
          [ProfilGraph setNeedsDisplay:YES];
       }
        if ([[[note userInfo]objectForKey:@"stepperposition"]intValue] > [CNCPositionFeld intValue])
        {
          [PositionFeld setIntValue:[[[note userInfo]objectForKey:@"stepperposition"]intValue]];
-          [ProfilGraph setStepperposition:[[[note userInfo]objectForKey:@"stepperposition"]intValue]];
+          [ProfilGraph setStepperposition:[[[note userInfo]objectForKey:@"stepperposition"]intValue]-1];
           [ProfilGraph setNeedsDisplay:YES];
        }
    }
@@ -9170,14 +9173,43 @@ return returnInt;
       homeanschlagCount = [[[note userInfo]objectForKey:@"homeanschlagset"]intValue];
    
    }
-   NSLog(@"homeanschlagCount: %d",homeanschlagCount);
+   //NSLog(@"homeanschlagCount: %d",homeanschlagCount);
    //if([[note userInfo]objectForKey:@"abschnittcode"])
-   if([[note userInfo]objectForKey:@"abschnittcode"])
+   
+//   if([[note userInfo]objectForKey:@"abschnittcode"])
+   if([[note userInfo]objectForKey:@"abschnittfertig"])
    {
-      int abschnittfertig=[[[note userInfo]objectForKey:@"abschnittcode"]intValue];
       
+      //int abschnittfertig=[[[note userInfo]objectForKey:@"abschnittcode"]intValue];
+      int abschnittfertig=[[[note userInfo]objectForKey:@"abschnittfertig"]intValue];
+      
+      uint16_t stepperposition = [[[note userInfo]objectForKey:@"stepperposition"]intValue];
+      uint16_t anzsteps = [SchnittdatenArray count];
+      
+      NSLog(@"AVR  USBReadAktion abschnittfertig: %d stepperposition: %d anzsteps: %d)",abschnittfertig,stepperposition,anzsteps);
+      
+      if (abschnittfertig >= 0xA0)
+      {
+         [CNC_busySpinner stopAnimation:NULL];
+      }
+
       switch (abschnittfertig)
       {
+         case 0xD0: // letzter Abschnitt
+         {
+            NSLog(@"AVR  USBReadAktion abschnittcode D0 anzsteps: %d stepperposition: %d",anzsteps, stepperposition);
+         }break;
+         case 0xBD: // Abschnitt fertig // von Stepper_20
+            {
+               NSLog(@"AVR  USBReadAktion abschnittcode BD anzsteps: %d stepperposition: %d",anzsteps, stepperposition);
+               // letzte Marke setzen
+               [ProfilGraph setStepperposition:stepperposition];
+               [ProfilGraph setNeedsDisplay:YES];
+               [self setBusy:NO];
+                NSBeep();
+               
+            }break;
+
          case 0xAF:
          {
              NSLog(@"AVR USBReadAktion next %@",[[note userInfo] description]);

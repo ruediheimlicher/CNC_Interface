@@ -19,7 +19,7 @@
 #define USBATTACHED           5
 #define USBREMOVED            6
 
-#define BUFFER_SIZE 32
+#define BUFFER_SIZE 64
 
 //#define printf(...) // comment this out to get lots of info printed
 

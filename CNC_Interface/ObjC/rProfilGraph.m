@@ -120,11 +120,11 @@ int (^add)(int,int) = ^(int number1, int number2){
 
 - (void)setStepperposition:(int)pos
 {
-   NSLog(@"setStepperposition pos: %d",pos);
+   //NSLog(@"setStepperposition pos: %d",pos);
    stepperposition = pos;
    if ([DatenArray count] && pos < [DatenArray count])
    {
-      NSLog(@"setStepperposition ok");
+      //NSLog(@"setStepperposition ok");
       NSPoint PunktA=NSMakePoint([[[DatenArray objectAtIndex:pos]objectForKey:@"ax"]floatValue]*scale,[[[DatenArray objectAtIndex:pos]objectForKey:@"ay"]floatValue]*scale);
       //NSLog(@"i: %d Punkt.x: %.4f Punkt.y: %.4f",i,Punkt.x,Punkt.y);
       NSRect tempMarkARect=NSMakeRect(PunktA.x-4.1, PunktA.y-4.1, 8.2, 8.2);
@@ -429,7 +429,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 
 - (void)mouseUp:(NSEvent*)derEvent
 {
-   NSLog(@"mouseUp:");
+   //NSLog(@"mouseUp:");
    NSMutableDictionary* MausDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [MausDic setObject:[NSNumber numberWithInt:0] forKey:@"mausistdown"];
    [MausDic setObject:[NSNumber numberWithInt:GraphOffset] forKey:@"graphoffset"];
@@ -656,7 +656,7 @@ int (^add)(int,int) = ^(int number1, int number2){
   
    if ([[NSGraphicsContext currentContext]isDrawingToScreen])
    {
-      NSLog(@"ProfilGraph drawRect screen");
+      //NSLog(@"ProfilGraph drawRect screen");
       screen=1;
    }
    else
@@ -696,7 +696,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 		EndPunktB=NSMakePoint([[[DatenArray objectAtIndex:anz-1]objectForKey:@"bx"]floatValue]*scale,([[[DatenArray objectAtIndex:anz-1]objectForKey:@"by"]floatValue]+GraphOffset)*scale);
       int endpunktbx = [[[DatenArray objectAtIndex:anz-1]objectForKey:@"bx"]floatValue];
 
-      NSLog(@"endpunktax: %d endpunktbx: %d",endpunktax,endpunktbx);
+  //    NSLog(@"endpunktax: %d endpunktbx: %d",endpunktax,endpunktbx);
       if (screen)
       {
          

@@ -235,7 +235,8 @@ class rViewController: NSViewController, NSWindowDelegate
       var backupEnabled:Bool
       var robot1_offset:Int
    }
-
+   
+ 
    func windowWillClose(_ aNotification: Notification) {
       print("windowWillClose ViewC")
       //let nc = NotificationCenter.default
@@ -358,13 +359,14 @@ class rViewController: NSViewController, NSWindowDelegate
        warnung.addButton(withTitle: "cancel")
        let devicereturn:Int = warnung.runModal().rawValue
        boardindex = devicereturn-1000
-       print("devicereturn: \(devicereturn)")
+       print("boardindex: \(boardindex) devicereturn: \(devicereturn)")
       if boardindex < teensyboardarray.count
       {
          BoardPop.selectItem(at:devicereturn-1000)
          
-         let device = teensyboardarray[boardindex]
-         let erfolg = teensy.USBOpen(board:device)
+         let teensycode = teensyboardarray[boardindex]
+         
+         let erfolg = teensy.USBOpen(code:teensycode, board: boardindex)
          usbstatus = erfolg
          globalusbstatus = Int(erfolg)
          print("viewDidAppear erfolg: \(erfolg) usbstatus: \(usbstatus) rawhid_status: \(rawhid_status())")
@@ -552,7 +554,7 @@ class rViewController: NSViewController, NSWindowDelegate
    @objc func newDataAktion(_ notification:Notification) 
    {
       let lastData = teensy.getlastDataRead()
-      print("lastData:\t \(lastData[1])\t\(lastData[2])   ")
+      print("rViewController newDataAktion lastData:\t \(lastData[1])\t\(lastData[2])   ")
       var ii = 0
       while ii < 10
       {
@@ -603,7 +605,7 @@ class rViewController: NSViewController, NSWindowDelegate
          
          //print("dic end\n")
       }
-      
+      print("rViewController newDataAktion end");
       //let dic = notification.userInfo as? [String:[UInt8]]
       //print("dic: \(dic ?? ["a":[123]])\n")
 
@@ -1076,7 +1078,7 @@ class rViewController: NSViewController, NSWindowDelegate
             return;
          }
          let device = teensyboardarray[boardindex]
-         let erfolg = teensy.USBOpen(board:device)
+         let erfolg = teensy.USBOpen(code:device,  board: boardindex)
          usbstatus = erfolg
          globalusbstatus = Int(erfolg)
          //   print("USBOpen erfolg: \(erfolg) usbstatus: \(usbstatus)")

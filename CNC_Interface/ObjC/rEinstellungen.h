@@ -273,7 +273,7 @@
 - (float)calcY;
 
 // Lib
-- (NSArray*)readLib;
+- (NSMutableArray*)readLib;
 - (int)SetLibElemente:(NSArray*)LibArray;
 - (IBAction)reportLibPop:(id)sender;
 - (IBAction)reportLibElementEinfuegen:(id)sender;

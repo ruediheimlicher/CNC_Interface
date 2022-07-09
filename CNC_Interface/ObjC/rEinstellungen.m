@@ -1000,12 +1000,13 @@
    
 	
    zoom=1;
-   /*  
-    ElementLibArray = [[self readLib]retain];
+     
+    ElementLibArray = [self readLib];
     NSLog(@"Einstellungen init ElementLibArray: %@",[ElementLibArray valueForKey:@"name"]);
-    LibElementName = [[NSString string]retain];
-    LibElementArray = [[[NSMutableArray alloc]initWithCapacity:0]retain];
-    */
+    LibElementName = [NSString string];
+    LibElementArray = [[NSMutableArray alloc]initWithCapacity:0];
+    
+   
    
    FormNamenArray = [NSArray arrayWithObjects:@"Kreis",@"Ellipse",@"Quadrat",@"Rechteck", nil];
    PList = [[NSMutableDictionary alloc]initWithCapacity:0];
@@ -1443,6 +1444,9 @@
    {
       [AbbrandmassA setFloatValue:1.3];
    }
+   
+   
+   
 
    if ([daten objectForKey:@"flipv"])
    {
@@ -2292,7 +2296,7 @@
 
 - (void)doProfilEinfuegenTask
 {
-   //NSLog(@"reportProfilEinfuegen");
+   NSLog(@"doProfilEinfuegenTask");
    if ([Profil1Array count])
    {
       NSMutableDictionary* ProfilDic=[[NSMutableDictionary alloc]initWithCapacity:0];
@@ -2365,7 +2369,7 @@
 
 
 #pragma mark Lib
-- (NSArray*)readLib
+- (NSMutableArray*)readLib
 {
    NSMutableArray* tempLibElementArray = [[NSMutableArray alloc]initWithCapacity:0];
 	BOOL LibOK=NO;
@@ -2725,7 +2729,7 @@
 	ProfilLibPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@%@",@"/Documents",@"/CNCDaten",@"/ProfilLib"];
    //NSURL* LibURL=[NSURL fileURLWithPath:LibPfad];
    LibOK= ([Filemanager fileExistsAtPath:ProfilLibPfad isDirectory:&istOrdner]&&istOrdner);
-   //NSLog(@"readProfilLib:    LibPfad: %@ LibOK: %d",ProfilLibPfad, LibOK );	
+   NSLog(@"readProfilLib:    LibPfad: %@ LibOK: %d",ProfilLibPfad, LibOK );	
    if (LibOK)
    {
       ;
@@ -2904,6 +2908,7 @@
       [ProfilDic setObject:[NSNumber numberWithInt:[EinlaufCheck state]] forKey:@"einlauf"];
       [ProfilDic setObject:[NSNumber numberWithInt:[AuslaufCheck state]] forKey:@"auslauf"];
       
+      float einlauflaenge = [Einlauflaenge floatValue];
       [ProfilDic setObject:[NSNumber numberWithFloat:[Einlauflaenge floatValue]] forKey:@"einlauflaenge"];
       [ProfilDic setObject:[NSNumber numberWithFloat:[Einlauftiefe floatValue]] forKey:@"einlauftiefe"];
       [ProfilDic setObject:[NSNumber numberWithFloat:[Einlaufrand floatValue]] forKey:@"einlaufrand"];

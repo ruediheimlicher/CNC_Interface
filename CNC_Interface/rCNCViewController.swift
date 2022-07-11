@@ -228,8 +228,9 @@ class rCNCViewController:rViewController
    //    let usb_pwm =  info?["pwm"] as! UInt8
    //    let usb_delayok =  info?["delayok"] as! UInt8
        
-      let usb_home =  info?["home"] as! UInt8
-   //    let usb_art =  info?["art"] as! UInt8
+   //   let usb_home =  info?["home"] as! UInt8
+
+        //    let usb_art =  info?["art"] as! UInt8
    //    let usb_cncposition =  info?["cncposition"]
        
        //print("usb_pwm: \(usb_pwm) usb_delayok: \(usb_delayok) usb_home: \(usb_home) usb_art: \(usb_art) usb_cncposition: \(usb_cncposition) ")

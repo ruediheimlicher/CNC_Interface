@@ -141,7 +141,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 - (NSDictionary*)ProfilDatenAnPfad:(NSString*)profilpfad
 {
 	NSMutableArray* ProfilArray=[[NSMutableArray alloc]initWithCapacity:0];
-   //NSLog(@"ProfilDatenAnPfad: URL: %@",profilpfad);
+   NSLog(@"ProfilDatenAnPfad: URL: %@",profilpfad);
 	NSError* err=0;
 	NSString* ProfilString=[NSString stringWithContentsOfURL:[NSURL fileURLWithPath:profilpfad] encoding:NSUTF8StringEncoding error:&err]; // String des Speicherpfads
 	//NSLog(@"Utils openProfil ProfilString: \n%@ err: %@",ProfilString, [err description]);

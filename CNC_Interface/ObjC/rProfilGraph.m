@@ -696,7 +696,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 		EndPunktB=NSMakePoint([[[DatenArray objectAtIndex:anz-1]objectForKey:@"bx"]floatValue]*scale,([[[DatenArray objectAtIndex:anz-1]objectForKey:@"by"]floatValue]+GraphOffset)*scale);
       int endpunktbx = [[[DatenArray objectAtIndex:anz-1]objectForKey:@"bx"]floatValue];
 
-  //    NSLog(@"endpunktax: %d endpunktbx: %d",endpunktax,endpunktbx);
+      NSLog(@"endpunktax: %d endpunktbx: %d",endpunktax,endpunktbx);
       if (screen)
       {
          
@@ -731,6 +731,7 @@ int (^add)(int,int) = ^(int number1, int number2){
       }
       
       NSRect StartMarkBRect=NSMakeRect(StartPunktB.x-1.5, StartPunktB.y-1, 3, 3);
+      NSLog(@"StartMarkBRect: x: %d y: %d ",StartMarkBRect.origin.x, StartMarkBRect.origin.y);
 		NSBezierPath* StartMarkB=[NSBezierPath bezierPathWithOvalInRect:StartMarkBRect];
 		[[NSColor grayColor]set];
 		[StartMarkB stroke];
@@ -739,6 +740,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 		[LinieB moveToPoint:StartPunktB];
       
 		NSRect StartMarkARect=NSMakeRect(StartPunktA.x-1.5, StartPunktA.y-1, 3, 3);
+      NSLog(@"StartMarkARect: x: %d y: %d ",StartMarkARect.origin.x, StartMarkARect.origin.y);
 		NSBezierPath* StartMarkA=[NSBezierPath bezierPathWithOvalInRect:StartMarkARect];
 		[[NSColor blueColor]set];
 		[StartMarkA stroke];
@@ -751,10 +753,12 @@ int (^add)(int,int) = ^(int number1, int number2){
       // Abbrand
       // Seite 1
       NSBezierPath* AbbrandLinieA=[NSBezierPath bezierPath];
+      NSLog(@"Start Abbrand");
       int startabbrandindexa=0;
       for (i=0;i<anz;i++)
       {
-         if ([[DatenArray objectAtIndex:i]objectForKey:@"abrax"])
+         
+         if ([[DatenArray objectAtIndex:i]objectForKey:@"abrax"] && [[DatenArray objectAtIndex:i]objectForKey:@"abrax"] > 0)
          {
             //NSLog(@"Start Abbrand bei %d",i);
             startabbrandindexa=i;
@@ -767,6 +771,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 		
       NSPoint AbbrandEndPunktA=NSMakePoint(([[[DatenArray objectAtIndex:anz-1]objectForKey:@"abrax"]floatValue]),([[[DatenArray objectAtIndex:anz-1]objectForKey:@"abray"]floatValue]+GraphOffset));
 		
+      NSLog(@"startabbrandindex: %d AbbrandStartPunktA.x %d AbbrandEndPunktA.y %d ",startabbrandindexa ,AbbrandStartPunktA.x,AbbrandEndPunktA.y);
       [AbbrandLinieA moveToPoint:AbbrandStartPunktA];
       //
       // Seite 2
@@ -774,7 +779,7 @@ int (^add)(int,int) = ^(int number1, int number2){
       int startabbrandindexb=0;
       for (i=0;i<anz;i++)
       {
-         if ([[DatenArray objectAtIndex:i]objectForKey:@"abrax"])
+         if ([[DatenArray objectAtIndex:i]objectForKey:@"abrbx"] && [[DatenArray objectAtIndex:i]objectForKey:@"abrbx"]>0)
          {
             //NSLog(@"Start Abbrand bei %d",i);
             startabbrandindexb=i;
@@ -786,7 +791,9 @@ int (^add)(int,int) = ^(int number1, int number2){
 		NSPoint AbbrandStartPunktB=NSMakePoint(([[[DatenArray objectAtIndex:startabbrandindexb]objectForKey:@"abrbx"]floatValue])*scale,([[[DatenArray objectAtIndex:startabbrandindexb]objectForKey:@"abrby"]floatValue]+GraphOffset)*scale);
       AbbrandStartPunktB.y +=abbbranddelay;
 		NSPoint AbbrandEndPunktB=NSMakePoint([[[DatenArray objectAtIndex:anz-1]objectForKey:@"abrbx"]floatValue],[[[DatenArray objectAtIndex:anz-1]objectForKey:@"abrby"]floatValue]);
-		
+	
+      NSLog(@"startabbrandindexb: %d AbbrandStartPunktB.x %d AbbrandEndPunktB.y %d ",startabbrandindexb ,AbbrandStartPunktA.x,AbbrandEndPunktA.y);
+
       [AbbrandLinieB moveToPoint:AbbrandStartPunktB];
       
       
@@ -796,12 +803,12 @@ int (^add)(int,int) = ^(int number1, int number2){
 		for (i=0;i<anz;i++)
 		{
 			NSPoint PunktA=NSMakePoint([[[DatenArray objectAtIndex:i]objectForKey:@"ax"]floatValue]*scale,[[[DatenArray objectAtIndex:i]objectForKey:@"ay"]floatValue]*scale);
-			//NSLog(@"i: %d Punkt.x: %.4f Punkt.y: %.4f",i,Punkt.x,Punkt.y);
+			NSLog(@"i: %d PunktA.x: %.4f PunktA.y: %.4f",i,PunktA.x,PunktA.y);
 			[LinieA lineToPoint:PunktA];
 			NSBezierPath* tempMarkA;//=[NSBezierPath bezierPathWithOvalInRect:tempMarkRect];
          
          NSPoint PunktB=NSMakePoint([[[DatenArray objectAtIndex:i]objectForKey:@"bx"]floatValue]*scale,([[[DatenArray objectAtIndex:i]objectForKey:@"by"]floatValue]+GraphOffset)*scale);
-			//NSLog(@"i: %d Punkt.x: %.4f Punkt.y: %.4f",i,Punkt.x,Punkt.y);
+			NSLog(@"i: %d PunktB.x: %.4f PunktB.y: %.4f",i,PunktB.x,PunktB.y);
 			[LinieB lineToPoint:PunktB];
 			NSBezierPath* tempMarkB;//=[NSBezierPath bezierPathWithOvalInRect:tempMarkRect];
          

@@ -99,6 +99,11 @@ return NULL;
    for (i=anfangsindex;i<endindex;i++)
    {
       float deltax = [[[profil objectAtIndex:i]objectForKey:@"x"]floatValue] - [[[profil objectAtIndex:i-1]objectForKey:@"x"]floatValue];
+      if (deltax == 0)
+      {
+         NSLog(@"EndleistenwinkelvonProfil deltax ist 0");
+      }
+      
       float deltay = [[[profil objectAtIndex:i]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:i-1]objectForKey:@"y"]floatValue];
       float steigung= atanf(deltay/deltax);
 //      steigung *= -1;
@@ -112,6 +117,11 @@ return NULL;
    {
       int endi=[profil count]-1-i;
       float deltax = [[[profil objectAtIndex:[profil count]-1-i-1]objectForKey:@"x"]floatValue] - [[[profil objectAtIndex:[profil count]-1-i]objectForKey:@"x"]floatValue];
+      if (deltax == 0)
+      {
+         NSLog(@"EndleistenwinkelvonProfil Unterseite deltax ist 0");
+      }
+
       float deltay = [[[profil objectAtIndex:[profil count]-1-i-1]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:[profil count]-1-i]objectForKey:@"y"]floatValue];
       float steigung= atanf(deltay/deltax);
 //      steigung *= -1;
@@ -1901,7 +1911,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    int holmposhinten = holmpos + schritte;
    
    // neu
-   //holmposhinten = holmposvorn + 2;
+   holmposhinten = holmposvorn + 2;
    
    // Koordinatenunterschiede
    float deltay = [[[ProfilArray objectAtIndex:holmposhinten]objectForKey:@"y"]floatValue]-[[[ProfilArray objectAtIndex:holmposvorn]objectForKey:@"y"]floatValue]; // index verlaeuft gegen Endleiste zu
@@ -1910,8 +1920,11 @@ PortA=vs[n & 3]; warte10ms(); n++;
    //NSLog(@"deltax real: %.5fmm ",deltax*Profiltiefe);
    
    // Steigung der Tangente und Einheitsvektor
-   float steigungunten = deltay/deltax; // tangente
-   
+   float steigungunten = 0;
+   if(deltax)
+   {
+      steigungunten = deltay/deltax; // tangente
+   }
    // Berechnung Startpunktnachhinten im Abstand basisbreite aus Startpunkt nachvorn und steigungunten 
    
    
@@ -2472,11 +2485,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
             prevby = [[[Koordinatentabelle objectAtIndex:i-1]objectForKey:@"by"]floatValue];
          }
          
-        
-         
-         
-         
-         
+          
          if ((i<bis-1) && (i>von)) // Punkt im Abbrandbereich
          {
              // Kruemmungen berechnen
@@ -2484,11 +2493,13 @@ PortA=vs[n & 3]; warte10ms(); n++;
             {
                float diffvor[2] = {ax-prevax, ay-prevay};
                float diffnach[2] = {nextax-ax, nextay-ay};
-               //fprintf(stderr,"mittelpunkt \t%d\t%2.8f\t%2.8f\t%2.8f\t%2.8f\t%2.8f\n",i,diffvor[0],diffvor[1],diffnach[0],diffnach[1],1);
+               fprintf(stderr,"Kruemmungen \t%d\tdiffvor %2.8f\tdiffnach %2.8f\n",i,diffvor[2],diffnach[2]);
 
                
                float mittevor[2] = {(ax+prevax)/2,(prevay+ay)/2};
                float mittenach[2] = {(ax+nextax)/2,(nextay+ay)/2};
+               fprintf(stderr,"Kruemmungen \t%d\tmittevor %2.8f\tmittenach %2.8f\n",i,diffvor[2],diffnach[2]);
+
                //fprintf(stderr,"mittelpunkt \t%d\t%2.8f\t%2.8f\t%2.8f\t%2.8f\t%2.8f\n",i,mittevor[0],mittevor[1],mittenach[0],mittenach[1],1);
 
                // senkrechte:
@@ -2961,7 +2972,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
          
          if (i==von) // erster Punkt, Abbrandvektor soll senkrecht stehen
          {
-            //NSLog(@"i=von: %d",i);
+            NSLog(@"i=von: %d",i);
             float deltaax=nextax-ax;
             float deltaay=nextay-ay;
             float normalenhypoa = hypotenuse(deltaax, deltaay);
@@ -3059,12 +3070,19 @@ PortA=vs[n & 3]; warte10ms(); n++;
          //NSLog(@"whbhypo: %2.4f",whbhypo);
          float abbrandb[2]= {whb[0]*seitenkorrekturb/whbhypo*profilabbrandbmass/cosphi2b,whb[1]*seitenkorrekturb/whbhypo*profilabbrandbmass/cosphi2b};
          
-         //NSLog(@"i %d orig %2.2f %2.2f %2.2f %2.2f",i,ax,ay,bx,by);
+ //        NSLog(@"i %d orig ax %2.2f ay %2.2f bx %2.2f by %2.2f",i,ax,ay,bx,by);
+ //        NSLog(@"i %d abbranda[0] %2.4f abbranda[1] %2.4f ",i,abbranda[0], abbranda[1]);
+         if (isnan(abbrandb[0]) || isnan(abbrandb[1]))
+         {
+            NSLog(@"i %d abbranda[0] , abbranda[1] ist nan ",i);
+         }
+         else
+         {
          [tempDic setObject:[NSNumber numberWithFloat:ax+abbranda[0]] forKey:@"abrax"];
          [tempDic setObject:[NSNumber numberWithFloat:ay+abbranda[1]] forKey:@"abray"];
          [tempDic setObject:[NSNumber numberWithFloat:bx+abbrandb[0]] forKey:@"abrbx"];
          [tempDic setObject:[NSNumber numberWithFloat:by+abbrandb[1]] forKey:@"abrby"];
-         
+         }
   //       float hypa = hypotf(ax, ay);
   //       float hypb = hypotf(bx, by);
   //       float abrhypa = hypotf(ax+abbranda[0], ay+abbranda[1]);

@@ -262,6 +262,7 @@
    IBOutlet id               WertFeld;
    
    IBOutlet id               PositionFeld;
+   IBOutlet id               AnzahlFeld;
    IBOutlet id               PositionXFeld;
    IBOutlet id               PositionYFeld;
    

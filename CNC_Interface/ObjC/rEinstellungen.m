@@ -1002,7 +1002,7 @@
    zoom=1;
      
     ElementLibArray = [self readLib];
-    NSLog(@"Einstellungen init ElementLibArray: %@",[ElementLibArray valueForKey:@"name"]);
+    //NSLog(@"Einstellungen init ElementLibArray: %@",[ElementLibArray valueForKey:@"name"]);
     LibElementName = [NSString string];
     LibElementArray = [[NSMutableArray alloc]initWithCapacity:0];
     
@@ -2343,10 +2343,12 @@
       [PList setObject:[NSNumber numberWithInt:[Einlaufrand intValue]] forKey:@"einlaufrand"];
       [PList setObject:[NSNumber numberWithInt:[Auslaufrand intValue]] forKey:@"auslaufrand"];
       
-       //NSLog(@"reportProfilEinfuegen userInfo:ProfilDic count: %ld",(unsigned long)[ProfilDic count]);
+       //NSLog(@"doProfilEinfuegenTask userInfo:ProfilDic count: %ld",(unsigned long)[ProfilDic count]);
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"LibProfileingabe" object:self userInfo: ProfilDic];
+      
    }
+   [[self window]orderOut:NULL];
    //NSLog(@"reportProfilEinfuegen end");
 
 }
@@ -2365,8 +2367,6 @@
 {
    [UnterseiteCheck setState:ein];
 }
-
-
 
 #pragma mark Lib
 - (NSMutableArray*)readLib
@@ -2387,8 +2387,6 @@
    else
    {
       //Lib ist noch leer
-      
-      
    }
    
    //NSLog(@"LibPfad: %@",LibPfad);	
@@ -2935,6 +2933,7 @@
       
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"LibProfileingabe" object:self userInfo:ProfilDic];
+      [[self window]orderOut:NULL];
    }
 }
 

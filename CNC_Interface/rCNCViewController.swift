@@ -318,7 +318,7 @@ class rCNCViewController:rViewController
       
       //print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
       let count = usb_schnittdatenarray.count
-      print("writeCNCAbschnitt Stepperposition: \(Stepperposition) count: \(count)")
+      //print("writeCNCAbschnitt Stepperposition: \(Stepperposition) count: \(count)")
       teensy.write_byteArray.removeAll()
       
       if Stepperposition < usb_schnittdatenarray.count
@@ -359,7 +359,7 @@ class rCNCViewController:rViewController
          
       }
       
-      print("writeCNCAbschnitt teensy.write_byteArray: \(teensy.write_byteArray)")
+      //print("writeCNCAbschnitt teensy.write_byteArray: \(teensy.write_byteArray)")
    }
    
   

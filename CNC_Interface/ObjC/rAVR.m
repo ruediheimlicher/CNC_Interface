@@ -5301,6 +5301,9 @@ return returnInt;
       [ProfilGraph setNeedsDisplay:YES];
       [CNCTable reloadData];
       [NeuesElementTaste setEnabled:YES];
+      [CNC_Starttaste setEnabled:NO];
+      [CNC_Stoptaste setEnabled:YES];
+
    }
 }
 
@@ -8433,8 +8436,8 @@ return returnInt;
    [RechtsLinksRadio  performClick:NULL]; 
    //double delta = [anfang timeIntervalSinceNow];
    //NSLog(@"delta: %f",delta);
- //  [CNC_Starttaste setEnabled:NO];
-   
+ [CNC_Starttaste setEnabled:NO];
+   [CNC_Stoptaste setEnabled:YES];
 }
 
 - (IBAction)reportProfilUnterseiteTask:(id)sender
@@ -8499,7 +8502,9 @@ return returnInt;
   
    
    [RechtsLinksRadio setSelectedSegment:0];
-   
+   [CNC_Starttaste setEnabled:NO];
+   [CNC_Stoptaste setEnabled:YES];
+
 }
 
 
@@ -8654,6 +8659,8 @@ return returnInt;
    [CNCTable reloadData];
    [ProfilGraph setDatenArray:KoordinatenTabelle];
    [ProfilGraph setNeedsDisplay:YES];
+   [CNC_Starttaste setEnabled:NO];
+     [CNC_Stoptaste setEnabled:YES];
 
 
 }

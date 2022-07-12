@@ -2493,12 +2493,12 @@ PortA=vs[n & 3]; warte10ms(); n++;
             {
                float diffvor[2] = {ax-prevax, ay-prevay};
                float diffnach[2] = {nextax-ax, nextay-ay};
-               fprintf(stderr,"Kruemmungen \t%d\tdiffvor %2.8f\tdiffnach %2.8f\n",i,diffvor[2],diffnach[2]);
+               //fprintf(stderr,"Kruemmungen \t%d\tdiffvor %2.8f\tdiffnach %2.8f\n",i,diffvor[2],diffnach[2]);
 
                
                float mittevor[2] = {(ax+prevax)/2,(prevay+ay)/2};
                float mittenach[2] = {(ax+nextax)/2,(nextay+ay)/2};
-               fprintf(stderr,"Kruemmungen \t%d\tmittevor %2.8f\tmittenach %2.8f\n",i,diffvor[2],diffnach[2]);
+               //fprintf(stderr,"Kruemmungen \t%d\tmittevor %2.8f\tmittenach %2.8f\n",i,diffvor[2],diffnach[2]);
 
                //fprintf(stderr,"mittelpunkt \t%d\t%2.8f\t%2.8f\t%2.8f\t%2.8f\t%2.8f\n",i,mittevor[0],mittevor[1],mittenach[0],mittenach[1],1);
 
@@ -2583,7 +2583,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
                   //
                   if (radius < abbrandmassa )
                   {
-                     fprintf(stderr,"mittelpunkt \t%d\t%2.3f\t%2.3f\t%2.3f\t%2.3f\t%2.3f\t%2.3f\t%2.3f\n",i,ax,ay,detvor,detnach,mittelpunkt[0],mittelpunkt[1],radius);
+                     //fprintf(stderr,"mittelpunkt \t%d\t%2.3f\t%2.3f\t%2.3f\t%2.3f\t%2.3f\t%2.3f\t%2.3f\n",i,ax,ay,detvor,detnach,mittelpunkt[0],mittelpunkt[1],radius);
                   }
                   
                }

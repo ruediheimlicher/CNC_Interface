@@ -359,7 +359,7 @@ class rCNCViewController:rViewController
          
       }
       
-      print("writeCNCAbschnitt teensy.write_byteArray: \(teensy.write_byteArray)")
+      //print("writeCNCAbschnitt teensy.write_byteArray: \(teensy.write_byteArray)")
    }
    
   
@@ -369,7 +369,7 @@ class rCNCViewController:rViewController
       var lastData = teensy.getlastDataRead()
       let lastDataArray = [UInt8](lastData)
       //print("newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")       
-      print("newDataAktion start")
+      //print("newDataAktion start")
       var ii = 0
       while ii < 10
       {
@@ -398,7 +398,7 @@ class rCNCViewController:rViewController
       
       if let d = info!["contdata"] // Data vornanden
       {
-         print("newDataAktion if let d ok")
+         //print("newDataAktion if let d ok")
          var usbdata = info!["data"] as! [UInt8]
          
          //      let stringFromByteArray = String(data: Data(bytes: usbdata), encoding: .utf8)         
@@ -605,7 +605,7 @@ class rCNCViewController:rViewController
                   }
                   else
                   {
-                     print("WriteCNCAbschnitt ")
+                     //print("WriteCNCAbschnitt ")
                      writeCNCAbschnitt()
                   }
                }

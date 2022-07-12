@@ -2346,10 +2346,13 @@
        //NSLog(@"doProfilEinfuegenTask userInfo:ProfilDic count: %ld",(unsigned long)[ProfilDic count]);
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"LibProfileingabe" object:self userInfo: ProfilDic];
+   //   [NSApp stopModalWithCode:1];
       
+     // [[self window]orderOut:NULL];
    }
-   [[self window]orderOut:NULL];
-   //NSLog(@"reportProfilEinfuegen end");
+   [self doSchliessenTask];
+   //[[self window]orderOut:NULL];
+   NSLog(@"reportProfilEinfuegen end");
 
 }
 
@@ -2877,7 +2880,7 @@
 
 - (IBAction)reportProfilEinfuegen:(id)sender
 {
-   //NSLog(@"reportProfilEinfuegen");
+   NSLog(@"reportProfilEinfuegen");
    if ([Profil1Array count])
    {
       NSMutableDictionary* ProfilDic=[[NSMutableDictionary alloc]initWithCapacity:0];
@@ -2935,6 +2938,7 @@
       [nc postNotificationName:@"LibProfileingabe" object:self userInfo:ProfilDic];
       [[self window]orderOut:NULL];
    }
+   
 }
 
 - (IBAction)reportProfilLoeschen:(id)sender

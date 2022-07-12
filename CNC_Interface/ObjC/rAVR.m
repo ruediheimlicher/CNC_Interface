@@ -2090,7 +2090,7 @@ return returnInt;
       //      }
       if (i<8)
       {
-          NSLog(@"reportStop i: %d \ntempDic: %@",i,[tempDic description]);
+          //NSLog(@"reportStop i: %d \ntempDic: %@",i,[tempDic description]);
       }
       
       NSDictionary* tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
@@ -5347,7 +5347,8 @@ return returnInt;
 
    [datenDic setObject:[NSNumber numberWithFloat:[AbbrandFeld floatValue]] forKey:@"abbranda"];
     
-   NSModalSession session = [NSApp beginModalSessionForWindow:[CNC_Eingabe window]];
+   session = [NSApp beginModalSessionForWindow:[CNC_Eingabe window]];
+   
    //NSLog(@"runModalForWindow A");
    
    [CNC_Eingabe setPList:CNC_PList];
@@ -5359,12 +5360,14 @@ return returnInt;
    
 //   for (;;) 
    {
-      
+      [NSApp runModalSession:session] ;
+      /*
       while ([NSApp runModalSession:session] != NSModalResponseContinue)
       {
        //NSLog(@"Modal break");
       break;
       }
+       */
       //[CNC_Eingabe showWindow:NULL];
       //[self doSomeWork];
    }
@@ -5768,7 +5771,7 @@ return returnInt;
       // distanz zum letzten registrierten Element im Array
       float regdist = hypotf(dx-prevregdx, dy-prevregdy)* MIN(ProfiltiefeA,ProfiltiefeB);
       
-      fprintf(stderr,"i: %d \t prevdx %2.2f \t dx%2.2f \t dist%2.2f \t regdist %2.2f \t ",i,prevdx,dx,dist,regdist);
+  //    fprintf(stderr,"i: %d \t prevdx %2.2f \t dx%2.2f \t dist%2.2f \t regdist %2.2f \t ",i,prevdx,dx,dist,regdist);
       //NSLog(@"i: %d dx %2.2f",i,dx);
       if (regdist>minabstand)
       {
@@ -5777,11 +5780,11 @@ return returnInt;
          int index =[Profil1Array count];
          //NSLog(@"i: %d index: %d dx %2.2f",i,index,dist);
          
-         fprintf(stderr,"\tindex: %d",index);
+    //     fprintf(stderr,"\tindex: %d",index);
       }
       else
       {
-         fprintf(stderr,"\t abstand zu klein ");
+    //     fprintf(stderr,"\t abstand zu klein ");
       }
       
       // NSLog(@"i: %d dx: %2.2f",i,dx);
@@ -6876,7 +6879,7 @@ return returnInt;
       [BlockKoordinatenTabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:aktuellepwm * full_pwm],@"pwm",nil]];
       index++;
     
-      NSLog(@"Rand bei Einlauf");
+      //NSLog(@"Rand bei Einlauf");
       /*
        // Rand bei Einlauf nach links freischneiden
        PositionA.x -=rand;
@@ -8425,16 +8428,20 @@ return returnInt;
    [CNC_Eingabe doProfilSpiegelnVertikalTask];
    [CNC_Eingabe doProfilEinfuegenTask];
    [CNC_Eingabe doSchliessenTask];
-   
+  
    //   [CNC_BlockKonfigurierenTaste performClick:NULL];
    
    [CNC_BlockAnfuegenTaste performClick:NULL]; 
    [RechtsLinksRadio setSelectedSegment:1];
    [RechtsLinksRadio  performClick:NULL]; 
-   //double delta = [anfang timeIntervalSinceNow];
-   //NSLog(@"delta: %f",delta);
- //  [CNC_Starttaste setEnabled:NO];
    
+  // [CNC_Stoptaste setState:1];
+   //double delta = [anfang timeIntervalSinceNow];
+   NSLog(@"doProfil1PopTaskMitProfil vor endmodal");
+   [CNC_Starttaste setEnabled:NO];
+   [NSApp endModalSession:session];
+   NSLog(@"doProfil1PopTaskMitProfil nach endmodal");
+
 }
 
 - (IBAction)reportProfilUnterseiteTask:(id)sender
@@ -9359,7 +9366,7 @@ return returnInt;
 
          case 0xAF:
          {
-             NSLog(@"AVR USBReadAktion next %@",[[note userInfo] description]);
+             //NSLog(@"AVR USBReadAktion next %@",[[note userInfo] description]);
             
          }break;
          case 0xAA:

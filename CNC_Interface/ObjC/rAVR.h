@@ -326,6 +326,8 @@
    
    rProfildruckView*       Profilfeld;
    
+   NSModalSession session;
+   
    }
    @property (nonatomic)  int    Kote;
    @property (nonatomic) BOOL wantsLayer;

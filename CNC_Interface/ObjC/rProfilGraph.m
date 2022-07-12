@@ -229,7 +229,7 @@ int (^add)(int,int) = ^(int number1, int number2){
       BOOL hit=[clickPfad containsPoint:derPunkt];
       if (hit)
       {
-         NSLog(@"tempPunktA: x: %2.2f y: %2.2f",tempPunktA.x,tempPunktA.y);
+         //NSLog(@"tempPunktA: x: %2.2f y: %2.2f",tempPunktA.x,tempPunktA.y);
          NSLog(@"clickPfad: %@",clickPfad );
          index=i;
          NSLog(@"clickedAbschnittvonMaus Abschnitt: %d ",i);
@@ -803,12 +803,12 @@ int (^add)(int,int) = ^(int number1, int number2){
 		for (i=0;i<anz;i++)
 		{
 			NSPoint PunktA=NSMakePoint([[[DatenArray objectAtIndex:i]objectForKey:@"ax"]floatValue]*scale,[[[DatenArray objectAtIndex:i]objectForKey:@"ay"]floatValue]*scale);
-			NSLog(@"i: %d PunktA.x: %.4f PunktA.y: %.4f",i,PunktA.x,PunktA.y);
+			//NSLog(@"i: %d PunktA.x: %.4f PunktA.y: %.4f",i,PunktA.x,PunktA.y);
 			[LinieA lineToPoint:PunktA];
 			NSBezierPath* tempMarkA;//=[NSBezierPath bezierPathWithOvalInRect:tempMarkRect];
          
          NSPoint PunktB=NSMakePoint([[[DatenArray objectAtIndex:i]objectForKey:@"bx"]floatValue]*scale,([[[DatenArray objectAtIndex:i]objectForKey:@"by"]floatValue]+GraphOffset)*scale);
-			NSLog(@"i: %d PunktB.x: %.4f PunktB.y: %.4f",i,PunktB.x,PunktB.y);
+			//NSLog(@"i: %d PunktB.x: %.4f PunktB.y: %.4f",i,PunktB.x,PunktB.y);
 			[LinieB lineToPoint:PunktB];
 			NSBezierPath* tempMarkB;//=[NSBezierPath bezierPathWithOvalInRect:tempMarkRect];
          

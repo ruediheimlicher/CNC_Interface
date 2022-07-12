@@ -27,7 +27,7 @@ class rCNCViewController:rViewController
    var usb_schnittdatenarray:[[UInt8]] = [[]]
    
    //var readTimer:Timer
-   var readTimer : Timer? = nil
+   //var readtimer : Timer? = nil
    
    var AVR = rAVRview()
    
@@ -302,8 +302,8 @@ class rCNCViewController:rViewController
   
   //    writeCNCAbschnitt()
       
-//      var timerdic:[String:Any] = [String:Any]()
-//      timerdic["home"] = home
+      var timerdic:[String:Any] = [String:Any]()
+      timerdic["home"] = home
       
       teensy.start_read_USB(true, dic:timerdic)
       
@@ -325,12 +325,13 @@ class rCNCViewController:rViewController
       {
          if halt > 0
          {
-            if readTimer?.isValid ?? false 
+            /*
+            if readtimer?.isValid ?? false 
             {
                print("writeCNCAbschnitt HALT readTimer inval")
-               readTimer?.invalidate() 
+               readtimer?.invalidate() 
             }
-            
+            */
          }
          else
          {
@@ -354,11 +355,6 @@ class rCNCViewController:rViewController
       {
          print("writeCNCAbschnitt Fertig ")
          teensy.stop_read_USB()
-         if readTimer?.isValid ?? false
-         {
-            print("writeCNCAbschnitt HALT readTimer inval")
-            readTimer?.invalidate()
-         }
          return
          
       }

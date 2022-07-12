@@ -163,7 +163,7 @@ class rTimerInfo {
    @objc func start_read_USB(_ cont: Bool, dic:[String:Any])-> Int
    {
       read_OK = ObjCBool(cont)
-      var timerDic:NSMutableDictionary  = ["count": 0]
+      var timerDic:NSMutableDictionary  = ["count": 0,"home":home]
       
  //     let result = rawhid_recv(0, &read_byteArray, Int32(BUFFER_SIZE), 50);
       
@@ -189,8 +189,15 @@ class rTimerInfo {
       
       if (xcont == true)
       {
-         var timer : Timer? = nil
-         timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(usb_teensy.cont_read_USB(_:)), userInfo: USBTimerInfo, repeats: true)
+         
+         //var timer : Timer? = nil
+         
+         if readtimer?.isValid == true
+         {
+            readtimer?.invalidate()
+         }
+         readTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(usb_teensy.cont_read_USB(_:)), userInfo: USBTimerInfo, repeats: true)
+      
       }
       return 0
       //return Int(result) //
@@ -206,7 +213,7 @@ class rTimerInfo {
       {
          //var tempbyteArray = [UInt8](count: 32, repeatedValue: 0x00)
          
-         var result = rawhid_recv(0, &read_byteArray, Int32(BUFFER_SIZE), 50)
+         var result = rawhid_recv(0, &read_byteArray, Int32(BUFFER_SIZE), 0)
          
          
          //print("*cont_read_USB result: \(result)")

@@ -433,7 +433,7 @@ float det(float v0[],float v1[])
 @implementation  rPfeiltaste  
 - (void)awakeFromNib
 {
-   //NSLog(@"Pfeiltaste awakeFromNib");
+   NSLog(@"Pfeiltaste awakeFromNib");
    //richtung=1;
 //- (void)setPeriodicDelay:(float)delay interval:(float)interval
    //[self setPeriodicDelay:1 interval:1];
@@ -441,14 +441,20 @@ float det(float v0[],float v1[])
  //  self.view.window?.acceptsMouseMovedEvents = true;
     //let view = view[0] as! NSView
  
-
+   [self setAction:@selector(reportPfeiltaste:)];
+}
+- (IBAction)reportPfeiltaste:(id)sender
+{
+   NSLog(@"Pfeiltaste reportPfeiltaste");
 }
 
-- (void)mouseUp:(NSEvent *)event
+- (void)mouseUp:(NSEvent *)theEvent
 {
-   NSLog(@"AVR mouseup");
+   [super mouseUp:theEvent];
+ //  NSLog(@"Pfeiltaste mouseup");
    richtung=[self tag];
-   NSLog(@"AVR mouseUp Pfeiltaste richtung: %d",richtung);
+   int status = [self state];
+   NSLog(@"rPfeiltaste mouseUp: Pfeiltaste richtung: %d status: %d",richtung,status);
    /*
     richtung:
     right: 1
@@ -457,17 +463,20 @@ float det(float v0[],float v1[])
     down: 4
     */
    
-   [self setState:NSControlStateValueOff];
+  //[self setState:NSControlStateValueOff];
    
    NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:richtung] forKey:@"richtung"];
+   [NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"push"];
 	
    int aktpwm=0;
-   NSPoint location = [event locationInWindow];
-   NSLog(@"Pfeiltaste mouseUp location: %2.2f %2.2f",location.x, location.y);
-   [NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"push"];
-   [NotificationDic setObject:[NSNumber numberWithFloat:location.x] forKey:@"locationx"];
-   [NotificationDic setObject:[NSNumber numberWithFloat:location.y] forKey:@"locationy"];
+   
+//   NSPoint location = [theEvent locationInWindow];
+//   NSLog(@"Pfeiltaste mouseUp location: %2.2f %2.2f",location.x, location.y);
+   
+
+//   [NotificationDic setObject:[NSNumber numberWithFloat:location.x] forKey:@"locationx"];
+//   [NotificationDic setObject:[NSNumber numberWithFloat:location.y] forKey:@"locationy"];
       
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"Pfeil" object:self userInfo:NotificationDic];
@@ -479,10 +488,11 @@ float det(float v0[],float v1[])
 {
    
    richtung=[self tag];
-
-   //NSLog(@"AVR mouseDown: Pfeiltaste richtung: %d",richtung);
-   [self setState:NSControlStateValueOn];
+   int status = [self state];
+   NSLog(@"rPfeiltaste mouseDown: Pfeiltaste richtung: %d status: %d",richtung,status);
+  // [self setState:NSControlStateValueOn];
 	
+  
    
    NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:richtung] forKey:@"richtung"];
@@ -553,6 +563,9 @@ float det(float v0[],float v1[])
 
 //@synthesize self;.wantsLayer = YES;
 
+
+
+
 - (void)awakeFromNib
 {
    NSLog(@"AVR awakeFromNib");
@@ -561,6 +574,9 @@ float det(float v0[],float v1[])
    // self.layer.backgroundcolor = bgcolor;
    self.wantsLayer = YES;
    [ self.view.layer setBackgroundColor:(__bridge CGColorRef _Nullable)(bgcolor)];
+   
+   [self->CNC_Righttaste sendActionOn: NSEventMaskLeftMouseDown | NSEventMaskLeftMouseUp];
+
    
    NSNotificationCenter * nc;
    nc=[NSNotificationCenter defaultCenter]; // alles weg, wegen doppeltem awake
@@ -2178,7 +2194,7 @@ return returnInt;
    cncposition =0;
    if (i==0 || i==[KoordinatenTabelle count]-1)
    {
-      NSLog(@"reportStopKnopf SchnittdatenArray: %@",[SchnittdatenArray description]);
+      //NSLog(@"reportStopKnopf SchnittdatenArray: %@",[SchnittdatenArray description]);
    }
    
    //NSLog(@"reportStopKnopf CNCDatenArray: %@",[CNCDatenArray description]);
@@ -2900,15 +2916,15 @@ return returnInt;
 }
 
 #pragma mark "Richtung"
-- (void)ManRichtung:(int)richtung  pfeilstep:(int)step
+- (void)ManRichtung:(int)richtung mousestatus:(int)status pfeilstep:(int)step
 {
    // 
    {
-      NSLog(@"AVR  manRichtung richtung: %d",richtung);
+      NSLog(@"AVR  ManRichtung richtung: %d mousestatus: %d",richtung, status);
       
       if ((cncstatus)|| !([CNC_Seite1Check state] || [CNC_Seite2Check state]))
       {
-         NSLog(@"AVR  manRichtung  return");
+         NSLog(@"AVR  ManRichtung  return");
          return;
       }
       
@@ -2917,7 +2933,7 @@ return returnInt;
       {
          aktpwm = [DC_PWM intValue];
       }
-      NSLog(@"AVR  manRichtung aktpwm: %d",aktpwm);
+      NSLog(@"AVR  ManRichtung aktpwm: %d",aktpwm);
       
       [self setStepperstrom:aktpwm];
       NSMutableArray* ManArray = [[NSMutableArray alloc]initWithCapacity:0];
@@ -2970,9 +2986,10 @@ return returnInt;
       // von reportOberkanteAnfahren
       int i=0;
       int zoomfaktor=1.0;
+      int code=0;
       NSMutableArray* HomeSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
       
-      for (i=0;i<[ManArray count]-1;i++)
+  //    for (i=0;i<[ManArray count]-1;i++)
       {
          //NSLog(@"B i: %d",i);
          // Seite A
@@ -3010,7 +3027,14 @@ return returnInt;
          [tempDic setObject:[NSNumber numberWithInt:i] forKey:@"index"];
          
          [tempDic setObject:[NSNumber numberWithFloat:zoomfaktor] forKey:@"zoomfaktor"];
-         int code=0;
+         if (status) // mousedown
+         {
+            code=0xC0;
+         }
+         else 
+         {
+            code=0xC2;
+         }
          
          [tempDic setObject:[NSNumber numberWithInt:code] forKey:@"code"];
          
@@ -3022,16 +3046,19 @@ return returnInt;
          {
             position |= (1<<FIRST_BIT);
          }
-         if (i==[ManArray count]-2)
+         //if (i==[ManArray count]-2)
          {
             position |= (1<<LAST_BIT);
          }
          [tempDic setObject:[NSNumber numberWithInt:position] forKey:@"position"];
          
          NSDictionary* tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
-         NSLog(@"D i: %d",i);
+         //NSLog(@"D i: %d",i);
          [HomeSchnittdatenArray addObject:[CNC SchnittdatenVonDic:tempSteuerdatenDic]];
-         NSLog(@"E i: %d",i);
+         //NSLog(@"E i: %d",i);
+         HomeSchnittdatenArray[0][24] = [NSNumber numberWithInt:code];
+         HomeSchnittdatenArray[0][31] = [NSNumber numberWithInt:richtung];
+         
       } // for i
       
       NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
@@ -3052,8 +3079,8 @@ return returnInt;
       
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"home"]; // 
       
-      [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"art"]; // 
-      //NSLog(@"reportManLeft SchnittdatenDic: %@",[HomeSchnittdatenDic description]);
+      [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"usbschnittdaten"]; // 
+      //NSLog(@"ManRichtung SchnittdatenDic: %@",[HomeSchnittdatenDic description]);
       
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"usbschnittdaten" object:self userInfo:HomeSchnittdatenDic];
@@ -3076,7 +3103,7 @@ return returnInt;
    {
       NSLog(@"AVR  reportManLeft tag: %d",[sender tag]);
       
-      [self ManRichtung:3 pfeilstep:500];
+      [self ManRichtung:3 mousestatus:0 pfeilstep:500];
       return;
       
       if ((cncstatus)|| !([CNC_Seite1Check state] || [CNC_Seite2Check state]))
@@ -3202,11 +3229,11 @@ return returnInt;
     left:   3
     down:   4
     */
-   [self ManRichtung:1  pfeilstep:10         if ([tempNowDic objectForKey:@"abrax"])
-];
+   [self ManRichtung:1 mousestatus:0 pfeilstep:100];
    [CNC_Lefttaste setEnabled:YES];
    [AnschlagLinksIndikator setTransparent:YES];
    NSLog(@"reportManRight");
+   
    if ((cncstatus)|| !([CNC_Seite1Check state] || [CNC_Seite2Check state]))
    {
       return;
@@ -3299,7 +3326,7 @@ return returnInt;
     left:   3
     down:   4
     */
-   [self ManRichtung:2 pfeilstep: 500];
+   [self ManRichtung:2 mousestatus:0 pfeilstep: 500];
    [CNC_Downtaste setEnabled:YES];
    [AnschlagUntenIndikator setTransparent:YES];
 
@@ -3400,7 +3427,7 @@ return returnInt;
     left:   3
     down:   4
     */
-   [self ManRichtung:4 pfeilstep: 500];
+   [self ManRichtung:4 mousestatus:0  pfeilstep: 500];
    return;
 
    if ((cncstatus)|| !([CNC_Seite1Check state] || [CNC_Seite2Check state]))
@@ -4221,28 +4248,40 @@ return returnInt;
 {
    //[self reportManDown:NULL];
    NSLog(@"AVR PfeilAktion start note: %@",[[note userInfo]description]);
-   
-   // Richtung >0: Pfeiltaste
-   if ([[note userInfo]objectForKey:@"richtung"]&&[[[note userInfo]objectForKey:@"richtung"]intValue])
+   if ([[note userInfo]objectForKey:@"richtung"])
    {
       quelle=[[[note userInfo]objectForKey:@"richtung"]intValue];
       if ([[note userInfo]objectForKey:@"push"])
       {
          mausistdown = [[[note userInfo]objectForKey:@"push"]intValue];
+      }
+   }
+   else
+   {
+      NSBeep();
+      quelle = 0;
+      mausistdown = 0;
+      return;
+   }
+   // Richtung >0: Pfeiltaste
+//   if ([[note userInfo]objectForKey:@"richtung"]&&[[[note userInfo]objectForKey:@"richtung"]intValue])
+   {
+     // quelle=[[[note userInfo]objectForKey:@"richtung"]intValue];
+      //if (mausistdown) // Button pressed
+      {
          if (mausistdown)
          {
-            
             switch (quelle)
             {
                case MANDOWN:
                {
-                  NSLog(@"AVR PfeilAktion mandown");
-                  [self reportManDown:NULL];
+                  NSLog(@"AVR PfeilAktion mandown mosedown");
+                  //[self reportManDown:NULL];
                }break;
                case MANUP:
                {
-                  NSLog(@"AVR PfeilAktion manup");
-                  [self ManRichtung:2 pfeilstep: 500];
+                  NSLog(@"AVR PfeilAktion manup mosedown");
+                  //[self ManRichtung:quelle mousestatus:mausistdown pfeilstep: 500];
                   [CNC_Downtaste setEnabled:YES];
                   [AnschlagUntenIndikator setTransparent:YES];
 
@@ -4250,20 +4289,25 @@ return returnInt;
                }break;
                case MANLEFT:
                {
-                  NSLog(@"AVR PfeilAktion manleft");
-                  [self reportManLeft:NULL];
+                  NSLog(@"AVR PfeilAktion manleft mosedown");
+                  //[self reportManLeft:NULL];
                }break;
                case MANRIGHT:
                {
-                  NSLog(@"AVR PfeilAktion manright");
-                  [self reportManRight:NULL];
+                  NSLog(@"AVR PfeilAktion manright mosedown");
+                  [CNC_Lefttaste setEnabled:YES];
+                  [AnschlagLinksIndikator setTransparent:YES];
+                 // [self reportManRight:NULL];
                }break;
                   
             }//switch
+            // senden an teensy: go
+            [self ManRichtung:quelle mousestatus:mausistdown pfeilstep: 50];
          }
-         else
+         else // Button released
          {
-            
+            NSLog(@"AVR PfeilAktion mouseUP quelle: %d",quelle);
+            [self ManRichtung:quelle mousestatus:mausistdown pfeilstep: 50];
          }
       }
    }

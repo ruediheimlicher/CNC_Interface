@@ -52,6 +52,7 @@
    int richtung;
    IBOutlet id Taste;
 }
+
 - (IBAction)reportPfeiltaste:(id)sender;
 - (void)setRichtung:(int)dieRichtung;
 - (int)Richtung;
@@ -355,7 +356,7 @@
    - (int)saveSpeed;
    - (int)saveProfileinstellungen;
    - (void)setUSBDaten:(NSDictionary*)datendic;
-   - (void)ManRichtung:(int)richtung  pfeilstep:(int)step;
+   - (void)ManRichtung:(int)richtung  mousestatus:(int)status pfeilstep:(int)step;
    - (IBAction)reportSpeedStepper:(id)sender;
 
 //- (IBAction)reportCNCKnopf:(id)sender;

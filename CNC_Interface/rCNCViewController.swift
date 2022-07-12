@@ -49,7 +49,6 @@ class rCNCViewController:rViewController
       NotificationCenter.default.addObserver(self, selector:#selector(contDataAktion(_:)),name:NSNotification.Name(rawValue: "contdata"),object:nil)
       NotificationCenter.default.addObserver(self, selector:#selector(usbattachAktion(_:)),name:NSNotification.Name(rawValue: "usb_attach"),object:nil)
 
-
    }
    
  
@@ -73,19 +72,19 @@ class rCNCViewController:rViewController
       {
          case 123:
             print("left arrowstep: \(arrowstep)")
-            AVR?.manRichtung(3, pfeilstep: arrowstep) // left
+ //        AVR?.ManRichtung(3, pfeilstep: arrowstep) // left
             break
          case 124:
             print("right arrowstep: \(arrowstep)")
-             AVR?.manRichtung(1, pfeilstep: arrowstep) // right
+ //            AVR?.ManRichtung(1, pfeilstep: arrowstep) // right
              break
          case 125:
             print("down arrowstep: \(arrowstep)")
-             AVR?.manRichtung(4, pfeilstep: arrowstep) // down
+  //           AVR?.ManRichtung(4, pfeilstep: arrowstep) // down
              break
          case 126:
             print("up arrowstep: \(arrowstep)")
-             AVR?.manRichtung(2, pfeilstep: arrowstep) // up
+ //            AVR?.ManRichtung(2, pfeilstep: arrowstep) // up
              break
          
          default:
@@ -222,6 +221,7 @@ class rCNCViewController:rViewController
       
       Stepperposition = 0
       print("cncviewcontroller usbschnittdatenAktion")
+        
        usb_schnittdatenarray.removeAll()
        let info = notification.userInfo
    //   print("info: \(info)")
@@ -300,13 +300,14 @@ class rCNCViewController:rViewController
          
       }
   
-      writeCNCAbschnitt()
+  //    writeCNCAbschnitt()
       
-      var timerdic:[String:Any] = [String:Any]()
-      timerdic["home"] = home
+//      var timerdic:[String:Any] = [String:Any]()
+//      timerdic["home"] = home
       
       teensy.start_read_USB(true, dic:timerdic)
       
+        writeCNCAbschnitt()
      // readTimer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(teensy.cont_read_USB(_:)), userInfo: timerdic, repeats: true)
 
       
@@ -345,7 +346,6 @@ class rCNCViewController:rViewController
                let senderfolg = teensy.send_USB()
                print("writeCNCAbschnitt senderfolg: \(senderfolg)")
             }
-            
             
             Stepperposition += 1
          }// halt

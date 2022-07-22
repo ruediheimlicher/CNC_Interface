@@ -7553,12 +7553,15 @@ return returnInt;
    HomeSchnittdatenArray[0][24] = [NSNumber numberWithInt:neucode];
    
    [tempDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
+   [tempDic setObject:[NSNumber numberWithInt:0] forKey:@"home"]; // 
 
    [tempDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
 
 
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-   [nc postNotificationName:@"slavereset" object:self userInfo:tempDic];
+   [nc postNotificationName:@"usbschnittdaten" object:self userInfo:tempDic];
+
+   //  [nc postNotificationName:@"slavereset" object:self userInfo:tempDic];
 
 }
 

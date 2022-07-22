@@ -190,7 +190,6 @@ class rCNCViewController:rViewController
       
       
       
-      
       teensy.clear_data()
    }
 
@@ -340,8 +339,10 @@ class rCNCViewController:rViewController
       var timerdic:[String:Any] = [String:Any]()
       timerdic["home"] = usb_home
       
-      teensy.start_read_USB(true, dic:timerdic)
-      
+        if (teensy.read_OK.boolValue == false)
+        {
+           teensy.start_read_USB(true, dic:timerdic)
+        }
         writeCNCAbschnitt()
      // readTimer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(teensy.cont_read_USB(_:)), userInfo: timerdic, repeats: true)
 

@@ -154,7 +154,14 @@ class rTimerInfo {
     }
     */
    
- 
+    open func iscont()-> Int
+    {
+       if (read_OK).boolValue == true
+       {
+            return 1
+       }
+       return 0
+    }
    
    open func getlastDataRead()->Data
    {
@@ -339,6 +346,10 @@ class rTimerInfo {
        for  i in 0..<BUFFER_SIZE
        {
           read_byteArray[i] = 0
+          if write_byteArray.count > i
+          {
+          write_byteArray[i] = 0
+          }
        }
 
     }

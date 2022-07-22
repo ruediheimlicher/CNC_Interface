@@ -2222,7 +2222,7 @@
 
    [ErgebnisDic setObject:[NSNumber numberWithFloat:winkel]  forKey:@"winkel"];
    [ErgebnisDic setObject:@"Schliessen"  forKey:@"quelle"];
-   //[nc postNotificationName:@"Elementeingabe" object:self userInfo:ErgebnisDic];
+   [nc postNotificationName:@"Elementeingabe" object:self userInfo:ErgebnisDic];
    
    [NSApp stopModalWithCode:1];
    [[self window]orderOut:NULL];

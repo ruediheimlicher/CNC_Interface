@@ -131,13 +131,13 @@ static void add_hid(hid_t *h)
    //IOHIDDeviceRef* r= &h->ref;
    
    CFTypeRef prod = IOHIDDeviceGetProperty(h->ref, CFSTR(kIOHIDProductKey));
-   const char* prodstr = CFStringGetCStringPtr(prod, kCFStringEncodingMacRoman);
+ //  const char* prodstr = CFStringGetCStringPtr(prod, kCFStringEncodingMacRoman);
 //   fprintf(stderr,"prodstr: %s\n",prodstr);
    
   
    CFTypeRef prop= IOHIDDeviceGetProperty(h->ref,CFSTR(kIOHIDManufacturerKey));
    //CFStringRef manu = (CFStringRef)prop;
-   const char* manustr = CFStringGetCStringPtr(prop, kCFStringEncodingMacRoman);
+//   const char* manustr = CFStringGetCStringPtr(prop, kCFStringEncodingMacRoman);
 //   fprintf(stderr,"manustr: %s\n",manustr);
    
 	if (!first_hid || !last_hid) 
@@ -182,6 +182,7 @@ static void free_all_hid(void)
 
 const char* get_manu()
 {
+   return "*\n";
    hid_t * cnc = get_hid(0);
    if (cnc)
    {

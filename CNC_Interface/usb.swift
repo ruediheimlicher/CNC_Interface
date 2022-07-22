@@ -80,7 +80,7 @@ class rTimerInfo {
          let manu   = get_manu()
          let manustr:String = String(cString: manu!)
          
-         if (manustr == nil)
+         if (manustr == "")
          {
             manustring = "-"
          }
@@ -333,7 +333,17 @@ class rTimerInfo {
    {
       read_OK = false
    }
-   
+ 
+    @objc func clear_data()
+    {
+       for  i in 0..<BUFFER_SIZE
+       {
+          read_byteArray[i] = 0
+       }
+
+    }
+
+    
    open func send_USB()->Int32
    {
       // http://www.swiftsoda.com/swift-coding/get-bytes-from-nsdata/

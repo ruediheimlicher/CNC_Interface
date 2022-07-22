@@ -48,6 +48,7 @@ class rCNCViewController:rViewController
       NotificationCenter.default.addObserver(self, selector:#selector(newDataAktion(_:)),name:NSNotification.Name(rawValue: "newdata"),object:nil)
       NotificationCenter.default.addObserver(self, selector:#selector(contDataAktion(_:)),name:NSNotification.Name(rawValue: "contdata"),object:nil)
       NotificationCenter.default.addObserver(self, selector:#selector(usbattachAktion(_:)),name:NSNotification.Name(rawValue: "usb_attach"),object:nil)
+      NotificationCenter.default.addObserver(self, selector: #selector(slaveresetAktion), name:NSNotification.Name(rawValue: "slavereset"), object: nil)
 
    }
    
@@ -181,6 +182,18 @@ class rCNCViewController:rViewController
                 userInfo: nil)
         
      }
+   
+   
+   @objc func slaveresetAktion(_ notification:Notification) 
+   {
+      print("slaveresetAktion")
+      
+      
+      
+      
+      teensy.clear_data()
+   }
+
 
     
      @objc func usbschnittdatenAktion(_ notification:Notification) 
@@ -228,15 +241,36 @@ class rCNCViewController:rViewController
    //    let usb_pwm =  info?["pwm"] as! UInt8
    //    let usb_delayok =  info?["delayok"] as! UInt8
        
-   //   let usb_home =  info?["home"] as! UInt8
+      let usb_home =  info?["home"] as! UInt8
 
         //    let usb_art =  info?["art"] as! UInt8
    //    let usb_cncposition =  info?["cncposition"]
        
        //print("usb_pwm: \(usb_pwm) usb_delayok: \(usb_delayok) usb_home: \(usb_home) usb_art: \(usb_art) usb_cncposition: \(usb_cncposition) ")
-      
+//        let zeilenzahlarray = info?["schnittdatenarray"] as! [UInt8]
+        guard   let zeilenzahlarray = info?["schnittdatenarray"] as?[[UInt8]] else {return}
+        var zeilenindex = 0
+      for zeile in   zeilenzahlarray
+      {
+         var wertarray = [UInt8]()
+         var elementindex = 0
+         for el in zeile
+         {
+            guard UInt8(el) != nil else { return  }
+            wertarray.append(el)
+            elementindex += 1
+         }
+         for anz in  elementindex..<Int(BufferSize())
+         {
+            wertarray.append(0)
+            
+         }
+         usb_schnittdatenarray.append(wertarray)
+      }
+        
+      /*  
       let zeilenstringarray = info?["schnittdatenstringarray"] as! [String]
-      var zeilenindex = 0
+      zeilenindex = 0
       for zeile in zeilenstringarray
       {
          let zeilenarray = zeile.components(separatedBy: ",")
@@ -254,10 +288,11 @@ class rCNCViewController:rViewController
             wertarray.append(0)
             
          }
-         usb_schnittdatenarray.append(wertarray)
+         
+ //        usb_schnittdatenarray.append(wertarray)
          zeilenindex += 1
       }
-      
+      */
       
         //print("usbschnittdatenAktion usb_schnittdatenarray: \(usb_schnittdatenarray )")
        
@@ -303,7 +338,7 @@ class rCNCViewController:rViewController
   //    writeCNCAbschnitt()
       
       var timerdic:[String:Any] = [String:Any]()
-      timerdic["home"] = home
+      timerdic["home"] = usb_home
       
       teensy.start_read_USB(true, dic:timerdic)
       
@@ -316,9 +351,9 @@ class rCNCViewController:rViewController
     @objc func writeCNCAbschnitt()
    {
       
-      //print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
+     print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
       let count = usb_schnittdatenarray.count
-      //print("writeCNCAbschnitt Stepperposition: \(Stepperposition) count: \(count)")
+      print("writeCNCAbschnitt code: \(usb_schnittdatenarray[0][24]) Stepperposition: \(Stepperposition) count: \(count)")
       teensy.write_byteArray.removeAll()
       
       if Stepperposition < usb_schnittdatenarray.count
@@ -341,7 +376,7 @@ class rCNCViewController:rViewController
             {
                teensy.write_byteArray.append(wert)
             }
-            //print("write_byteArray: \(teensy.write_byteArray)")
+            print("write_byteArray: \(teensy.write_byteArray)")
             if (globalusbstatus > 0)
             {
                let senderfolg = teensy.send_USB()
@@ -540,6 +575,12 @@ class rCNCViewController:rViewController
                           userInfo: NotificationDic)
                   return
                   break
+               
+                  
+               case 0xF1:
+                  
+                     print(" home ")
+                  break;
                   
                default:
                   break

@@ -618,7 +618,7 @@ void plot_line (int x0, int y0, int x1, int y1)
    self.wantsLayer = YES;
    [ self.view.layer setBackgroundColor:(__bridge CGColorRef _Nullable)(bgcolor)];
    
-   [self->CNC_Righttaste sendActionOn: NSEventMaskLeftMouseDown | NSEventMaskLeftMouseUp];
+   [self->CNC_Lefttaste sendActionOn: NSEventMaskLeftMouseDown | NSEventMaskLeftMouseUp];
 
    
    NSNotificationCenter * nc;
@@ -736,6 +736,11 @@ void plot_line (int x0, int y0, int x1, int y1)
               name:@"FigElementeingabe"
             object:nil];
    
+   [nc addObserver:self
+          selector:@selector(USBStartAktion:)
+              name:@"usbstart"
+            object:nil];
+
    
    Utils = [[rUtils alloc]init];
    
@@ -1049,12 +1054,20 @@ void plot_line (int x0, int y0, int x1, int y1)
       NSLog(@"usbattachAktion USBATTACHED");
    }
    
-   
 }
 
 - (void)USBStatusAktion:(NSNotification*)note
 {
    NSLog(@"USBStatusAktion note: %@",[[note userInfo]description]);
+   NSString* message = [[note userInfo]objectForKey:@"message"];
+   NSLog(@"USBStatusAktion message: %@",message);
+   if ([message isEqualToString: @"usbstart"])
+   {
+      NSLog(@"USBStatusAktion start");
+    //  [[[self view]window]makeFirstResponder:self];
+      [[[self view]window]makeKeyAndOrderFront:self];
+      
+   }
    AVR_USBStatus = [[[note userInfo]objectForKey:@"usbstatus"]intValue];
 
 }
@@ -1483,9 +1496,8 @@ return returnInt;
       
       //[self Alert:@"showEinstellungenFenster nach init"];
    }
-   
+   //[CNC_Eingabe setDaten:
    [CNC_Eingabe showWindow:NULL];
-   
 }
 
 - (void)showEinstellungen
@@ -1499,9 +1511,10 @@ return returnInt;
       CNC_Eingabe=[[rEinstellungen alloc]init];
       
       //[EinstellungenFenster showWindow:self];
-      [self reportNeueLinie:(NULL)];
+     // [self reportNeueLinie:(NULL)];
       //[self Alert:@"showEinstellungenFenster nach init"];
    }
+   [self reportNeueLinie:(NULL)];
   // [self reportNeueLinie:(NULL)];
 //   [CNC_Eingabe setDaten:<#(NSDictionary *)#>
    [CNC_Eingabe showWindow:NULL];
@@ -3852,12 +3865,13 @@ return returnInt;
    [CNCTable reloadData];
 }
 
-
+/*
 - (int)mausistdown
 {
   // return mausistdown;
    return [TestPfeiltaste Tastestatus];
 }
+*/
 
 - (void)MausAktion:(NSNotification*)note
 {
@@ -5727,6 +5741,8 @@ return returnInt;
    float offsetx = [ProfilBOffsetXFeld floatValue];
    float offsety = [ProfilBOffsetYFeld floatValue];
    
+   float startx = [[[note userInfo]objectForKey:@"startx"]floatValue];
+   float starty = [[[note userInfo]objectForKey:@"starty"]floatValue];
    
    NSDictionary* oldPosDic = nil;
    
@@ -5738,15 +5754,16 @@ return returnInt;
    if ([KoordinatenTabelle count])
    {
       oldPosDic = [KoordinatenTabelle lastObject];
-      oldax = [[[KoordinatenTabelle lastObject]objectForKey:@"ax"]floatValue];
-      olday = [[[KoordinatenTabelle lastObject]objectForKey:@"ay"]floatValue];
-      oldbx = [[[KoordinatenTabelle lastObject]objectForKey:@"bx"]floatValue];
-      oldby = [[[KoordinatenTabelle lastObject]objectForKey:@"by"]floatValue];
+      oldax = [[[KoordinatenTabelle lastObject]objectForKey:@"ax"]floatValue] - startx;
+      olday = [[[KoordinatenTabelle lastObject]objectForKey:@"ay"]floatValue] - starty;
+      oldbx = [[[KoordinatenTabelle lastObject]objectForKey:@"bx"]floatValue] - startx;
+      oldby = [[[KoordinatenTabelle lastObject]objectForKey:@"by"]floatValue] - starty;
    }
    else // Startpunkt, nur Offset aus Offsetfeldern
    {
       oldbx += offsetx;
       oldby += offsety;
+   
    }
    // Offset der letzten Punkte von A und B:
    //NSLog(@"oldax: %2.2f olday: %2.2f",oldax,olday);
@@ -5755,8 +5772,8 @@ return returnInt;
    // 31.10.
    for (i=0;i<[tempElementKoordinatenArray count];i++) // Data 0 ist letztes Data von Koordinatentabelle 
    {
-      float dx = [[[tempElementKoordinatenArray objectAtIndex:i]objectAtIndex:0]floatValue]; 
-      float dy = [[[tempElementKoordinatenArray objectAtIndex:i]objectAtIndex:1]floatValue];
+      float dx = [[[tempElementKoordinatenArray objectAtIndex:i]objectAtIndex:0]floatValue] - startx; 
+      float dy = [[[tempElementKoordinatenArray objectAtIndex:i]objectAtIndex:1]floatValue] - starty;
 
       //NSLog(@"index: %d oldax: %2.2f olday: %2.2f  dx: %2.2f dy: %2.2f",i,oldax,olday,dx,dy);
       NSDictionary* tempDic=[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:oldax+dx],@"ax",[NSNumber numberWithFloat:olday+dy],@"ay",[NSNumber numberWithFloat:oldbx+dx],@"bx",[NSNumber numberWithFloat:oldby+dy],@"by",[NSNumber numberWithInt:i],@"index", nil];
@@ -5951,7 +5968,7 @@ return returnInt;
    
    // Dic mit keys x,y,index, Werte mit wahrer laenge in mm proportional Profiltiefe
    
-   NSArray* Profil1RawArray=NULL;
+   NSArray* Profil1RawArray=[NSArray array];
    
    if ([ProfilDic objectForKey:@"profil1array"])
    {
@@ -5960,7 +5977,7 @@ return returnInt;
       //NSLog(@"Profil1RawArray: %d",[Profil1RawArray count]);
       [AnzahlFeld setIntValue:[Profil1RawArray count]];
    }
-   NSArray* Profil2RawArray=NULL;
+   NSArray* Profil2RawArray=[NSArray array];
    if ([ProfilDic objectForKey:@"profil2array"])
    {
       Profil2RawArray=[ProfilDic objectForKey:@"profil2array"];
@@ -5975,49 +5992,52 @@ return returnInt;
    float minabstand=[MinimaldistanzFeld floatValue];
    
    // Erstes Element einsetzen
-   [Profil1Array addObject:[Profil1RawArray objectAtIndex:0]];
-   [Profil2Array addObject:[Profil2RawArray objectAtIndex:0]];
-   
-   for (int i=1;i<[Profil1RawArray count];i++)
+   if (([Profil1RawArray count]) && ([Profil1RawArray count]))
    {
-      //letzte registrierte Werte
-      float prevregdx = [[[Profil1Array lastObject]objectForKey:@"x"]floatValue];
-      float prevregdy = [[[Profil1Array lastObject]objectForKey:@"y"]floatValue];
+      [Profil1Array addObject:[Profil1RawArray objectAtIndex:0]];
       
-      // letzte Werte im RawArray
-      float prevdx = [[[Profil1RawArray objectAtIndex:i-1]objectForKey:@"x"]floatValue];
-      float prevdy = [[[Profil1RawArray objectAtIndex:i-1]objectForKey:@"y"]floatValue];
+      [Profil2Array addObject:[Profil2RawArray objectAtIndex:0]];
       
-      // aktuelle Werte im RawArray
-      float dx = [[[Profil1RawArray objectAtIndex:i]objectForKey:@"x"]floatValue];
-      float dy = [[[Profil1RawArray objectAtIndex:i]objectForKey:@"y"]floatValue];
-      
-      // distanz zum letzten Element im RawArray
-      float dist = hypotf(dx-prevdx, dy-prevdy)* MIN(ProfiltiefeA,ProfiltiefeB);
-      
-      // distanz zum letzten registrierten Element im Array
-      float regdist = hypotf(dx-prevregdx, dy-prevregdy)* MIN(ProfiltiefeA,ProfiltiefeB);
-      
-      fprintf(stderr,"i: %d \t prevdx %2.2f \t dx%2.2f \t dist%2.2f \t regdist %2.2f \t ",i,prevdx,dx,dist,regdist);
-      //NSLog(@"i: %d dx %2.2f",i,dx);
-      if (regdist>minabstand)
+      for (int i=1;i<[Profil1RawArray count];i++)
       {
-         [Profil1Array addObject:[Profil1RawArray objectAtIndex:i]];
-         [Profil2Array addObject:[Profil2RawArray objectAtIndex:i]];
-         int index =[Profil1Array count];
-         //NSLog(@"i: %d index: %d dx %2.2f",i,index,dist);
+         //letzte registrierte Werte
+         float prevregdx = [[[Profil1Array lastObject]objectForKey:@"x"]floatValue];
+         float prevregdy = [[[Profil1Array lastObject]objectForKey:@"y"]floatValue];
          
-         fprintf(stderr,"\tindex: %d",index);
+         // letzte Werte im RawArray
+         float prevdx = [[[Profil1RawArray objectAtIndex:i-1]objectForKey:@"x"]floatValue];
+         float prevdy = [[[Profil1RawArray objectAtIndex:i-1]objectForKey:@"y"]floatValue];
+         
+         // aktuelle Werte im RawArray
+         float dx = [[[Profil1RawArray objectAtIndex:i]objectForKey:@"x"]floatValue];
+         float dy = [[[Profil1RawArray objectAtIndex:i]objectForKey:@"y"]floatValue];
+         
+         // distanz zum letzten Element im RawArray
+         float dist = hypotf(dx-prevdx, dy-prevdy)* MIN(ProfiltiefeA,ProfiltiefeB);
+         
+         // distanz zum letzten registrierten Element im Array
+         float regdist = hypotf(dx-prevregdx, dy-prevregdy)* MIN(ProfiltiefeA,ProfiltiefeB);
+         
+         fprintf(stderr,"i: %d \t prevdx %2.2f \t dx%2.2f \t dist%2.2f \t regdist %2.2f \t ",i,prevdx,dx,dist,regdist);
+         //NSLog(@"i: %d dx %2.2f",i,dx);
+         if (regdist>minabstand)
+         {
+            [Profil1Array addObject:[Profil1RawArray objectAtIndex:i]];
+            [Profil2Array addObject:[Profil2RawArray objectAtIndex:i]];
+            int index =[Profil1Array count];
+            //NSLog(@"i: %d index: %d dx %2.2f",i,index,dist);
+            
+            fprintf(stderr,"\tindex: %d",index);
+         }
+         else
+         {
+            fprintf(stderr,"\t abstand zu klein ");
+         }
+         
+         // NSLog(@"i: %d dx: %2.2f",i,dx);
+         fprintf(stderr,"\n");
       }
-      else
-      {
-         fprintf(stderr,"\t abstand zu klein ");
-      }
-      
-      // NSLog(@"i: %d dx: %2.2f",i,dx);
-      fprintf(stderr,"\n");
-   }
-   
+   } // if profil1RawArray
    float pfeilung = (ProfiltiefeA - ProfiltiefeB)/[Spannweite intValue];
    float arc=atan(pfeilung);
    //NSLog(@"pfeilung: %2.8f arc: %2.8f sinus: %2.8f",pfeilung,arc,sinus);

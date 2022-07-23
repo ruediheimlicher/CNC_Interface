@@ -377,7 +377,15 @@ class rViewController: NSViewController, NSWindowDelegate
          {
             USB_OK_Feld.image = notokimage
          }
+
       }
+       var userinformation:[String : Any]
+       userinformation = ["message":"usbstart", "usbstatus": usbstatus] as [String : Any]
+       let nc = NotificationCenter.default
+       nc.post(name:Notification.Name(rawValue:"usb_status"),
+               object: nil,
+               userInfo: userinformation)
+
     }
     
   /* 

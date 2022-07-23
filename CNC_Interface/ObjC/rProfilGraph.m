@@ -684,7 +684,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 	{
 		int anz=[DatenArray count];
 		StartPunktA=NSMakePoint([[[DatenArray objectAtIndex:0]objectForKey:@"ax"]floatValue]*scale,[[[DatenArray objectAtIndex:0]objectForKey:@"ay"]floatValue]*scale);
-		//NSLog(@"drawRect startpunkt x: %.2f  y: %.2f",[[[DatenArray objectAtIndex:0]objectForKey:@"ax"]floatValue],[[[DatenArray objectAtIndex:0]objectForKey:@"ay"]floatValue]);
+		NSLog(@"drawRect startpunkt x: %.2f  y: %.2f",[[[DatenArray objectAtIndex:0]objectForKey:@"ax"]floatValue],[[[DatenArray objectAtIndex:0]objectForKey:@"ay"]floatValue]);
       int endpunktax = [[[DatenArray objectAtIndex:anz-1]objectForKey:@"ax"]floatValue];
       
       EndPunktA=NSMakePoint([[[DatenArray objectAtIndex:anz-1]objectForKey:@"ax"]floatValue],[[[DatenArray objectAtIndex:anz-1]objectForKey:@"ay"]floatValue]);
@@ -696,7 +696,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 		EndPunktB=NSMakePoint([[[DatenArray objectAtIndex:anz-1]objectForKey:@"bx"]floatValue]*scale,([[[DatenArray objectAtIndex:anz-1]objectForKey:@"by"]floatValue]+GraphOffset)*scale);
       int endpunktbx = [[[DatenArray objectAtIndex:anz-1]objectForKey:@"bx"]floatValue];
 
-      NSLog(@"endpunktax: %d endpunktbx: %d",endpunktax,endpunktbx);
+      //NSLog(@"drawRect endpunktax: %d endpunktbx: %d",endpunktax,endpunktbx);
       if (screen)
       {
          
@@ -731,7 +731,7 @@ int (^add)(int,int) = ^(int number1, int number2){
       }
       
       NSRect StartMarkBRect=NSMakeRect(StartPunktB.x-1.5, StartPunktB.y-1, 3, 3);
-      NSLog(@"StartMarkBRect: x: %d y: %d ",StartMarkBRect.origin.x, StartMarkBRect.origin.y);
+      //NSLog(@"StartMarkBRect: x: %d y: %d ",StartMarkBRect.origin.x, StartMarkBRect.origin.y);
 		NSBezierPath* StartMarkB=[NSBezierPath bezierPathWithOvalInRect:StartMarkBRect];
 		[[NSColor grayColor]set];
 		[StartMarkB stroke];
@@ -740,7 +740,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 		[LinieB moveToPoint:StartPunktB];
       
 		NSRect StartMarkARect=NSMakeRect(StartPunktA.x-1.5, StartPunktA.y-1, 3, 3);
-      NSLog(@"StartMarkARect: x: %d y: %d ",StartMarkARect.origin.x, StartMarkARect.origin.y);
+      //NSLog(@"StartMarkARect: x: %d y: %d ",StartMarkARect.origin.x, StartMarkARect.origin.y);
 		NSBezierPath* StartMarkA=[NSBezierPath bezierPathWithOvalInRect:StartMarkARect];
 		[[NSColor blueColor]set];
 		[StartMarkA stroke];
@@ -771,7 +771,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 		
       NSPoint AbbrandEndPunktA=NSMakePoint(([[[DatenArray objectAtIndex:anz-1]objectForKey:@"abrax"]floatValue]),([[[DatenArray objectAtIndex:anz-1]objectForKey:@"abray"]floatValue]+GraphOffset));
 		
-      NSLog(@"startabbrandindex: %d AbbrandStartPunktA.x %d AbbrandEndPunktA.y %d ",startabbrandindexa ,AbbrandStartPunktA.x,AbbrandEndPunktA.y);
+      //NSLog(@"startabbrandindex: %d AbbrandStartPunktA.x %d AbbrandEndPunktA.y %d ",startabbrandindexa ,AbbrandStartPunktA.x,AbbrandEndPunktA.y);
       [AbbrandLinieA moveToPoint:AbbrandStartPunktA];
       //
       // Seite 2
@@ -792,7 +792,7 @@ int (^add)(int,int) = ^(int number1, int number2){
       AbbrandStartPunktB.y +=abbbranddelay;
 		NSPoint AbbrandEndPunktB=NSMakePoint([[[DatenArray objectAtIndex:anz-1]objectForKey:@"abrbx"]floatValue],[[[DatenArray objectAtIndex:anz-1]objectForKey:@"abrby"]floatValue]);
 	
-      NSLog(@"startabbrandindexb: %d AbbrandStartPunktB.x %d AbbrandEndPunktB.y %d ",startabbrandindexb ,AbbrandStartPunktA.x,AbbrandEndPunktA.y);
+      //NSLog(@"startabbrandindexb: %d AbbrandStartPunktB.x %d AbbrandEndPunktB.y %d ",startabbrandindexb ,AbbrandStartPunktA.x,AbbrandEndPunktA.y);
 
       [AbbrandLinieB moveToPoint:AbbrandStartPunktB];
       

@@ -885,9 +885,19 @@
       int i;
       for(i=0;i<[ElementArray count];i++)
       {
-         float tempX = [[[ElementArray objectAtIndex:i]objectForKey:@"x"]floatValue];
-         float tempY = [[[ElementArray objectAtIndex:i]objectForKey:@"y"]floatValue];
-         
+         float tempX = 0;
+         float tempY = 0;
+         if ([[ElementArray objectAtIndex:i]objectForKey:@"x"]) // nur eine Seite
+         {
+         tempX = [[[ElementArray objectAtIndex:i]objectForKey:@"x"]floatValue];
+         tempY = [[[ElementArray objectAtIndex:i]objectForKey:@"y"]floatValue];
+         }
+         else if ([[ElementArray objectAtIndex:i]objectForKey:@"ax"]) // zwei Seiten
+         {
+            tempX = [[[ElementArray objectAtIndex:i]objectForKey:@"ax"]floatValue];
+            tempY = [[[ElementArray objectAtIndex:i]objectForKey:@"ay"]floatValue];
+            
+         }
          //NSLog(@"index: %d tempX: %1.1f tempY: %1.1f *** minX: %1.1f maxX: %1.1f minY: %1.1f maxY: %1.1f",i,tempX,tempY,minX, maxY, minY, maxY);
          //NSLog(@"index: %d tempX: %1.1f tempY: %1.1f",i,tempX,tempY);
          if (tempX > maxX)
@@ -907,7 +917,7 @@
             minY = tempY;
          }
          
-      }
+      } // for i
       
       
       //NSLog(@"minX: %1.1f maxX: %1.1f minY: %1.1f maxY: %1.1f",minX, maxX, minY, maxY);
@@ -936,11 +946,28 @@
       float offsetY= (maxY+minY)/2;
       //NSLog(@" offsetX: %1.1f offsetY: %1.1f", offsetX, offsetY);
       
+      float tempX = 0;
+      float tempY = 0;
+      if ([[ElementArray objectAtIndex:0]objectForKey:@"x"]) // nur eine Seite
+      {
+      tempX = [[[ElementArray objectAtIndex:0]objectForKey:@"x"]floatValue];
+      tempY = [[[ElementArray objectAtIndex:0]objectForKey:@"y"]floatValue];
+      }
+      else if ([[ElementArray objectAtIndex:0]objectForKey:@"ax"]) // zwei Seiten
+      {
+         tempX = [[[ElementArray objectAtIndex:0]objectForKey:@"ax"]floatValue];
+         tempY = [[[ElementArray objectAtIndex:0]objectForKey:@"ay"]floatValue];
+         
+      }
+
       
+//      NSPoint scaleStartPunkt= NSMakePoint(([[[ElementArray objectAtIndex:0]objectForKey:@"x"]floatValue]- offsetX)*scale+feldbreite/2 , ([[[ElementArray objectAtIndex:0]objectForKey:@"y"]floatValue]- offsetY)*scale+feldhoehe/2 );
+//      NSPoint scaleEndPunkt= NSMakePoint(([[[ElementArray lastObject]objectForKey:@"x"]floatValue]- offsetX)*scale+feldbreite/2 , ([[[ElementArray lastObject]objectForKey:@"y"]floatValue]- offsetY)*scale+feldhoehe/2 );
       
-      NSPoint scaleStartPunkt= NSMakePoint(([[[ElementArray objectAtIndex:0]objectForKey:@"x"]floatValue]- offsetX)*scale+feldbreite/2 , ([[[ElementArray objectAtIndex:0]objectForKey:@"y"]floatValue]- offsetY)*scale+feldhoehe/2 );
-      NSPoint scaleEndPunkt= NSMakePoint(([[[ElementArray lastObject]objectForKey:@"x"]floatValue]- offsetX)*scale+feldbreite/2 , ([[[ElementArray lastObject]objectForKey:@"y"]floatValue]- offsetY)*scale+feldhoehe/2 );
-      
+      NSPoint scaleStartPunkt= NSMakePoint((tempX - offsetX)*scale+feldbreite/2 , (tempY - offsetY)*scale+feldhoehe/2 );
+      NSPoint scaleEndPunkt= NSMakePoint((tempX - offsetX)*scale+feldbreite/2 , (tempY - offsetY)*scale+feldhoehe/2 );
+     
+
       [self GitterZeichnenMitUrsprung:scaleStartPunkt];
       
       //NSLog(@"StartPunkt.x: %1.3f StartPunkt.y: %1.3f EndPunkt.x: %1.3f EndPunkt.y: %1.3f",scaleStartPunkt.x, scaleStartPunkt.y, scaleEndPunkt.x, scaleEndPunkt.y);
@@ -948,7 +975,24 @@
       //[Graph moveToPoint:scaleStartPunkt];
       for (i=0;i<[ElementArray count];i++)
       {
-         NSPoint tempPunkt= NSMakePoint(([[[ElementArray objectAtIndex:i]objectForKey:@"x"]floatValue]- offsetX)*scale+feldbreite/2 , ([[[ElementArray objectAtIndex:i]objectForKey:@"y"]floatValue]- offsetY)*scale+feldhoehe/2 );
+         float tempX = 0;
+         float tempY = 0;
+         if ([[ElementArray objectAtIndex:i]objectForKey:@"x"]) // nur eine Seite
+         {
+         tempX = [[[ElementArray objectAtIndex:i]objectForKey:@"x"]floatValue];
+         tempY = [[[ElementArray objectAtIndex:i]objectForKey:@"y"]floatValue];
+         }
+         else if ([[ElementArray objectAtIndex:i]objectForKey:@"ax"]) // zwei Seiten
+         {
+            tempX = [[[ElementArray objectAtIndex:i]objectForKey:@"ax"]floatValue];
+            tempY = [[[ElementArray objectAtIndex:i]objectForKey:@"ay"]floatValue];
+            
+         }
+
+         
+         
+         NSPoint tempPunkt= NSMakePoint((tempX - offsetX)*scale+feldbreite/2 , (tempY - offsetY)*scale+feldhoehe/2 );
+        
          // NSLog(@"index: %d tempPunkt.x: %1.3f tempPunkt.y: %1.3f",i,tempPunkt.x, tempPunkt.y);
          if (i)
          {
@@ -2348,6 +2392,7 @@
       [nc postNotificationName:@"LibProfileingabe" object:self userInfo: ProfilDic];
       
    }
+   [NSApp stopModalWithCode:0];
    [[self window]orderOut:NULL];
    //NSLog(@"reportProfilEinfuegen end");
 
@@ -2439,7 +2484,7 @@
 
 - (IBAction)reportLibPop:(id)sender
 {
-   //NSLog(@"reportLibPop index: %d",[sender indexOfSelectedItem]);
+   NSLog(@"reportLibPop index: %d",[sender indexOfSelectedItem]);
    if ([sender indexOfSelectedItem])
    {
       int index=[sender indexOfSelectedItem]-1; // Item 0 ist Titel
@@ -2449,18 +2494,49 @@
       {
          LibElementName = [NSString stringWithString:[[ElementLibArray objectAtIndex:index]objectForKey:@"name"]];
       }
-      NSLog(@"LibElementName: %@",LibElementName);
+      NSLog(@"LibElementName: %@ index: %d",LibElementName, index);
       if ([[ElementLibArray objectAtIndex:index]objectForKey:@"elementarray"])// Daten für Element da
       {
+         
+         //NSLog(@"element an index: %@",[ElementLibArray objectAtIndex:index]);
          [LibElementArray removeAllObjects];
          [LibElementArray addObjectsFromArray:[[ElementLibArray objectAtIndex:index]objectForKey:@"elementarray"]];
          if ([LibElementArray count])
          {
-            [LibStartpunktX setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"x"]floatValue]];
-            [LibStartpunktY setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"y"]floatValue]];
-            [LibEndpunktX setFloatValue:[[[LibElementArray lastObject]objectForKey:@"x"]floatValue]];
-            [LibEndpunktY setFloatValue:[[[LibElementArray lastObject]objectForKey:@"y"]floatValue]];
+            startx = [[[LibElementArray objectAtIndex:0]objectForKey:@"x"]floatValue];
+           
+            starty = [[[LibElementArray objectAtIndex:0]objectForKey:@"y"]floatValue];
             
+         //   endx = [[[LibElementArray lastObject]objectForKey:@"x"]floatValue];
+                        
+         //   endy = [[[LibElementArray lastObject]objectForKey:@"y"]floatValue];
+            
+            if ([[LibElementArray lastObject]objectForKey:@"x"])
+            {
+            [LibEndpunktX setFloatValue:[[[LibElementArray lastObject]objectForKey:@"x"]floatValue]];
+            
+            [LibStartpunktX setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"x"]floatValue]];
+            
+            [LibStartpunktY setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"y"]floatValue]];
+            
+            [LibEndpunktY setFloatValue:[[[LibElementArray lastObject]objectForKey:@"y"]floatValue]];
+            }
+            else
+            {
+               NSLog(@"keine Daten");
+               if ([[LibElementArray lastObject]objectForKey:@"ax"])
+                  [LibEndpunktX setFloatValue:[[[LibElementArray lastObject]objectForKey:@"ax"]floatValue]];
+                  
+                  [LibStartpunktX setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"ax"]floatValue]];
+                  
+                  [LibStartpunktY setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"ay"]floatValue]];
+                  
+                  [LibEndpunktY setFloatValue:[[[LibElementArray lastObject]objectForKey:@"ay"]floatValue]];
+ 
+                  
+            }
+         
+         
          }
          //NSLog(@"reportLibPop LibElementArray LAST: %@",[[LibElementArray lastObject]description]);
       }
@@ -2487,17 +2563,20 @@
    // Offset x,y einsetzen
    
    NSMutableArray* Koordinatentabelle=[[NSMutableArray alloc]initWithCapacity:0];
-   startx=0;
-   starty=0;
+   //startx=0;
+   //starty=0;
    int i=0;
+   
    for (i=1;i<[LibElementArray count];i++) // Erstes Element ist Startpunkt und schon im Array
    {
       float tempx = [[[LibElementArray objectAtIndex:i]objectForKey:@"x"]floatValue] + startx;
       float tempy = [[[LibElementArray objectAtIndex:i]objectForKey:@"y"]floatValue] + starty;
       [Koordinatentabelle addObject:[NSArray arrayWithObjects:[NSNumber numberWithFloat:tempx],[NSNumber numberWithFloat:tempy], nil]];
+   //   fprintf(stderr,"tempx: %2.2f tempy: %2.2f\n",tempx, tempy);
    }
 	[ElementDic setObject:Koordinatentabelle forKey:@"koordinatentabelle"];
-   
+   [ElementDic setObject:[NSNumber numberWithFloat:startx] forKey:@"startx"];
+   [ElementDic setObject:[NSNumber numberWithFloat:starty] forKey:@"starty"];
    
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
    [nc postNotificationName:@"LibElementeingabe" object:self userInfo:ElementDic];
@@ -2933,6 +3012,8 @@
       
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"LibProfileingabe" object:self userInfo:ProfilDic];
+      
+      [NSApp stopModalWithCode:0];
       [[self window]orderOut:NULL];
    }
 }

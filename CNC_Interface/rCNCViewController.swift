@@ -229,11 +229,17 @@ class rCNCViewController:rViewController
         pwm (pos 20)
         motorstatus (pos 21)
 
+         zoomfaktor  22
+         steps 23
+         micro 24
        */
       
       Stepperposition = 0
       print("cncviewcontroller usbschnittdatenAktion")
         
+        guard let steps:Int32 = AVR?.motorsteps()  else {return}
+        
+        print("cncviewcontroller usbschnittdatenAktion steps: \(steps)")
        usb_schnittdatenarray.removeAll()
        let info = notification.userInfo
    //   print("info: \(info)")
@@ -352,9 +358,9 @@ class rCNCViewController:rViewController
     @objc func writeCNCAbschnitt()
    {
       
-     print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
+    // print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
       let count = usb_schnittdatenarray.count
-      print("writeCNCAbschnitt code: \(usb_schnittdatenarray[0][24]) Stepperposition: \(Stepperposition) count: \(count)")
+  //    print("writeCNCAbschnitt code: \(usb_schnittdatenarray[0][24]) Stepperposition: \(Stepperposition) count: \(count)")
       teensy.write_byteArray.removeAll()
       
       if Stepperposition < usb_schnittdatenarray.count
@@ -377,7 +383,7 @@ class rCNCViewController:rViewController
             {
                teensy.write_byteArray.append(wert)
             }
-            print("write_byteArray: \(teensy.write_byteArray)")
+            //print("write_byteArray: \(teensy.write_byteArray)")
             if (globalusbstatus > 0)
             {
                let senderfolg = teensy.send_USB()
@@ -405,7 +411,7 @@ class rCNCViewController:rViewController
       var lastData = teensy.getlastDataRead()
       let lastDataArray = [UInt8](lastData)
       //print("newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")       
-      print("newDataAktion start")
+      //print("newDataAktion start")
       var ii = 0
       while ii < 10
       {
@@ -434,7 +440,7 @@ class rCNCViewController:rViewController
       
       if let d = info!["contdata"] // Data vornanden
       {
-         print("newDataAktion if let d ok")
+         //print("newDataAktion if let d ok")
          var usbdata = info!["data"] as! [UInt8]
          
          //      let stringFromByteArray = String(data: Data(bytes: usbdata), encoding: .utf8)         

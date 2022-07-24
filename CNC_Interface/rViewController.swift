@@ -159,7 +159,7 @@ class rDeviceTabViewController: NSTabViewController
    {
      // 
       let identifier:String = tabViewItem?.identifier as! String
-      print("DeviceTab identifier: \(String(describing: identifier)) usbstatus: \(globalusbstatus)")
+      //print("DeviceTab identifier: \(String(describing: identifier)) usbstatus: \(globalusbstatus)")
     // let sup = self.view.superview
      // print("DeviceTab superview: \(sup) ident: \(sup?.identifier)")
    //let supsup = self.view.superview?.superview

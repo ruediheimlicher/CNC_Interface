@@ -16,12 +16,14 @@ float det(float v0[],float v1[]);
 	NSMutableArray*		DatenArray;
 	int			speed;
 	int			steps;
+   int micro;
    float red_pwm;
    float schalendicke;
 
 }
 - (int)steps;
 - (void)setSteps:(int)dieSteps;
+- (int)micro;
 - (void)setDatenArray:(NSArray*)derDatenArray;
 - (NSArray*)DatenArray;
 - (void)setSpeed:(float)dieGeschwindigkeit;

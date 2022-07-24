@@ -779,6 +779,9 @@ void plot_line (int x0, int y0, int x1, int y1)
    cncstatus=0;
    cncposition=0;
    
+   steps = 48;
+   micro = 1;
+
    AVR_USBStatus=0;
    
    BlockKoordinatenTabelle=[[NSMutableArray alloc]initWithCapacity:0];
@@ -1058,12 +1061,12 @@ void plot_line (int x0, int y0, int x1, int y1)
 
 - (void)USBStatusAktion:(NSNotification*)note
 {
-   NSLog(@"USBStatusAktion note: %@",[[note userInfo]description]);
+   //NSLog(@"USBStatusAktion note: %@",[[note userInfo]description]);
    NSString* message = [[note userInfo]objectForKey:@"message"];
-   NSLog(@"USBStatusAktion message: %@",message);
+   //NSLog(@"USBStatusAktion message: %@",message);
    if ([message isEqualToString: @"usbstart"])
    {
-      NSLog(@"USBStatusAktion start");
+      //NSLog(@"USBStatusAktion start");
     //  [[[self view]window]makeFirstResponder:self];
       [[[self view]window]makeKeyAndOrderFront:self];
       
@@ -1682,7 +1685,15 @@ return returnInt;
    {
       GraphEnd=0;
    }
-   float zoomfaktor=[ProfilTiefeFeldA floatValue]/1000;
+   float zoomfaktor=[ProfilTiefeFeldA floatValue]/1000; 
+   
+   // steps per revolution: 48 oder 200
+   int stepsindex = [CNC_Steps selectedSegment];
+   steps = [CNC_Steps tagForSegment:stepsindex];
+   // level microstepping: 1,2,4
+   micro  = [[CNC_micro selectedItem]tag];
+ 
+   
    zoomfaktor=1;
    //Schnittdaten aus Mausklicktabelle
    int i;
@@ -2130,11 +2141,12 @@ return returnInt;
       
       //     if ([DC_Taste state])
       {
-         
          [tempDic setObject:[NSNumber numberWithInt:nowpwm]forKey:@"pwm"];
-         
-         
       }
+      
+  //    [tempDic setObject:[NSNumber numberWithInt:micro]forKey:@"micro"];
+  //    [tempDic setObject:[NSNumber numberWithInt:steps]forKey:@"steps"];
+      
       if ([tempNowDic objectForKey:@"teil"])
       {
          [tempDic setObject:[tempNowDic objectForKey:@"teil"]forKey:@"teil"];
@@ -2149,7 +2161,7 @@ return returnInt;
       //      }
       if (i<8)
       {
-          NSLog(@"reportStop i: %d \ntempDic: %@",i,[tempDic description]);
+          //NSLog(@"reportStop i: %d \ntempDic: %@",i,[tempDic description]);
       }
       
       NSDictionary* tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
@@ -2208,9 +2220,9 @@ return returnInt;
    float wegax=0, wegay=0, wegbx=0, wegby=0;
    float distanzax=0, distanzay=0, distanzbx=0, distanzby=0;
    float zeitax=0, zeitay=0,zeitbx=0,zeitby=0;
-   int steps = 48;
-   //fprintf(stderr, "index: \t zeitax:\tzeitay:\tzeitbx:\tzeitby:\t\n");
    
+    //fprintf(stderr, "index: \t zeitax:\tzeitay:\tzeitbx:\tzeitby:\t\n");
+   // Summierung der Werte
    for (i=0;i<[CNCDatenArray count];i++)
    {
       NSDictionary* tempDic = [CNCDatenArray objectAtIndex:i];
@@ -2267,7 +2279,7 @@ return returnInt;
    [CNCStepXFeld setIntValue:[[[CNCDatenArray objectAtIndex:0]objectForKey:@"schrittex"]intValue]];
    [CNCStepYFeld setIntValue:[[[CNCDatenArray objectAtIndex:0]objectForKey:@"schrittey"]intValue]];
    
-   [KoordinatenTabelle setArray:tempKoordinatenTabelle];
+   [KoordinatenTabelle setArray:tempKoordinatenTabelle];//index, pwm, ax,bx,ay,by
    [self updateIndex];
    [ProfilGraph setStepperposition:0];
    [ProfilGraph setNeedsDisplay:YES];
@@ -2339,7 +2351,7 @@ return returnInt;
 }
 
 
-- (void)DC_ON:(int)pwmwert
+- (void)DC_ON:(int)pwmwert // nicht verwendet
 {
    if (pwmwert==0)
    {
@@ -2376,6 +2388,13 @@ return returnInt;
 {
       return [SpeedFeld intValue];
 }
+
+- (int)motorsteps
+{
+ 
+      return steps;
+}
+
 
 
 - (void)setBusy:(int)busy
@@ -3111,6 +3130,10 @@ return returnInt;
          }
          [tempDic setObject:[NSNumber numberWithInt:position] forKey:@"position"];
          
+   //      [tempDic setObject:[NSNumber numberWithInt:micro]forKey:@"micro"];
+   //      [tempDic setObject:[NSNumber numberWithInt:steps]forKey:@"steps"];
+    
+         
          NSDictionary* tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
          //NSLog(@"D i: %d",i);
          [HomeSchnittdatenArray addObject:[CNC SchnittdatenVonDic:tempSteuerdatenDic]];
@@ -3148,6 +3171,7 @@ return returnInt;
    }
 
 }
+
 
 
 - (IBAction)reportManLeft:(id)sender
@@ -3255,6 +3279,9 @@ return returnInt;
       }
       [tempDic setObject:[NSNumber numberWithInt:position] forKey:@"position"];
       //
+ //     [tempDic setObject:[NSNumber numberWithInt:micro]forKey:@"micro"];
+ //     [tempDic setObject:[NSNumber numberWithInt:steps]forKey:@"steps"];
+ 
       
       NSDictionary*   tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
       
@@ -3407,6 +3434,8 @@ return returnInt;
       
       //NSDictionary*   tempSteuerdatenDic=[CNC SteuerdatenVonDic:[tempKreisArray objectAtIndex:i]];
        NSDictionary*   tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
+      
+      
       
       //NSLog(@"tempSteuerdatenDic: %@",[tempSteuerdatenDic description]);
       NSArray* tempSchnittdatenArray = [CNC SchnittdatenVonDic:tempSteuerdatenDic];
@@ -3567,7 +3596,7 @@ return returnInt;
 #pragma mark "Graph"
 - (void)MausGraphAktion:(NSNotification*)note
 {
-   NSLog(@"MausGraphAktion note: %@",[[note userInfo]description]);
+   //NSLog(@"MausGraphAktion note: %@",[[note userInfo]description]);
    //NSLog(@"MausGraphAktion note: %@",[[note userInfo]objectForKey:@"mauspunkt"]);
    [CNCTable deselectAll:NULL];
    
@@ -4643,10 +4672,10 @@ return returnInt;
   // [KoordinatenTabelle removeAllObjects];
    [self RumpfelementmitBreiteA:50 
                       mitHoeheA:25 
-                     mitRadiusA:10
+                     mitRadiusA:5
                      mitBreiteB:15 
-                     mitHoeheB:15 
-                     mitRadiusB:10
+                     mitHoeheB:10 
+                     mitRadiusB:4
    ];
    [CNC_Stoptaste setEnabled:YES];
 }
@@ -4910,15 +4939,13 @@ return returnInt;
    //NSLog(@"count: %d KoordinatenTabelle 1: %@",[KoordinatenTabelle count],[KoordinatenTabelle description]);
   
    // Radius down
-   float RadiusA = 10;
-   float RadiusB = 5;
    float Winkel = 90;
    int Lage = 3;
    int anzahlPunkte = 6;
    
    float Blockbreite = breiteA +  2*rand + einlaufA + auslaufA;
    
-   NSArray* SegmentKoordinatenArray = [CNC SegmentKoordinatenMitRadiusA:(float)RadiusA mitRadiusB:(float)RadiusB mitWinkel:(float)Winkel mitLage:(int)Lage mitAnzahlPunkten:(int)anzahlPunkte vonStartpunktA:tempPunktA vonStartpunktB:tempPunktB];
+   NSArray* SegmentKoordinatenArray = [CNC SegmentKoordinatenMitRadiusA:(float)radiusA mitRadiusB:(float)radiusB mitWinkel:(float)Winkel mitLage:(int)Lage mitAnzahlPunkten:(int)anzahlPunkte vonStartpunktA:tempPunktA vonStartpunktB:tempPunktB];
 
    int i;
    for(i=0;i<SegmentKoordinatenArray.count;i++)
@@ -4936,8 +4963,8 @@ return returnInt;
    
    // Form waagrecht zum Radius up
    rahmenindex++;
-   tempPunktA.x += breiteA - 2*RadiusA;
-   tempPunktB.x += breiteB - 2*RadiusB;
+   tempPunktA.x += breiteA - 2*radiusA;
+   tempPunktB.x += breiteB - 2*radiusB;
    
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
@@ -4954,7 +4981,7 @@ return returnInt;
    // Radius up
    Lage = 0;
   
-   SegmentKoordinatenArray = [CNC SegmentKoordinatenMitRadiusA:(float)RadiusA mitRadiusB:(float)RadiusB mitWinkel:(float)Winkel mitLage:(int)Lage mitAnzahlPunkten:(int)anzahlPunkte vonStartpunktA:tempPunktA vonStartpunktB:tempPunktB];
+   SegmentKoordinatenArray = [CNC SegmentKoordinatenMitRadiusA:(float)radiusA mitRadiusB:(float)radiusB mitWinkel:(float)Winkel mitLage:(int)Lage mitAnzahlPunkten:(int)anzahlPunkte vonStartpunktA:tempPunktA vonStartpunktB:tempPunktB];
 
    
    for(i=0;i<SegmentKoordinatenArray.count;i++)
@@ -9622,7 +9649,7 @@ return returnInt;
       uint16_t stepperposition = [[[note userInfo]objectForKey:@"stepperposition"]intValue];
       uint16_t anzsteps = [SchnittdatenArray count];
       
-      NSLog(@"AVR  USBReadAktion abschnittfertig: %d stepperposition: %d anzsteps: %d)",abschnittfertig,stepperposition,anzsteps);
+      //NSLog(@"AVR  USBReadAktion abschnittfertig: %02.X stepperposition: %d anzsteps: %d)",abschnittfertig,stepperposition,anzsteps);
       
       if (abschnittfertig >= 0xA0)
       {
@@ -9637,7 +9664,7 @@ return returnInt;
          }break;
          case 0xBD: // Abschnitt fertig // von Stepper_20
             {
-               NSLog(@"AVR  USBReadAktion abschnittcode BD anzsteps: %d stepperposition: %d",anzsteps, stepperposition);
+               //NSLog(@"AVR  USBReadAktion abschnittcode BD anzsteps: %d stepperposition: %d",anzsteps, stepperposition);
                // letzte Marke setzen
                [ProfilGraph setStepperposition:stepperposition];
                [ProfilGraph setNeedsDisplay:YES];

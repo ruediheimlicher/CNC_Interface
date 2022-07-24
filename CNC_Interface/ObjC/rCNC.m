@@ -48,6 +48,7 @@ if ((self = [super init]) != nil)
 	
 	speed=10;
 	steps=48;
+   micro = 1;
    red_pwm = 0.4;
 
 return self;
@@ -60,6 +61,13 @@ return NULL;
 {
  return steps;
 }
+
+- (int)micro
+{
+ return micro;
+}
+
+
 - (void)setSteps:(int)dieSteps
 {
 	steps = dieSteps;
@@ -166,8 +174,8 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 */
 - (NSDictionary*)SteuerdatenVonDic:(NSDictionary*)derDatenDic
 {
-
-    //NSLog(@"SteuerdatenVonDic: %@",[derDatenDic description]);
+// Aufbereitung der Werte für die Uebergabe an Teensy, als uint8_t-Werte
+    NSLog(@"SteuerdatenVonDic: %@",[derDatenDic description]);
 	int  anzSchritte;
    int  anzaxplus=0;
    int  anzaxminus=0;
@@ -195,6 +203,8 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 	float zoomfaktor = [[derDatenDic objectForKey:@"zoomfaktor"]floatValue];
 	//NSLog(@"zoomfaktor: %.3f",zoomfaktor);
 	zoomfaktor=1;
+   
+     
 	NSPoint StartPunkt= NSPointFromString([derDatenDic objectForKey:@"startpunkt"]);
 	NSPoint StartPunktA= NSPointFromString([derDatenDic objectForKey:@"startpunkta"]);
 	NSPoint StartPunktB= NSPointFromString([derDatenDic objectForKey:@"startpunktb"]);
@@ -210,7 +220,11 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 	
 	//NSMutableDictionary* tempDatenDic=[[[NSMutableDictionary alloc]initWithDictionary:derDatenDic]autorelease];
 	NSMutableDictionary* tempDatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+   
+   // Daten von derDatendic uebernehmen
+   
    [tempDatenDic addEntriesFromDictionary:derDatenDic];
+   
 	float DistanzX= EndPunkt.x - StartPunkt.x;
 	float DistanzAX= EndPunktA.x - StartPunktA.x;
 	float DistanzBX= EndPunktB.x - StartPunktB.x;
@@ -633,7 +647,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
     schrittex = "-18";
     schrittey = "-42";
     startpunkt = "{52, 54.9}";
-    zoomfaktor = "0.19";
+    zoomfaktor = "1.0";
     
     Array:
     
@@ -664,6 +678,9 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
     
     pwm (pos 20)
     motorstatus (pos 21)
+    
+    steps // 48, 200
+    micro // microsteps, 1,2 4
     */
    
    if ([[derDatenDic objectForKey:@"indexl"]intValue] < 3)
@@ -739,9 +756,40 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
    {
       [tempArray addObject:[NSNumber numberWithInt:1]];
    }
+
+   if ([derDatenDic objectForKey:@"zoomfaktor"])
+   {
+      [tempArray addObject:[derDatenDic objectForKey:@"zoomfaktor"]];
+   }
+   else 
+   {
+      [tempArray addObject:[NSNumber numberWithInt:1]];
+   }
+ /*
+// Steps einfuegen
+   if ([derDatenDic objectForKey:@"steps"])
+   {
+      [tempArray addObject:[derDatenDic objectForKey:@"steps"]];
+   }
+   else 
+   {
+      [tempArray addObject:[NSNumber numberWithInt:48]];
+   }
+
+   // Faktor fuer microsteps einfuegen
+   if ([derDatenDic objectForKey:@"micro"])
+   {
+      [tempArray addObject:[derDatenDic objectForKey:@"micro"]];
+   }
+   else 
+   {
+      [tempArray addObject:[NSNumber numberWithInt:1]];
+   }
+*/
    
    // Zusaetzliche Objekte einfuegen bis 36
-   for (uint8_t addindex = 0;addindex < 14; addindex++)
+   //for (uint8_t addindex = 0;addindex < 14; addindex++)
+   while ([tempArray count] < 36)
    {
       [tempArray addObject:[NSNumber numberWithInt:0]];
    }
@@ -775,7 +823,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
     schrittex = "-18";
     schrittey = "-42";
     startpunkt = "{52, 54.9}";
-    zoomfaktor = "0.19";
+    zoomfaktor = "1.0";
     
     Array:
     

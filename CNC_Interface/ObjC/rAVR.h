@@ -181,7 +181,8 @@
    int auslauftiefe;
    int auslaufrand;
    
-   
+   int steps;
+   int micro;
    
    NSMutableArray*         CNCDatenArray;
    NSMutableArray*         SchnittdatenArray;
@@ -213,9 +214,11 @@
    IBOutlet id               CNC_Terminatetaste;
    IBOutlet id               CNC_Neutaste;
    IBOutlet id               CNC_Halttaste;
-   IBOutlet id             DC_Taste;
-   IBOutlet id             DC_Stepper;
-   IBOutlet id             DC_PWM;
+   IBOutlet id                DC_Taste;
+   IBOutlet id                DC_Stepper;
+   IBOutlet id                DC_PWM;
+   IBOutlet id                CNC_Steps;
+   IBOutlet id                CNC_micro;
 
    IBOutlet id               CNC_Uptaste;
    IBOutlet id               CNC_Downtaste;
@@ -354,6 +357,9 @@
    - (void)setBusy:(int)busy;
    - (int)speed;
    - (int)saveSpeed;
+   - (int)motorsteps;
+   - (int)CNC_micro;
+
    - (int)saveProfileinstellungen;
    - (void)setUSBDaten:(NSDictionary*)datendic;
    - (void)ManRichtung:(int)richtung  mousestatus:(int)status pfeilstep:(int)step;

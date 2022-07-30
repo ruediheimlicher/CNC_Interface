@@ -354,6 +354,23 @@ class rTimerInfo {
 
     }
 
+    @objc func stop_timer()
+    {
+       if ((readtimer) != nil)
+            
+       {
+          if ((readtimer?.isValid) != nil)
+          {
+             NSLog("writeCNCAbschnitt HALT timer inval");
+             readtimer?.invalidate();
+          }
+          readtimer = nil
+          
+       }
+       read_OK = false
+
+    }
+
     
    open func send_USB()->Int32
    {

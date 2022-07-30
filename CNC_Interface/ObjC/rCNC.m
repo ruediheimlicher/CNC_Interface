@@ -175,7 +175,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 - (NSDictionary*)SteuerdatenVonDic:(NSDictionary*)derDatenDic
 {
 // Aufbereitung der Werte für die Uebergabe an Teensy, als uint8_t-Werte
-    NSLog(@"SteuerdatenVonDic: %@",[derDatenDic description]);
+   //NSLog(@"SteuerdatenVonDic: %@",[derDatenDic description]);
 	int  anzSchritte;
    int  anzaxplus=0;
    int  anzaxminus=0;

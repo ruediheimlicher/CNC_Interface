@@ -6,6 +6,7 @@
 //  Copyright 2008 Ruedi Heimlicher. All rights reserved.
 //
 #import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 #import "rProfil_DS.h"
 #import "rDump_DS.h"
 #import "rProfilGraph.h"
@@ -181,7 +182,7 @@
    int auslauftiefe;
    int auslaufrand;
    
-   int steps;
+   int motorsteps;
    int micro;
    
    NSMutableArray*         CNCDatenArray;
@@ -329,6 +330,7 @@
    
    rProfildruckView*       Profilfeld;
    
+   int                     boardindex; // teensy""2: 0  teensy3: 1
    }
    @property (nonatomic)  int    Kote;
    @property (nonatomic) BOOL wantsLayer;
@@ -347,6 +349,8 @@
    - (IBAction)reportDrehgeber:(id)sender;
    - (IBAction)reportStartKnopf:(id)sender;
    - (IBAction)reportStopKnopf:(id)sender;
+   - (IBAction)reportMotorsteps:(id)sender;
+   - (IBAction)reportMicrosteps:(id)sender;
 
    - (NSDictionary*)RahmenDic;
    - (void)DC_ON:(int)pwm;

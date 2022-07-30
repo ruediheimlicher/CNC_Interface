@@ -12,6 +12,9 @@ import Cocoa
 class rCNCViewController:rViewController
 {
    // von IOWarriorWindowController
+   
+   @IBOutlet weak var steps_Feld: NSTextField!
+   @IBOutlet weak var micro_Feld: NSTextField!
     var mausistdown:Int = 0
     
    var Stepperposition:Int = 0
@@ -30,6 +33,8 @@ class rCNCViewController:rViewController
    //var readtimer : Timer? = nil
    
    var AVR = rAVRview()
+   var steps = 0
+   var micro = 0
    
    var Einstellungen = rEinstellungen()
    
@@ -49,6 +54,13 @@ class rCNCViewController:rViewController
       NotificationCenter.default.addObserver(self, selector:#selector(contDataAktion(_:)),name:NSNotification.Name(rawValue: "contdata"),object:nil)
       NotificationCenter.default.addObserver(self, selector:#selector(usbattachAktion(_:)),name:NSNotification.Name(rawValue: "usb_attach"),object:nil)
       NotificationCenter.default.addObserver(self, selector: #selector(slaveresetAktion), name:NSNotification.Name(rawValue: "slavereset"), object: nil)
+
+      NotificationCenter.default.addObserver(self, selector: #selector(stepsAktion), name:NSNotification.Name(rawValue: "steps"), object: nil)
+      NotificationCenter.default.addObserver(self, selector: #selector(microAktion), name:NSNotification.Name(rawValue: "micro"), object: nil)
+
+      NotificationCenter.default.addObserver(self, selector: #selector(stoptimerAktion), name:NSNotification.Name(rawValue: "stoptimer"), object: nil)
+
+      NotificationCenter.default.addObserver(self, selector: #selector(haltAktion), name:NSNotification.Name(rawValue: "halt"), object: nil)
 
    }
    
@@ -167,11 +179,37 @@ class rCNCViewController:rViewController
       
       
    }
+   
+   @objc func stepsAktion(_ notification:Notification) 
+   {
+      print("stepsAktion: \(notification)")
+      steps = notification.userInfo?["motorsteps"] as! Int
+      print("stepsAktion steps: \(steps)")
+      steps_Feld.integerValue = steps
+   }
+
+   @objc func microAktion(_ notification:Notification) 
+   {
+      print("stepsAktion: \(notification)")
+      micro = notification.userInfo?["micro"] as! Int
+      print("Aktion micro: \(micro)")
+      micro_Feld.integerValue = micro
+   }
+
+   @objc func stoptimerAktion(_ notification:Notification) 
+    {
+       print("stoptimerAktion: \(notification)")
+       teensy.stop_timer()
+       
+    
+    }
 
    
    @objc func usbsendAktion(_ notification:Notification) 
     {
        print("usbsendAktion: \(notification)")
+       
+    
     }
     
     override func windowWillClose(_ aNotification: Notification) {
@@ -183,16 +221,36 @@ class rCNCViewController:rViewController
         
      }
    
+   @objc func haltAktion(_ notification:Notification) 
+   {
+      print("haltAktion ")
+      usb_schnittdatenarray.removeAll()
+      let info = notification.userInfo
+      print("haltAktion info: \(info)")
+      var wertarray = [UInt8](repeating: 0, count: Int(BufferSize()))  
+      
+      wertarray[16] = 0xE0
+      wertarray[18]=0; // indexh, indexl ergibt abschnittnummer
+      wertarray[20]=0; // pwm
+      
+      usb_schnittdatenarray.append(wertarray)
+      writeCNCAbschnitt()
+      teensy.clear_data()
+   }
+
    
    @objc func slaveresetAktion(_ notification:Notification) 
    {
       print("slaveresetAktion")
       
-      
-      
       teensy.clear_data()
    }
 
+   @objc func AVR_steps()->Int32
+   {
+      guard let avrsteps:Int32 = AVR?.motorsteps()  else {return 0}
+      return avrsteps
+   }
 
     
      @objc func usbschnittdatenAktion(_ notification:Notification) 
@@ -237,7 +295,9 @@ class rCNCViewController:rViewController
       Stepperposition = 0
       print("cncviewcontroller usbschnittdatenAktion")
         
-        guard let steps:Int32 = AVR?.motorsteps()  else {return}
+       
+        
+   //     guard let steps:Int32 = AVR?.motorsteps()  else {return}
         
         print("cncviewcontroller usbschnittdatenAktion steps: \(steps)")
        usb_schnittdatenarray.removeAll()
@@ -270,35 +330,11 @@ class rCNCViewController:rViewController
             wertarray.append(0)
             
          }
+         wertarray[25] = UInt8(steps)
+         wertarray[26] = UInt8(micro)
          usb_schnittdatenarray.append(wertarray)
       }
-        
-      /*  
-      let zeilenstringarray = info?["schnittdatenstringarray"] as! [String]
-      zeilenindex = 0
-      for zeile in zeilenstringarray
-      {
-         let zeilenarray = zeile.components(separatedBy: ",")
-         //print("zeilenindex: \(zeilenindex) zeile: \(zeile)  zeilenarray: \(zeilenarray)")
-         var wertarray = [UInt8]() 
-         var elementindex = 0
-         for el in zeilenarray
-         {
-            guard let wert = UInt8(el) else { return  }
-            wertarray.append(wert)
-            elementindex += 1
-         }
-         for anz in  elementindex..<Int(BufferSize())
-         {
-            wertarray.append(0)
-            
-         }
-         
- //        usb_schnittdatenarray.append(wertarray)
-         zeilenindex += 1
-      }
-      */
-      
+       
         //print("usbschnittdatenAktion usb_schnittdatenarray: \(usb_schnittdatenarray )")
        
       
@@ -411,7 +447,7 @@ class rCNCViewController:rViewController
       var lastData = teensy.getlastDataRead()
       let lastDataArray = [UInt8](lastData)
       //print("newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")       
-      //print("newDataAktion start")
+      print("newDataAktion start")
       var ii = 0
       while ii < 10
       {
@@ -438,7 +474,7 @@ class rCNCViewController:rViewController
          i = i+1
       }
       
-      if let d = info!["contdata"] // Data vornanden
+      if let d = info!["contdata"] // Data vorhanden
       {
          //print("newDataAktion if let d ok")
          var usbdata = info!["data"] as! [UInt8]
@@ -450,7 +486,7 @@ class rCNCViewController:rViewController
          //if  usbdata = info!["data"] as! [String] // Data vornanden
          if  usbdata.count > 0 // Data vorhanden
          {
-            //print("usbdata: \(usbdata)\n") // d: [0, 9, 56, 0, 0,... 
+            print("usbdata: \(usbdata)\n") // d: [0, 9, 56, 0, 0,... 
             var NotificationDic = [String:Int]()
             
             let abschnittfertig:UInt8 =   usbdata[0]
@@ -480,17 +516,7 @@ class rCNCViewController:rViewController
                NotificationDic["stepperposition"] = Stepperposition
                NotificationDic["mausistdown"] = mausistdown
                
-               /*
-                let nc = NotificationCenter.default
-                nc.post(name:Notification.Name(rawValue:"usbread"),
-                object: nil,
-                userInfo: NotificationDic)
-                */
-               //[NotificationDic setObject:abschnittfertig forKey:@"abschnittfertig"];
-               //print("newDataAktion NotificationDic: \(NotificationDic)")
-               //NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-               //[nc postNotificationName:@"usbread" object:self userInfo:NotificationDic];
-               
+                 
                
                var AnschlagSet = IndexSet()
                

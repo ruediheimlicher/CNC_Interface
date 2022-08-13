@@ -29,6 +29,7 @@ class rCNCViewController:rViewController
 
    var usb_schnittdatenarray:[[UInt8]] = [[]]
    
+   var schnittdatenstring:String = ""
    //var readTimer:Timer
    //var readtimer : Timer? = nil
    
@@ -61,6 +62,8 @@ class rCNCViewController:rViewController
       NotificationCenter.default.addObserver(self, selector: #selector(stoptimerAktion), name:NSNotification.Name(rawValue: "stoptimer"), object: nil)
 
       NotificationCenter.default.addObserver(self, selector: #selector(haltAktion), name:NSNotification.Name(rawValue: "halt"), object: nil)
+
+      NotificationCenter.default.addObserver(self, selector: #selector(DCAktion), name:NSNotification.Name(rawValue: "dc_pwm"), object: nil)
 
    }
    
@@ -204,6 +207,31 @@ class rCNCViewController:rViewController
     
     }
 
+   @objc func DCAktion(_ notification:Notification) 
+    {
+       usb_schnittdatenarray.removeAll()
+       //print("DCAktion: \(notification)")
+       let info = notification.userInfo
+       guard let pwm = notification.userInfo?["pwm"] else 
+       {
+          print("DCAktion: kein pwm")
+          return
+       }
+       print("DCAktion  pwm: \(pwm)")
+       Stepperposition = 0;
+       var wertarray = [UInt8](repeating: 0, count: Int(BufferSize()))  
+       
+       wertarray[16] = 0xE2
+       wertarray[24] = 0xE2
+       wertarray[18]=0; // indexh, indexl ergibt abschnittnummer
+       wertarray[20]=pwm as! UInt8; // pwm
+       
+       usb_schnittdatenarray.append(wertarray)
+       writeCNCAbschnitt()
+       teensy.clear_data()
+
+    }
+   
    
    @objc func usbsendAktion(_ notification:Notification) 
     {
@@ -396,7 +424,21 @@ class rCNCViewController:rViewController
       
     // print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
       let count = usb_schnittdatenarray.count
-  //    print("writeCNCAbschnitt code: \(usb_schnittdatenarray[0][24]) Stepperposition: \(Stepperposition) count: \(count)")
+      //print("writeCNCAbschnitt code: \(usb_schnittdatenarray[0][24]) Stepperposition: \(Stepperposition) count: \(count) ")
+      
+      if Stepperposition < count
+      {
+         let motorstatus = usb_schnittdatenarray[Stepperposition][21]
+         //print("motorstatus: \(motorstatus)")
+      }
+ 
+      
+      if Stepperposition == 0
+      {
+         schnittdatenstring = ""
+        // print("writeCNCAbschnitt 19")
+         
+      }
       teensy.write_byteArray.removeAll()
       
       if Stepperposition < usb_schnittdatenarray.count
@@ -413,19 +455,31 @@ class rCNCViewController:rViewController
          }
          else
          {
-            let aktuellezeile = usb_schnittdatenarray[Stepperposition]
+            let aktuellezeile:[UInt8] = usb_schnittdatenarray[Stepperposition]
             // print("aktuellezeile: \(aktuellezeile) 25: \(aktuellezeile[25])")
+            var string:String = ""
+            var index=0
+            
             for wert in aktuellezeile
             {
                teensy.write_byteArray.append(wert)
+               if index < 24
+               {
+                  string.append(String(wert))
+                  string.append("\t")
+               }
+               index += 1
             }
+            print("\(string)");
+            schnittdatenstring.append(string)
+            schnittdatenstring.append("\n")
             //print("write_byteArray: \(teensy.write_byteArray)")
             if (globalusbstatus > 0)
             {
                let senderfolg = teensy.send_USB()
-               print("writeCNCAbschnitt senderfolg: \(senderfolg)")
+               //print("writeCNCAbschnitt senderfolg: \(senderfolg)")
             }
-            
+           // print("Stepperposition: \(Stepperposition) \n\(schnittdatenstring)");
             Stepperposition += 1
          }// halt
       }
@@ -447,7 +501,7 @@ class rCNCViewController:rViewController
       var lastData = teensy.getlastDataRead()
       let lastDataArray = [UInt8](lastData)
       //print("newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")       
-      print("newDataAktion start")
+      //print("newDataAktion start")
       var ii = 0
       while ii < 10
       {
@@ -486,14 +540,15 @@ class rCNCViewController:rViewController
          //if  usbdata = info!["data"] as! [String] // Data vornanden
          if  usbdata.count > 0 // Data vorhanden
          {
-            print("usbdata: \(usbdata)\n") // d: [0, 9, 56, 0, 0,... 
+            //print("usbdata: \(usbdata)\n") // d: [0, 9, 56, 0, 0,... 
             var NotificationDic = [String:Int]()
             
             let abschnittfertig:UInt8 =   usbdata[0]
-            //printhex(wert: abschnittfertig)
+            //print("abschnittfertig wert: \(abschnittfertig)")
             // https://useyourloaf.com/blog/swift-string-cheat-sheet/
             //print("abschnittfertig: \(String(abschnittfertig, radix:16, uppercase:true))\n")
-            print("newDataAktion abschnittfertig: \(hex(abschnittfertig))\n")
+            //print("newDataAktion abschnittfertig: \(hex(abschnittfertig))\n")
+            
             if usbdata != nil
             {
                //print("usbdata not nil\n")
@@ -522,9 +577,10 @@ class rCNCViewController:rViewController
                
                switch abschnittfertig
                {
-               case 0xE1:// Antwort auf Mouseup 0xE0 HALT
+               case 0xE1:// Antwort auf mouseup 0xE0 HALT
                   print("newDataAktion E1 mouseup")
                   usb_schnittdatenarray.removeAll()
+                  
                   AVR?.setBusy(0)
                   teensy.read_OK = false
                   break
@@ -600,6 +656,7 @@ class rCNCViewController:rViewController
                   
                case 0xD0:
                   print("***   ***   Letzter Abschnitt")
+                  //print("0xD0 Stepperposition: \(Stepperposition) \n\(schnittdatenstring)");
                   //print("HomeAnschlagSet: \(HomeAnschlagSet)")
                   NotificationDic["abschnittfertig"] = Int(abschnittfertig)
                   let nc = NotificationCenter.default
@@ -679,11 +736,14 @@ class rCNCViewController:rViewController
                   }
                   else
                   {
-                     print("WriteCNCAbschnitt ")
+                     //print("WriteCNCAbschnitt count: \(usb_schnittdatenarray.count)")
+                     if (usb_schnittdatenarray.count > 0) // nicht HALT
+                     {
                      writeCNCAbschnitt()
+                     }
                   }
                }
-                  print("HomeAnschlagSet: \(HomeAnschlagSet)")
+                  //print("HomeAnschlagSet: \(HomeAnschlagSet)")
                   NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
                   NotificationDic["home"] = home
                   NotificationDic["abschnittfertig"] = Int(abschnittfertig)

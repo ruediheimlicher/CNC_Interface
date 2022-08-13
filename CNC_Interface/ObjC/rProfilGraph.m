@@ -753,7 +753,7 @@ int (^add)(int,int) = ^(int number1, int number2){
       // Abbrand
       // Seite 1
       NSBezierPath* AbbrandLinieA=[NSBezierPath bezierPath];
-      NSLog(@"Start Abbrand");
+      //NSLog(@"Start Abbrand");
       int startabbrandindexa=0;
       for (i=0;i<anz;i++)
       {

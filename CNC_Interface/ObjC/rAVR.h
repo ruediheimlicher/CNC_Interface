@@ -406,7 +406,7 @@
 - (IBAction)reportHolm:(id)sender;
 
 - (IBAction)reportRumpfrohrkonfigurieren:(id)sender;
-
+- (IBAction)reportRumpfkern:(id)sender;
 - (NSArray*)KoordinatenTabelle;
 - (IBAction)reportSaveStepperDic:(id)sender;
 - (IBAction)reportZeileWeg:(id)sender;

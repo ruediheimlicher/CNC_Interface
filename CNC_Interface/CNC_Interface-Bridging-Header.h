@@ -14,6 +14,7 @@
 #import "rAVR.h"
 #import "rProfil_DS.h"
 #import "rCNC.h"
+#import "rVertikalanzeige.h"
 
 #include <IOKit/IOKitLib.h>
 #include <IOKit/usb/IOUSBLib.h>

@@ -1715,7 +1715,9 @@ return returnInt;
    zoomfaktor=1;
    //Schnittdaten aus Mausklicktabelle
    int i;
+   
    [CNCDatenArray removeAllObjects];
+   [SchnittdatenArray removeAllObjects];
    [HomeTaste setState:0];
    [DC_Taste setState:0];
    if ([SpeedFeld intValue])

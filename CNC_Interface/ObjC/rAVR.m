@@ -1055,7 +1055,7 @@ void plot_line (int x0, int y0, int x1, int y1)
    {
      // USB_OK_Feld.image = notok_image;
       [USBKontrolle setStringValue:@"USB OFF"];
-      NSLog(@"usbattachAktion USBREMOVED ");
+      NSLog(@"AVR usbattachAktion USBREMOVED ");
       AVR_USBStatus = 0;
    }
   else if (status == USBATTACHED)
@@ -1063,7 +1063,7 @@ void plot_line (int x0, int y0, int x1, int y1)
      // USB_OK_Feld.image = ok_image
       [USBKontrolle setStringValue:@"USB ON"];
       AVR_USBStatus = 1;
-      NSLog(@"usbattachAktion USBATTACHED");
+      NSLog(@"AVR usbattachAktion USBATTACHED");
    }
    
 }
@@ -1434,6 +1434,16 @@ return returnInt;
                [red_pwmFeld setFloatValue:0.4];
             }
             
+            // startdelay
+            if ([tempPListDic objectForKey:@"startdelay"])
+            {
+               [startdelayFeld setIntValue:[[tempPListDic objectForKey:@"startdelay"]intValue]];
+            }
+            else
+            {
+               [startdelayFeld setIntValue:6];
+            }
+
             return tempPListDic;
            
          }
@@ -1452,6 +1462,103 @@ return returnInt;
    return NULL;
 }
 
+- (void)saveCNCPlist
+{
+   BOOL CNCDatenDa=NO;
+   BOOL istOrdner;
+   NSMutableDictionary* tempPListDic;
+
+   NSFileManager *Filemanager = [NSFileManager defaultManager];
+   NSString* USBPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/CNCDaten"];
+   NSString* PListName=@"CNC.plist";
+   NSString* PListPfad;
+   PListPfad=[USBPfad stringByAppendingPathComponent:PListName];   
+   CNCDatenDa= ([Filemanager fileExistsAtPath:USBPfad isDirectory:&istOrdner]&&istOrdner);
+   if (CNCDatenDa)
+   {
+      NSURL* PListURL=[NSURL fileURLWithPath:PListPfad];
+      NSLog(@"saveCNC_PList: PListPfad: %@ ",PListPfad);
+      if (PListPfad)      
+      {
+
+         if ([Filemanager fileExistsAtPath:PListPfad])
+         {
+            tempPListDic=[NSMutableDictionary dictionaryWithContentsOfFile:PListPfad];
+            NSLog(@"savePListAktion: vorhandener PListDic: %@",[tempPListDic description]);
+            
+            
+         } // if fileExits
+         else
+         {
+            tempPListDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+            NSLog(@"savePListAktion: neuer PListDic");
+         }
+         [tempPListDic setObject:[NSNumber numberWithFloat:[MinimaldistanzFeld floatValue]] forKey:@"minimaldistanz"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[Einlauflaenge intValue]] forKey:@"einlauflaenge"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[Einlauftiefe intValue]] forKey:@"einlauftiefe"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[Einlaufrand intValue]] forKey:@"einlaufrand"];
+
+         [tempPListDic setObject:[NSNumber numberWithInt:[Auslauflaenge intValue]] forKey:@"auslauflaenge"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[Auslauftiefe intValue]] forKey:@"auslauftiefe"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[Auslaufrand intValue]] forKey:@"auslaufrand"];
+          [tempPListDic setObject:[ProfilNameFeldA stringValue] forKey:@"profilnamea"];
+         [tempPListDic setObject:[ProfilNameFeldB stringValue] forKey:@"profilnameb"];
+         [tempPListDic setObject:[NSNumber numberWithFloat:[ProfilWrenchFeld floatValue]] forKey:@"profilwrench"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[ProfilTiefeFeldA intValue]] forKey:@"profiltiefea"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[ProfilTiefeFeldB intValue]] forKey:@"profiltiefeb"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[ProfilBOffsetXFeld intValue]] forKey:@"profilboffsetx"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[ProfilBOffsetYFeld intValue]] forKey:@"profilboffsety"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[Basisabstand intValue]] forKey:@"basisabstand"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[Spannweite intValue]] forKey:@"spannweite"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[Portalabstand intValue]] forKey:@"portalabstand"];
+         [tempPListDic setObject:[NSNumber numberWithFloat:[AbbrandFeld floatValue]] forKey:@"abbranda"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[SpeedFeld intValue]] forKey:@"speed"];
+         [tempPListDic setObject:[NSNumber numberWithFloat:[red_pwmFeld floatValue]] forKey:@"redpwm"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[PWMFeld intValue]] forKey:@"pwm"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[Blockbreite intValue]] forKey:@"blockbreite"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[Blockdicke intValue]] forKey:@"blockdicke"];
+
+         [tempPListDic setObject:[NSNumber numberWithFloat:[SpeedFeld intValue]] forKey:@"speed"];
+   
+         /*
+         // Rumpf
+         [tempPListDic setObject:[NSNumber numberWithInt:[RandFeld intValue]] forKey:@"rand"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[EinlaufFeld intValue]] forKey:@"einlauf"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[BreiteAFeld intValue]] forKey:@"breitea"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[HoeheAFeld intValue]] forKey:@"hoehea"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[RadiusAFeld intValue]] forKey:@"radiusa"];
+        
+         [tempPListDic setObject:[NSNumber numberWithInt:[BreiteBFeld intValue]] forKey:@"breiteb"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[HoeheBFeld intValue]] forKey:@"hoeheb"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[RadiusBFeld intValue]] forKey:@"radiusb"];
+
+
+         [tempPListDic setObject:[NSNumber numberWithInt:[EinstichtiefeFeld intValue]] forKey:@"einstichtiefe"];
+
+         [tempPListDic setObject:[NSNumber numberWithInt:[RumpfabstandFeld intValue]] forKey:@"rumpfabstand"];
+         [tempPListDic setObject:[NSNumber numberWithInt:[ElementlaengeFeld intValue]] forKey:@"elementlaenge"];
+
+         
+         [tempPListDic setObject:[NSNumber numberWithInt:[AuslaufFeld intValue]] forKey:@"auslauf"];
+
+       */  
+         [tempPListDic setObject:[NSNumber numberWithInt:[startdelayFeld  intValue]] forKey:@"startdelay"];
+
+         // startdelay
+
+
+        
+
+
+         int erfolg=[tempPListDic writeToURL:PListURL atomically:YES];
+         NSLog(@"saveCNCPlist erfolg: %d",erfolg);
+
+      }// if PListPfad
+      
+   }// if (CNCDatenDa)
+   
+   
+}
 
 - (instancetype)init
 
@@ -9999,10 +10106,10 @@ return returnInt;
       for(k=0;k<[SchnittdatenArray count];k++)
       {
          NSString* tempzeilenstring = [[SchnittdatenArray objectAtIndex:k] componentsJoinedByString:@","] ;
-         //NSLog(@"k: %d String: %@",k,tempzeilenstring);
+         NSLog(@"k: %d String: %@",k,tempzeilenstring);
          [SchnittdatenStringArray addObject:tempzeilenstring];
        }
-      
+      //NSLog(@"sendArray SchnittdatenStringArray: %@",SchnittdatenStringArray); 
       [SchnittdatenDic setObject:SchnittdatenStringArray forKey:@"schnittdatenstringarray"];
       
       [SchnittdatenDic setObject:[NSNumber numberWithInt:cncposition] forKey:@"cncposition"];
@@ -10028,7 +10135,7 @@ return returnInt;
       if (delayok)
       {
          NSLog(@"mit delay");
-         [self performSelector:@selector (sendDelayedArrayWithDic:) withObject:SchnittdatenDic afterDelay:4];
+         [self performSelector:@selector (sendDelayedArrayWithDic:) withObject:SchnittdatenDic afterDelay:6];
       }
       else 
       {
@@ -10175,7 +10282,7 @@ return returnInt;
 
          case 0xAF:
          {
-             NSLog(@"AVR USBReadAktion next %@",[[note userInfo] description]);
+             //NSLog(@"AVR USBReadAktion AF next %@",[[note userInfo] description]);
             
          }break;
          case 0xAA:

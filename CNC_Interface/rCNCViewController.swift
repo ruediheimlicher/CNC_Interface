@@ -168,16 +168,16 @@ class rCNCViewController:rViewController
       
       if (status == USBREMOVED)
       {
-         USB_OK_Feld.image = notokimage
+   //      USB_OK_Feld.image = notokimage
          //USBKontrolle.stringValue="USB OFF"
-         print("usbattachAktion USBREMOVED ")
+         print("CNCViewController usbattachAktion USBREMOVED ")
       }
      else if (status == USBATTACHED)
       {
-         USB_OK_Feld.image = okimage
+    //     USB_OK_Feld.image = okimage
         // [USBKontrolle setStringValue:@"USB ON"];
          
-         print("usbattachAktion USBATTACHED")
+         print("CNCViewController usbattachAktion USBATTACHED")
       }
       
       
@@ -470,7 +470,7 @@ class rCNCViewController:rViewController
                }
                index += 1
             }
-            print("\(string)");
+            print("\(string) code: \(aktuellezeile[16]) pos: \(aktuellezeile[17])");
             schnittdatenstring.append(string)
             schnittdatenstring.append("\n")
             //print("write_byteArray: \(teensy.write_byteArray)")

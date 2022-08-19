@@ -287,6 +287,8 @@
    IBOutlet id               Portalabstand; 
    IBOutlet id               Spannweite; // 
    
+   IBOutlet id               startdelayFeld; //
+   
    IBOutlet id               USBKontrolle;
    
    IBOutlet id               HomeTaste;

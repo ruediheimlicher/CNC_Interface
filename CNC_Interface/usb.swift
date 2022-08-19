@@ -60,15 +60,17 @@ class rTimerInfo {
       let VID:Int32 = Int32(code["VID"] as! Int32)//
       print("func usb_teensy.USBOpen PID: \(PID) VID: \(VID)")
       // rawhid_open(int max, int vid, int pid, int usage_page, int usage)
-      var    out = rawhid_open(1,  VID, PID, 0xFFAB, 0x0200)
-      
-    //  out = rawhid_open(1, 5824, 1152, 0xFFAB, 0x0200)
       
       
+      
+      
+      let    out = rawhid_open(1,  VID, PID, 0xFFAB, 0x0200)
+      
+       
       print("func usb_teensy.USBOpen out: \(out)")
       
       hid_usbstatus = out as Int32;
-      
+      globalusbstatus = Int(hid_usbstatus)
       if (out <= 0)
       {
          NSLog("USBOpen: no rawhid device found");
@@ -267,7 +269,7 @@ class rTimerInfo {
             //print("cont_read_USB new Data codehex: \(codehex) codehex: \(codehexstring)")
             
             
-            print("+++ new read_byteArray in Timer code: \(read_byteArray[24])")
+            print("+++ new read_byteArray in Timer code: \(read_byteArray[0])")
             /*
             for  i in 0..<BUFFER_SIZE
             {
@@ -328,6 +330,7 @@ class rTimerInfo {
          print("*cont_read_USB timer.invalidate")
          timer.invalidate()
       }
+      //print("+++ end cont_read +++\n")
    }
    
    open func report_stop_read_USB(_ inTimer: Timer)
@@ -458,8 +461,7 @@ class rTimerInfo {
          print("neue Daten")
       }
       print(dataRead as NSData);   
-      
-      
+            
    }
    
 }

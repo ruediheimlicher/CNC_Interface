@@ -470,7 +470,7 @@ class rCNCViewController:rViewController
                }
                index += 1
             }
-            print("\(string) code: \(aktuellezeile[16]) pos: \(aktuellezeile[17])");
+            print("\(string) code: \(aktuellezeile[16]) pos: \(aktuellezeile[17]) index: \(aktuellezeile[19])");
             schnittdatenstring.append(string)
             schnittdatenstring.append("\n")
             //print("write_byteArray: \(teensy.write_byteArray)")

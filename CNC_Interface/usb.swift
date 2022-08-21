@@ -270,13 +270,13 @@ class rTimerInfo {
             
             
             print("+++ new read_byteArray in Timer code: \(read_byteArray[0])")
-            /*
+            
             for  i in 0..<BUFFER_SIZE
             {
                print(" \(read_byteArray[i])", terminator: "")
             }
             print("\n")
-*/
+
             // http://dev.iachieved.it/iachievedit/notifications-and-userinfo-with-swift-3-0/
             
             //let usbdic = ["message":"neue Daten", "data":read_byteArray] as [String : UInt8]

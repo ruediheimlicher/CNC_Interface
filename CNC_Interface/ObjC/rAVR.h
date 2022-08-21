@@ -188,6 +188,7 @@
    NSMutableArray*         CNCDatenArray;
    NSMutableArray*         SchnittdatenArray;
    
+   NSMutableArray*         debugArray;
     char*      newsendbuffer;
    int               Stepperposition;
    NSMutableIndexSet* HomeAnschlagSet;
@@ -324,6 +325,22 @@
    
    IBOutlet id             KoteFeld;
    IBOutlet id             KoteStepper;
+   
+   // Rumpf
+   IBOutlet id               RandFeld;
+   IBOutlet id               EinlaufFeld;
+   IBOutlet id               BreiteAFeld;
+   IBOutlet id               HoeheAFeld;
+   IBOutlet id               RadiusAFeld;
+   IBOutlet id               AuslaufFeld;
+   IBOutlet id               BreiteBFeld;
+   IBOutlet id               HoeheBFeld;
+   IBOutlet id               RadiusBFeld;
+   IBOutlet id               EinstichtiefeFeld;
+   //IBOutlet id               RumpfblockhoeheFeld;
+   IBOutlet id               RumpfabstandFeld; // Abstand CNC zu Block
+   IBOutlet id               ElementlaengeFeld; // Laenge des Rumpfabschnittes
+
    
    //int                     _kote;
    int                     KoteWert;

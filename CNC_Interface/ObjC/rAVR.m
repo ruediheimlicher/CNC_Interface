@@ -5263,7 +5263,7 @@ return returnInt;
    
    // Rumpfunterseite anschneiden links
    
-   // 3 ab zu Rumpfunterseite
+   // 3 ab zu Rumpfunterseite A,B
    rahmenindex++;
    NSLog(@"rahmenindex: %d task: %@",rahmenindex, @"ab zu Rumpfunterseite");
    [debugArray addObject:[NSString stringWithFormat:@"%d %@",rahmenindex, @"Einfahren"]];

@@ -98,7 +98,7 @@ class rJoystickView: NSView
       //let ident  = self.identifier as! String
        let ident  = self.identifier
       
-      Swift.print("left mouse ident: \(ident)")
+      Swift.print("rJoystickView mouseDown ident: \(ident)")
       var identstring = ""
       if let rawident:String = ident?.rawValue
       {
@@ -163,7 +163,7 @@ class rJoystickView: NSView
    override func rightMouseDown(with theEvent: NSEvent) 
    {
       self.clearWeg()
-      Swift.print("right mouse")
+      Swift.print("rJoystickView right mouse")
       let location = theEvent.locationInWindow
       Swift.print(location)
       needsDisplay = true
@@ -172,12 +172,12 @@ class rJoystickView: NSView
    
    override func mouseDragged(with theEvent: NSEvent) 
    {
-      Swift.print("mouseDragged")
+      Swift.print("rJoystickView mouseDragged ")
       let location = theEvent.locationInWindow
       //Swift.print(location)
       var lokalpunkt = convert(theEvent.locationInWindow, from: nil)
       var userinformation:[String : Any]
-      Swift.print(lokalpunkt)
+      Swift.print("rJoystickView mouseDragged weg.elementCount: \(weg.elementCount)" )
       if (lokalpunkt.x >= self.bounds.size.width)
       {
          lokalpunkt.x = self.bounds.size.width

@@ -434,8 +434,10 @@ class rViewController: NSViewController, NSWindowDelegate
    {
       let info = notification.userInfo
       let ident:String = info?["ident"] as! String  // 
-      //print("Basis tabviewAktion:\t \(ident)")
+      print("ViewController tabviewAktion:\t \(ident) usbstatus: \(usbstatus) globalusbstatus: \(globalusbstatus)")
       selectedDevice = ident
+      usbstatus = Int32(globalusbstatus)
+      
    }
 
    
@@ -708,11 +710,13 @@ class rViewController: NSViewController, NSWindowDelegate
       teensy.write_byteArray[ACHSE2_BYTE_H] = UInt8(((ACHSE2_START) & 0xFF00) >> 8) // hb
       teensy.write_byteArray[ACHSE2_BYTE_L] = UInt8(((ACHSE2_START) & 0x00FF) & 0xFF) // lb
  
+       /*
       teensy.write_byteArray[HYP_BYTE_H] = 0 // hb
       teensy.write_byteArray[HYP_BYTE_L] = 0 // lb
 
       teensy.write_byteArray[INDEX_BYTE_H] = 0 // hb
       teensy.write_byteArray[INDEX_BYTE_L] = 0 // lb
+        */
       Joystickfeld.clearWeg()
       servoPfad?.clearPfadarray()
 
@@ -1302,6 +1306,8 @@ class rViewController: NSViewController, NSWindowDelegate
    
    let SET_ROB:UInt8 = 0xA2
    
+   let SET_DRAW:UInt8 = 0xD2
+   
    let SET_P:UInt8 = 0xA3
    let GET_P:UInt8 = 0xB3
    
@@ -1311,32 +1317,34 @@ class rViewController: NSViewController, NSWindowDelegate
    let U_DIVIDER:Float = 9.8
    let ADC_REF:Float = 3.26
    
-   let ACHSE0_BYTE_H = 4
-   let ACHSE0_BYTE_L = 5
-   let ACHSE0_START_BYTE_H = 6
-   let ACHSE0_START_BYTE_L = 7
+   let ACHSE0_BYTE_H = 0
+   let ACHSE0_BYTE_L = 1
+   let ACHSE0_START_BYTE_H = 2
+   let ACHSE0_START_BYTE_L = 3
 
    
-   let ACHSE1_BYTE_H = 11
-   let ACHSE1_BYTE_L = 12
-   let ACHSE1_START_BYTE_H = 13
-   let ACHSE1_START_BYTE_L = 14
+   let ACHSE1_BYTE_H = 4
+   let ACHSE1_BYTE_L = 5
+   let ACHSE1_START_BYTE_H = 6
+   let ACHSE1_START_BYTE_L = 7
   
-   let ACHSE2_BYTE_H = 17
-   let ACHSE2_BYTE_L = 18
-   let ACHSE2_START_BYTE_H = 19
-   let ACHSE2_START_BYTE_L = 20
+   let ACHSE2_BYTE_H = 8
+   let ACHSE2_BYTE_L = 9
+   let ACHSE2_START_BYTE_H = 10
+   let ACHSE2_START_BYTE_L = 11
    
-   let ACHSE3_BYTE_H = 23
-   let ACHSE3_BYTE_L = 24
-   let ACHSE3_START_BYTE_H = 25
-   let ACHSE3_START_BYTE_L = 26
+   let ACHSE3_BYTE_H = 12
+   let ACHSE3_BYTE_L = 13
+   let ACHSE3_START_BYTE_H = 14
+   let ACHSE3_START_BYTE_L = 15
 
+   
+   
    let HYP_BYTE_H = 32 // Hypotenuse
    let HYP_BYTE_L = 33
    
-   let INDEX_BYTE_H = 34
-   let INDEX_BYTE_L = 35
+   let INDEX_BYTE_H = 18
+   let INDEX_BYTE_L = 19
    
    let STEPS_BYTE_H = 36
    let STEPS_BYTE_L = 37

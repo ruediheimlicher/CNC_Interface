@@ -65,6 +65,8 @@ class rCNCViewController:rViewController
 
       NotificationCenter.default.addObserver(self, selector: #selector(DCAktion), name:NSNotification.Name(rawValue: "dc_pwm"), object: nil)
 
+  //    NotificationCenter.default.addObserver(self, selector: #selector(joystickAktion), name:NSNotification.Name(rawValue: "joystick"), object: nil)
+
    }
    
  
@@ -841,6 +843,17 @@ class rCNCViewController:rViewController
        //let dic = notification.userInfo as? [String:[UInt8]]
        //print("dic: \(dic ?? ["a":[123]])\n")
        
+   
+   
+   /*
+   // MARK: joystick
+     @objc override func joystickAktion(_ notification:Notification) 
+     {
+        print("CNCViewController joystickAktion usbstatus:\t \(usbstatus) selectedDevice: \(selectedDevice) ident: \(self.view.identifier)")
+        let sel = NSUserInterfaceItemIdentifier.init(selectedDevice)
+
+     }
+    */
    @objc @IBAction  func showEinstellungen(_ sender: Any)
    {
       AVR?.showEinstellungen()

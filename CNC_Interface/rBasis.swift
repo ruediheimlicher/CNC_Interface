@@ -146,6 +146,8 @@ class rBasis: rViewController
                 popindex += 1
              }
 
+   
+   
    }
    
    override func viewDidLoad() 
@@ -175,7 +177,7 @@ class rBasis: rViewController
       // Do any additional setup after loading the view.
  //     let newdataname = Notification.Name("newdata")
  //     NotificationCenter.default.addObserver(self, selector:#selector(newDataAktion(_:)),name:newdataname,object:nil)
-  //    NotificationCenter.default.addObserver(self, selector:#selector(joystickAktion(_:)),name:NSNotification.Name(rawValue: "joystick"),object:nil)
+ //     NotificationCenter.default.addObserver(self, selector:#selector(joystickAktion(_:)),name:NSNotification.Name(rawValue: "joystick"),object:nil)
       NotificationCenter.default.addObserver(self, selector:#selector(usbstatusAktion(_:)),name:NSNotification.Name(rawValue: "usb_status"),object:nil)
       
       
@@ -227,7 +229,7 @@ class rBasis: rViewController
       teensy.write_byteArray[ACHSE1_BYTE_H] = UInt8(((ACHSE1_START) & 0xFF00) >> 8) // hb
       teensy.write_byteArray[ACHSE1_BYTE_L] = UInt8(((ACHSE1_START) & 0x00FF) & 0xFF) // lb
       
-      teensy.write_byteArray[0] = SET_0
+      teensy.write_byteArray[24] = SET_DRAW
   
    
    }
@@ -241,7 +243,7 @@ class rBasis: rViewController
          return  
          
       }// 
-      //print("Basis usbstatusAktion:\t \(status)")
+      print("Basis usbstatusAktion:\t \(status)")
       usbstatus = Int32(status)
    }
 
@@ -249,21 +251,26 @@ class rBasis: rViewController
  // MARK: joystick
    @objc override func joystickAktion(_ notification:Notification) 
    {
-      print("Basis joystickAktion usbstatus:\t \(usbstatus) selectedDevice: \(selectedDevice) ident: \(self.view.identifier)")
+      print("Basis joystickAktion usbstatus:\t \(usbstatus) selectedDevice: \(selectedDevice) ")
       let sel = NSUserInterfaceItemIdentifier.init(selectedDevice)
      // if (selectedDevice == self.view.identifier)
       if (sel == self.view.identifier)
       {
-  //       print("Basis joystickAktion passt")
+         print("Basis joystickAktion passt")
          
          let info = notification.userInfo
          let punkt:CGPoint = info?["punkt"] as! CGPoint
          let wegindex:Int = info?["index"] as! Int // 
          let first:Int = info?["first"] as! Int
   //       print("Basis joystickAktion:\t \(punkt)")
-  //       print("x: \(punkt.x) y: \(punkt.y) index: \(wegindex) first: \(first)")
+         print("wegindex: \(wegindex) x: \(punkt.x) y: \(punkt.y)  first: \(first)")
          
-         teensy.write_byteArray[0] = SET_ROB // Code 
+         teensy.write_byteArray[INDEX_BYTE_H] = UInt8(((wegindex-1) & 0xFF00) >> 8) // hb // hb // Start, Index 0
+         teensy.write_byteArray[INDEX_BYTE_L] = UInt8(((wegindex-1) & 0x00FF) & 0xFF) // lb
+
+         teensy.write_byteArray[24] = SET_DRAW // Code  fuer Zeichnen
+         
+         
          
          // Horizontal Pot0
          let w = Double(Joystickfeld.bounds.size.width) // Breite Joystickfeld
@@ -309,7 +316,7 @@ class rBasis: rViewController
          let message:String = info?["message"] as! String
          if ((message == "mousedown") && (first >= 0))// Polynom ohne mousedragged
          {
-            teensy.write_byteArray[0] = SET_RING
+            teensy.write_byteArray[24] = SET_RING
             let anz = servoPfad?.anzahlPunkte()
             if (wegindex > 1)
             {
@@ -352,11 +359,12 @@ class rBasis: rViewController
             else
             {
                print("basis joystickAktion start achse0: \(achse0) achse1: \(achse1)  achse2: \(achse2) anz: \(anz) wegindex: \(wegindex)")
+          /*
                teensy.write_byteArray[HYP_BYTE_H] = 0 // hb // Start, keine Hypo
                teensy.write_byteArray[HYP_BYTE_L] = 0 // lb
                teensy.write_byteArray[INDEX_BYTE_H] = 0 // hb // Start, Index 0
                teensy.write_byteArray[INDEX_BYTE_L] = 0 // lb
-               
+            */   
             }
             
             servoPfad?.addPosition(newx: achse0, newy: achse1, newz: 0)

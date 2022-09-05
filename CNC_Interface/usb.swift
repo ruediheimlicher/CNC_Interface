@@ -146,6 +146,10 @@ class rTimerInfo {
       return usb_present()
    }
    
+    open func timer_valid()->Bool
+    {
+       return ((readtimer?.isValid) != nil)
+    }
    /*
     func appendCRLFAndConvertToUTF8_1(_ s: String) -> Data {
     let crlfString: NSString = s + "\r\n" as NSString
@@ -226,8 +230,23 @@ class rTimerInfo {
          
          var result = rawhid_recv(0, &read_byteArray, Int32(BUFFER_SIZE), 0)
          
-         
-         //print("*cont_read_USB result: \(result)")
+         var usbrecvcount = 0
+         for  i in 0..<BUFFER_SIZE
+         {
+            if read_byteArray[i] > 0
+            {
+               usbrecvcount += 1
+            }
+         }
+    //     print("*cont_read_USB usbrecvcount: \(usbrecvcount)")
+         if usbrecvcount == 0
+         {
+            return
+         }
+         if read_byteArray[0] > 0xA0
+         {
+            //print("*cont_read_USB result: \(result) code: \(read_byteArray[0])")
+         }
          //print("tempbyteArray in Timer: *\(read_byteArray)*")
         // var timerdic: [String: Int]
          
@@ -239,7 +258,7 @@ class rTimerInfo {
          }
          
              timerInfo.count += 1
-    //         print("cont_read_USB timerInfo: \(timerInfo.count)")
+     //        print("cont_read_USB timerInfo: \(timerInfo.count)")
       
           
          
@@ -249,6 +268,7 @@ class rTimerInfo {
          // var count:Int = timerdic["count"]
          
          //timer.userInfo["count"] = count+1
+         
          if !(last_read_byteArray == read_byteArray)
          {
             /*
@@ -258,6 +278,8 @@ class rTimerInfo {
                         print("cont_read_USB timerInfo: \(timerInfo.count)")
             */
             
+            print("cont_read_USB timerInfo: \(timerInfo) read_byteArray 0: \(read_byteArray[0])")
+
             
             last_read_byteArray = read_byteArray
             lastDataRead = Data(bytes:read_byteArray)
@@ -269,8 +291,12 @@ class rTimerInfo {
             //print("cont_read_USB new Data codehex: \(codehex) codehex: \(codehexstring)")
             
             
-            print("+++ new read_byteArray in Timer code: \(read_byteArray[0])")
+            print("\n+++ cont_read_USB new read_byteArray in Timer. code: \(read_byteArray[0])")
             
+            if (read_byteArray[0] == 0xBD)
+            {
+               print("usb code BD")
+            }
             for  i in 0..<BUFFER_SIZE
             {
                print(" \(read_byteArray[i])", terminator: "")
@@ -314,8 +340,10 @@ class rTimerInfo {
          else
          {
             //new_Data = false
-            
-          //  print("---nix neues  \(read_byteArray[0])\t\(datafalsecounter)")
+            if (read_byteArray[0] > 0)
+            {
+            //print("---nix neues  \(read_byteArray[0])\t\(datafalsecounter)\n")
+            }
             datafalsecounter += 1
             //stop_read_USB()
          }
@@ -354,7 +382,7 @@ class rTimerInfo {
           write_byteArray[i] = 0
           }
        }
-
+       
     }
 
     @objc func stop_timer()

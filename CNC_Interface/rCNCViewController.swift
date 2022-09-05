@@ -274,6 +274,8 @@ class rCNCViewController:rViewController
       print("slaveresetAktion")
       
       teensy.clear_data()
+      let senderfolg = teensy.send_USB()
+      print("slaveresetAktion senderfolg: \(senderfolg)")
    }
 
    @objc func AVR_steps()->Int32
@@ -323,21 +325,26 @@ class rCNCViewController:rViewController
        */
       
       Stepperposition = 0
-      print("cncviewcontroller usbschnittdatenAktion")
+      //print("cncviewcontroller usbschnittdatenAktion")
         
        
         
    //     guard let steps:Int32 = AVR?.motorsteps()  else {return}
         
-        print("cncviewcontroller usbschnittdatenAktion steps: \(steps)")
+        //print("cncviewcontroller usbschnittdatenAktion steps: \(steps)")
        usb_schnittdatenarray.removeAll()
+        
        let info = notification.userInfo
    //   print("info: \(info)")
    //    let usb_pwm =  info?["pwm"] as! UInt8
    //    let usb_delayok =  info?["delayok"] as! UInt8
        
       let usb_home =  info?["home"] as! UInt8
-
+        print("cncviewcontroller usbschnittdatenAktion usb_home: \(usb_home)")
+        if usb_home == 1
+        {
+           Stepperposition = 0
+        }
         //    let usb_art =  info?["art"] as! UInt8
    //    let usb_cncposition =  info?["cncposition"]
        
@@ -365,8 +372,8 @@ class rCNCViewController:rViewController
          usb_schnittdatenarray.append(wertarray)
       }
        
-        //print("usbschnittdatenAktion usb_schnittdatenarray: \(usb_schnittdatenarray )")
-       
+   //     print("usbschnittdatenAktion usb_schnittdatenarray: \(usb_schnittdatenarray )")
+   //     print("usbschnittdatenAktion Stepperposition: \(Stepperposition)")
       
       //teensy.write_byteArray[0] = UInt8((0x00FF) & 0xFF) // lb
 
@@ -406,15 +413,17 @@ class rCNCViewController:rViewController
          
       }
   
-  //    writeCNCAbschnitt()
-      
+ 
       var timerdic:[String:Any] = [String:Any]()
       timerdic["home"] = usb_home
       
         if (teensy.read_OK.boolValue == false)
         {
+           print("teensy.read_OK ist false")
            teensy.start_read_USB(true, dic:timerdic)
+           
         }
+        
         writeCNCAbschnitt()
      // readTimer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(teensy.cont_read_USB(_:)), userInfo: timerdic, repeats: true)
 
@@ -423,10 +432,9 @@ class rCNCViewController:rViewController
 
     @objc func writeCNCAbschnitt()
    {
-      
-    // print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
+     print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
       let count = usb_schnittdatenarray.count
-      //print("writeCNCAbschnitt code: \(usb_schnittdatenarray[0][24]) Stepperposition: \(Stepperposition) count: \(count) ")
+      print("writeCNCAbschnitt code: \(usb_schnittdatenarray[0][24]) Stepperposition: \(Stepperposition) count: \(count) ")
       
       if Stepperposition < count
       {
@@ -445,6 +453,7 @@ class rCNCViewController:rViewController
       
       if Stepperposition < usb_schnittdatenarray.count
       {
+         print("Stepperposition < usb_schnittdatenarray.count")
          if halt > 0
          {
             /*
@@ -458,10 +467,10 @@ class rCNCViewController:rViewController
          else
          {
             let aktuellezeile:[UInt8] = usb_schnittdatenarray[Stepperposition]
-            // print("aktuellezeile: \(aktuellezeile) 25: \(aktuellezeile[25])")
+             //print("aktuellezeile: \(aktuellezeile) 25: \(aktuellezeile[25])")
             var string:String = ""
             var index=0
-            
+            //print("aktuellezeile:")
             for wert in aktuellezeile
             {
                teensy.write_byteArray.append(wert)
@@ -479,16 +488,18 @@ class rCNCViewController:rViewController
             if (globalusbstatus > 0)
             {
                let senderfolg = teensy.send_USB()
-               //print("writeCNCAbschnitt senderfolg: \(senderfolg)")
+               print("writeCNCAbschnitt senderfolg: \(senderfolg)")
             }
            // print("Stepperposition: \(Stepperposition) \n\(schnittdatenstring)");
+            
             Stepperposition += 1
-         }// halt
+         }// ! halt
       }
       else
       {
          print("writeCNCAbschnitt Fertig ")
          teensy.stop_read_USB()
+         
          return
          
       }
@@ -499,18 +510,19 @@ class rCNCViewController:rViewController
   
    @objc override func newDataAktion(_ notification:Notification)  // entspricht readUSB
    {
-      // N
+      // Reaktion auf eingehende USB-Daten
       var lastData = teensy.getlastDataRead()
       let lastDataArray = [UInt8](lastData)
       //print("newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")       
-      //print("newDataAktion start")
+ //     print("newDataAktion start")
+/*
       var ii = 0
-      while ii < 10
+ //    while ii < 10
       {
-         //print("ii: \(ii)  wert: \(lastData[ii])\t")
+ //        print("ii: \(ii)  wert: \(lastData[ii])\t")
          ii = ii+1
       }
-      
+ */     
       //let u = ((Int32(lastData[1])<<8) + Int32(lastData[2]))
       //print("hb: \(lastData[1]) lb: \(lastData[2]) u: \(u)")
       let info = notification.userInfo
@@ -532,7 +544,7 @@ class rCNCViewController:rViewController
       
       if let d = info!["contdata"] // Data vorhanden
       {
-         //print("newDataAktion if let d ok")
+//         print("newDataAktion if let d ok")
          var usbdata = info!["data"] as! [UInt8]
          
          //      let stringFromByteArray = String(data: Data(bytes: usbdata), encoding: .utf8)         
@@ -549,7 +561,9 @@ class rCNCViewController:rViewController
             //print("abschnittfertig wert: \(abschnittfertig)")
             // https://useyourloaf.com/blog/swift-string-cheat-sheet/
             //print("abschnittfertig: \(String(abschnittfertig, radix:16, uppercase:true))\n")
-            //print("newDataAktion abschnittfertig: \(hex(abschnittfertig))\n")
+            print("newDataAktion abschnittfertig: \(hex(abschnittfertig)) cncstatus: \(usbdata[22])\n")
+            
+            let home = Int(usbdata[13])
             
             if usbdata != nil
             {
@@ -573,7 +587,7 @@ class rCNCViewController:rViewController
                NotificationDic["stepperposition"] = Stepperposition
                NotificationDic["mausistdown"] = mausistdown
                
-                 
+               NotificationDic["home"] = Int(usbdata[13])
                
                var AnschlagSet = IndexSet()
                
@@ -671,9 +685,23 @@ class rCNCViewController:rViewController
                   
                case 0xF1:
                   
-                     print(" home ")
-                  break;
+                     print("F1 home ")
                   
+                  break;
+               case 0xF2:
+                  
+                     print("F2 ")
+                  
+                  break;
+/*                  
+               case 0xBD:
+                  if Int(usbdata[63]) == 1
+                         {
+                     print("BD 17 ")
+                          return;
+                  }
+ */                 
+                  break;
                default:
                   break
                }// switch abschnittfertig
@@ -715,8 +743,8 @@ class rCNCViewController:rViewController
                {
                   print("EndIndexSet contains abschnittfertig")
                   //teensy.DC_pwm(0)
-                  AVR?.setBusy(0)
-                  teensy.read_OK = false
+  //                AVR?.setBusy(0)
+   //               teensy.read_OK = false
                }
                else
                {
@@ -738,16 +766,19 @@ class rCNCViewController:rViewController
                   }
                   else
                   {
-                     //print("WriteCNCAbschnitt count: \(usb_schnittdatenarray.count)")
+                     print("newDataAktion vor writeCNCAbschnitt count: \(usb_schnittdatenarray.count)")
                      if (usb_schnittdatenarray.count > 0) // nicht HALT
                      {
-                     writeCNCAbschnitt()
+                     //if (Int(usbdata[10]) == 0)
+                        print("HomeAnschlagSet: \(HomeAnschlagSet)")
+                           writeCNCAbschnitt()
+                        
                      }
                   }
                }
                   //print("HomeAnschlagSet: \(HomeAnschlagSet)")
                   NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
-                  NotificationDic["home"] = home
+               NotificationDic["home"] = Int(home)
                   NotificationDic["abschnittfertig"] = Int(abschnittfertig)
                   
                   

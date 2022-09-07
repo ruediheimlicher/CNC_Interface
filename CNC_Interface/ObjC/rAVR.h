@@ -370,6 +370,7 @@
    - (IBAction)reportStopKnopf:(id)sender;
    - (IBAction)reportMotorsteps:(id)sender;
    - (IBAction)reportMicrosteps:(id)sender;
+   - (IBAction)reportRandlinks:(id)sender;
 
    - (NSDictionary*)RahmenDic;
    - (void)DC_ON:(int)pwm;
@@ -382,6 +383,7 @@
    - (int)saveSpeed;
    - (int)motorsteps;
    - (int)CNC_micro;
+
 
    - (int)saveProfileinstellungen;
    - (void)setUSBDaten:(NSDictionary*)datendic;

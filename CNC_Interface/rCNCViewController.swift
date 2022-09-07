@@ -340,9 +340,10 @@ class rCNCViewController:rViewController
    //    let usb_delayok =  info?["delayok"] as! UInt8
        
       let usb_home =  info?["home"] as! UInt8
-        print("cncviewcontroller usbschnittdatenAktion usb_home: \(usb_home)")
+        
         if usb_home == 1
         {
+           print("cncviewcontroller usbschnittdatenAktion usb_home: \(usb_home)")
            Stepperposition = 0
         }
         //    let usb_art =  info?["art"] as! UInt8
@@ -432,7 +433,7 @@ class rCNCViewController:rViewController
 
     @objc func writeCNCAbschnitt()
    {
-     print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
+     //print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
       let count = usb_schnittdatenarray.count
       print("writeCNCAbschnitt code: \(usb_schnittdatenarray[0][24]) Stepperposition: \(Stepperposition) count: \(count) ")
       
@@ -481,9 +482,11 @@ class rCNCViewController:rViewController
                }
                index += 1
             }
+            /*
             print("\(string) code: \(aktuellezeile[16]) pos: \(aktuellezeile[17]) index: \(aktuellezeile[19])");
             schnittdatenstring.append(string)
             schnittdatenstring.append("\n")
+             */
             //print("write_byteArray: \(teensy.write_byteArray)")
             if (globalusbstatus > 0)
             {
@@ -498,8 +501,7 @@ class rCNCViewController:rViewController
       else
       {
          print("writeCNCAbschnitt Fertig ")
-         teensy.stop_read_USB()
-         
+     //    teensy.stop_read_USB()
          return
          
       }
@@ -557,11 +559,11 @@ class rCNCViewController:rViewController
             //print("usbdata: \(usbdata)\n") // d: [0, 9, 56, 0, 0,... 
             var NotificationDic = [String:Int]()
             
-            let abschnittfertig:UInt8 =   usbdata[0]
-            //print("abschnittfertig wert: \(abschnittfertig)")
+            let newdatacode:UInt8 =   usbdata[0]
+            //print("newdatacode wert: \(newdatacode)")
             // https://useyourloaf.com/blog/swift-string-cheat-sheet/
-            //print("abschnittfertig: \(String(abschnittfertig, radix:16, uppercase:true))\n")
-            print("newDataAktion abschnittfertig: \(hex(abschnittfertig)) cncstatus: \(usbdata[22])\n")
+            //print("newdatacode: \(String(newdatacode, radix:16, uppercase:true))\n")
+            print("newDataAktion newdatacode: \(hex(newdatacode)) cncstatus: \(usbdata[22])\n")
             
             let home = Int(usbdata[13])
             
@@ -577,9 +579,9 @@ class rCNCViewController:rViewController
                
             }
             
-            if abschnittfertig >= 0xA0 // Code fuer Fertig: AD
+            if newdatacode >= 0xA0 // Code fuer Fertig: AD
             {
-               //print("abschnittfertig > A0")
+               //print("newdatacode > A0")
                let Abschnittnummer = Int(usbdata[5])
                NotificationDic["inposition"] = Int(Abschnittnummer)
                let ladePosition = Int(usbdata[6])
@@ -589,9 +591,10 @@ class rCNCViewController:rViewController
                
                NotificationDic["home"] = Int(usbdata[13])
                
+               print("newDataAktion cncstatus: \(usbdata[22])")
                var AnschlagSet = IndexSet()
                
-               switch abschnittfertig
+               switch newdatacode
                {
                case 0xE1:// Antwort auf mouseup 0xE0 HALT
                   print("newDataAktion E1 mouseup")
@@ -671,10 +674,10 @@ class rCNCViewController:rViewController
                   break
                   
                case 0xD0:
-                  print("***   ***   Letzter Abschnitt")
+                  print("***   ***   D0 Letzter Abschnitt cncstatus: \(usbdata[22]) ")
                   //print("0xD0 Stepperposition: \(Stepperposition) \n\(schnittdatenstring)");
                   //print("HomeAnschlagSet: \(HomeAnschlagSet)")
-                  NotificationDic["abschnittfertig"] = Int(abschnittfertig)
+                  NotificationDic["newdatacode"] = Int(newdatacode)
                   let nc = NotificationCenter.default
                   nc.post(name:Notification.Name(rawValue:"usbread"),
                           object: nil,
@@ -693,18 +696,20 @@ class rCNCViewController:rViewController
                      print("F2 ")
                   
                   break;
-/*                  
+                  
                case 0xBD:
-                  if Int(usbdata[63]) == 1
+                  print("BD cncstatus: \(usbdata[22]) ")
+                  
+                  if Int(usbdata[63]) == 1 // Experiment home, nicht verwendet
                          {
-                     print("BD 17 ")
-                          return;
+                     //print("BD 63 ")
+                         // return;
                   }
- */                 
+                  
                   break;
                default:
                   break
-               }// switch abschnittfertig
+               }// switch newdatacode
                
                if AnschlagSet.count > 0
                {
@@ -739,18 +744,18 @@ class rCNCViewController:rViewController
               //  print("HomeIndexSet: \(HomeIndexSet)")
 
                
-               if EndIndexSet.contains(Int(abschnittfertig))
+               if EndIndexSet.contains(Int(newdatacode))
                {
-                  print("EndIndexSet contains abschnittfertig")
+                  print("EndIndexSet contains newdatacode")
                   //teensy.DC_pwm(0)
   //                AVR?.setBusy(0)
    //               teensy.read_OK = false
                }
                else
                {
-                  if HomeIndexSet.contains(Int(abschnittfertig))
+                  if HomeIndexSet.contains(Int(newdatacode))
                   {
-                     print("HomeIndexSet contains abschnittfertig")
+                     print("HomeIndexSet contains newdatacode")
                      if HomeAnschlagSet.count == 1
                      {
                         print("HomeAnschlagSet.count == 1")
@@ -778,8 +783,8 @@ class rCNCViewController:rViewController
                }
                   //print("HomeAnschlagSet: \(HomeAnschlagSet)")
                   NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
-               NotificationDic["home"] = Int(home)
-                  NotificationDic["abschnittfertig"] = Int(abschnittfertig)
+                  NotificationDic["home"] = Int(home)
+                  NotificationDic["newdatacode"] = Int(newdatacode)
                   
                   
                    let nc = NotificationCenter.default
@@ -788,7 +793,7 @@ class rCNCViewController:rViewController
                    userInfo: NotificationDic)
                    
                
-            } // if abschnittfertig > A0
+            } // if newdatacode > A0
             
             //writeCNCAbschnitt()
             //print("dic end\n")

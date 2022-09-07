@@ -275,10 +275,10 @@ class rTimerInfo {
                  guard let timerInfo = timer.userInfo as? rTimerInfo else { return }
 
                         timerInfo.count += 1
-                        print("cont_read_USB timerInfo: \(timerInfo.count)")
+                       // print("cont_read_USB timerInfo: \(timerInfo.count)")
             */
             
-            print("cont_read_USB timerInfo: \(timerInfo) read_byteArray 0: \(read_byteArray[0])")
+           // print("cont_read_USB timerInfo: \(timerInfo) read_byteArray 0: \(read_byteArray[0])")
 
             
             last_read_byteArray = read_byteArray
@@ -293,16 +293,17 @@ class rTimerInfo {
             
             print("\n+++ cont_read_USB new read_byteArray in Timer. code: \(read_byteArray[0])")
             
+            /*
             if (read_byteArray[0] == 0xBD)
             {
-               print("usb code BD")
+               //print("usb code BD")
             }
             for  i in 0..<BUFFER_SIZE
             {
                print(" \(read_byteArray[i])", terminator: "")
             }
             print("\n")
-
+             */
             // http://dev.iachieved.it/iachievedit/notifications-and-userinfo-with-swift-3-0/
             
             //let usbdic = ["message":"neue Daten", "data":read_byteArray] as [String : UInt8]
@@ -355,8 +356,8 @@ class rTimerInfo {
       }
       else
       {
-         print("*cont_read_USB timer.invalidate")
-         timer.invalidate()
+      //   print("*cont_read_USB timer.invalidate")
+      //   timer.invalidate()
       }
       //print("+++ end cont_read +++\n")
    }

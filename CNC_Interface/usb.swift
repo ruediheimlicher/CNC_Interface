@@ -356,7 +356,7 @@ class rTimerInfo {
       }
       else
       {
-      //   print("*cont_read_USB timer.invalidate")
+         print("* usb cont_read_USB timer.invalidate")
       //   timer.invalidate()
       }
       //print("+++ end cont_read +++\n")

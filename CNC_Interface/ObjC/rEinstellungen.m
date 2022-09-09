@@ -3347,6 +3347,31 @@
       case 3: // Rechteck
       {
          
+         float quadratwinkel1=0;
+         if ([[Winkel1 stringValue] length]==0)
+         {
+            quadratwinkel1 = [LagePop indexOfSelectedItem]*90;
+         }
+         else
+         {
+            quadratwinkel1 = [Winkel1 floatValue];
+         }
+         
+         float quadratwinkel2=0;
+         if ([[Winkel1 stringValue] length]==0)
+         {
+            quadratwinkel2 = [LagePop indexOfSelectedItem]*90;
+         }
+         else
+         {
+            quadratwinkel2 = [Winkel2 floatValue];
+         }
+
+         Form1KoordinatenArray = [NSMutableArray arrayWithArray:[CNC RechteckKoordinatenMitSeiteA:[SeiteA1 floatValue] SeiteB:[SeiteB1 floatValue] mitWinkel:quadratwinkel1]];
+         Form2KoordinatenArray = [NSMutableArray arrayWithArray:[CNC RechteckKoordinatenMitSeiteA:[SeiteA2 floatValue] SeiteB:[SeiteB2 floatValue]mitWinkel:quadratwinkel2]];
+
+         
+         
       }break;
          
    }

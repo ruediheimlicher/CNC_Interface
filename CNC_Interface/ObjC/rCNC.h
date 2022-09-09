@@ -44,7 +44,7 @@ float det(float v0[],float v1[]);
 
 - (NSArray*)QuadratVonPunkt:(NSPoint)EckeLinksUnten mitSeite:(float)Seite mitLage:(int)Lage;
 - (NSArray*)QuadratKoordinatenMitSeite:(float)Seite mitWinkel:(float)Winkel;
-
+- (NSArray*)RechteckKoordinatenMitSeiteA:(float)SeiteA SeiteB:(float)SeiteB mitWinkel:(float)Winkel;
 - (NSArray*)KreisVonPunkt:(NSPoint)Startpunkt mitRadius:(float)Radius mitLage:(int)Lage;
 - (NSArray*)KreisKoordinatenMitRadius:(float)Radius mitLage:(int)Lage;
 - (NSArray*)KreisKoordinatenMitRadius:(float)Radius mitLage:(int)Lage  mitAnzahlPunkten:(int)anzahlPunkte;

@@ -320,8 +320,8 @@ class rCNCViewController:rViewController
         motorstatus (pos 21)
 
          zoomfaktor  22
-         steps 23
-         micro 24
+         steps 25
+         micro 26
        */
       
       Stepperposition = 0
@@ -433,7 +433,7 @@ class rCNCViewController:rViewController
 
     @objc func writeCNCAbschnitt()
    {
-     print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
+     //print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
       let count = usb_schnittdatenarray.count
       print("writeCNCAbschnitt code: \(usb_schnittdatenarray[0][24]) Stepperposition: \(Stepperposition) count: \(count) ")
       

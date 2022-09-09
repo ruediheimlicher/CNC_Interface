@@ -5116,13 +5116,15 @@ return returnInt;
    rumpfDaten.einlaufB = 10;
 */
    
-   float breiteAraw = 50;
-   float hoeheAraw = 25;
-   float radiusAraw = 5;
-   float breiteBraw = 15;
-   float hoeheBraw = 8;
-   float radiusBraw = 3;
+   float breiteAraw = [BreiteAFeld intValue];
+   float hoeheAraw = [HoeheAFeld intValue] ;
+   float radiusAraw = [RadiusAFeld intValue];
+   float breiteBraw = [BreiteBFeld intValue];
+   float hoeheBraw = [HoeheBFeld intValue] ;
+   float radiusBraw = [RadiusBFeld intValue];
    
+ //  float spannweite = [ElementlaengeFeld intValue];
+   float portalabstand = [Portalabstand floatValue];   
    float spannweite = [Spannweite floatValue];
    float pfeilungW = (breiteAraw - breiteBraw)/spannweite;
    float arc=atan(pfeilungW);
@@ -5991,11 +5993,14 @@ return returnInt;
    float origpwm=[DC_PWM intValue];
    float redpwm = origpwm * [red_pwmFeld floatValue];
 
+   int vertikaloffset = 3; // Schneiden ueber definitiver Oberseite
+   int vertikalabstand = 3; // Abstand beim Zurueckschneiden
    int abstandoben = 5;
    int abstandunten = 10;
    float horizontaleinstich = 10;
    
-   float einfahrt = 5;
+   float einfahrtx = 5;
+   float einfahrty = 3;
    [CNC setSchalendicke:[Schalendickefeld floatValue]];
    //
    
@@ -6058,8 +6063,11 @@ return returnInt;
    
    // Einfahren
    rahmenindex++;
-   tempPunktA.x += einfahrt;
-   tempPunktB.x += einfahrt;
+   tempPunktA.x += einfahrtx;
+   tempPunktB.x += einfahrtx;
+   tempPunktA.y += einfahrty;
+   tempPunktB.y += einfahrty;
+   
    [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
 
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
@@ -6115,6 +6123,7 @@ return returnInt;
    rahmenindex++;
    tempPunktA.x -= horizontaleinstich;
    tempPunktB.x -= horizontaleinstich;
+   
    [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
    
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
@@ -6134,8 +6143,8 @@ return returnInt;
    
    // Hochfahren von horizontaler einstich bis kote
    rahmenindex++;
-   tempPunktA.y += hoeheA;
-   tempPunktB.y += hoeheA;
+   tempPunktA.y += hoeheA + vertikaloffset;
+   tempPunktB.y += hoeheA + vertikaloffset;
    
   
    
@@ -6172,8 +6181,8 @@ return returnInt;
  
    //  Einstich down
    rahmenindex++;
-   tempPunktA.y -= einstichy;
-   tempPunktB.y -= einstichy;
+   tempPunktA.y -= (einstichy + vertikaloffset);
+   tempPunktB.y -= (einstichy + vertikaloffset);
    
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
@@ -6188,8 +6197,8 @@ return returnInt;
 
    //  Einstich up
    rahmenindex++;
-   tempPunktA.y += einstichy;
-   tempPunktB.y += einstichy;
+   tempPunktA.y += (einstichy + vertikaloffset);
+   tempPunktB.y += (einstichy + vertikaloffset);
    
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
@@ -6222,8 +6231,8 @@ return returnInt;
 
 // Form down zum Radius down
    rahmenindex++;
-   tempPunktA.y -= hoeheA - radiusA;
-   tempPunktB.y -= hoeheB - radiusB;
+   tempPunktA.y -= (hoeheA - radiusA + vertikaloffset);
+   tempPunktB.y -= (hoeheB - radiusB + vertikaloffset);
    
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
@@ -6248,7 +6257,7 @@ return returnInt;
    for(i=0;i<SegmentKoordinatenArray.count;i++)
    {
       NSDictionary* tempdic = SegmentKoordinatenArray[i];
-      fprintf(stderr,"SegmentKoordinatenArray_:\n%d\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\n",i,[tempdic[@"ax"]floatValue],[tempdic[@"ay"]floatValue],[tempdic[@"bx"]floatValue],[tempdic[@"by"]floatValue]);
+  //    fprintf(stderr,"SegmentKoordinatenArray_:\n%d\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\n",i,[tempdic[@"ax"]floatValue],[tempdic[@"ay"]floatValue],[tempdic[@"bx"]floatValue],[tempdic[@"by"]floatValue]);
       [KoordinatenTabelle addObject:tempdic];
       rahmenindex++;
    }
@@ -6298,8 +6307,8 @@ return returnInt;
 
    // Form down vom Radius up
       rahmenindex++;
-      tempPunktA.y += hoeheA - radiusA;
-      tempPunktB.y += hoeheB - radiusB;
+      tempPunktA.y += (hoeheA - radiusA + vertikaloffset);
+      tempPunktB.y += (hoeheB - radiusB + vertikaloffset);
       
       [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
       [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
@@ -6328,8 +6337,8 @@ return returnInt;
 
    //  Einstich down
    rahmenindex++;
-   tempPunktA.y -= einstichy;
-   tempPunktB.y -= einstichy;
+   tempPunktA.y -= (einstichy + vertikaloffset);
+   tempPunktB.y -= (einstichy + vertikaloffset);
    
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
@@ -6344,8 +6353,8 @@ return returnInt;
 
    //  Einstich up
    rahmenindex++;
-   tempPunktA.y += einstichy;
-   tempPunktB.y += einstichy;
+   tempPunktA.y += (einstichy + vertikaloffset);
+   tempPunktB.y += (einstichy + vertikaloffset);
    
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
@@ -6359,7 +6368,7 @@ return returnInt;
    [KoordinatenTabelle addObject:[tempRahmenDic copy]];
    //NSLog(@"count: %d KoordinatenTabelle 1: %@",[KoordinatenTabelle count],[KoordinatenTabelle description]);
 
-   // Einstich zum Auslauf
+   // Schneiden Einstich zum Auslauf
    rahmenindex++;
    tempPunktA.x += auslaufA;
    tempPunktB.x += auslaufB;//-offsetX;
@@ -6375,6 +6384,33 @@ return returnInt;
    [KoordinatenTabelle addObject:[tempRahmenDic copy]];
    //NSLog(@"count: %d KoordinatenTabelle 1: %@",[KoordinatenTabelle count],[KoordinatenTabelle description]);
 
+     // Deckel abschneiden
+   
+   // up vertikalabstand
+   rahmenindex++;
+   tempPunktA.y += vertikalabstand;
+   tempPunktB.y += vertikalabstand;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+   // Schneiden links zum blockrand
+   rahmenindex++;
+   tempPunktA.x -= Blockbreite;
+   tempPunktB.x -= Blockbreite;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+                   
+   // down vertikaloffset 
+   rahmenindex++;
+   tempPunktA.y -= (vertikaloffset + vertikalabstand);
+   tempPunktB.y -= (vertikaloffset + vertikalabstand);
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+  
+   // Schneiden nach rechts zum blockrand rechts
+   rahmenindex++;
+   tempPunktA.x += Blockbreite;
+   tempPunktB.x += Blockbreite;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+                    
    // Herunterfahren bis horizontaler Einstich
    rahmenindex++;
    tempPunktA.y -= hoeheA;
@@ -6460,9 +6496,13 @@ return returnInt;
 
    // Ausfahren
    rahmenindex++;
-   tempPunktA.x -= einfahrt;
-   //tempPunktA.y -= 3;
-   tempPunktB.x -= einfahrt;
+   tempPunktA.x -= einfahrtx;
+   tempPunktB.x -= einfahrtx;
+   
+   tempPunktA.y -= einfahrty;
+   tempPunktB.y -= einfahrty;
+
+   
    
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
@@ -9898,6 +9938,9 @@ return returnInt;
       position |= (1<<LAST_BIT);
       [tempDic setObject:[NSNumber numberWithInt:position] forKey:@"position"];
       
+      [tempDic setObject:[NSNumber numberWithInt:micro]forKey:@"micro"];
+      [tempDic setObject:[NSNumber numberWithInt:motorsteps]forKey:@"steps"];
+
     
       NSDictionary* tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
       //NSLog(@"AVR  reportHome tempSteuerdatenDic: %@",[tempSteuerdatenDic description]);

@@ -1136,24 +1136,25 @@ PortA=vs[n & 3]; warte10ms(); n++;
 	return tempDatenArray;
 }
 
+
 - (NSArray*)QuadratKoordinatenMitSeite:(float)Seite mitWinkel:(float)Winkel
 {
-	NSLog(@"QuadratmitSeite: %2.2f  Winkel: %2.2f", Seite,Winkel);
-	NSMutableArray* tempDatenArray=[[NSMutableArray alloc]initWithCapacity:0];
-	// waagrecht rechts
-	NSPoint Eckpunkt=NSMakePoint(0,0);
-	
-	int anzSchritte =4;
-	int index=0;
-	NSMutableArray* PolygonpunktArray=[[NSMutableArray alloc]initWithCapacity:0];
-	/*
-    Winkel: Grad, waagrecht nach rechts = 0°	CCW */
-	//      NSDictionary* tempDic=[NSDictionary dictionaryWithObjectsAndKeys:KoordinateX, @"x",KoordinateY,@"y" ,[NSNumber numberWithInt:index],@"index", nil];
+   NSLog(@"QuadratKoordinatenMitSeite: %2.2f  Winkel: %2.2f", Seite,Winkel);
+   NSMutableArray* tempDatenArray=[[NSMutableArray alloc]initWithCapacity:0];
+   // waagrecht rechts
+   NSPoint Eckpunkt=NSMakePoint(0,0);
+   
+   int anzSchritte =4;
+   int index=0;
+   NSMutableArray* PolygonpunktArray=[[NSMutableArray alloc]initWithCapacity:0];
+   /*
+    Winkel: Grad, waagrecht nach rechts = 0°   CCW */
+   //      NSDictionary* tempDic=[NSDictionary dictionaryWithObjectsAndKeys:KoordinateX, @"x",KoordinateY,@"y" ,[NSNumber numberWithInt:index],@"index", nil];
    
    // Startpunkt
    [tempDatenArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:Eckpunkt.x],@"x",[NSNumber numberWithFloat:Eckpunkt.y],@"y",[NSNumber numberWithInt:index],@"index" ,NULL]];
 
-	
+   
    float winkel=Winkel*M_PI/180;
    NSLog(@"QuadratmitSeite winkel rad: %2.2f", winkel);
    // waagrecht rechts
@@ -1174,6 +1175,64 @@ PortA=vs[n & 3]; warte10ms(); n++;
    index++;
    Eckpunkt.x -= Seite*cos(winkel);
    Eckpunkt.y -= Seite*sin(winkel);
+   [tempDatenArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:Eckpunkt.x],@"x",[NSNumber numberWithFloat:Eckpunkt.y],@"y",[NSNumber numberWithInt:index],@"index" ,NULL]];
+
+   
+   // nach unten
+   index++;
+   
+   Eckpunkt = NSMakePoint(0,0);;
+   [tempDatenArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:Eckpunkt.x],@"x",[NSNumber numberWithFloat:Eckpunkt.y],@"y",[NSNumber numberWithInt:index],@"index" ,NULL]];
+
+   
+   
+   
+
+   NSLog(@"QuadratmitSeite: tempDatenArray: %@",[tempDatenArray description]);
+   
+   
+   
+   return tempDatenArray;
+}
+
+- (NSArray*)RechteckKoordinatenMitSeiteA:(float)SeiteA SeiteB:(float)SeiteB  mitWinkel:(float)Winkel
+{
+	NSLog(@"RechteckKoordinatenMitSeiteA: %2.2f SeiteB: %2.2f  Winkel: %2.2f", SeiteA,SeiteB, Winkel);
+	NSMutableArray* tempDatenArray=[[NSMutableArray alloc]initWithCapacity:0];
+	// waagrecht rechts
+	NSPoint Eckpunkt=NSMakePoint(0,0);
+	
+	int anzSchritte =4;
+	int index=0;
+	NSMutableArray* PolygonpunktArray=[[NSMutableArray alloc]initWithCapacity:0];
+	/*
+    Winkel: Grad, waagrecht nach rechts = 0°	CCW */
+	//      NSDictionary* tempDic=[NSDictionary dictionaryWithObjectsAndKeys:KoordinateX, @"x",KoordinateY,@"y" ,[NSNumber numberWithInt:index],@"index", nil];
+   
+   // Startpunkt
+   [tempDatenArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:Eckpunkt.x],@"x",[NSNumber numberWithFloat:Eckpunkt.y],@"y",[NSNumber numberWithInt:index],@"index" ,NULL]];
+
+	
+   float winkel=Winkel*M_PI/180;
+   NSLog(@"QuadratmitSeite winkel rad: %2.2f", winkel);
+   // waagrecht rechts
+   
+   Eckpunkt.x +=SeiteA*cos(winkel);
+   Eckpunkt.y +=SeiteA*sin(winkel);
+
+   [tempDatenArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:Eckpunkt.x],@"x",[NSNumber numberWithFloat:Eckpunkt.y],@"y",[NSNumber numberWithInt:index],@"index" ,NULL]];
+
+    // nach oben
+   index++;
+   Eckpunkt.x -= SeiteB*sin(winkel);
+   Eckpunkt.y += SeiteB*cos(winkel);
+   [tempDatenArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:Eckpunkt.x],@"x",[NSNumber numberWithFloat:Eckpunkt.y],@"y",[NSNumber numberWithInt:index],@"index" ,NULL]];
+
+   
+   // nach links
+   index++;
+   Eckpunkt.x -= SeiteA*cos(winkel);
+   Eckpunkt.y -= SeiteA*sin(winkel);
    [tempDatenArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:Eckpunkt.x],@"x",[NSNumber numberWithFloat:Eckpunkt.y],@"y",[NSNumber numberWithInt:index],@"index" ,NULL]];
 
    
@@ -1830,9 +1889,6 @@ PortA=vs[n & 3]; warte10ms(); n++;
 
 
    } // for i
-   
-   
-   
    return segmentKoordinatenArray;
 }
 

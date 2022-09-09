@@ -22,6 +22,10 @@
     return self;
 }
 
+- (IBAction)ElementSichern:(id)sender
+{
+   
+}
 - (NSPoint)Startpunkt
 {
    return Startpunkt;

@@ -5091,7 +5091,7 @@ return returnInt;
    //rumpfDaten.
   // [KoordinatenTabelle removeAllObjects];
     
-   [self RumpfelementmitBreiteA:breiteAraw 
+   [self RumpfelementRawMitBreiteA:breiteAraw 
                       mitHoeheA:hoeheAraw  
                      mitBreiteB:breiteBraw
                      mitHoeheB:hoeheBraw 
@@ -5263,6 +5263,471 @@ return returnInt;
    tempPunktB.y += blockhoehe;
    
    [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+   
+   // Rumpfunterseite anschneiden links
+   
+   // 3 fahren ab zu Rumpfunterseite A,B
+   rahmenindex++;
+   NSLog(@"rahmenindex: %d task: %@",rahmenindex, @"ab zu Rumpfunterseite");
+   [debugArray addObject:[NSString stringWithFormat:@"%d %@",rahmenindex, @"Einfahren"]];
+
+   tempPunktA.y -= (hoeheA);
+   tempPunktB.y -= (hoeheB);
+   
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:redpwm teil:20];
+ 
+   if (mitnut)
+   {
+      // 4 nut unterseite links
+      // nut in
+      rahmenindex++;
+      NSLog(@"rahmenindex: %d task: %@",rahmenindex, @"nut unterseite links in");
+      [debugArray addObject:[NSString stringWithFormat:@"%d %@",rahmenindex, @"nut unterseite links in"]];
+      tempPunktA.x += 5;
+      tempPunktA.y += 5;
+      tempPunktB.x += 3;
+      tempPunktB.y += 3;
+      [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+      
+      // 5 nut out
+      rahmenindex++;
+      NSLog(@"rahmenindex: %d task: %@",rahmenindex, @"nut unterseite links out");
+      [debugArray addObject:[NSString stringWithFormat:@"%d %@",rahmenindex, @"nut unterseite links out"]];
+      
+      tempPunktA.x -= 5;
+      tempPunktA.y -= 5;
+      tempPunktB.x -= 3;
+      tempPunktB.y -= 3;
+      [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:redpwm teil:20];
+   } // if Nut
+   
+   
+   // 6 Schneiden nach links aussen auf Blockrand
+   rahmenindex++;
+   NSLog(@"rahmenindex: %d task: %@",rahmenindex, @"nach links aussen auf Blockrand");
+   [debugArray addObject:[NSString stringWithFormat:@"%d %@",rahmenindex, @"Einfahren"]];
+
+    
+   tempPunktB.x -= (breiteA - breiteB)/2;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+   
+   // 7 Schneiden Rumpfunterseite bis mitte - stegbreite
+   rahmenindex++;
+   NSLog(@"rahmenindex: %d task: %@",rahmenindex, @"Rumpfunterseite schneiden bis mitte - 5");
+   [debugArray addObject:[NSString stringWithFormat:@"%d %@",rahmenindex, @"Einfahren"]];
+
+   tempPunktA.x += (breiteA/2-stegbreite);
+   tempPunktB.x += (breiteA/2-stegbreite);
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+   // zurueckfahren zu Rumpfseite links
+   rahmenindex++;
+   NSLog(@"rahmenindex: %d task: %@",rahmenindex, @"zurueck zu rumpfseite links");
+   [debugArray addObject:[NSString stringWithFormat:@"%d %@",rahmenindex, @"Einfahren"]];
+
+   tempPunktA.x -= (breiteA/2 - stegbreite);
+   tempPunktB.x -= (breiteB/2 - stegbreite);
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:redpwm teil:20];
+  
+   
+   // Auffahren zu Blockoberkante
+   
+   rahmenindex++;
+   NSLog(@"rahmenindex: %d task: %@",rahmenindex, @"Auffahren zu Blockoberkante");
+   [debugArray addObject:[NSString stringWithFormat:@"%d %@",rahmenindex, @"Einfahren"]];
+
+   tempPunktA.y += hoeheA;
+   tempPunktB.y += hoeheB;
+   
+   //[self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:redpwm teil:20]; // schon  geschnitten
+   if (mitnut)
+   {
+      // nut Oberseite links
+      // nut in
+      rahmenindex++;
+      NSLog(@"rahmenindex: %d task: %@",rahmenindex, @"nut Oberseite links in");
+      [debugArray addObject:[NSString stringWithFormat:@"%d %@",rahmenindex, @"Einfahren"]];
+      
+      tempPunktA.x += 5;
+      tempPunktA.y -= 5;
+      tempPunktB.x += 3;
+      tempPunktB.y -= 3;
+      [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+      
+      // nut out
+      rahmenindex++;
+      NSLog(@"rahmenindex: %d task: %@",rahmenindex, @"nut Oberseite links out");
+      [debugArray addObject:[NSString stringWithFormat:@"%d %@",rahmenindex, @"Einfahren"]];
+      
+      tempPunktA.x -= 5;
+      tempPunktA.y += 5;
+      tempPunktB.x -= 3;
+      tempPunktB.y += 3;
+      [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:redpwm teil:20];
+   }
+   // Schneiden zu Blockmitte
+   
+   rahmenindex++;
+   NSLog(@"rahmenindex: %d task: %@",rahmenindex, @"Fahren zu Blockmitte");
+   tempPunktA.x += breiteA/2;
+   tempPunktB.x += breiteB/2;
+   
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+   
+   //  Einstich down
+   rahmenindex++;
+   tempPunktA.y -= (hoeheA/2 + 2);
+   tempPunktB.y -= (hoeheB/2 + 1);
+   
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+   
+   //  Einstich up
+   rahmenindex++;
+   NSLog(@"einstich uphoeheA: %2.2f hoeheB: %2.2f",hoeheA, hoeheB);
+
+   tempPunktA.y += (hoeheA/2 + 2);
+   tempPunktB.y += (hoeheB/2 + 1);
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:redpwm teil:20];
+   
+   // Schneiden nach rechts aussen auf Blockrand
+   tempPunktA.x += breiteA/2;
+   tempPunktB.x += breiteA/2;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+ 
+   
+   // Zurueckfahren  zu Rumpfrand rechts
+   rahmenindex++;
+   tempPunktB.x -= (breiteA - breiteB)/2;
+   
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:redpwm teil:20];
+   
+   
+   if (mitnut)
+   {
+      // nut in
+      rahmenindex++;
+      tempPunktA.x -= 5;
+      tempPunktA.y -= 5;
+      tempPunktB.x -= 3;
+      tempPunktB.y -= 3;
+      [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+      
+      // nut out
+      rahmenindex++;
+      tempPunktA.x += 5;
+      tempPunktA.y += 5;
+      tempPunktB.x += 3;
+      tempPunktB.y += 3;
+      [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:redpwm teil:20];
+   }
+   // Schneiden zu Blockunterkante
+   
+   rahmenindex++;
+   tempPunktA.y -= blockhoehe;
+   tempPunktB.y -= blockhoehe;
+   
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+   
+   
+   
+   // Rumpfunterseite anschneiden rechts
+   
+   // fahren auf zu Rumpfunterseite
+   NSLog(@"auf zu Rumpfunterseite hoeheA: %2.2f hoeheB: %2.2f",hoeheA, hoeheB);
+   rahmenindex++;
+  // tempPunktA.y -= hoeheA;
+  // tempPunktA.y -= 1;
+   tempPunktB.y += (hoeheA - hoeheB);
+   
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:redpwm teil:20];
+ 
+   if (mitnut)
+   {
+
+   // nut unterseite rechts
+   // nut in
+   rahmenindex++;
+   tempPunktA.x -= 5;
+   tempPunktA.y += 5;
+   tempPunktB.x -= 3;
+   tempPunktB.y += 3;
+   [self addNextPunktA:tempPunktA nextPunktB:tempPunktB pwm:origpwm teil:20];
+   
+   // nut out
+   rahmenindex++;
+   tempPunktA.x += 5;
+   tempPunktA.y -= 5;
+   tempPunktB.x += 3;
+   tempPunktB.y -= 3;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:redpwm teil:20];
+   }
+   
+   //Schneiden nach aussen auf Blockrand rechts (nur B)
+   rahmenindex++;
+   tempPunktB.x += (breiteA - breiteB)/2;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+   
+   // Rumpfunterseite schneiden bis mitte - stegbreite
+   rahmenindex++;
+   tempPunktA.x -= (breiteA/2 - stegbreite);
+   tempPunktB.x -= (breiteA/2 - stegbreite);
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+   // zurueck zu Rumpfseite rechts
+   rahmenindex++;
+   tempPunktA.x += (breiteA/2 - stegbreite);
+   tempPunktB.x += (breiteB/2 - stegbreite);
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:redpwm teil:20];
+  
+   
+   // Abfahren zu Blockunterkante (schnon geschnitten)
+   
+   rahmenindex++;
+   //tempPunktA.y -= hoeheA; //unveraendert, ist schon unten
+  // tempPunktA.y -= 1;
+   tempPunktB.y -= (hoeheA - hoeheB);
+   
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:redpwm teil:20];
+
+    // Fahren zu Blockrand links unten
+   rahmenindex++;
+   tempPunktA.x -= breiteA;
+   tempPunktB.x -= (breiteB/2 + breiteA/2);
+   
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+   
+   // Ausfahren
+   rahmenindex++;
+   tempPunktA.x -= einfahrt;
+//   tempPunktB.x -= einfahrt + (breiteA - breiteB)/2;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+   
+   NSLog(@"KoordinatenTabelle last: %@",KoordinatenTabelle.lastObject);
+   // ******* Probelauf
+   
+   [CNCTable scrollRowToVisible:[KoordinatenTabelle count] - 1];
+   [CNCTable selectRowIndexes:[NSIndexSet indexSetWithIndex:[KoordinatenTabelle count]-1] byExtendingSelection:NO];
+   
+   [ProfilGraph setDatenArray:KoordinatenTabelle];
+   [ProfilGraph setNeedsDisplay:YES];
+   [CNCTable reloadData];
+   [NeuesElementTaste setEnabled:YES];
+
+   
+   return NULL;
+}
+
+// Rumpfende konisch, raw
+- (NSArray*)RumpfelementRawMitBreiteA: (float)breiteA mitHoeheA: (float)hoeheA  mitBreiteB: (float)breiteB mitHoeheB: (float)hoeheB mitNut:(int)mitnut
+{
+   float origpwm=[DC_PWM intValue];
+   float redpwm = origpwm * [red_pwmFeld floatValue];
+   float einfahrt = 5;
+   int abstandoben = 5;
+   int abstandunten = 10;
+   
+   int stegbreite = 3; // Rest bei Rumpfunterseite
+   
+   
+   if ([WertAXFeld floatValue]==0)
+   {
+      [WertAXFeld setFloatValue:15.0 ];
+   }
+   if ([WertAYFeld floatValue]==0)
+   {
+      [WertAYFeld setFloatValue:20];
+      //[WertAYFeld setFloatValue:[ProfilBOffsetYFeld intValue]];
+   }
+   
+   NSPoint StartpunktA;
+   NSPoint StartpunktB;
+   
+   StartpunktA = NSMakePoint([WertAXFeld floatValue], [WertAYFeld floatValue]);
+   StartpunktB = NSMakePoint([WertAXFeld floatValue], [WertAYFeld floatValue]);
+   
+   NSMutableDictionary* tempRahmenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
+   NSPoint tempPunktA = StartpunktA;
+   NSPoint tempPunktB = StartpunktB;
+   NSPoint EckeLinksUnten;
+   int rahmenindex=0;
+   
+   // start
+   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
+   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
+   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.x] forKey:@"bx"];
+   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.y] forKey:@"by"];
+   [tempRahmenDic setObject:[NSNumber numberWithInt:rahmenindex] forKey:@"index"];
+   [tempRahmenDic setObject:[NSNumber numberWithInt:20] forKey:@"teil"]; // Kennzeichnung Oberseite
+   //NSLog(@"rahmenindex: %d tempRahmenDic: %@",rahmenindex,[tempRahmenDic description]);
+   
+   [KoordinatenTabelle addObject:[tempRahmenDic copy]];
+   
+   // abheben von home
+   rahmenindex++;
+   tempPunktA.x += 2;
+   tempPunktB.x += 2;
+   tempPunktA.y += 2;
+   tempPunktB.y += 2;
+
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+   // 1 Einfahren
+   rahmenindex++;
+   NSLog(@"rahmenindex: %d task: %@",rahmenindex, @"Einfahren");
+   [debugArray addObject:[NSString stringWithFormat:@"%d %@",rahmenindex, @"Einfahren"]];
+   tempPunktA.x += einfahrt;
+   tempPunktB.x += einfahrt + (breiteA - breiteB)/2;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+   
+   float blockhoehe = hoeheA ;
+   
+   // 2 Schneiden zu Blockoberkante
+   
+   rahmenindex++;
+   NSLog(@"rahmenindex: %d task: %@",rahmenindex, @"Auffahren zu Blockoberkante");
+   [debugArray addObject:[NSString stringWithFormat:@"%d %@",rahmenindex, @"Einfahren"]];
+
+   tempPunktA.y += blockhoehe;
+   tempPunktB.y += blockhoehe;
+   
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+   
+   // schneiden nach links zu blockkante links
+   rahmenindex++;
+   tempPunktB.x -= (breiteA - breiteB)/2;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+   
+   //links 2
+   tempPunktA.x -= 2;
+   tempPunktB.x -= 2;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+   
+   
+   // fahren zu rumpfunterkante
+   rahmenindex++;
+   tempPunktA.y -= hoeheA;
+   tempPunktB.y -= hoeheB ;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+  
+   // schneiden rechts bis Rumpfseite rechts
+   rahmenindex++;
+   tempPunktA.x += (breiteA + 2);
+   tempPunktB.x += (breiteA + 2) ;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+   // schneiden links bis Rumpfseite links
+   rahmenindex++;
+   tempPunktA.x -= (breiteA + 2);
+   tempPunktB.x -= (breiteA + 2) ;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+   // fahren zu blockoberkante
+   rahmenindex++;
+   tempPunktA.y += hoeheA;
+   tempPunktB.y += hoeheB ;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+   //rechts 2
+   tempPunktA.x += 2;
+   tempPunktB.x += 2;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+   
+   // schneiden nach rechts zu blockkante rechts
+   rahmenindex++;
+   tempPunktA.x += breiteA;
+   tempPunktB.x += breiteA ;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+
+
+
+// auffahren 5
+   rahmenindex++;
+   tempPunktA.y += 5;
+   tempPunktB.y += 5;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+ //fahren zu mitte
+   
+   rahmenindex++;
+   
+   tempPunktA.x -= (breiteA )/2;
+   tempPunktB.x -= (breiteA )/2;
+   
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+   // abfahren 5
+      rahmenindex++;
+      tempPunktA.y -= 5;
+      tempPunktB.y -= 5;
+      [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+ 
+   //  Einstich down
+   rahmenindex++;
+   tempPunktA.y -= (hoeheA/2 + 2);
+   tempPunktB.y -= (hoeheB/2 + 1);
+   
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+   
+   //  Einstich up
+   rahmenindex++;
+   NSLog(@"einstich uphoeheA: %2.2f hoeheB: %2.2f",hoeheA, hoeheB);
+
+   tempPunktA.y += (hoeheA/2 + 2);
+   tempPunktB.y += (hoeheB/2 + 1);
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:redpwm teil:20];
+
+   
+   // auffahren 5
+      rahmenindex++;
+      tempPunktA.y += 5;
+      tempPunktB.y += 5;
+      [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+// fahren rechts zu Rumpfseite rechts
+   
+   rahmenindex++;
+   tempPunktA.x += breiteA/2;
+   tempPunktB.x += breiteB/2;
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+// schneiden zu blockunterkante
+   rahmenindex++;
+   tempPunktA.y -= (hoeheA + 5);
+   tempPunktB.y -= (hoeheA + 5);
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+   
+   
+   [CNCTable scrollRowToVisible:[KoordinatenTabelle count] - 1];
+   [CNCTable selectRowIndexes:[NSIndexSet indexSetWithIndex:[KoordinatenTabelle count]-1] byExtendingSelection:NO];
+   
+   [ProfilGraph setDatenArray:KoordinatenTabelle];
+   [ProfilGraph setNeedsDisplay:YES];
+   [CNCTable reloadData];
+   [NeuesElementTaste setEnabled:YES];
+
+   // Fahren zu Blockrand links unten
+  rahmenindex++;
+  tempPunktA.x -= breiteA;
+  tempPunktB.x -= (breiteB/2 + breiteA/2);
+  
+  [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+  
+  // Ausfahren
+  rahmenindex++;
+  tempPunktA.x -= einfahrt;
+   tempPunktB.x -= einfahrt ;
+  [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+  
+
+   
+   return NULL;
+   
    
    // Rumpfunterseite anschneiden links
    

@@ -565,6 +565,7 @@ class rCNCViewController:rViewController
             
             let home = Int(usbdata[13])
             
+            /*
             if usbdata != nil
             {
                //print("usbdata not nil\n")
@@ -576,7 +577,7 @@ class rCNCViewController:rViewController
                }
                
             }
-            
+            */
             if abschnittfertig >= 0xA0 // Code fuer Fertig: AD
             {
                //print("abschnittfertig > A0")

@@ -1851,7 +1851,7 @@ return returnInt;
 
 - (IBAction)showEinstellungen:(id)sender
 {
-   NSLog(@"showEinstellungenFenster");
+   NSLog(@"AVR showEinstellungenFenster");
    if (!CNC_Eingabe)
    {
       //[self Alert:@"showEinstellungenFenster vor init"];
@@ -1869,7 +1869,7 @@ return returnInt;
 
 - (void)showEinstellungen
 {
-   NSLog(@"showEinstellungenFenster");
+   NSLog(@"AVR showEinstellungen");
    if (!CNC_Eingabe)
    {
       //[self Alert:@"showEinstellungenFenster vor init"];
@@ -1881,10 +1881,11 @@ return returnInt;
      // [self reportNeueLinie:(NULL)];
       //[self Alert:@"showEinstellungenFenster nach init"];
    }
+   [CNC_Eingabe showWindow:NULL];
    [self reportNeueLinie:(NULL)];
   // [self reportNeueLinie:(NULL)];
 //   [CNC_Eingabe setDaten:<#(NSDictionary *)#>
-   [CNC_Eingabe showWindow:NULL];
+   
    
 }
 
@@ -5116,12 +5117,12 @@ return returnInt;
    rumpfDaten.einlaufB = 10;
 */
    
-   float breiteAraw = [BreiteAFeld intValue];
-   float hoeheAraw = [HoeheAFeld intValue] ;
-   float radiusAraw = [RadiusAFeld intValue];
-   float breiteBraw = [BreiteBFeld intValue];
-   float hoeheBraw = [HoeheBFeld intValue] ;
-   float radiusBraw = [RadiusBFeld intValue];
+   float breiteAraw = [BreiteAFeld floatValue];
+   float hoeheAraw = [HoeheAFeld floatValue] ;
+   float radiusAraw = [RadiusAFeld floatValue];
+   float breiteBraw = [BreiteBFeld floatValue];
+   float hoeheBraw = [HoeheBFeld floatValue] ;
+   float radiusBraw = [RadiusBFeld floatValue];
    
  //  float spannweite = [ElementlaengeFeld intValue];
    float portalabstand = [Portalabstand floatValue];   
@@ -5990,13 +5991,15 @@ return returnInt;
 
 - (NSArray*)RumpfelementmitBreiteA: (float)breiteA mitHoeheA: (float)hoeheA mitRadiusA:(float) radiusA mitBreiteB: (float)breiteB mitHoeheB: (float)hoeheB mitRadiusB:(float) radiusB
 {
+   
+   float effektivebreite = 0;
    float origpwm=[DC_PWM intValue];
    float redpwm = origpwm * [red_pwmFeld floatValue];
 
-   int vertikaloffset = 3; // Schneiden ueber definitiver Oberseite
-   int vertikalabstand = 3; // Abstand beim Zurueckschneiden
-   int abstandoben = 5;
-   int abstandunten = 10;
+   float vertikaloffset = 3; // Schneiden ueber definitiver Oberseite
+   float vertikalabstand = 3; // Abstand beim Zurueckschneiden
+   float abstandoben = 5;
+   float abstandunten = 10;
    float horizontaleinstich = 10;
    
    float einfahrtx = 5;
@@ -6153,7 +6156,7 @@ return returnInt;
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.x] forKey:@"bx"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.y] forKey:@"by"];
    [tempRahmenDic setObject:[NSNumber numberWithInt:rahmenindex] forKey:@"index"];
-   [tempRahmenDic setObject:[NSNumber numberWithInt:20] forKey:@"teil"]; // Kennzeichnung Oberseite
+   [tempRahmenDic setObject:[NSNumber numberWithInt:30] forKey:@"teil"]; // Kennzeichnung Oberseite
    [tempRahmenDic setObject:[NSNumber numberWithInt:origpwm]forKey:@"pwm"];
    //NSLog(@"rahmenindex: %d tempRahmenDic: %@",rahmenindex,[tempRahmenDic description]);
    [KoordinatenTabelle addObject:[tempRahmenDic copy]];
@@ -6217,7 +6220,7 @@ return returnInt;
    rahmenindex++;
    tempPunktA.x += rand;
    tempPunktB.x += rand;
-   
+   effektivebreite = tempPunktA.x;
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.x] forKey:@"bx"];
@@ -6244,12 +6247,16 @@ return returnInt;
    [KoordinatenTabelle addObject:[tempRahmenDic copy]];
    //NSLog(@"count: %d KoordinatenTabelle 1: %@",[KoordinatenTabelle count],[KoordinatenTabelle description]);
   
+   
+   
+ 
    // Radius down
    float Winkel = 90;
    int Lage = 3;
-   int anzahlPunkte = 5;
+   int anzahlPunkte = 6;
    
    float Blockbreite = breiteA +  2*rand + einlaufA + auslaufA;
+ 
    
    NSArray* SegmentKoordinatenArray = [CNC SegmentKoordinatenMitRadiusA:(float)radiusA mitRadiusB:(float)radiusB mitWinkel:(float)Winkel mitLage:(int)Lage mitAnzahlPunkten:(int)anzahlPunkte vonStartpunktA:tempPunktA vonStartpunktB:tempPunktB];
 
@@ -6305,17 +6312,27 @@ return returnInt;
    tempPunktB.x = [[[SegmentKoordinatenArray lastObject]objectForKey:@"bx"]floatValue];
    tempPunktB.y = [[[SegmentKoordinatenArray lastObject]objectForKey:@"by"]floatValue];
 
+
+   
+   /*
+   tempPunktA.x += breiteA;
+      tempPunktB.x += breiteB;
+
+    */  [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+
+   
    // Form down vom Radius up
       rahmenindex++;
       tempPunktA.y += (hoeheA - radiusA + vertikaloffset);
       tempPunktB.y += (hoeheB - radiusB + vertikaloffset);
-      
+      effektivebreite = tempPunktA.x - effektivebreite; 
+   NSLog(@"effektivebreite: %2.2f breiteA:  %2.2f",effektivebreite, breiteA);
       [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
       [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
       [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.x] forKey:@"bx"];
       [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.y] forKey:@"by"];
       [tempRahmenDic setObject:[NSNumber numberWithInt:rahmenindex] forKey:@"index"];
-      [tempRahmenDic setObject:[NSNumber numberWithInt:20] forKey:@"teil"]; // Kennzeichnung Oberseite
+      [tempRahmenDic setObject:[NSNumber numberWithInt:15] forKey:@"teil"]; // Kennzeichnung Oberseite
       //NSLog(@"rahmenindex: %d tempRahmenDic: %@",rahmenindex,[tempRahmenDic description]);
       [KoordinatenTabelle addObject:[tempRahmenDic copy]];
       //NSLog(@"count: %d KoordinatenTabelle 1: %@",[KoordinatenTabelle count],[KoordinatenTabelle description]);
@@ -6361,7 +6378,7 @@ return returnInt;
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.x] forKey:@"bx"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.y] forKey:@"by"];
    [tempRahmenDic setObject:[NSNumber numberWithInt:rahmenindex] forKey:@"index"];
-   [tempRahmenDic setObject:[NSNumber numberWithInt:20] forKey:@"teil"]; // Kennzeichnung Oberseite
+   [tempRahmenDic setObject:[NSNumber numberWithInt:15] forKey:@"teil"]; // Kennzeichnung Oberseite
    [tempRahmenDic setObject:[NSNumber numberWithInt:redpwm]forKey:@"pwm"];
    
    //NSLog(@"rahmenindex: %d tempRahmenDic: %@",rahmenindex,[tempRahmenDic description]);

@@ -891,6 +891,7 @@ class rCNCViewController:rViewController
     */
    @objc @IBAction  func showEinstellungen(_ sender: Any)
    {
+      Swift.print("CNCView showEinstellungen")
       AVR?.showEinstellungen()
       
    }

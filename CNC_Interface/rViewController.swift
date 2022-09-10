@@ -427,7 +427,7 @@ class rViewController: NSViewController, NSWindowDelegate
 
    @objc @IBAction func showEinstellunge(_ sender: Any)
     {
-       print("showEinstellungen")
+       print("ViewController showEinstellungen")
     }
 
    @objc func tabviewAktion(_ notification:Notification) 

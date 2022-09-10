@@ -2151,15 +2151,16 @@
 - (IBAction)reportCancel:(id)sender
 {
    NSLog(@"reportCancel");
-   [NSApp stopModalWithCode:0];
+  
    [[self window]orderOut:NULL];
+   [NSApp stopModalWithCode:0];
    
 }
 
 - (IBAction)reportClose:(id)sender
 {
    
-   //NSLog(@"reportClose");
+   NSLog(@"reportClose");
    /*
    NSString* StartpunktString = NSStringFromPoint(NSMakePoint(startx,starty));
    float endx = [EndpunktX floatValue];
@@ -2195,9 +2196,9 @@
    [UnterseiteCheck setState:1];
    [EinlaufCheck setState:1];
    [AuslaufCheck setState:1];
-
-   [NSApp stopModalWithCode:1];
    [[self window]orderOut:NULL];
+   [NSApp stopModalWithCode:1];
+  
 }
 
 #pragma mark Profiltask
@@ -2268,8 +2269,9 @@
    [ErgebnisDic setObject:@"Schliessen"  forKey:@"quelle"];
    [nc postNotificationName:@"Elementeingabe" object:self userInfo:ErgebnisDic];
    
-   [NSApp stopModalWithCode:1];
+   
    [[self window]orderOut:NULL];
+   [NSApp stopModalWithCode:1];
 }
 
 
@@ -2392,8 +2394,8 @@
       [nc postNotificationName:@"LibProfileingabe" object:self userInfo: ProfilDic];
       
    }
-   [NSApp stopModalWithCode:0];
    [[self window]orderOut:NULL];
+   [NSApp stopModalWithCode:1];
    //NSLog(@"reportProfilEinfuegen end");
 
 }
@@ -3013,8 +3015,8 @@
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"LibProfileingabe" object:self userInfo:ProfilDic];
       
-      [NSApp stopModalWithCode:0];
       [[self window]orderOut:NULL];
+      [NSApp stopModalWithCode:1];
    }
 }
 

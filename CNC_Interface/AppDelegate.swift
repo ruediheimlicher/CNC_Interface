@@ -44,6 +44,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMenuDele
    func applicationWillTerminate(_ aNotification: Notification) {
       // Insert code here to tear down your application
       print("applicationWillTerminate") 
+      
    }
 
 

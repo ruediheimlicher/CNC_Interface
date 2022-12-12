@@ -242,8 +242,7 @@
    IBOutlet id          Blockbreite;
    IBOutlet id          Blockdicke;
    
-    
-   
+     
    // Figur extern
    IBOutlet id          FigGraph;
    IBOutlet id          FigStartpunktX;

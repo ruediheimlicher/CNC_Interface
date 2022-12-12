@@ -249,6 +249,10 @@ class rViewController: NSViewController, NSWindowDelegate
    
    override func viewDidLoad()
    {
+      
+      
+      
+      
       super.viewDidLoad()
       self.view.wantsLayer = true
       self.view.superview?.wantsLayer = true
@@ -1026,6 +1030,11 @@ class rViewController: NSViewController, NSWindowDelegate
       print("report_Pot3_Stepper_H IntVal: \(sender.integerValue)")
    }
    
+   @IBAction func report_start_UDP(_ sender: AnyObject)
+   {
+      
+      
+   }
     
    @IBAction func report_start_read_USB(_ sender: AnyObject)
    {

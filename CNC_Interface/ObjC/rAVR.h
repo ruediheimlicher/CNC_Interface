@@ -115,8 +115,8 @@
    IBOutlet   id               Drehgeber;
    IBOutlet   id               DrehgeberFeld;
    
-//   IBOutlet   id               StartKnopf;
-//   IBOutlet   id               StopKnopf;
+// IBOutlet   id               StartKnopf;
+// IBOutlet   id               StopKnopf;
    
    IBOutlet   id               CNCKnopf;
    IBOutlet   id               OberseiteCheckbox;
@@ -128,18 +128,16 @@
    
    IBOutlet id             AbbrandCheckbox;
 
-   IBOutlet   id               ScalePop;
-   IBOutlet   id               ProfilPop;
-   IBOutlet   id               CNCPositionFeld;
-   IBOutlet   id               CNCStepXFeld;
-   IBOutlet   id               CNCStepYFeld;
+   IBOutlet   id           ScalePop;
+   IBOutlet   id           ProfilPop;
+   IBOutlet   id           CNCPositionFeld;
+   IBOutlet   id           CNCStepXFeld;
+   IBOutlet   id           CNCStepYFeld;
    int                     Scale;
    int                     cncposition;
    int                     cncstatus;
    
-   //rProfil_DS*               Profil_DS;
-   //rDump_DS*               Dump_DS;
-   
+    
    NSString*               CNCdataPfad;
    NSMutableArray*         EEPROMArray;
    NSMutableArray*         KoordinatenTabelle;
@@ -150,22 +148,24 @@
    NSMutableArray*         BlockKoordinatenTabelle;
    NSMutableArray*         BlockrahmenArray;
 
-   NSPoint                  oldMauspunkt;
+   NSMutableDictionary*     RumpfteilDic;
    
-   rProfilGraph*            ProfilGraph;
+   NSPoint                 oldMauspunkt;
+   
+   rProfilGraph*           ProfilGraph;
   
    int                     GraphEnd;
-   IBOutlet   NSTableView*   CNCTable;
-   IBOutlet   NSScrollView*   CNCScroller;
+   IBOutlet NSTableView*   CNCTable;
+   IBOutlet NSScrollView*  CNCScroller;
    
-   rCNC*                     CNC;
+   rCNC*                   CNC;
    int                     CNC_busy;
    
-   NSTimer*                  CNCTimer;
+   NSTimer*                CNCTimer;
    
    int                     ProfilTiefe;
-   float                     ProfilZoom;
-   NSPoint                  ProfilNullpunkt;
+   float                   ProfilZoom;
+   NSPoint                 ProfilNullpunkt;
    int                     mitOberseite;
    int                     mitUnterseite;
    int                     mitEinlauf;
@@ -218,6 +218,7 @@
    IBOutlet id               CNC_Halttaste;
    IBOutlet id                DC_Taste;
    IBOutlet id                DC_Stepper;
+   IBOutlet id                DC_Slider;
    IBOutlet id                DC_PWM;
    IBOutlet id                CNC_Steps;
    IBOutlet id                CNC_micro;
@@ -279,6 +280,11 @@
    IBOutlet id               OberkantenStepper;
    IBOutlet id               Blockbreite;
    IBOutlet id               Blockdicke;
+   
+   IBOutlet id                RumpfBlockbreite;
+   IBOutlet id                RumpfBlockhoehe;
+
+   
    IBOutlet id               Einlaufrand;
    IBOutlet id               Auslaufrand;
    IBOutlet id               AnschlagLinksIndikator;
@@ -342,6 +348,7 @@
    IBOutlet id               ElementlaengeFeld; // Laenge des Rumpfabschnittes
    IBOutlet id                NutCheckbox;
    
+   IBOutlet id                RumpfteilPop;
    //int                     _kote;
    int                     KoteWert;
    
@@ -350,6 +357,8 @@
    rProfildruckView*       Profilfeld;
    
    int                     boardindex; // teensy""2: 0  teensy3: 1
+   
+ 
    }
    @property (nonatomic)  int    Kote;
    @property (nonatomic) BOOL wantsLayer;
@@ -405,7 +414,7 @@
 - (IBAction)reportWertBXStepper:(id)sender;
 - (IBAction)reportWertBYStepper:(id)sender;
 
-- (IBAction)reportPWMStepper:(id)sender;
+- (IBAction)reportPWMSlider:(id)sender;
 - (IBAction)reportNewElement:(id)sender;
 - (IBAction)reportManLeft:(id)sender;
 - (IBAction)reportManRight:(id)sender;
@@ -479,5 +488,18 @@
 - (void)showEinstellungen;
 - (void)printGraph;
    
+
+//Convert Object(Dictionary,Array) to Plist(NSData)
+-(NSData *) objToPlistAsData:(id)obj;
+ 
+//Convert Object(Dictionary,Array) to Plist(NSString)
+-(NSString *) objToPlistAsString:(id)obj;
+ 
+//Convert Plist(NSData) to Object(Array,Dictionary)
+-(id) plistToObjectFromData:(NSData *)data;
+ 
+//Convert Plist(NSString) to Object(Array,Dictionary)
+-(id) plistToObjectFromString:(NSString*)str;
+
    @end
 

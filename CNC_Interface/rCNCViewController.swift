@@ -47,26 +47,26 @@ class rCNCViewController:rViewController
       super.viewDidLoad()
       
       NotificationCenter.default.addObserver(self, selector: #selector(beendenAktion), name:NSNotification.Name(rawValue: "beenden"), object: nil)
-
+      
       NotificationCenter.default.addObserver(self, selector: #selector(usbsendAktion), name:NSNotification.Name(rawValue: "usbsend"), object: nil)
-       NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
-       NotificationCenter.default.addObserver(self, selector: #selector(usbschnittdatenAktion), name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
+      NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
+      NotificationCenter.default.addObserver(self, selector: #selector(usbschnittdatenAktion), name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
       NotificationCenter.default.addObserver(self, selector:#selector(newDataAktion(_:)),name:NSNotification.Name(rawValue: "newdata"),object:nil)
       NotificationCenter.default.addObserver(self, selector:#selector(contDataAktion(_:)),name:NSNotification.Name(rawValue: "contdata"),object:nil)
       NotificationCenter.default.addObserver(self, selector:#selector(usbattachAktion(_:)),name:NSNotification.Name(rawValue: "usb_attach"),object:nil)
       NotificationCenter.default.addObserver(self, selector: #selector(slaveresetAktion), name:NSNotification.Name(rawValue: "slavereset"), object: nil)
-
+      
       NotificationCenter.default.addObserver(self, selector: #selector(stepsAktion), name:NSNotification.Name(rawValue: "steps"), object: nil)
       NotificationCenter.default.addObserver(self, selector: #selector(microAktion), name:NSNotification.Name(rawValue: "micro"), object: nil)
-
+      
       NotificationCenter.default.addObserver(self, selector: #selector(stoptimerAktion), name:NSNotification.Name(rawValue: "stoptimer"), object: nil)
-
+      
       NotificationCenter.default.addObserver(self, selector: #selector(haltAktion), name:NSNotification.Name(rawValue: "halt"), object: nil)
-
+      
       NotificationCenter.default.addObserver(self, selector: #selector(DCAktion), name:NSNotification.Name(rawValue: "dc_pwm"), object: nil)
-
-  //    NotificationCenter.default.addObserver(self, selector: #selector(joystickAktion), name:NSNotification.Name(rawValue: "joystick"), object: nil)
-
+      
+      //    NotificationCenter.default.addObserver(self, selector: #selector(joystickAktion), name:NSNotification.Name(rawValue: "joystick"), object: nil)
+      
    }
    
  
@@ -435,7 +435,7 @@ class rCNCViewController:rViewController
    {
      //print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
       let count = usb_schnittdatenarray.count
-      print("writeCNCAbschnitt code: \(usb_schnittdatenarray[0][24]) Stepperposition: \(Stepperposition) count: \(count) ")
+      print("writeCNCAbschnitt code: \(usb_schnittdatenarray[0][16]) Stepperposition: \(Stepperposition) count: \(count) ")
       
       if Stepperposition < count
       {
@@ -468,7 +468,8 @@ class rCNCViewController:rViewController
          else
          {
             let aktuellezeile:[UInt8] = usb_schnittdatenarray[Stepperposition]
-             //print("aktuellezeile: \(aktuellezeile) 25: \(aktuellezeile[25])")
+            print("aktuellezeile: \(aktuellezeile) 25: \(aktuellezeile[25])")
+            let writecode = aktuellezeile[16]
             var string:String = ""
             var index=0
             //print("aktuellezeile:")
@@ -491,9 +492,13 @@ class rCNCViewController:rViewController
                let senderfolg = teensy.send_USB()
                print("writeCNCAbschnitt senderfolg: \(senderfolg)")
             }
-           // print("Stepperposition: \(Stepperposition) \n\(schnittdatenstring)");
+            // print("Stepperposition: \(Stepperposition) \n\(schnittdatenstring)");
+            var ausschlussindex:[UInt8] = [0xE2]
+            if !(ausschlussindex.contains(writecode))
+            {
+               Stepperposition += 1
+            }
             
-            Stepperposition += 1
          }// ! halt
       }
       else

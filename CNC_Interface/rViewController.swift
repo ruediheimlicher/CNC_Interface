@@ -15,6 +15,7 @@ import Cocoa
  public var lastDataRead = Data.init(count:BUFFER_SIZE)
 
 
+
 var globalusbstatus = 0
 
 func printhex(wert:UInt8)
@@ -216,7 +217,7 @@ class rViewController: NSViewController, NSWindowDelegate
    
    var hgfarbe  = NSColor()
    
-  
+   var tsp_nn = rTSP_NN()
    
    var formatter = NumberFormatter()
    

@@ -5,6 +5,10 @@
 //  Created by Sysadmin on 01.02.08.
 //  Copyright 2008 Ruedi Heimlicher. All rights reserved.
 //
+
+// https://developer.apple.com/documentation/swift/importing-swift-into-objective-c
+@class rTSP_NN;
+
 #import <Cocoa/Cocoa.h>
 #import <Foundation/Foundation.h>
 #import "rProfil_DS.h"
@@ -14,6 +18,8 @@
 #import "rUtils.h"
 //#import "datum.c"
 #import "rEinstellungen.h"
+
+
 
 #define USBTASTE              1
 #define NEUTASTE              2
@@ -68,12 +74,19 @@
 
 @interface rAVRview:NSViewController <NSTableViewDataSource,NSTableViewDelegate>
 {
+   // https://dev.iachieved.it/iachievedit/using-swift-in-an-existing-objective-c-project/
+   rTSP_NN* nn;
+   
    NSMutableDictionary*      CNC_PList;
    
 //   IBOutlet id             BoardPop;
    
    IBOutlet id               StepperTab;
    IBOutlet   id               ProfilFeld;
+   
+   IBOutlet   id               GFKFeldA;
+   IBOutlet   id               GFKFeldB;
+
    
    IBOutlet   id               ProfilTiefeFeldA;
    IBOutlet   id               ProfilTiefeFeldB;
@@ -362,6 +375,9 @@
    }
    @property (nonatomic)  int    Kote;
    @property (nonatomic) BOOL wantsLayer;
+
+   - (rTSP_NN*)returnSwiftClassInstance;
+
 
 - (instancetype)init;
    - (void)setAVR;

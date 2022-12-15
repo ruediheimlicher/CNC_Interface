@@ -11,6 +11,10 @@
 
 #import "hid.h"
 
+
+// https://dev.iachieved.it/iachievedit/using-swift-in-an-existing-objective-c-project/
+#import "CNC_Interface-Swift.h"
+
 extern int usbstatus;
 
 
@@ -619,7 +623,9 @@ void plot_line (int x0, int y0, int x1, int y1)
    [ self.view.layer setBackgroundColor:(__bridge CGColorRef _Nullable)(bgcolor)];
    
    [self->CNC_Lefttaste sendActionOn: NSEventMaskLeftMouseDown | NSEventMaskLeftMouseUp];
-
+   
+   // https://dev.iachieved.it/iachievedit/using-swift-in-an-existing-objective-c-project/
+   nn = [[rTSP_NN alloc]init];
    
    NSNotificationCenter * nc;
    nc=[NSNotificationCenter defaultCenter]; // alles weg, wegen doppeltem awake
@@ -1199,6 +1205,7 @@ return returnInt;
    NSString* PListPfad;
    PListPfad=[USBPfad stringByAppendingPathComponent:PListName];
 
+  
    
    CNCDatenDa= ([Filemanager fileExistsAtPath:USBPfad isDirectory:&istOrdner]&&istOrdner);
    //NSLog(@"mountedVolume:    USBPfad: %@",USBPfad);   
@@ -1406,16 +1413,8 @@ return returnInt;
                [Portalabstand setIntValue:1000];
             }
             
-            if ([tempPListDic objectForKey:@"elementlaenge"])
-            {
-               //NSLog(@"elementlaenge: %d",[[tempPListDic objectForKey:@"elementlaenge"]intValue]);
-               [ElementlaengeFeld setIntValue:[[tempPListDic objectForKey:@"elementlaenge"]intValue]];
-            }
-            else
-            {
-               [ElementlaengeFeld setIntValue:650];
-            }
- 
+              
+    
             if ([tempPListDic objectForKey:@"spannweite"])
             {
                //NSLog(@"spannweite: %d",[[tempPListDic objectForKey:@"spannweite"]intValue]);
@@ -1588,80 +1587,163 @@ return returnInt;
     
 
             // Rumpf
+            // Rumpfteile, start mit Teil 0: Heck
             
-            if ([tempPListDic objectForKey:@"rand"])
+            NSString* rumpfteilpopkey = [NSString stringWithFormat: @"%d", 0];
+            if ([tempPListDic objectForKey:rumpfteilpopkey])
             {
-               [RandFeld setIntValue:[[tempPListDic objectForKey:@"rand"]intValue]];
-            }
-            else
-            {
-               [HoeheAFeld setIntValue:50];
-            }
+               NSLog(@"rumpfteildic da");
+               NSDictionary* rumpfteildic = [tempPListDic objectForKey:rumpfteilpopkey];
+               
+               NSLog(@"rumpfteildic: %@",rumpfteildic);
+               
+               [self setRumpfteilDic:rumpfteildic forPart:0];
+               
+               /*
+               if ([rumpfteildic objectForKey:@"elementlaenge"])
+               {
+                  //NSLog(@"elementlaenge: %d",[[rumpfteildic objectForKey:@"elementlaenge"]intValue]);
+                  [ElementlaengeFeld setIntValue:[[rumpfteildic objectForKey:@"elementlaenge"]intValue]];
+               }
+               else
+               {
+                  [ElementlaengeFeld setIntValue:651];
+               }
+
+               if ([rumpfteildic objectForKey:@"portalabstand"])
+               {
+                  [Portalabstand setIntValue:[[rumpfteildic objectForKey:@"portalabstand"]intValue]];
+               }
+               else
+               {
+                  [Portalabstand setIntValue:550];
+               }
+               
+               if ([rumpfteildic objectForKey:@"rand"])
+               {
+                  [RandFeld setIntValue:[[rumpfteildic objectForKey:@"rand"]intValue]];
+               }
+               else
+               {
+                  [RandFeld setIntValue:50];
+               }
+               
+               if ([rumpfteildic objectForKey:@"einlauf"])
+               {
+                  [EinlaufFeld setIntValue:[[rumpfteildic objectForKey:@"einlauf"]intValue]];
+               }
+               else
+               {
+                  [EinlaufFeld setIntValue:15];
+               }
+
+               if ([rumpfteildic objectForKey:@"auslauf"])
+               {
+                  [AuslaufFeld setIntValue:[[rumpfteildic objectForKey:@"auslauf"]intValue]];
+               }
+               else
+               {
+                  [AuslaufFeld setIntValue:15];
+               }
  
- 
-            
-            if ([tempPListDic objectForKey:@"hoehea"])
-            {
-               //NSLog(@"einlauftiefe: %d",[[tempPListDic objectForKey:@"einlauftiefe"]intValue]);
-               [HoeheAFeld setIntValue:[[tempPListDic objectForKey:@"hoehea"]intValue]];
-            }
-            else
-            {
-               [HoeheAFeld setIntValue:50];
-            }
-            
-            if ([tempPListDic objectForKey:@"hoeheb"])
-            {
-               NSLog(@"hoeheB: %d",[[tempPListDic objectForKey:@"hoeheb"]intValue]);
-               [HoeheBFeld setIntValue:[[tempPListDic objectForKey:@"hoeheb"]intValue]];
-            }
-            else
-            {
-               [HoeheBFeld setIntValue:50];
-            }
+               if ([rumpfteildic objectForKey:@"hoehea"])
+               {
+                  [HoeheAFeld setIntValue:[[rumpfteildic objectForKey:@"hoehea"]intValue]];
+               }
+               else
+               {
+                  [HoeheAFeld setIntValue:50];
+               }
+               
+               if ([rumpfteildic objectForKey:@"hoeheb"])
+               {
+                  NSLog(@"hoeheB: %d",[[rumpfteildic objectForKey:@"hoeheb"]intValue]);
+                  [HoeheBFeld setIntValue:[[rumpfteildic objectForKey:@"hoeheb"]intValue]];
+               }
+               else
+               {
+                  [HoeheBFeld setIntValue:50];
+               }
+               
+               if ([rumpfteildic objectForKey:@"rumpfblockbreite"])
+               {
+                  [RumpfBlockbreite setIntValue:[[rumpfteildic objectForKey:@"rumpfblockbreite"]intValue]];
+               }
+               else
+               {
+                  [RumpfBlockbreite setIntValue:50];
+               }
+               
+               if ([rumpfteildic objectForKey:@"rumpfblockhoehe"])
+               {
+                  [RumpfBlockhoehe setIntValue:[[rumpfteildic objectForKey:@"rumpfblockhoehe"]intValue]];
+               }
+               else
+               {
+                  [RumpfBlockhoehe setIntValue:50];
+               }
+               
+               if ([rumpfteildic objectForKey:@"breitea"])
+               {
+                  [BreiteAFeld setIntValue:[[rumpfteildic objectForKey:@"breitea"]intValue]];
+               }
+               else
+               {
+                  [BreiteAFeld setIntValue:50];
+               }
+    
+               if ([rumpfteildic objectForKey:@"breiteb"])
+               {
+                  [BreiteBFeld setIntValue:[[rumpfteildic objectForKey:@"breiteb"]intValue]];
+               }
+               else
+               {
+                  [BreiteBFeld setIntValue:20];
+               }
 
-           
-            
-            
+               if ([rumpfteildic objectForKey:@"radiusa"])
+               {
+                  [RadiusAFeld setIntValue:[[rumpfteildic objectForKey:@"radiusa"]intValue]];
+               }
+               else
+               {
+                  [RadiusAFeld setIntValue:10];
+               }
+
+               if ([rumpfteildic objectForKey:@"radiusb"])
+               {
+                  [RadiusBFeld setIntValue:[[rumpfteildic objectForKey:@"radiusb"]intValue]];
+               }
+               else
+               {
+                  [RadiusBFeld setIntValue:10];
+               }
+
+               if ([rumpfteildic objectForKey:@"einstichtiefe"])
+               {
+                  [EinstichtiefeFeld setIntValue:[[rumpfteildic objectForKey:@"einstichtiefe"]intValue]];
+               }
+               else
+               {
+                  [EinstichtiefeFeld setIntValue:10];
+               }
+
+               if ([rumpfteildic objectForKey:@"rumpfabstand"])
+               {
+                  [RumpfabstandFeld setIntValue:[[rumpfteildic objectForKey:@"rumpfabstand"]intValue]];
+               }
+               else
+               {
+                  [RumpfabstandFeld setIntValue:10];
+               }
+*/
+               
+            }// rumpfteildic
             
 
-            if ([tempPListDic objectForKey:@"rumpfblockbreite"])
-            {
-               [RumpfBlockbreite setIntValue:[[tempPListDic objectForKey:@"rumpfblockbreite"]intValue]];
-            }
-            else
-            {
-               [RumpfBlockbreite setIntValue:50];
-            }
-
-            if ([tempPListDic objectForKey:@"rumpfblockhoehe"])
-            {
-               [RumpfBlockhoehe setIntValue:[[tempPListDic objectForKey:@"rumpfblockhoehe"]intValue]];
-            }
-            else
-            {
-               [RumpfBlockhoehe setIntValue:50];
-            }
-
-        
-            if ([tempPListDic objectForKey:@"breitea"])
-            {
-               [BreiteAFeld setIntValue:[[tempPListDic objectForKey:@"breitea"]intValue]];
-            }
-            else
-            {
-               [BreiteAFeld setIntValue:50];
-            }
- 
-            if ([tempPListDic objectForKey:@"breiteb"])
-            {
-               [BreiteBFeld setIntValue:[[tempPListDic objectForKey:@"breiteb"]intValue]];
-            }
-            else
-            {
-               [BreiteBFeld setIntValue:20];
-            }
-            
+    
+     
+            /*                
             if ([tempPListDic objectForKey:@"einlauf"])
             {
                [EinlaufFeld setIntValue:[[tempPListDic objectForKey:@"einlauf"]intValue]];
@@ -1723,6 +1805,7 @@ return returnInt;
             {
                [RumpfabstandFeld setIntValue:5];
             }
+ */
 
 //end Rumpf
             
@@ -1788,7 +1871,7 @@ return returnInt;
          [tempPListDic setObject:[NSNumber numberWithInt:[Auslauflaenge intValue]] forKey:@"auslauflaenge"];
          [tempPListDic setObject:[NSNumber numberWithInt:[Auslauftiefe intValue]] forKey:@"auslauftiefe"];
          [tempPListDic setObject:[NSNumber numberWithInt:[Auslaufrand intValue]] forKey:@"auslaufrand"];
-          [tempPListDic setObject:[ProfilNameFeldA stringValue] forKey:@"profilnamea"];
+         [tempPListDic setObject:[ProfilNameFeldA stringValue] forKey:@"profilnamea"];
          [tempPListDic setObject:[ProfilNameFeldB stringValue] forKey:@"profilnameb"];
          [tempPListDic setObject:[NSNumber numberWithFloat:[ProfilWrenchFeld floatValue]] forKey:@"profilwrench"];
          [tempPListDic setObject:[NSNumber numberWithInt:[ProfilTiefeFeldA intValue]] forKey:@"profiltiefea"];
@@ -1797,7 +1880,7 @@ return returnInt;
          [tempPListDic setObject:[NSNumber numberWithInt:[ProfilBOffsetYFeld intValue]] forKey:@"profilboffsety"];
          [tempPListDic setObject:[NSNumber numberWithInt:[Basisabstand intValue]] forKey:@"basisabstand"];
          [tempPListDic setObject:[NSNumber numberWithInt:[Spannweite intValue]] forKey:@"spannweite"];
-         [tempPListDic setObject:[NSNumber numberWithInt:[ElementlaengeFeld intValue]] forKey:@"elementlaenge"];
+         //[tempPListDic setObject:[NSNumber numberWithInt:[ElementlaengeFeld intValue]] forKey:@"elementlaenge"];
          [tempPListDic setObject:[NSNumber numberWithInt:[Portalabstand intValue]] forKey:@"portalabstand"];
          [tempPListDic setObject:[NSNumber numberWithFloat:[AbbrandFeld floatValue]] forKey:@"abbranda"];
          [tempPListDic setObject:[NSNumber numberWithInt:[SpeedFeld intValue]] forKey:@"speed"];
@@ -1810,28 +1893,27 @@ return returnInt;
          [tempPListDic setObject:[NSNumber numberWithFloat:[DC_PWM intValue]] forKey:@"pwm"];
          
          // Rumpf
-         [tempPListDic setObject:[NSNumber numberWithInt:[RandFeld intValue]] forKey:@"rand"];
-         [tempPListDic setObject:[NSNumber numberWithInt:[EinlaufFeld intValue]] forKey:@"einlauf"];
-         [tempPListDic setObject:[NSNumber numberWithInt:[BreiteAFeld intValue]] forKey:@"breitea"];
-         [tempPListDic setObject:[NSNumber numberWithInt:[HoeheAFeld intValue]] forKey:@"hoehea"];
-         [tempPListDic setObject:[NSNumber numberWithInt:[RadiusAFeld intValue]] forKey:@"radiusa"];
+  //       [tempPListDic setObject:[NSNumber numberWithInt:[RandFeld intValue]] forKey:@"rand"];
+  //       [tempPListDic setObject:[NSNumber numberWithInt:[EinlaufFeld intValue]] forKey:@"einlauf"];
+  //       [tempPListDic setObject:[NSNumber numberWithInt:[BreiteAFeld intValue]] forKey:@"breitea"];
+  //       [tempPListDic setObject:[NSNumber numberWithInt:[HoeheAFeld intValue]] forKey:@"hoehea"];
+ //        [tempPListDic setObject:[NSNumber numberWithInt:[RadiusAFeld intValue]] forKey:@"radiusa"];
         
-         [tempPListDic setObject:[NSNumber numberWithInt:[BreiteBFeld intValue]] forKey:@"breiteb"];
-         [tempPListDic setObject:[NSNumber numberWithInt:[HoeheBFeld intValue]] forKey:@"hoeheb"];
-         [tempPListDic setObject:[NSNumber numberWithInt:[RadiusBFeld intValue]] forKey:@"radiusb"];
+  //       [tempPListDic setObject:[NSNumber numberWithInt:[BreiteBFeld intValue]] forKey:@"breiteb"];
+ //        [tempPListDic setObject:[NSNumber numberWithInt:[HoeheBFeld intValue]] forKey:@"hoeheb"];
+ //        [tempPListDic setObject:[NSNumber numberWithInt:[RadiusBFeld intValue]] forKey:@"radiusb"];
 
 
-         [tempPListDic setObject:[NSNumber numberWithInt:[EinstichtiefeFeld intValue]] forKey:@"einstichtiefe"];
+ //        [tempPListDic setObject:[NSNumber numberWithInt:[EinstichtiefeFeld intValue]] forKey:@"einstichtiefe"];
 
-         [tempPListDic setObject:[NSNumber numberWithInt:[RumpfabstandFeld intValue]] forKey:@"rumpfabstand"];
-         [tempPListDic setObject:[NSNumber numberWithInt:[ElementlaengeFeld intValue]] forKey:@"elementlaenge"];
+ //        [tempPListDic setObject:[NSNumber numberWithInt:[RumpfabstandFeld intValue]] forKey:@"rumpfabstand"];
+ //        [tempPListDic setObject:[NSNumber numberWithInt:[ElementlaengeFeld intValue]] forKey:@"elementlaenge"];
 
          [tempPListDic setObject:[NSNumber numberWithInt:[RumpfBlockbreite intValue]] forKey:@"rumpfblockbreite"];
          [tempPListDic setObject:[NSNumber numberWithInt:[RumpfBlockhoehe intValue]] forKey:@"rumpfblockhoehe"];
 
          
          [tempPListDic setObject:[NSNumber numberWithInt:[AuslaufFeld intValue]] forKey:@"auslauf"];
-
          
          [tempPListDic setObject:[NSNumber numberWithInt:[startdelayFeld  intValue]] forKey:@"startdelay"];
 
@@ -1880,32 +1962,179 @@ return returnInt;
     return plist;
  
 }
+
 -(id) plistToObjectFromString:(NSString*)str
 {
     NSData * data =[str dataUsingEncoding:NSUTF8StringEncoding];
     return [self plistToObjectFromData:data];
 }
 
+- (void)setRumpfteilDic:(NSDictionary*) rumpfteildic forPart:(int) rumpfteil
+{
+   
+   if ([rumpfteildic objectForKey:@"elementlaenge"])
+   {
+      //NSLog(@"elementlaenge: %d",[[rumpfteildic objectForKey:@"elementlaenge"]intValue]);
+      [ElementlaengeFeld setIntValue:[[rumpfteildic objectForKey:@"elementlaenge"]intValue]];
+   }
+   else
+   {
+      [ElementlaengeFeld setIntValue:651];
+   }
+
+   if ([rumpfteildic objectForKey:@"portalabstand"])
+   {
+      [Portalabstand setIntValue:[[rumpfteildic objectForKey:@"portalabstand"]intValue]];
+   }
+   else
+   {
+      [Portalabstand setIntValue:550];
+   }
+   
+   if ([rumpfteildic objectForKey:@"rand"])
+   {
+      [RandFeld setIntValue:[[rumpfteildic objectForKey:@"rand"]intValue]];
+   }
+   else
+   {
+      [RandFeld setIntValue:50];
+   }
+   
+   if ([rumpfteildic objectForKey:@"einlauf"])
+   {
+      [EinlaufFeld setIntValue:[[rumpfteildic objectForKey:@"einlauf"]intValue]];
+   }
+   else
+   {
+      [EinlaufFeld setIntValue:15];
+   }
+
+   if ([rumpfteildic objectForKey:@"auslauf"])
+   {
+      [AuslaufFeld setIntValue:[[rumpfteildic objectForKey:@"auslauf"]intValue]];
+   }
+   else
+   {
+      [AuslaufFeld setIntValue:15];
+   }
+
+   if ([rumpfteildic objectForKey:@"hoehea"])
+   {
+      [HoeheAFeld setIntValue:[[rumpfteildic objectForKey:@"hoehea"]intValue]];
+   }
+   else
+   {
+      [HoeheAFeld setIntValue:50];
+   }
+   
+   if ([rumpfteildic objectForKey:@"hoeheb"])
+   {
+      NSLog(@"hoeheB: %d",[[rumpfteildic objectForKey:@"hoeheb"]intValue]);
+      [HoeheBFeld setIntValue:[[rumpfteildic objectForKey:@"hoeheb"]intValue]];
+   }
+   else
+   {
+      [HoeheBFeld setIntValue:50];
+   }
+   
+   if ([rumpfteildic objectForKey:@"rumpfblockbreite"])
+   {
+      [RumpfBlockbreite setIntValue:[[rumpfteildic objectForKey:@"rumpfblockbreite"]intValue]];
+   }
+   else
+   {
+      [RumpfBlockbreite setIntValue:50];
+   }
+   
+   if ([rumpfteildic objectForKey:@"rumpfblockhoehe"])
+   {
+      [RumpfBlockhoehe setIntValue:[[rumpfteildic objectForKey:@"rumpfblockhoehe"]intValue]];
+   }
+   else
+   {
+      [RumpfBlockhoehe setIntValue:50];
+   }
+   
+   if ([rumpfteildic objectForKey:@"breitea"])
+   {
+      [BreiteAFeld setIntValue:[[rumpfteildic objectForKey:@"breitea"]intValue]];
+   }
+   else
+   {
+      [BreiteAFeld setIntValue:50];
+   }
+
+   if ([rumpfteildic objectForKey:@"breiteb"])
+   {
+      [BreiteBFeld setIntValue:[[rumpfteildic objectForKey:@"breiteb"]intValue]];
+   }
+   else
+   {
+      [BreiteBFeld setIntValue:20];
+   }
+
+   if ([rumpfteildic objectForKey:@"radiusa"])
+   {
+      [RadiusAFeld setIntValue:[[rumpfteildic objectForKey:@"radiusa"]intValue]];
+   }
+   else
+   {
+      [RadiusAFeld setIntValue:10];
+   }
+
+   if ([rumpfteildic objectForKey:@"radiusb"])
+   {
+      [RadiusBFeld setIntValue:[[rumpfteildic objectForKey:@"radiusb"]intValue]];
+   }
+   else
+   {
+      [RadiusBFeld setIntValue:10];
+   }
+
+   if ([rumpfteildic objectForKey:@"einstichtiefe"])
+   {
+      [EinstichtiefeFeld setIntValue:[[rumpfteildic objectForKey:@"einstichtiefe"]intValue]];
+   }
+   else
+   {
+      [EinstichtiefeFeld setIntValue:10];
+   }
+
+   if ([rumpfteildic objectForKey:@"rumpfabstand"])
+   {
+      [RumpfabstandFeld setIntValue:[[rumpfteildic objectForKey:@"rumpfabstand"]intValue]];
+   }
+   else
+   {
+      [RumpfabstandFeld setIntValue:10];
+   }
+
+}// setrumpfteildic
+
 - (NSDictionary*) rumpfteilDic
 {
    NSMutableDictionary* teildic = [NSMutableDictionary new];
    
-   [teildic setObject:[NSNumber numberWithInt:[Portalabstand intValue]] forKey:@"portalabstand"];  
-   [teildic setObject:[NSNumber numberWithInt:[RandFeld intValue]] forKey:@"rand"];
-   [teildic setObject:[NSNumber numberWithInt:[EinlaufFeld intValue]] forKey:@"einlauf"];
-   [teildic setObject:[NSNumber numberWithInt:[BreiteAFeld intValue]] forKey:@"breitea"];
-   [teildic setObject:[NSNumber numberWithInt:[HoeheAFeld intValue]] forKey:@"hoehea"];
-   [teildic setObject:[NSNumber numberWithInt:[RadiusAFeld intValue]] forKey:@"radiusa"];
-   [teildic setObject:[NSNumber numberWithInt:[BreiteBFeld intValue]] forKey:@"breiteb"];
-   [teildic setObject:[NSNumber numberWithInt:[HoeheBFeld intValue]] forKey:@"hoeheb"];
-   [teildic setObject:[NSNumber numberWithInt:[RadiusBFeld intValue]] forKey:@"radiusb"];
-   [teildic setObject:[NSNumber numberWithInt:[EinstichtiefeFeld intValue]] forKey:@"einstichtiefe"];
-   [teildic setObject:[NSNumber numberWithInt:[RumpfabstandFeld intValue]] forKey:@"rumpfabstand"];
-   [teildic setObject:[NSNumber numberWithInt:[ElementlaengeFeld intValue]] forKey:@"elementlaenge"];
+   [teildic setObject:[NSNumber numberWithInt:[Portalabstand intValue]] forKey:@"portalabstand"];  //
+   [teildic setObject:[NSNumber numberWithInt:[RandFeld intValue]] forKey:@"rand"];//
+   [teildic setObject:[NSNumber numberWithInt:[EinlaufFeld intValue]] forKey:@"einlauf"];//
+   [teildic setObject:[NSNumber numberWithInt:[BreiteAFeld intValue]] forKey:@"breitea"];//
+   [teildic setObject:[NSNumber numberWithInt:[HoeheAFeld intValue]] forKey:@"hoehea"];//
+   [teildic setObject:[NSNumber numberWithInt:[RadiusAFeld intValue]] forKey:@"radiusa"];//
+   [teildic setObject:[NSNumber numberWithInt:[BreiteBFeld intValue]] forKey:@"breiteb"];//
+   [teildic setObject:[NSNumber numberWithInt:[HoeheBFeld intValue]] forKey:@"hoeheb"];//
+   [teildic setObject:[NSNumber numberWithInt:[RadiusBFeld intValue]] forKey:@"radiusb"];//
+   [teildic setObject:[NSNumber numberWithInt:[EinstichtiefeFeld intValue]] forKey:@"einstichtiefe"];//
+   [teildic setObject:[NSNumber numberWithInt:[RumpfabstandFeld intValue]] forKey:@"rumpfabstand"];//
+   [teildic setObject:[NSNumber numberWithInt:[ElementlaengeFeld intValue]] forKey:@"elementlaenge"];//
 
-   [teildic setObject:[NSNumber numberWithInt:[RumpfBlockbreite intValue]] forKey:@"rumpfblockbreite"];
-   [teildic setObject:[NSNumber numberWithInt:[RumpfBlockhoehe intValue]] forKey:@"rumpfblockhoehe"];
-   [teildic setObject:[NSNumber numberWithInt:[AuslaufFeld intValue]] forKey:@"auslauf"];
+   [teildic setObject:[NSNumber numberWithInt:[RumpfBlockbreite intValue]] forKey:@"rumpfblockbreite"];//
+   [teildic setObject:[NSNumber numberWithInt:[RumpfBlockhoehe intValue]] forKey:@"rumpfblockhoehe"];//
+   [teildic setObject:[NSNumber numberWithInt:[AuslaufFeld intValue]] forKey:@"auslauf"];//
+   
+   [teildic setObject:[NSNumber numberWithInt:[ProfilBOffsetXFeld intValue]] forKey:@"offsetx"];
+   int rumpfteil = [RumpfteilPop indexOfSelectedItem];
+   [teildic setObject:[NSNumber numberWithInt:rumpfteil] forKey:@"teil"];
    NSLog(@"rumpfteilDic : %@",teildic);
    return teildic;
 }
@@ -2174,7 +2403,7 @@ return returnInt;
    motorsteps = [CNC_Steps tagForSegment:stepsindex];
    // level microstepping: 1,2,4
    micro  = [[CNC_micro selectedItem]tag];
- 
+   
    
    zoomfaktor=1;
    //Schnittdaten aus Mausklicktabelle
@@ -2182,6 +2411,11 @@ return returnInt;
    
    [CNCDatenArray removeAllObjects];
    [SchnittdatenArray removeAllObjects];
+   
+   NSArray* nnarray = NSArray.array;
+   
+   [nn firstrun]; //setkoordinaten(SchnittdatenArray);
+   
    [HomeTaste setState:0];
    [DC_Taste setState:0];
    if ([SpeedFeld intValue])
@@ -3452,7 +3686,7 @@ return returnInt;
 
 - (IBAction)reportPWMSlider:(id)sender
 {
-   NSLog(@"reportPWMSlider intValue: %d",[sender intValue]);
+   //NSLog(@"reportPWMSlider intValue: %d",[sender intValue]);
    if ([CNCTable numberOfSelectedRows]==0) // keine Zeile aktiviert
    {
       //return;
@@ -5256,7 +5490,7 @@ return returnInt;
 }
 
 
-- (void)addNextPunktA:(NSPoint)nextPunktA nextPunktB:(NSPoint)nextPunktB pwm:(float)pwm teil:(int) teil
+- (void)addNextPunktA:(NSPoint)nextPunktA nextPunktB:(NSPoint)nextPunktB pwm:(float)pwm teil:(int) teil 
 {
    NSMutableDictionary* tempRahmenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
       
@@ -6073,7 +6307,8 @@ return returnInt;
 
 - (NSArray*)RumpfelementmitBreiteA: (float)breiteA mitHoeheA: (float)hoeheA mitRadiusA:(float) radiusA mitBreiteB: (float)breiteB mitHoeheB: (float)hoeheB mitRadiusB:(float) radiusB
 {
-   
+   float gfkbreiteA = 0; // Breite der GFK-Lage
+   float gfkbreiteB = 0;
    float effektivebreite = 0;
    float origpwm=[DC_PWM intValue];
    float redpwm = origpwm * [red_pwmFeld floatValue];
@@ -6081,15 +6316,14 @@ return returnInt;
    float vertikaloffset = 3; // Schneiden ueber definitiver Oberseite
    float vertikalabstand = 3; // Abstand beim Zurueckschneiden
    float abstandoben = 5;
-   float abstandunten = 10;
+   float abstandunten = 10; // Wasser unter Kiel
    float horizontaleinstich = 15;
    
    float einfahrtx = 5;
    float einfahrty = 3;
-   [CNC setSchalendicke:[Schalendickefeld floatValue]];
    //
    
-   
+   // Startpunkt im Gitter
    if ([WertAXFeld floatValue]==0)
    {
       [WertAXFeld setFloatValue:20.0 ];
@@ -6124,8 +6358,8 @@ return returnInt;
    float auslaufB = auslaufA + (breiteA - breiteB)/2 - offsetX;
 
    
-   
-   float rand = 10; // Einstich bis Rumpf
+   float profileinlauf = [EinlaufFeld floatValue]; // Einstich bis Formrand
+   float rand = [RandFeld floatValue]; // Einstich bis Rumpf
    
    float einstichx = 10;
    float einstichy = 10;
@@ -6146,7 +6380,7 @@ return returnInt;
 
    
    
-   // Einfahren
+   // A Einfahren
    rahmenindex++;
    tempPunktA.x += einfahrtx;
    tempPunktB.x += einfahrtx;
@@ -6157,44 +6391,26 @@ return returnInt;
 
     ////NSLog(@"count: %d KoordinatenTabelle 1: %@",[KoordinatenTabelle count],[KoordinatenTabelle description]);
 
-   EckeLinksUnten = tempPunktA; // Rückkehrwert
-   
+   EckeLinksUnten = tempPunktA; // Rückkehrwert sichern
    
    float blockhoehe = hoeheA + abstandunten;
+   [Blockdicke setIntValue:blockhoehe];
    
    
-      // Hochfahren bis horizontaler einstich
+   // B Hochfahren bis horizontaler Einstich fuer Schiene: Niveau von HoeheA
       rahmenindex++;
       tempPunktA.y += blockhoehe-hoeheA;
       tempPunktB.y += blockhoehe-hoeheA;
    [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
-
-      [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
-      [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
-      [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.x] forKey:@"bx"];
-      [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.y] forKey:@"by"];
-      [tempRahmenDic setObject:[NSNumber numberWithInt:rahmenindex] forKey:@"index"];
-      [tempRahmenDic setObject:[NSNumber numberWithInt:20] forKey:@"teil"]; // Kennzeichnung Oberseite
-      //NSLog(@"rahmenindex: %d tempRahmenDic: %@",rahmenindex,[tempRahmenDic description]);
-     // [KoordinatenTabelle addObject:[tempRahmenDic copy]];
-      
    
-   // horizontaler einstich in
+   // C horizontaler Einstich in
    rahmenindex++;
    tempPunktA.x += horizontaleinstich;
    tempPunktB.x += horizontaleinstich;
    [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
-   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
-   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
-   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.x] forKey:@"bx"];
-   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.y] forKey:@"by"];
-   [tempRahmenDic setObject:[NSNumber numberWithInt:rahmenindex] forKey:@"index"];
-   [tempRahmenDic setObject:[NSNumber numberWithInt:20] forKey:@"teil"]; // Kennzeichnung Oberseite
-   //NSLog(@"rahmenindex: %d tempRahmenDic: %@",rahmenindex,[tempRahmenDic description]);
- //  [KoordinatenTabelle addObject:[tempRahmenDic copy]];
-   // Hochfahren bis horizontaler einstich
-   rahmenindex++;
-
+   
+  
+   // D horizontaler einstich out
    // horizontaler einstich out
    rahmenindex++;
    tempPunktA.x -= horizontaleinstich;
@@ -6202,47 +6418,25 @@ return returnInt;
    
    [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
    
-   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
-   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
-   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.x] forKey:@"bx"];
-   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.y] forKey:@"by"];
-   [tempRahmenDic setObject:[NSNumber numberWithInt:rahmenindex] forKey:@"index"];
-   [tempRahmenDic setObject:[NSNumber numberWithInt:20] forKey:@"teil"]; // Kennzeichnung Oberseite
-   [tempRahmenDic setObject:[NSNumber numberWithInt:redpwm]forKey:@"pwm"];
-   //NSLog(@"rahmenindex: %d tempRahmenDic: %@",rahmenindex,[tempRahmenDic description]);
-//   [KoordinatenTabelle addObject:[tempRahmenDic copy]];
-   // Hochfahren bis horizontaler einstich
-   rahmenindex++;
-
    
-    
-   
-   // Hochfahren von horizontaler einstich bis kote
+   // E Hochfahren von horizontaler einstich bis Oberkante + vertikaloffset
    rahmenindex++;
    tempPunktA.y += hoeheA + vertikaloffset;
    tempPunktB.y += hoeheA + vertikaloffset;
    
-  
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:30];
    
-   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
-   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
-   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.x] forKey:@"bx"];
-   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.y] forKey:@"by"];
-   [tempRahmenDic setObject:[NSNumber numberWithInt:rahmenindex] forKey:@"index"];
-   [tempRahmenDic setObject:[NSNumber numberWithInt:30] forKey:@"teil"]; // Kennzeichnung Oberseite
-   [tempRahmenDic setObject:[NSNumber numberWithInt:origpwm]forKey:@"pwm"];
-   //NSLog(@"rahmenindex: %d tempRahmenDic: %@",rahmenindex,[tempRahmenDic description]);
-   [KoordinatenTabelle addObject:[tempRahmenDic copy]];
-  
+    
    
    
    
-   
-   // Einlauf zum Einstich
+   // F Einlauf zum Einstich fuer Profil
    rahmenindex++;
    tempPunktA.x +=  einlaufA;
    tempPunktB.x +=  einlaufB;
-   
+
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+   /*
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.x] forKey:@"bx"];
@@ -6252,14 +6446,17 @@ return returnInt;
    //NSLog(@"rahmenindex: %d tempRahmenDic: %@",rahmenindex,[tempRahmenDic description]);
    [KoordinatenTabelle addObject:[tempRahmenDic copy]];
    //NSLog(@"count: %d KoordinatenTabelle 1: %@",[KoordinatenTabelle count],[KoordinatenTabelle description]);
- 
+ */
    
  
-   //  Einstich down
+   // G Einstich down
    rahmenindex++;
    tempPunktA.y -= (einstichy + vertikaloffset);
    tempPunktB.y -= (einstichy + vertikaloffset);
    
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+   
+   /*
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.x] forKey:@"bx"];
@@ -6269,31 +6466,25 @@ return returnInt;
    //NSLog(@"rahmenindex: %d tempRahmenDic: %@",rahmenindex,[tempRahmenDic description]);
    [KoordinatenTabelle addObject:[tempRahmenDic copy]];
    //NSLog(@"count: %d KoordinatenTabelle 1: %@",[KoordinatenTabelle count],[KoordinatenTabelle description]);
+*/
 
-
-   //  Einstich up
+   // H Einstich up
    rahmenindex++;
    tempPunktA.y += (einstichy + vertikaloffset);
    tempPunktB.y += (einstichy + vertikaloffset);
    
-   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
-   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
-   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.x] forKey:@"bx"];
-   [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.y] forKey:@"by"];
-   [tempRahmenDic setObject:[NSNumber numberWithInt:rahmenindex] forKey:@"index"];
-   [tempRahmenDic setObject:[NSNumber numberWithInt:20] forKey:@"teil"]; // Kennzeichnung Oberseite
-   [tempRahmenDic setObject:[NSNumber numberWithInt:redpwm]forKey:@"pwm"];
-   //NSLog(@"rahmenindex: %d tempRahmenDic: %@",rahmenindex,[tempRahmenDic description]);
-   [KoordinatenTabelle addObject:[tempRahmenDic copy]];
-   //NSLog(@"count: %d KoordinatenTabelle 1: %@",[KoordinatenTabelle count],[KoordinatenTabelle description]);
-
-
-   //  zum Formrand
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:redpwm teil:20];
+   
+ 
+   // I zum Formrand
    
    rahmenindex++;
-   tempPunktA.x += rand;
-   tempPunktB.x += rand;
+   tempPunktA.x += profileinlauf;
+   tempPunktB.x += profileinlauf;
+   
+   
    effektivebreite = tempPunktA.x;
+   
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktB.x] forKey:@"bx"];
@@ -6305,10 +6496,12 @@ return returnInt;
    [KoordinatenTabelle addObject:[tempRahmenDic copy]];
    //NSLog(@"count: %d KoordinatenTabelle 1: %@",[KoordinatenTabelle count],[KoordinatenTabelle description]);
 
-// Form down zum Radius down
+// J Form down zum Radius links
    rahmenindex++;
    tempPunktA.y -= (hoeheA - radiusA + vertikaloffset);
    tempPunktB.y -= (hoeheB - radiusB + vertikaloffset);
+   gfkbreiteA += hoeheA - radiusA ;
+   gfkbreiteB += hoeheB - radiusB ;
    
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
@@ -6328,8 +6521,12 @@ return returnInt;
    int Lage = 3;
    int anzahlPunkte = 6;
    
-   float blockbreitefloat = breiteA +  2*rand + einlaufA + auslaufA;
+   float blockbreitefloat = breiteA +  2*profileinlauf + einlaufA + auslaufA;
    //float Blockbreite = 0;
+   
+   gfkbreiteA += radiusA * M_PI; // beide Viertelkreise
+   gfkbreiteB += radiusB * M_PI;
+
    
    NSArray* SegmentKoordinatenArray = [CNC SegmentKoordinatenMitRadiusA:(float)radiusA mitRadiusB:(float)radiusB mitWinkel:(float)Winkel mitLage:(int)Lage mitAnzahlPunkten:(int)anzahlPunkte vonStartpunktA:tempPunktA vonStartpunktB:tempPunktB];
 
@@ -6351,6 +6548,10 @@ return returnInt;
    rahmenindex++;
    tempPunktA.x += breiteA - 2*radiusA;
    tempPunktB.x += breiteB - 2*radiusB;
+   
+   gfkbreiteA += breiteA - 2*radiusA; // waagrechter Teil
+   gfkbreiteB += breiteB - 2*radiusB;
+
    
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
@@ -6385,20 +6586,18 @@ return returnInt;
    tempPunktB.x = [[[SegmentKoordinatenArray lastObject]objectForKey:@"bx"]floatValue];
    tempPunktB.y = [[[SegmentKoordinatenArray lastObject]objectForKey:@"by"]floatValue];
 
+   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
 
    
-   /*
-   tempPunktA.x += breiteA;
-      tempPunktB.x += breiteB;
-
-    */  [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
-
-   
-   // Form down vom Radius up
+   // Form waagrechter Teil vom Radius up
       rahmenindex++;
       tempPunktA.y += (hoeheA - radiusA + vertikaloffset);
       tempPunktB.y += (hoeheB - radiusB + vertikaloffset);
       effektivebreite = tempPunktA.x - effektivebreite; 
+   
+      gfkbreiteA += hoeheA - radiusA ;
+      gfkbreiteB += hoeheB - radiusB ;
+
    NSLog(@"effektivebreite: %2.2f breiteA:  %2.2f",effektivebreite, breiteA);
       [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
       [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
@@ -6412,8 +6611,8 @@ return returnInt;
 
    //  vom Formrand zum Einstich
    rahmenindex++;
-   tempPunktA.x += rand;
-   tempPunktB.x += rand;
+   tempPunktA.x += profileinlauf;
+   tempPunktB.x += profileinlauf;
    
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
@@ -6603,7 +6802,9 @@ return returnInt;
    //NSLog(@"rahmenindex: %d tempRahmenDic: %@",rahmenindex,[tempRahmenDic description]);
    [KoordinatenTabelle addObject:[tempRahmenDic copy]];
 
-   
+   NSLog(@"gfkbreiteA: %0.2f gfkbreiteB: %0.2f",gfkbreiteA,gfkbreiteB);
+   [GFKFeldA setIntValue: ceil(gfkbreiteA)];
+   [GFKFeldB setFloatValue: ceil(gfkbreiteB)];
    // ******* Probelauf
    
    [CNCTable scrollRowToVisible:[KoordinatenTabelle count] - 1];
@@ -8456,6 +8657,7 @@ return returnInt;
       
       if ((maxy + fabs(miny))>dicke) 
       {
+         NSLog(@"Block ist nicht dick genug");
       }
       
       // Rahmen
@@ -8488,7 +8690,7 @@ return returnInt;
       // neue Berechnung
       
             
-      NSPoint EckeLinksUnten = NSMakePoint(einlaufAX -rand, fmax(einlaufAY,einlaufBY) - abstandunten  - zugabeunten);
+      NSPoint EckeLinksUnten = NSMakePoint(einlaufAX - rand, fmax(einlaufAY,einlaufBY) - abstandunten  - zugabeunten);
       NSPoint EckeLinksOben = NSMakePoint(EckeLinksUnten.x, EckeLinksUnten.y + dicke);
       
       NSPoint EckeRechtsOben = NSMakePoint(EckeLinksOben.x + ausmassx + einlaufrand + auslaufrand, EckeLinksOben.y);
@@ -8532,7 +8734,7 @@ return returnInt;
       
       int index=0;
      
-      NSLog(@"Einstich");
+      NSLog(@"Einstich: Werte in BlockKoordinatenTabelle einsetzen");
 
       [BlockKoordinatenTabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:aktuellepwm*full_pwm],@"pwm",nil]];
       
@@ -8554,9 +8756,9 @@ return returnInt;
  */
      
 
-      NSLog(@"von Einstich hoch zum Blockrand");
+      NSLog(@"von Einstich zum Blockrand");
       
-      // Einstich  zum Blockrand
+      // A Einstich  zum Blockrand
       PositionA.x +=einstichx;       
       PositionB.x +=einstichx;
       //NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
@@ -8564,16 +8766,17 @@ return returnInt;
       index++;
  
 
-      // Anfahrt von unten: Zuerst schneiden senkrecht nach oben bis Blockrand
+      // B Anfahrt von unten: Zuerst senkrecht nach oben schneiden bis Blockrand
       
       // Hochfahren auf Einlauf. Liegt auf gleicher Hoehe, wenn kein wrench
       //float deltaAY = zugabeunten - miny; 
       //float deltaBY = zugabeunten - miny;
       
-      float deltaAY = einlaufAY - EckeLinksUnten.y;
+      float deltaAY = einlaufAY - EckeLinksUnten.y; //       einlaufAY: KoordinatenTabelle[0] "ay" 
+
       float deltaBY = einlaufBY - EckeLinksUnten.y;
       
-      NSLog(@"Anfahrt von unten");
+      NSLog(@"Anfahrt von unten bis profil");
       
       PositionA.y +=deltaAY;
       PositionB.y +=deltaBY;
@@ -8582,17 +8785,11 @@ return returnInt;
       index++;
     
       NSLog(@"Rand bei Einlauf");
-      /*
-       // Rand bei Einlauf nach links freischneiden
-       PositionA.x -=rand;
-       PositionB.x -=rand;
-       //NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
-       [BlockKoordinatenTabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",nil]];
-       index++;
-      */
+      
       // Schneiden zum Einlauf. Kann in x und y unterschiedlich sein.
       //     NSLog(@"reportBlockkonfigurieren vor Schneiden zum Einlauf EckeRechtsOben x: %2.2f  y: %2.2f",EckeRechtsOben.x,EckeRechtsOben.y);
       //NSLog(@"vor index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+      
       
       float deltaAX = einlaufAX - PositionA.x;
       deltaAY = einlaufAY - PositionA.y;

@@ -7,6 +7,8 @@
 //
 
 #import "rEinstellungen.h"
+// https://dev.iachieved.it/iachievedit/using-swift-in-an-existing-objective-c-project/
+#import "CNC_Interface-Swift.h"
 
 
 @implementation rGraph
@@ -1064,6 +1066,12 @@
 - (void)awakeFromNib
 {
 	//NSLog(@"Einstellungen awake");
+   
+   
+   // https://dev.iachieved.it/iachievedit/using-swift-in-an-existing-objective-c-project/
+   nn = [[rTSP_NN alloc]init];
+
+   
 	NSFont* Tablefont;
 	Tablefont=[NSFont fontWithName:@"Helvetica" size: 12];
    NSNumberFormatter* Eingabeformatter=[[NSNumberFormatter alloc] init];
@@ -3491,8 +3499,14 @@
     */
   // NSArray* FigurArray = [Utils readFigur];
    //NSLog(@"CNC_Eingbe readFigur FigurArray: \n%@",[FigurArray description]);
-   FigElementArray= [NSMutableArray arrayWithArray:[Utils readFigur]]; // retain ist noetig
-   NSLog(@"CNC_Eingbe readFigur FigElementArray: \n%@",[FigElementArray description]);
+   FigElementArray= [NSMutableArray arrayWithArray:[Utils readFigur]]; // 
+   NSLog(@"CNC_Eingabe readFigur FigElementArray: \n%@",[FigElementArray description]);
+   
+   
+   
+   
+   
+   
    [self setFigGraphDaten];
    //NSLog(@"CNC_Eingbe readFigur A");
    [FigGraph setNeedsDisplay:YES];

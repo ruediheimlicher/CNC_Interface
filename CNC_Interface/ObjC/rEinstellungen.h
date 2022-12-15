@@ -11,6 +11,10 @@
 #import "rUtils.h"
 #import "rCNC.h"
 
+// https://developer.apple.com/documentation/swift/importing-swift-into-objective-c
+@class rTSP_NN;
+
+
 @interface rGraph : NSControl 
 {
    NSDictionary*    DatenDic;
@@ -108,6 +112,8 @@
 
 @interface rEinstellungen : NSWindowController 
 {
+   
+   rTSP_NN* nn;
    // Element
    IBOutlet id    Element;
    IBOutlet id    StartpunktX;

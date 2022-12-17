@@ -23,6 +23,7 @@
                 <outlet property="Einlauflaenge" destination="1237" id="1264"/>
                 <outlet property="Einlaufrand" destination="1252" id="1265"/>
                 <outlet property="Einlauftiefe" destination="1238" id="1266"/>
+                <outlet property="EinstellungenTab" destination="66" id="hxA-vW-8He"/>
                 <outlet property="Element" destination="254" id="334"/>
                 <outlet property="EndpunktX" destination="244" id="335"/>
                 <outlet property="EndpunktXSlider" destination="273" id="336"/>
@@ -1823,7 +1824,7 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="LRq-Jz-aCp"/>
             </connections>
-            <point key="canvasLocation" x="100" y="-570"/>
+            <point key="canvasLocation" x="17" y="-619"/>
         </window>
     </objects>
 </document>

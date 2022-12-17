@@ -1043,8 +1043,13 @@
           selector:@selector(EingabedatenAktion:)
               name:@"eingabedaten"
             object:nil];
+   [nc addObserver:self
+          selector:@selector(ProfilPopAktion:)
+              name:@"profilpop"
+            object:nil];
    
-	
+   
+   
    zoom=1;
      
     ElementLibArray = [self readLib];
@@ -1497,9 +1502,6 @@
       [AbbrandmassA setFloatValue:1.3];
    }
    
-   
-   
-
    if ([daten objectForKey:@"flipv"])
    {
       flipV = [[daten objectForKey:@"flipv"]floatValue];
@@ -1517,6 +1519,34 @@
    {
       flipH=0;
    }
+   
+   // Profil
+   [self SetLibProfile:[self readProfilLib]];
+  // [ProfilEinfuegenTaste setEnabled:0];
+
+   if ([daten objectForKey:@"profil1"])
+   {
+      [Profile1 selectItemWithTitle:[daten objectForKey:@"profil1"]];
+      Profil1Name = [daten objectForKey:@"profil1"];
+   }
+   else
+   {
+      [Profile1 selectItemAtIndex:1];
+      Profil1Name = [Profile1 itemTitleAtIndex:1];
+   }
+
+   if ([daten objectForKey:@"profil2"])
+   {
+      [Profile2 selectItemWithTitle:[daten objectForKey:@"profil2"]];
+      Profil2Name = [daten objectForKey:@"profil2"];
+   }
+   else // gleiches Profil wie 1
+   {
+      [Profile2 selectItemWithTitle:[daten objectForKey:@"profil1"]];
+      Profil2Name = Profil1Name;
+
+   }
+
 
 
    /*
@@ -1549,7 +1579,7 @@
    [LibGraph clearGraph];
    
    // Profil
-   [self SetLibProfile:[self readProfilLib]];
+  // [self SetLibProfile:[self readProfilLib]];
    [ProfilEinfuegenTaste setEnabled:0];
    
 }
@@ -2216,8 +2246,7 @@
    if ([Profil1Array count]==0)
    {
       return;
-   }
-   
+   }   
    //NSLog(@"reportProfilSpiegelnVertikal");
    int i;
    flipV = !flipV; // flip toggeln
@@ -2237,9 +2266,9 @@
    
    [self setProfilGraphDaten];
    [ProfilGraph setNeedsDisplay:YES];
-   
-   
+
 }
+
 
 
 
@@ -2282,6 +2311,130 @@
    [NSApp stopModalWithCode:1];
 }
 
+
+- (void)doProfilPopTaskMitProfil1:(int)profil1 mitProfil2: (int)profil2
+{
+   [FlipHTaste setState:0];
+   [FlipVTaste setState:0];
+   [ReverseTaste setState:0];
+   NSLog(@"profil1: %d profil2: %d",profil1, profil2);
+   //profil2 = profil1;
+   [EinstellungenTab selectTabViewItemAtIndex:3];
+   if (profil1)
+   {
+      
+      int index=profil1; // Item 0 ist Titel
+      //NSLog(@"xA");
+      [Profile1 selectItemAtIndex:profil1];
+       
+      //NSLog(@"doProfil1PopTaskMitProfil Profil aus Pop: %@",[Profile1 itemTitleAtIndex:index]);
+      Profil1Name=[Profile1 itemTitleAtIndex:profil1];
+      //Profil1Name = [Profil1Name stringByAppendingPathExtension:@"txt"];
+      
+      NSString* Profil1pfad = [[ProfilLibPfad stringByAppendingPathComponent:Profil1Name]stringByAppendingPathExtension:@"txt"];
+      NSLog(@"doProfil1PopTaskMitProfil Profilpfad: %@",Profil1pfad);
+      NSFileManager *Filemanager = [NSFileManager defaultManager];
+      int Profil1OK= [Filemanager fileExistsAtPath:Profil1pfad];
+      if (Profil1OK)
+      {
+         NSDictionary* Profil1Dic = [Utils ProfilDatenAnPfad:Profil1pfad];
+         
+         //NSLog(@"reportProfilPop Profil1Dic: %@",[ProfilDic description]);
+         //Profil1Array = [ProfilDic objectForKey:@"profilarray"];
+         //NSLog(@"SplinekoeffizientenVonArray profilarray: %@",[[ProfilDic objectForKey:@"profilarray"] description]);
+         
+         /*
+         if ([ProfilDic objectForKey:@"name"])
+         {
+            Profil1Name = [NSString stringWithString:[[ElementLibArray objectAtIndex:index]objectForKey:@"name"]];
+         }
+          */
+         NSLog(@"doProfil1PopTaskMitProfil ProfilName1: %@",Profil1Name);
+         if ([Profil1Dic objectForKey:@"profilarray"])
+         {
+            [Profil1Array removeAllObjects];
+            [Profil1Array addObjectsFromArray:[Profil1Dic objectForKey:@"profilarray"]];
+  
+            
+            if ([Profil1Array count])
+            {
+               [ProfilStartpunktX setFloatValue:[[[Profil1Array objectAtIndex:0]objectForKey:@"x"]floatValue]];
+               [ProfilStartpunktY setFloatValue:[[[Profil1Array objectAtIndex:0]objectForKey:@"y"]floatValue]];
+               [ProfilEndpunktX setFloatValue:[[[Profil1Array lastObject]objectForKey:@"x"]floatValue]];
+               [ProfilEndpunktY setFloatValue:[[[Profil1Array lastObject]objectForKey:@"y"]floatValue]];
+               
+            }
+            //NSLog(@"doProfil1PopTaskMitProfil Profil1Array LAST: %@",[[Profil1Array lastObject]description]);
+         }
+         
+         if(profil2 == profil1) // beide Profile gleich
+         {
+            NSLog(@"doProfil1PopTaskMitProfil mitProfil2 beide gleich");
+            [Profil2Array removeAllObjects];
+            [Profil2Array addObjectsFromArray:Profil1];
+
+            [Profile2 selectItemAtIndex:profil1];    // Profil 2 ist  gleich
+         }
+         else
+         {
+            [Profile2 selectItemAtIndex:profil2];
+            Profil2Name=[Profile2 itemTitleAtIndex:profil2];
+            //Profil2Name = [Profil2Name stringByAppendingPathExtension:@"txt"];
+            NSString* Profil2pfad = [[ProfilLibPfad stringByAppendingPathComponent:Profil2Name]stringByAppendingPathExtension:@"txt"];
+            NSLog(@"doProfil1,2 PopTaskMitProfil Profil2pfad: %@",Profil2pfad);
+            NSFileManager *Filemanager = [NSFileManager defaultManager];
+            int Profil2OK= [Filemanager fileExistsAtPath:Profil2pfad];
+            NSLog(@"doProfi Profil2OK: %d",Profil2OK);
+            if (Profil2OK)
+            {
+               // Daten von Profil2 holen
+               NSDictionary* Profil2Dic = [Utils ProfilDatenAnPfad:Profil2pfad];
+               
+                 
+               /*
+               if ([ProfilDic objectForKey:@"profilname"])
+               {
+                  Profil2Name = [NSString stringWithString:[[ElementLibArray objectAtIndex:index]objectForKey:@"name"]];
+               }
+               */
+               //NSLog(@"doProfil1PopTaskMitProfil ProfilName1: %@",Profil1Name);
+               if ([Profil2Dic objectForKey:@"profilarray"])
+               {
+                  [Profil2Array removeAllObjects];
+                  [Profil2Array addObjectsFromArray:[Profil2Dic objectForKey:@"profilarray"]];
+                  
+                  
+                  if ([Profil2Array count])
+                  {
+                     /*
+                      [ProfilStartpunktX setFloatValue:[[[Profil1Array objectAtIndex:0]objectForKey:@"x"]floatValue]];
+                      [ProfilStartpunktY setFloatValue:[[[Profil1Array objectAtIndex:0]objectForKey:@"y"]floatValue]];
+                      [ProfilEndpunktX setFloatValue:[[[Profil1Array lastObject]objectForKey:@"x"]floatValue]];
+                      [ProfilEndpunktY setFloatValue:[[[Profil1Array lastObject]objectForKey:@"y"]floatValue]];
+                      */
+                  }
+                  //NSLog(@"doProfil1PopTaskMitProfil Profil1Array LAST: %@",[[Profil1Array lastObject]
+               }
+            }
+         }
+         
+         
+         [ProfilEinfuegenTaste setEnabled:1]; 
+         
+      } // if Profil1OK
+      
+      
+      
+      [self setProfilGraphDaten];
+      [ProfilGraph setNeedsDisplay:YES];
+      
+   }
+   else
+   {
+      NSLog(@"doProfil1PopTaskMitProfil: Kein Profil *** ");
+      
+   }
+}
 
 - (void)doProfil1PopTaskMitProfil:(int)profil1
 {
@@ -2348,6 +2501,36 @@
    }
 }
 
+// Notific von Profilpop
+
+- (void)ProfilPopAktion:(NSNotification*)note
+{
+
+   NSLog(@"ProfilPopAktion note: %@",[[note userInfo] description]);
+   NSDictionary* not = [note userInfo];
+   
+   [Einlauflaenge setIntValue:[[not objectForKey:@"einlauflaenge"]intValue]] ;
+ if ([not objectForKey:@"profil1"])
+ {
+    Profil1 = [not objectForKey:@"profil1"];
+    //NSLog(@"Profile1 items: %@",[Profile1 items]);
+ }
+   else
+   {
+      Profil1 = @"";
+   }
+   if ([not objectForKey:@"profil2"])
+   {
+      Profil2 = [not objectForKey:@"profil2"];
+     // NSLog(@"Profile1 items: %@",[Profile1 items]);
+   }
+   else
+   {
+      Profil2 = @"";
+   }
+
+}
+
 - (void)doProfilEinfuegenTask
 {
    NSLog(@"doProfilEinfuegenTask");
@@ -2356,7 +2539,7 @@
       NSMutableDictionary* ProfilDic=[[NSMutableDictionary alloc]initWithCapacity:0];
       [ProfilDic setObject:@"LibProfil"  forKey:@"quelle"];
       //NSLog(@"reportLibElementEinfuegen LibElementArray: %@",[LibElementArray description]);
-      [ProfilDic setObject:Profil1Name forKey:@"profilname"];
+     // [ProfilDic setObject:Profil1Name forKey:@"profilname"];
       [ProfilDic setObject:Profil1Name forKey:@"profil1name"];
       
       //NSLog(@"reportProfilEinfuegen Profil1Array: %@",[Profil1Array description]);
@@ -2365,7 +2548,13 @@
       if ([Profil2Array count]) // verschiedene Profile
       {
          [ProfilDic setObject:Profil2Name forKey:@"profil2name"];
-         [ProfilDic setObject:Profil2Array forKey:@"profil2array"];
+      //   [ProfilDic setObject:Profil2Array forKey:@"profil2array"];
+         
+         NSArray* syncarray  = [Utils anzahlwertesynchronisierenVon:[NSArray arrayWithObjects:Profil1Array, Profil2Array,nil]];
+         [ProfilDic setObject:syncarray[0] forKey:@"profil1array"];
+         [ProfilDic setObject:syncarray[1] forKey:@"profil2array"];
+ 
+         
       }
       else // gleiches Profil
       {
@@ -2831,7 +3020,7 @@
    //NSLog(@"LibPfad: %@",LibPfad);	
 	if (LibOK)
 	{
-			NSMutableArray* ProfilnamenArray = (NSMutableArray*)[Filemanager contentsOfDirectoryAtPath:ProfilLibPfad error:NULL];
+      NSMutableArray* ProfilnamenArray = (NSMutableArray*)[Filemanager contentsOfDirectoryAtPath:ProfilLibPfad error:NULL];
       [ProfilnamenArray removeObject:@".DS_Store"];
       [ProfilnamenArray removeObject:@" Profile ReadMe.txt"];
 		//NSLog(@"readProfilLib ProfilnamenArray: %@",[ProfilnamenArray description]);

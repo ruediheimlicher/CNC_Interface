@@ -42,6 +42,8 @@
 @end
 */
 
+int globalcounter = 0;
+
 @interface rProfildruckView : rProfilGraph
 {
    NSView*        Druckfeld;
@@ -142,7 +144,8 @@
    IBOutlet id             AbbrandCheckbox;
 
    IBOutlet   id           ScalePop;
-   IBOutlet   id           ProfilPop;
+   IBOutlet   NSPopUpButton*           Profil1Pop;
+   IBOutlet   NSPopUpButton*          Profil2Pop;
    IBOutlet   id           CNCPositionFeld;
    IBOutlet   id           CNCStepXFeld;
    IBOutlet   id           CNCStepYFeld;
@@ -150,6 +153,7 @@
    int                     cncposition;
    int                     cncstatus;
    
+   NSString*            ProfilLibPfad;
     
    NSString*               CNCdataPfad;
    NSMutableArray*         EEPROMArray;
@@ -419,6 +423,9 @@
 - (IBAction)reportOberseiteTaste:(id)sender;
 - (IBAction)reportUnterseiteTaste:(id)sender;
 - (IBAction)reportProfil:(id)sender;
+- (IBAction)reportProfil1Pop:(id)sender;
+- (IBAction)reportProfil2Pop:(id)sender;
+
 - (IBAction)reportClearProfilTabelle:(id)sender;
 - (IBAction)reportScalePop:(id)sender;
 - (IBAction)reportHaltTaste:(id)sender;
@@ -426,7 +433,7 @@
 - (IBAction)reportIndexStepper:(id)sender;
 - (IBAction)reportWertAXStepper:(id)sender;
 - (IBAction)reportWertAYStepper:(id)sender;
-
+- (IBAction)reportPWMStepper:(id)sender;
 - (IBAction)reportWertBXStepper:(id)sender;
 - (IBAction)reportWertBYStepper:(id)sender;
 

@@ -17,6 +17,7 @@
 - (NSDictionary*)ProfilDatenAnPfad:(NSString*)profilpfad;
 - (NSArray*)readProfil:(NSString*)profilname;
 - (NSDictionary*)readProfilMitName;
+- (NSArray*)anzahlwertesynchronisierenVon:(NSArray*) syncarray;
 - (NSDictionary*)SplinekoeffizientenVonArray:(NSArray*)dataArray;
 - (NSArray*)wrenchProfil:(NSArray*)profilArray mitWrench:(float)wrench;
 - (NSMutableArray*)wrenchProfilschnittlinie:(NSArray*)profilArray mitWrench:(float)wrench;

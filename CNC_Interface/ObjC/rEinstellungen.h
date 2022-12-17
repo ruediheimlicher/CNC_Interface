@@ -114,6 +114,8 @@
 {
    
    rTSP_NN* nn;
+   
+   IBOutlet id         EinstellungenTab;
    // Element
    IBOutlet id    Element;
    IBOutlet id    StartpunktX;
@@ -174,8 +176,8 @@
    NSString*         LibElementPfad;
    
    // Profil
-   IBOutlet id          Profile1;
-   IBOutlet id          Profile2;
+   IBOutlet NSPopUpButton*          Profile1;
+   IBOutlet NSPopUpButton*           Profile2;
 
    IBOutlet id          Profil2Tiefe;
    IBOutlet id          Profil1Tiefe;
@@ -185,7 +187,7 @@
    IBOutlet id          ProfilEndpunktX;
    IBOutlet id          ProfilEndpunktY;
    IBOutlet id          ProfilGraph;
-   IBOutlet id          ProfilPop;
+   IBOutlet id          Profil1Pop;
    IBOutlet id          Profilstartx;
    IBOutlet id          Profilstarty;
    
@@ -264,6 +266,9 @@
    rUtils*              Utils;
    rCNC*                CNC;
    NSMutableDictionary* PList;
+   
+   NSString*            Profil1;
+   NSString*            Profil2;
 
 }
 
@@ -292,7 +297,7 @@
 // Profil
 - (NSArray*)readProfilLib;
 - (void)SetLibProfile:(NSArray*)profile;
-- (IBAction)reportProfilPop:(id)sender;
+//- (IBAction)reportProfilPop:(id)sender;
 - (IBAction)reportProfilEinfuegen:(id)sender;
 - (IBAction)reportProfilLoeschen:(id)sender;
 - (IBAction)reportProfilSpiegelnHorizontal:(id)sender;
@@ -305,6 +310,7 @@
 
 // von 32
 - (void)doProfil1PopTaskMitProfil:(int)profil1;
+- (void)doProfilPopTaskMitProfil1:(int)profil1 mitProfil2: (int)profil2;
 - (void)doProfilEinfuegenTask;
 - (void)setOberseite:(int) ein;
 - (void)setUnterseite:(int) ein;

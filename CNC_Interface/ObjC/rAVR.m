@@ -615,7 +615,13 @@ void plot_line (int x0, int y0, int x1, int y1)
 
 - (void)awakeFromNib
 {
-   NSLog(@"AVR awakeFromNib");
+   NSLog(@"AVR awakeFromNib globalcounter: %d",globalcounter);
+   if(globalcounter)
+   {
+      return;
+   }
+   globalcounter++;
+   
    NSColor* bgcolor = [NSColor colorWithCalibratedRed:0.3 green:0.5 blue:0.8 alpha:1.0f];
    //self = [super initWithWindowNibName:@"AVR"];
    // self.layer.backgroundcolor = bgcolor;
@@ -1020,10 +1026,16 @@ void plot_line (int x0, int y0, int x1, int y1)
    }
    
    
-   [ProfilPop removeAllItems];
-   [ProfilPop addItemWithTitle:@"Profil waehlen"];
+   
+   [Profil1Pop removeAllItems];
+   [Profil1Pop addItemWithTitle:@"Profil waehlen"];
    NSArray* ProfilnamenArray = [self readProfilLib];
-   [ProfilPop addItemsWithTitles:ProfilnamenArray];
+   [Profil1Pop addItemsWithTitles:ProfilnamenArray];
+
+   [Profil2Pop removeAllItems];
+   [Profil2Pop addItemWithTitle:@"Profil waehlen"];
+   [Profil2Pop addItemsWithTitles:ProfilnamenArray];
+   
    
    
    motorstatus |= (1<<2);
@@ -1266,7 +1278,7 @@ return returnInt;
             // Profilname A
             if ([tempPListDic objectForKey:@"profilnamea"])
             {
-               //NSLog(@"profilnamea: %@",[tempPListDic objectForKey:@"profilnamea"]);
+               NSLog(@"profilnamea: %@",[tempPListDic objectForKey:@"profilnamea"]);
                [ProfilNameFeldA setStringValue:[tempPListDic objectForKey:@"profilnamea"]];
                
             }
@@ -1278,7 +1290,7 @@ return returnInt;
             // Profilname B
             if ([tempPListDic objectForKey:@"profilnameb"])
             {
-               //NSLog(@"profilnameb: %@",[tempPListDic objectForKey:@"profilnameb"]);
+               NSLog(@"profilnameb: %@",[tempPListDic objectForKey:@"profilnameb"]);
                [ProfilNameFeldB setStringValue:[tempPListDic objectForKey:@"profilnameb"]];
                
             }
@@ -2160,7 +2172,7 @@ return returnInt;
 // transfer
 - (NSArray*)readProfilLib
 {
-   NSMutableArray* tempLibElementArray = [[NSMutableArray alloc]initWithCapacity:0];
+   NSMutableArray* ProfilnamenArray = [[NSMutableArray alloc]initWithCapacity:0];
    BOOL LibOK=NO;
    BOOL istOrdner;
    
@@ -2169,30 +2181,24 @@ return returnInt;
    //NSURL* LibURL=[NSURL fileURLWithPath:LibPfad];
    LibOK= ([Filemanager fileExistsAtPath:ProfilLibPfad isDirectory:&istOrdner]&&istOrdner);
    NSLog(@"readProfilLib:    LibPfad: %@ LibOK: %d",ProfilLibPfad, LibOK );
-   if (LibOK)
-   {
-      ;
-   }
-   else
-   {
-      //Lib ist noch leer
-      
-      
-   }
-   
+    
    //NSLog(@"LibPfad: %@",LibPfad);
    if (LibOK)
    {
-      NSMutableArray* ProfilnamenArray = (NSMutableArray*)[Filemanager contentsOfDirectoryAtPath:ProfilLibPfad error:NULL];
+      ProfilnamenArray = (NSMutableArray*)[Filemanager contentsOfDirectoryAtPath:ProfilLibPfad error:NULL];
       [ProfilnamenArray removeObject:@".DS_Store"];
       [ProfilnamenArray removeObject:@" Profile ReadMe.txt"];
       //NSLog(@"readProfilLib ProfilnamenArray: %@",[ProfilnamenArray description]);
-      
+      for (int i=0;i<ProfilnamenArray.count;i++)
+      {
+         NSString* t =  [[ProfilnamenArray objectAtIndex:i]stringByDeletingPathExtension];
+         [ProfilnamenArray replaceObjectAtIndex:i withObject:t] ; 
+      }
       return ProfilnamenArray;
       
       
    }//LIBOK
-   return tempLibElementArray;
+   return ProfilnamenArray;
 }
 
 - (IBAction)showEinstellungen:(id)sender
@@ -2317,13 +2323,13 @@ return returnInt;
       {
          //NSLog(@"reportStartKnopf count 0");
          NSPoint tempStartPunkt=NSMakePoint(0, 0);
-         [WertAXFeld setFloatValue:(10.0+ einlauflaenge)];
+         [WertAXFeld setFloatValue:(20.0+ einlauflaenge)];
          [WertAYFeld setFloatValue:50.0];
          
          [WertAXStepper setFloatValue:[WertAXFeld intValue]];
          [WertAYStepper setFloatValue:[WertAYFeld intValue]];
 
-         [WertBXFeld setFloatValue:(10.0+ einlauflaenge)];
+         [WertBXFeld setFloatValue:(20.0+ einlauflaenge)];
          [WertBYFeld setFloatValue:50.0];
          
          [WertBXStepper setFloatValue:[WertBXFeld intValue]];
@@ -2351,7 +2357,7 @@ return returnInt;
          //NSLog(@"reportStartKnopf tempDic: %@",tempDic);
          [KoordinatenTabelle addObject:tempDic];
          //NSLog(@"reportStartKnopf KoordinatenTabelle: %@",KoordinatenTabelle);
-           [CNCDatenArray removeAllObjects];
+         [CNCDatenArray removeAllObjects];
          [CNCTable reloadData];
          if ([KoordinatenTabelle count])
          {
@@ -3683,6 +3689,10 @@ return returnInt;
    
 }
 
+- (IBAction)reportPWMStepper:(id)sender;
+{
+   NSLog(@"reportPWMStepper");
+}
 
 - (IBAction)reportPWMSlider:(id)sender
 {
@@ -5061,7 +5071,82 @@ return returnInt;
    
 }
 
+- (IBAction)reportProfil1Pop:(id)sender
+{
+   if ([Profil1Pop indexOfSelectedItem])
+   {
+      
+      NSLog(@"AVR reportProfil1Pop Profil: %@",[sender titleOfSelectedItem]);
+      NSString* profilname = [[[sender titleOfSelectedItem] componentsSeparatedByString:@"."]  objectAtIndex:0];
+      [ProfilNameFeldA setStringValue:profilname];
+      
+      //
+      if (!CNC_Eingabe)
+      {
+         CNC_Eingabe =[[rEinstellungen alloc]init];
+      }
+      
+      
+      NSMutableDictionary* datenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+      
+      [datenDic setObject:@"profil1" forKey:@"element"];
+      [datenDic setObject:[NSNumber numberWithFloat:[WertAXFeld floatValue]] forKey:@"startx"];//
+      [datenDic setObject:[NSNumber numberWithFloat:[WertAYFeld floatValue]] forKey:@"starty"];//
+      [datenDic setObject:[NSNumber numberWithInt:[Einlaufrand intValue]] forKey:@"einlaufrand"];//
+      [datenDic setObject:[NSNumber numberWithInt:[Auslaufrand intValue]] forKey:@"auslaufrand"];//
+      
+      [datenDic setObject:[NSNumber numberWithInt:[Einlauflaenge intValue]] forKey:@"einlauflaenge"];//
+      [datenDic setObject:[NSNumber numberWithInt:[Einlauftiefe intValue]] forKey:@"einlauftiefe"];//
+      [datenDic setObject:[NSNumber numberWithInt:[Auslauflaenge intValue]] forKey:@"auslauflaenge"];//
+      [datenDic setObject:[NSNumber numberWithInt:[Auslauftiefe intValue]] forKey:@"auslauftiefe"];//
+      
+      [datenDic setObject:[NSNumber numberWithFloat:[AbbrandFeld floatValue]] forKey:@"abbranda"];//
+      [datenDic setObject:[NSNumber numberWithInt:[Profil1Pop indexOfSelectedItem]] forKey:@"profil1index"];
+      [datenDic setObject:profilname forKey:@"profil1"];
+      
+      // [CNC_Eingabe setDaten:datenDic];
+      
+      NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+    //  [nc postNotificationName:@"profilpop" object:self userInfo:datenDic];
+      
+      
+   }
+   //
+   
+}
+- (IBAction)reportProfil2Pop:(id)sender
+{
+   if ([Profil2Pop indexOfSelectedItem])
+   {
+      
+      NSLog(@"AVR reportProfil2Pop Profil: %@",[sender titleOfSelectedItem]);
+      NSString* profilname = [[[sender titleOfSelectedItem] componentsSeparatedByString:@"."]  objectAtIndex:0];
+      [ProfilNameFeldB setStringValue:profilname];
+      
+      NSMutableDictionary* datenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 
+      [datenDic setObject:@"profil2" forKey:@"element"];
+      [datenDic setObject:[NSNumber numberWithFloat:[WertAXFeld floatValue]] forKey:@"startx"];
+      [datenDic setObject:[NSNumber numberWithFloat:[WertAYFeld floatValue]] forKey:@"starty"];
+      [datenDic setObject:[NSNumber numberWithInt:[Einlaufrand intValue]] forKey:@"einlaufrand"];
+      [datenDic setObject:[NSNumber numberWithInt:[Auslaufrand intValue]] forKey:@"auslaufrand"];
+
+      [datenDic setObject:[NSNumber numberWithInt:[Einlauflaenge intValue]] forKey:@"einlauflaenge"];
+      [datenDic setObject:[NSNumber numberWithInt:[Einlauftiefe intValue]] forKey:@"einlauftiefe"];
+      [datenDic setObject:[NSNumber numberWithInt:[Auslauflaenge intValue]] forKey:@"auslauflaenge"];
+      [datenDic setObject:[NSNumber numberWithInt:[Auslauftiefe intValue]] forKey:@"auslauftiefe"];
+
+      [datenDic setObject:[NSNumber numberWithFloat:[AbbrandFeld floatValue]] forKey:@"abbranda"];
+      [datenDic setObject:[NSNumber numberWithInt:[Profil1Pop indexOfSelectedItem]] forKey:@"profil2index"];
+      [datenDic setObject:profilname forKey:@"profil1"];
+      
+      
+      NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+    //  [nc postNotificationName:@"profilpop" object:self userInfo:datenDic];
+
+      
+   }
+}
 
 - (IBAction)reportProfil:(id)sender
 {
@@ -5076,7 +5161,7 @@ return returnInt;
    
    // Profil lesen
    [ProfilGraph setScale:[[ScalePop selectedItem]tag]];
-   NSLog(@"AVR openProfil scale: %d",[[ScalePop selectedItem]tag]);
+   NSLog(@"AVR openProfil scale: %ld",(long)[[ScalePop selectedItem]tag]);
    if ([WertAXFeld floatValue]==0)
    {
       [WertAXFeld setFloatValue:20.0 + [ProfilTiefeFeldA intValue]];
@@ -6890,28 +6975,28 @@ return returnInt;
    NSString* ProfilLibPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@%@",@"/Documents",@"/CNCDaten",@"/ProfilLib"];
    //NSURL* LibURL=[NSURL fileURLWithPath:LibPfad];
    LibOK= ([Filemanager fileExistsAtPath:ProfilLibPfad isDirectory:&istOrdner]&&istOrdner);
-   //NSLog(@"readProfilLib:    LibPfad: %@ LibOK: %d profilindex: %d",ProfilLibPfad, LibOK,[ProfilPop indexOfSelectedItem]+1);
+   //NSLog(@"readProfilLib:    LibPfad: %@ LibOK: %d profilindex: %d",ProfilLibPfad, LibOK,[Profil1Pop indexOfSelectedItem]+1);
    
    if (LibOK)
    {
       ProfilnamenArray = (NSMutableArray*)[Filemanager contentsOfDirectoryAtPath:ProfilLibPfad error:NULL];
       [ProfilnamenArray removeObject:@".DS_Store"];
       [ProfilnamenArray removeObject:@" Profile ReadMe.txt"];
-      //NSLog(@"readProfilLib ProfilnamenArray: %@ selected: %@",[ProfilnamenArray description], [[ProfilnamenArray objectAtIndex:[ProfilPop indexOfSelectedItem]+1] description]); // item 0 ist Titel
+      //NSLog(@"readProfilLib ProfilnamenArray: %@ selected: %@",[ProfilnamenArray description], [[ProfilnamenArray objectAtIndex:[Profil1Pop indexOfSelectedItem]+1] description]); // item 0 ist Titel
       
    }//LIBOK
    
-   NSArray* Profil1Array;
+  NSArray* Profil1Array;
    NSArray* Profil2Array;
    
    NSString* Profil1Name;
    NSString* Profil2Name;
    
-   if ([ProfilPop indexOfSelectedItem])
+   if ([Profil1Pop indexOfSelectedItem])
    {
-      int index=[ProfilPop indexOfSelectedItem]; // Item 0 ist Titel
-      //NSLog(@"reportProfilPop Profil aus Pop: %@",[ProfilPop itemTitleAtIndex:index]);
-      Profil1Name = [ProfilPop itemTitleAtIndex:index];
+      int index=[Profil1Pop indexOfSelectedItem]; // Item 0 ist Titel
+      //NSLog(@"reportProfilPop Profil aus Pop: %@",[Profil1Pop itemTitleAtIndex:index]);
+      Profil1Name = [Profil1Pop itemTitleAtIndex:index];
    }
    else
    {
@@ -6924,6 +7009,7 @@ return returnInt;
       }
    }
    
+     
    [[ProfilGraph viewWithTag:1001]setStringValue:[Profil1Name stringByDeletingPathExtension]];
    NSString* Profilpfad = [ProfilLibPfad stringByAppendingPathComponent:Profil1Name];
    
@@ -7253,6 +7339,25 @@ return returnInt;
    [datenDic setObject:[NSNumber numberWithInt:[Auslauftiefe intValue]] forKey:@"auslauftiefe"];
 
    [datenDic setObject:[NSNumber numberWithFloat:[AbbrandFeld floatValue]] forKey:@"abbranda"];
+   if ([Profil1Pop indexOfSelectedItem])
+   {
+      NSString* profilname = [[[Profil1Pop titleOfSelectedItem] componentsSeparatedByString:@"."]  objectAtIndex:0];
+      [datenDic setObject: profilname forKey:@"profil1"];
+   }
+   else
+   {
+      [datenDic setObject: @"***" forKey:@"profil1"];
+   }
+    if ([Profil2Pop indexOfSelectedItem])
+    {
+       NSString* profilname = [[[Profil2Pop titleOfSelectedItem] componentsSeparatedByString:@"."]  objectAtIndex:0];
+       [datenDic setObject: profilname forKey:@"profil2"];
+    }
+    else
+    {
+       [datenDic setObject: @"***" forKey:@"profil2"];
+    }
+ 
     
    NSModalSession session = [NSApp beginModalSessionForWindow:[CNC_Eingabe window]];
    //NSLog(@"runModalForWindow A");
@@ -7575,7 +7680,7 @@ return returnInt;
    if ([note userInfo])
    {
       ProfilDic = [note userInfo];
-      //NSLog(@"Profildic aus userInfo: %@",ProfilDic);
+      NSLog(@"Profildic aus userInfo: %@",ProfilDic);
    }
    else
    {
@@ -7647,7 +7752,7 @@ return returnInt;
    {
       [Profil1Array addObject:[Profil1RawArray objectAtIndex:0]];
       
-      [Profil2Array addObject:[Profil2RawArray objectAtIndex:0]];
+     // [Profil2Array addObject:[Profil2RawArray objectAtIndex:0]];
       
       for (int i=1;i<[Profil1RawArray count];i++)
       {
@@ -7669,12 +7774,12 @@ return returnInt;
          // distanz zum letzten registrierten Element im Array
          float regdist = hypotf(dx-prevregdx, dy-prevregdy)* MIN(ProfiltiefeA,ProfiltiefeB);
          
-         fprintf(stderr,"i: %d \t prevdx %2.2f \t dx%2.2f \t dist%2.2f \t regdist %2.2f \t ",i,prevdx,dx,dist,regdist);
+   //      fprintf(stderr,"i: %d \t prevdx %2.2f \t dx%2.2f \t dist%2.2f \t regdist %2.2f \t ",i,prevdx,dx,dist,regdist);
          //NSLog(@"i: %d dx %2.2f",i,dx);
          if (regdist>minabstand)
          {
             [Profil1Array addObject:[Profil1RawArray objectAtIndex:i]];
-            [Profil2Array addObject:[Profil2RawArray objectAtIndex:i]];
+      //      [Profil2Array addObject:[Profil2RawArray objectAtIndex:i]];
             int index =[Profil1Array count];
             //NSLog(@"i: %d index: %d dx %2.2f",i,index,dist);
             
@@ -7689,6 +7794,54 @@ return returnInt;
          fprintf(stderr,"\n");
       }
    } // if profil1RawArray
+   
+   if ( ([Profil2RawArray count]))
+   {
+      
+      [Profil2Array addObject:[Profil2RawArray objectAtIndex:0]];
+      NSLog(@"for Profil2RawArray start count: %d", [Profil2RawArray count]);
+      for (int i=1;i<[Profil2RawArray count];i++)
+      {
+         fprintf(stderr,"i: %d \n",i);
+         //letzte registrierte Werte
+         float prevregdx = [[[Profil2Array lastObject]objectForKey:@"x"]floatValue];
+         float prevregdy = [[[Profil2Array lastObject]objectForKey:@"y"]floatValue];
+         
+         // letzte Werte im RawArray
+         float prevdx = [[[Profil2RawArray objectAtIndex:i-1]objectForKey:@"x"]floatValue];
+         float prevdy = [[[Profil2RawArray objectAtIndex:i-1]objectForKey:@"y"]floatValue];
+         
+         // aktuelle Werte im RawArray
+         float dx = [[[Profil2RawArray objectAtIndex:i]objectForKey:@"x"]floatValue];
+         float dy = [[[Profil2RawArray objectAtIndex:i]objectForKey:@"y"]floatValue];
+         
+         // distanz zum letzten Element im RawArray
+         float dist = hypotf(dx-prevdx, dy-prevdy)* MIN(ProfiltiefeA,ProfiltiefeB);
+         
+         // distanz zum letzten registrierten Element im Array
+         float regdist = hypotf(dx-prevregdx, dy-prevregdy)* MIN(ProfiltiefeA,ProfiltiefeB);
+         
+         fprintf(stderr,"i: %d \t prevdx %2.2f \t dx%2.2f \t dist%2.2f \t regdist %2.2f \t ",i,prevdx,dx,dist,regdist);
+         //NSLog(@"i: %d dx %2.2f",i,dx);
+         if (regdist>minabstand)
+         {
+            [Profil2Array addObject:[Profil2RawArray objectAtIndex:i]];
+            int index =[Profil2Array count];
+            //NSLog(@"i: %d index: %d dx %2.2f",i,index,dist);
+            
+            fprintf(stderr,"\tindex: %d",index);
+         }
+         else
+         {
+            fprintf(stderr,"\t abstand zu klein ");
+         }
+         
+         // NSLog(@"i: %d dx: %2.2f",i,dx);
+         fprintf(stderr,"\n");
+      }
+      NSLog(@"for Profil2RawArray end");
+   }
+   
    float pfeilung = (ProfiltiefeA - ProfiltiefeB)/[Spannweite intValue];
    float arc=atan(pfeilung);
    //NSLog(@"pfeilung: %2.8f arc: %2.8f sinus: %2.8f",pfeilung,arc,sinus);
@@ -8133,7 +8286,7 @@ return returnInt;
    [ProfilGraph setDatenArray:KoordinatenTabelle];
    [ProfilGraph setNeedsDisplay:YES];
    [CNCTable reloadData];
-   [self saveProfileinstellungen];
+ //  [self saveProfileinstellungen];
    
    [CNC_Stoptaste setEnabled:YES];
    //   [self Blockeinfuegen];
@@ -8885,6 +9038,7 @@ return returnInt;
    NSLog(@"reportBlockanfuegen ");
    [self reportBlockkonfigurieren:NULL];
    NSLog(@"reportBlockanfuegen nach Blockkonfig");
+   
    if ([KoordinatenTabelle count])
    {
       if ([BlockKoordinatenTabelle count])
@@ -10577,16 +10731,16 @@ return returnInt;
 
    [self reportNeueLinie:NULL];
    int profilpopindex =0;
-   if ([ProfilPop indexOfSelectedItem])
+   if ([Profil1Pop indexOfSelectedItem])
    {
-      profilpopindex=[ProfilPop indexOfSelectedItem]; // Item 0 ist Titel
-      //NSLog(@"reportProfilOberseiteTask Profil aus Pop: %@",[ProfilPop itemTitleAtIndex:profilpopindex]);
+      profilpopindex=[Profil1Pop indexOfSelectedItem]; // Item 0 ist Titel
+      //NSLog(@"reportProfilOberseiteTask Profil aus Pop: %@",[Profil1Pop itemTitleAtIndex:profilpopindex]);
    }
    else
    {
       
       NSString* Profil1Name = [[ProfilNameFeldA stringValue]stringByAppendingPathExtension:@"txt"];
-      profilpopindex = [[ProfilPop itemTitles]indexOfObject:Profil1Name];
+      profilpopindex = [[Profil1Pop itemTitles]indexOfObject:Profil1Name];
       
       //NSLog(@"reportProfilPop profilpopindex: %d Profil aus ProfilNameFeldA: %@",profilpopindex,Profil1Name);
       if (profilpopindex == NSNotFound)
@@ -10611,6 +10765,7 @@ return returnInt;
 {
    NSDate *anfang = [NSDate date];
 
+   NSLog(@"reportProfilOberseiteTask ");
    [CNC_Stoptaste setState:0];
    //[self reportOberkanteAnfahren:NULL];
    [CNC_Neutaste performClick:NULL];
@@ -10618,29 +10773,54 @@ return returnInt;
    //[CNC_Starttaste setEnabled:NO];
    [CNC_Starttaste performClick:NULL]; // Startpunkt fixieren
    
-   [self reportNeueLinie:NULL];
-   //NSLog(@"reportProfilOberseiteTask items: %@",[[ProfilPop itemTitles]description]);
-   long profilpopindex =0;
-   if ([ProfilPop indexOfSelectedItem])
+   [self reportNeueLinie:NULL]; // Einstellungen aktivieren
+   
+  
+   long profil1popindex =0;
+   long profil2popindex =0;
+   if ([Profil1Pop indexOfSelectedItem])
    {
-      profilpopindex=[ProfilPop indexOfSelectedItem]; // Item 0 ist Titel
-      //NSLog(@"reportProfilOberseiteTask profilpopindex: %d Profil aus Pop: %@",profilpopindex,[ProfilPop itemTitleAtIndex:profilpopindex]);
+      profil1popindex=[Profil1Pop indexOfSelectedItem]; // Item 0 ist Titel
+      NSLog(@"reportProfilOberseiteTask profil1popindex: %d Profil aus Pop: %@",profil1popindex,[Profil1Pop itemTitleAtIndex:profil1popindex]);
    }
    else
    {
-      
       NSString* Profil1Name = [ProfilNameFeldA stringValue];
       if ([Profil1Name length] == 0)
       {
+         NSLog(@"reportProfilUnterseiteTask kein Profil 1");
          return;
       }
-      Profil1Name = [Profil1Name stringByAppendingPathExtension:@"txt"];
       
+      profil1popindex = [[Profil1Pop itemTitles]indexOfObject:Profil1Name];
       
-      profilpopindex = [[ProfilPop itemTitles]indexOfObject:Profil1Name];
+   }
+   
+   if ([Profil2Pop indexOfSelectedItem]) // ein Profil explizit ausgewaehlt
+   {
+      profil2popindex=[Profil2Pop indexOfSelectedItem]; // Item 0 ist Titel
+      NSLog(@"reportProfilOberseiteTask profil2popindex: %d Profil2 aus Pop: %@",profil2popindex,[Profil2Pop itemTitleAtIndex:profil2popindex]);
+   }
+   else
+   {
+      if([[ProfilNameFeldB stringValue]length ]== 0)
+      {
+         [ProfilNameFeldB setStringValue: [ProfilNameFeldA stringValue]];; // beide gleich
+      }
+      
+      NSString* Profil2Name = [ProfilNameFeldB stringValue];
+      if ([Profil2Name length] == 0)
+      {
+         NSLog(@"reportProfilPop kein Profil 2");
+         return;
+      }
+      //Profil2Name = [Profil2Name stringByAppendingPathExtension:@"txt"];
+      profil2popindex = [[Profil2Pop itemTitles]indexOfObject:Profil2Name];
+      [Profil2Pop selectItemAtIndex:profil2popindex];
+     
       
       //NSLog(@"reportProfilOberseiteTask profilpopindex: %d Profil aus ProfilNameFeldA: %@",profilpopindex,Profil1Name);
-      if (profilpopindex == NSNotFound)
+      if (profil1popindex == NSNotFound)
       {
          NSLog(@"reportProfilPop kein Profil");
          return;
@@ -10648,7 +10828,8 @@ return returnInt;
       
    }
 
-   [CNC_Eingabe doProfil1PopTaskMitProfil:profilpopindex];
+  // [CNC_Eingabe doProfil1PopTaskMitProfil:profil1popindex];
+   [CNC_Eingabe doProfilPopTaskMitProfil1:profil1popindex mitProfil2:profil2popindex];
    
    [CNC_Eingabe setOberseite:1];
    [CNC_Eingabe setUnterseite:0];
@@ -10670,7 +10851,7 @@ return returnInt;
 - (IBAction)reportProfilUnterseiteTask:(id)sender
 {
    
-   //NSLog(@"reportProfilUnterseiteTask A %d",[ProfilPop indexOfSelectedItem]);
+   //NSLog(@"reportProfilUnterseiteTask A %d",[Profil1Pop indexOfSelectedItem]);
 
    //[self reportOberkanteAnfahren:NULL];
    
@@ -10681,44 +10862,79 @@ return returnInt;
    
    [CNC_Starttaste performClick:NULL]; // Startpunkt fixieren
    [self reportNeueLinie:NULL];
-   
+  //[[CNC_Eingabe EinstellungenTab]selectItemAtIndex:3];
 
-   long profilpopindex =0;
+   //long profilpopindex =0;
+   long profil1popindex =0;
+   long profil2popindex =0;
+
+   //NSLog(@"reportProfilUnterseiteTask indexOfSelectedItem: %d",[Profil1Pop indexOfSelectedItem]);
    
-   //NSLog(@"reportProfilUnterseiteTask indexOfSelectedItem: %d",[ProfilPop indexOfSelectedItem]);
-   
-   if ([ProfilPop indexOfSelectedItem])
+   if ([Profil1Pop indexOfSelectedItem])
    {
       
-      profilpopindex=[ProfilPop indexOfSelectedItem]; // Item 0 ist Titel
-      //NSLog(@"reportProfilUnterseiteTask Profil aus Pop: %@",[ProfilPop itemTitleAtIndex:profilpopindex]);
+      profil1popindex=[Profil1Pop indexOfSelectedItem]; // Item 0 ist Titel
+      //NSLog(@"reportProfilUnterseiteTask Profil aus Pop: %@",[Profil1Pop itemTitleAtIndex:profilpopindex]);
    }
    else
    {
       
-      NSString* Profil1Name = [[ProfilNameFeldA stringValue]stringByAppendingPathExtension:@"txt"];
-      
-      profilpopindex = [[ProfilPop itemTitles]indexOfObject:Profil1Name];
-      
+      NSString* Profil1Name = [ProfilNameFeldA stringValue];
+      if ([Profil1Name length] == 0)
+      {
+         NSLog(@"reportProfilUnterseiteTask kein Profil 1");
+         return;
+      }
+      profil1popindex = [[Profil1Pop itemTitles]indexOfObject:Profil1Name];
       //NSLog(@"reportProfilUnterseiteTask profilpopindex: %ld Profil aus ProfilNameFeldA: %@",profilpopindex,Profil1Name);
-      if (profilpopindex == NSNotFound)
+      if (profil1popindex == NSNotFound)
       {
          NSLog(@"reportProfilUnterseiteTask kein Profil");
          
       }
    }
    
-   //NSLog(@"reportProfilUnterseiteTask profilpopindex: %d",profilpopindex);
-
    
-   [CNC_Eingabe doProfil1PopTaskMitProfil:profilpopindex];
+   //NSLog(@"reportProfilUnterseiteTask profil1popindex: %d",profilpopindex);
+
+   if ([Profil2Pop indexOfSelectedItem]) // ein Profil explizit ausgewaehlt
+   {
+      profil2popindex=[Profil2Pop indexOfSelectedItem]; // Item 0 ist Titel
+      NSLog(@"reportProfilOberseiteTask profil2popindex: %d Profil2 aus Pop: %@",profil2popindex,[Profil2Pop itemTitleAtIndex:profil2popindex]);
+   }
+   else
+   {
+      if([[ProfilNameFeldB stringValue]length ]== 0)
+      {
+         [ProfilNameFeldB setStringValue: [ProfilNameFeldA stringValue]];; // beide gleich
+      }
+      
+      NSString* Profil2Name = [ProfilNameFeldB stringValue];
+      if ([Profil2Name length] == 0)
+      {
+         NSLog(@"reportProfilPop kein Profil 2");
+         return;
+      }
+      //Profil2Name = [Profil2Name stringByAppendingPathExtension:@"txt"];
+      profil2popindex = [[Profil2Pop itemTitles]indexOfObject:Profil2Name];
+      [Profil2Pop selectItemAtIndex:profil2popindex];
+     
+      
+      //NSLog(@"reportProfilOberseiteTask profilpopindex: %d Profil aus ProfilNameFeldA: %@",profilpopindex,Profil1Name);
+      if (profil1popindex == NSNotFound)
+      {
+         NSLog(@"reportProfilPop kein Profil");
+         return;
+      }
+      
+   }
+
+   //[CNC_Eingabe doProfil1PopTaskMitProfil:profilpopindex];
+   [CNC_Eingabe doProfilPopTaskMitProfil1:profil1popindex mitProfil2:profil2popindex];
    
    [CNC_Eingabe setOberseite:0];
-   
    [CNC_Eingabe setUnterseite:1];
-   
    [CNC_Eingabe doProfilEinfuegenTask];
-   
    [CNC_Eingabe doSchliessenTask];
    
    //   [CNC_BlockKonfigurierenTaste performClick:NULL];
@@ -11791,8 +12007,13 @@ return returnInt;
 
 - (void)beendenAktion:(NSNotification*)note
 {
-    
-   [self saveCNCPlist];
+   NSLog(@"beendenAktion globalcounter: %d",globalcounter);
+   if (globalcounter)
+   {
+      [self saveCNCPlist];
+      globalcounter = 0;
+   }
+  
 }
 
 #pragma mark "Print"

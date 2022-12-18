@@ -109,14 +109,16 @@ return NULL;
       float deltax = [[[profil objectAtIndex:i]objectForKey:@"x"]floatValue] - [[[profil objectAtIndex:i-1]objectForKey:@"x"]floatValue];
       if (deltax == 0)
       {
-         NSLog(@"EndleistenwinkelvonProfil deltax ist 0");
+         NSLog(@"EndleistenwinkelvonProfil Oberseite deltax ist 0");
       }
-      
-      float deltay = [[[profil objectAtIndex:i]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:i-1]objectForKey:@"y"]floatValue];
-      float steigung= atanf(deltay/deltax);
-//      steigung *= -1;
-      steigungo+=steigung;
-      anzWerte++;
+      else
+      {
+         float deltay = [[[profil objectAtIndex:i]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:i-1]objectForKey:@"y"]floatValue];
+         float steigung= atanf(deltay/deltax);
+         //      steigung *= -1;
+         steigungo+=steigung;
+         anzWerte++;
+      }
       //NSLog(@"start i: %d steigung o: %2.3f grad: %2.3f",i,steigung, steigung/M_PI*180);
    }
 
@@ -129,13 +131,19 @@ return NULL;
       {
          NSLog(@"EndleistenwinkelvonProfil Unterseite deltax ist 0");
       }
-
-      float deltay = [[[profil objectAtIndex:[profil count]-1-i-1]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:[profil count]-1-i]objectForKey:@"y"]floatValue];
-      float steigung= atanf(deltay/deltax);
-//      steigung *= -1;
-      steigungu+= steigung;
-      //NSLog(@"end i: %d steigung u: %2.3f grad: %2.3f",endi,steigung, steigung/M_PI*180);
-   
+      else
+      {
+         float deltay = [[[profil objectAtIndex:[profil count]-1-i-1]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:[profil count]-1-i]objectForKey:@"y"]floatValue];
+         float steigung= atanf(deltay/deltax);
+         //      steigung *= -1;
+         steigungu+= steigung;
+         //NSLog(@"end i: %d steigung u: %2.3f grad: %2.3f",endi,steigung, steigung/M_PI*180);
+      }
+   }
+   if (anzWerte == 0)
+   {
+      NSLog(@"EndleistenwinkelvonProfil anzwerte = 0");
+      return 0;
    }
    steigungo /=anzWerte;
    steigungu /=anzWerte;
@@ -2402,7 +2410,6 @@ PortA=vs[n & 3]; warte10ms(); n++;
       // Maximum von x bestimmen: Nase
       int seitenindex=0;// Oberseite
       
-//		if (tempX < minX) // Minimum noch nicht erreicht, Oberseite
 		if (tempX > maxX) // Maximum noch nicht erreicht, Oberseite
       {
          maxX = tempX;

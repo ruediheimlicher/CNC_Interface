@@ -2245,6 +2245,7 @@
 {
    if ([Profil1Array count]==0)
    {
+      NSLog(@"reportProfilSpiegelnVertikal kein profil1array");
       return;
    }   
    //NSLog(@"reportProfilSpiegelnVertikal");
@@ -2263,6 +2264,21 @@
    }
    [ProfilStartpunktY setFloatValue:[[[Profil1Array objectAtIndex:0]objectForKey:@"y"]floatValue]];
    [ProfilEndpunktY setFloatValue:[[[Profil1Array lastObject]objectForKey:@"y"]floatValue]];
+   
+   if ([Profil2Array count] == 0)
+   {
+      NSLog(@"reportProfilSpiegelnVertikal kein profil2array");
+      return;
+   }
+   for (i=0;i< [Profil2Array count];i++)
+   {
+      NSMutableDictionary* tempZeilenDic = [NSMutableDictionary dictionaryWithDictionary:[Profil2Array objectAtIndex:i]];
+      float tempy=[[tempZeilenDic objectForKey:@"y"]floatValue];
+      tempy *= -1;
+      [tempZeilenDic setObject:[NSNumber numberWithFloat:tempy]forKey:@"y"];
+      [Profil2Array replaceObjectAtIndex:i withObject:tempZeilenDic];
+   }
+
    
    [self setProfilGraphDaten];
    [ProfilGraph setNeedsDisplay:YES];
@@ -2314,12 +2330,14 @@
 
 - (void)doProfilPopTaskMitProfil1:(int)profil1 mitProfil2: (int)profil2
 {
+   NSLog(@"doProfilPopTaskMitProfil1 start");
    [FlipHTaste setState:0];
    [FlipVTaste setState:0];
    [ReverseTaste setState:0];
    NSLog(@"profil1: %d profil2: %d",profil1, profil2);
    //profil2 = profil1;
    [EinstellungenTab selectTabViewItemAtIndex:3];
+   
    if (profil1)
    {
       
@@ -2350,7 +2368,7 @@
          }
           */
          NSLog(@"doProfil1PopTaskMitProfil ProfilName1: %@",Profil1Name);
-         if ([Profil1Dic objectForKey:@"profilarray"])
+         if ([Profil1Dic objectForKey:@"profilarray"]) 
          {
             [Profil1Array removeAllObjects];
             [Profil1Array addObjectsFromArray:[Profil1Dic objectForKey:@"profilarray"]];
@@ -2371,7 +2389,7 @@
          {
             NSLog(@"doProfil1PopTaskMitProfil mitProfil2 beide gleich");
             [Profil2Array removeAllObjects];
-            [Profil2Array addObjectsFromArray:Profil1];
+            [Profil2Array addObjectsFromArray:Profil1Array];
 
             [Profile2 selectItemAtIndex:profil1];    // Profil 2 ist  gleich
          }
@@ -2533,7 +2551,7 @@
 
 - (void)doProfilEinfuegenTask
 {
-   NSLog(@"doProfilEinfuegenTask");
+   NSLog(@"doProfilEinfuegenTask start");
    if ([Profil1Array count])
    {
       NSMutableDictionary* ProfilDic=[[NSMutableDictionary alloc]initWithCapacity:0];
@@ -2543,17 +2561,20 @@
       [ProfilDic setObject:Profil1Name forKey:@"profil1name"];
       
       //NSLog(@"reportProfilEinfuegen Profil1Array: %@",[Profil1Array description]);
-      [ProfilDic setObject:Profil1Array forKey:@"profilarray"];
+      //[ProfilDic setObject:Profil1Array forKey:@"profilarray"];
       [ProfilDic setObject:Profil1Array forKey:@"profil1array"];
       if ([Profil2Array count]) // verschiedene Profile
       {
          [ProfilDic setObject:Profil2Name forKey:@"profil2name"];
-      //   [ProfilDic setObject:Profil2Array forKey:@"profil2array"];
+         [ProfilDic setObject:Profil2Array forKey:@"profil2array"];
          
-         NSArray* syncarray  = [Utils anzahlwertesynchronisierenVon:[NSArray arrayWithObjects:Profil1Array, Profil2Array,nil]];
-         [ProfilDic setObject:syncarray[0] forKey:@"profil1array"];
-         [ProfilDic setObject:syncarray[1] forKey:@"profil2array"];
- 
+         if([Profil1Array count] != [Profil2Array count])
+         {
+           // NSArray* syncarray  = [Utils anzahlwertesynchronisierenVon:[NSArray arrayWithObjects:Profil1Array, Profil2Array,nil]];
+            NSArray* syncarray  = [Utils anzahlwerteanpassenVon:[NSArray arrayWithObjects:Profil1Array, Profil2Array,nil]];
+            [ProfilDic setObject:syncarray[0] forKey:@"profil1array"];
+            [ProfilDic setObject:syncarray[1] forKey:@"profil2array"];
+         }
          
       }
       else // gleiches Profil

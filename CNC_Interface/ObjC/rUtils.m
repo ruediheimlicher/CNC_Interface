@@ -209,7 +209,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 	int i=0;
 	
 	NSNumberFormatter *numberFormatter =[[NSNumberFormatter alloc] init];
-	[numberFormatter setMaximumFractionDigits:4];
+	[numberFormatter setMaximumFractionDigits:6];
 	[numberFormatter setFormat:@"##0.0000"];
 	
    // Nasenindex suchen
@@ -249,7 +249,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 		{
 			tempZeilenString=[tempZeilenString substringFromIndex:1];
 		}
-		//NSLog(@"tempZeilenString A: %@",tempZeilenString);
+		//NSLog(@"%d tempZeilenString A: %@",i,tempZeilenString);
 		NSRange LeerschlagRange=[tempZeilenString rangeOfString:@"  "];
 		//NSLog(@"LeerschlagRange start loc: %d l: %d",LeerschlagRange.location, LeerschlagRange.length);
 		while(LeerschlagRange.length )
@@ -275,19 +275,32 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 		float werty=[[tempZeilenArray objectAtIndex:1]floatValue];
 		NSString*tempX=[NSString stringWithFormat:@"%@", [numberFormatter stringFromNumber:[NSNumber numberWithFloat:wertx]]];
 		NSString*tempY=[NSString stringWithFormat:@"%@", [numberFormatter stringFromNumber:[NSNumber numberWithFloat:werty]]];
-		//NSLog(@"tempX: %@",tempX);
+		//NSLog(@"tempX: %@ tempY: %@",tempX,tempY);
 		//NSDictionary* tempDic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:wertx], @"x",
 		//[NSNumber numberWithFloat:werty], @"y",NULL];
-		NSDictionary* tempDic = [NSDictionary dictionaryWithObjectsAndKeys:tempX, @"x",tempY, @"y",[NSNumber numberWithFloat:1], @"data",NULL];
-		[ProfilArray addObject:tempDic];
-      if (wertx < minx)
+      
+      //if (wertx < minx)
+      if ((wertx == 0) && (Nasenindex == 0))
       {
          minx=wertx;
          Nasenindex=i;
+         
       }
+
+		NSDictionary* tempDic = [NSDictionary dictionaryWithObjectsAndKeys:tempX, @"x",tempY, @"y",[NSNumber numberWithFloat:1], @"data",NULL];
+		[ProfilArray addObject:tempDic];
+     
+      
       //[ProfilArray insertObject:tempDic atIndex:0];
 	}
 	
+   NSLog(@"Profilarray %@:",ProfilName);
+   for (int i=0;i<ProfilArray.count;i++)
+   {
+      fprintf(stderr,"%d \t %2.6f \t %2.6f \n",i,[[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue], [[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue]);
+   }
+
+   // Profil umdrehen
    ProfilArray = (NSMutableArray*)[self flipProfil:ProfilArray];
 	//NSLog(@"Utils openProfil ProfilArray: \n%@",[ProfilArray description]);
 	
@@ -295,19 +308,24 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    
    //NSLog(@"count: %d Nasenindex: %d",[ProfilArray count],Nasenindex);
    
-   //NSLog(@"Spline Oberseite");
+   NSLog(@"OberseiteArray");
    NSArray* OberseiteArray=[ProfilArray subarrayWithRange:NSMakeRange(0, Nasenindex+1)];
    
-   // NSDictionary* OberseiteSplineKoeffArray=[self SplinekoeffizientenVonArray:OberseiteArray];
+   for (int i=0;i<OberseiteArray.count;i++)
+   {
+      fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[OberseiteArray objectAtIndex:i]objectForKey:@"x"] floatValue],[[[OberseiteArray objectAtIndex:i]objectForKey:@"y"] floatValue]);
+   }
+  //NSDictionary* OberseiteSplineKoeffArray=[self SplinekoeffizientenVonArray:OberseiteArray];
    
+   NSLog(@"OberseiteArray");
    NSArray* UnterseiteArray=[ProfilArray subarrayWithRange:NSMakeRange(Nasenindex, [ProfilArray count]-Nasenindex)];
-   NSMutableArray * revUnterseiteArray = [NSMutableArray arrayWithCapacity:[UnterseiteArray count]];
+   NSMutableArray * revUnterseiteArray = [NSMutableArray new];
    //int i=0;
    for( i = 0; i < [UnterseiteArray count]; i++) 
    {
       [revUnterseiteArray addObject:[UnterseiteArray objectAtIndex:[UnterseiteArray count] - i - 1]];
    }
-   
+   NSLog(@"revUnterseiteArray");
    
    //NSLog(@"Spline Unterseite");
    
@@ -319,7 +337,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    
    
    
-   NSDictionary* ProfilDic=[NSDictionary dictionaryWithObjectsAndKeys:ProfilArray,@"profilarray", OberseiteArray,@"oberseitenarray",UnterseiteArray, @"unterseitenarray",ProfilName, @"profilname",NULL];
+   NSDictionary* ProfilDic=[NSDictionary dictionaryWithObjectsAndKeys:ProfilArray,@"profilarray", OberseiteArray,@"oberseitearray",UnterseiteArray, @"unterseitearray",ProfilName, @"profilname",NULL];
    //NSLog(@"Utils openProfil ProfilDic: \n%@",[ProfilDic description]);
 	return ProfilDic;
 }
@@ -481,6 +499,264 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 	return ProfilDic;
 }
 
+- (NSArray*)werteanpassenUnterseiteVon:(NSArray*) syncarray
+{
+   NSLog(@"werteanpassenUnterseiteVon start");
+   NSMutableArray* returncarray = [NSMutableArray new];
+   if([syncarray count] == 2)
+   {
+      NSArray* A = [syncarray objectAtIndex:0];
+      long mincount = 0;
+      NSArray* B = [syncarray objectAtIndex:1];
+      long maxcount = 0;
+    
+      
+      // profil Richtung rechts
+      NSArray* soll = [NSArray array]; // zu erreichen
+      NSArray* quelle = [NSArray array]; // 
+      
+      NSString* code = @"x";
+      int changedarraypos = -1; // position von changedarray im returnarray
+      if(A.count > B.count) // B ist soll und berechnet  Zwischenwerte von A durch Interpolation
+      {
+         code = @"soll:B quelle:A";
+         changedarraypos = 0; 
+         soll = B;
+         maxcount = A.count;
+         quelle = A; // liefert Werte fuer Interpolation
+         mincount = B.count;
+         
+      }
+      else // 
+      {
+         code = @"soll:A quelle:B";
+         changedarraypos = 1; 
+         soll = A;
+         maxcount = B.count;
+         quelle = B; // wird reduziert
+         mincount = A.count;
+      }
+      NSLog(@"A count: %d B count: %d \t code: %@ ",A.count, B.count, code );
+      
+      NSLog(@"soll:");
+      for (int i=0;i<soll.count;i++)
+      {
+         fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[soll objectAtIndex:i]objectForKey:@"x"] floatValue],[[[soll objectAtIndex:i]objectForKey:@"y"] floatValue]);
+      }
+      NSLog(@"quelle:");
+      for (int i=0;i<quelle.count;i++)
+      {
+         fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[quelle objectAtIndex:i]objectForKey:@"x" ] floatValue],[[[quelle objectAtIndex:i]objectForKey:@"y" ] floatValue]);
+      }
+      
+      NSLog(@"UA");
+      if ([[soll[0]objectForKey:@"x"] floatValue] > 0)
+      {
+         NSLog(@"soll an 0 > 0");
+      }
+ 
+      float maxdiff = 0;
+      int maxindex = 0;
+      int insertindex = 0;
+      NSMutableArray* changedarray =  [NSMutableArray new]; // soll mit Interpolationswerten aus quelle an positionen von soll aufgebaut werden
+      int sollstart = 0; // aktuelle Pos der Interpolation
+      NSDictionary* startdic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:0.0],@"x", [NSNumber numberWithFloat:0.0],@"y", nil];
+  //    [changedarray addObject:startdic];
+      for (int sollpos = 0;sollpos < soll.count; sollpos++)
+      {
+         NSLog(@"sollpos: %d",sollpos);
+         
+         float sollx = [[soll[sollpos]objectForKey:@"x"] floatValue]; // fuer diese pos den Wert auf quelle bestimmen
+         float quellposU = 0;
+         float changexU, changexO = 0; // Pos auf quelle vor und nach sollx
+         int quellestartpos = 1;
+         int quellesucherfolg = 0;
+         for (int quellepos = quellestartpos;quellepos < quelle.count; quellepos++)// Positionen auf quelle vor und nach sollx suchen, Beginn ab 1
+         {
+            float quellex = [[quelle[quellepos]objectForKey:@"x"] floatValue]; 
+            if((quellex < sollx) && (quellesucherfolg == 0) ) // Wert gefunden quellx abnehmend
+            {
+               changexO = quellex;
+               changexU = [[quelle[quellepos-1]objectForKey:@"x"] floatValue];
+               float diffx = changexO - changexU;
+               
+               
+               quellestartpos = quellepos;
+               NSLog(@"Wert gefunden quellepos bei %d: sollx: %2.6f changexO: %2.6f changexU: %2.6f",quellepos, sollx, changexO, changexU);
+               float changeyO = [[quelle[quellepos]objectForKey:@"y"] floatValue];
+               float changeyU = [[quelle[quellepos-1]objectForKey:@"y"] floatValue];
+               float diffy = changeyO - changeyU;
+               NSLog(@"diffx: %2.6f diffy: %2.6f",diffx, diffy);
+               float interpolY = changeyU + (diffy)/(diffx)*(sollx - changexU);
+               NSLog(@"changeyO: %2.6f changeyU: %2.6f  interpolY: %2.6f",changeyO,changeyU,interpolY);
+               
+               NSDictionary* tempdic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:sollx],@"x", [NSNumber numberWithFloat:interpolY],@"y", nil];
+               [changedarray addObject:tempdic];
+               
+               quellesucherfolg = 1;
+               continue;
+            }
+            
+         } // Interpolationswerte finden
+         
+         
+          //    sollstart = sollpos; // naechste loop beginnt hier
+      }
+      NSLog(@"UB");
+      // letztes El einfuegen
+      NSDictionary* lastdic = [NSDictionary dictionaryWithObjectsAndKeys:[[quelle lastObject]objectForKey:@"x"],@"x", [[quelle lastObject]objectForKey:@"y"],@"y", nil];
+     [changedarray addObject:lastdic];
+
+      NSLog(@"changedarray:");
+      for (int i=0;i<changedarray.count;i++)
+      {
+         fprintf(stderr,"%d \t %2.6f \t %2.6f \n",i,[[[changedarray objectAtIndex:i]objectForKey:@"x"]floatValue], [[[changedarray objectAtIndex:i]objectForKey:@"y"]floatValue]);
+      }
+      NSLog(@"UC");
+      NSLog(@"werteanpassenUnterseiteVon end");
+      if (changedarraypos == 1) // pos 1 fuer changedarray
+      {
+         return [NSArray arrayWithObjects: soll, changedarray, nil];
+      }
+      else if (changedarraypos == 0)
+      {
+         return [NSArray arrayWithObjects: changedarray,soll, nil];
+      }
+      
+   }
+   
+  
+   return nil;
+}
+
+- (NSArray*)werteanpassenOberseiteVon:(NSArray*) syncarray
+{
+   NSLog(@"werteanpassenOberseiteVon start");
+   NSMutableArray* returncarray = [NSMutableArray new];
+   if([syncarray count] == 2)
+   {
+      NSArray* A = [syncarray objectAtIndex:0];
+      long mincount = 0;
+      NSArray* B = [syncarray objectAtIndex:1];
+      long maxcount = 0;
+      
+      
+      
+      // profil Richtung rechts
+      NSArray* soll = [NSArray array]; // zu erreichen
+      NSArray* quelle = [NSArray array]; // 
+      
+      NSString* code = @"x";
+      int changedarraypos = -1; // position von changedarray im returnarray
+      if(A.count > B.count) // B ist soll und berechnet  Zwischenwerte von A durch Interpolation
+      {
+         code = @"soll:B quelle:A";
+         changedarraypos = 0; 
+         soll = B;
+         maxcount = A.count;
+         quelle = A; // liefert Werte fuer Interpolation
+         mincount = B.count;
+         
+      }
+      else // 
+      {
+         code = @"soll:A quelle:B";
+         changedarraypos = 1; 
+         soll = A;
+         maxcount = B.count;
+         quelle = B; // wird reduziert
+         mincount = A.count;
+      }
+      NSLog(@"A count: %d B count: %d \t code: %@ ",A.count, B.count, code );
+      
+      NSLog(@"soll:");
+      for (int i=0;i<soll.count;i++)
+      {
+         fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[soll objectAtIndex:i]objectForKey:@"x"] floatValue],[[[soll objectAtIndex:i]objectForKey:@"y"] floatValue]);
+      }
+      NSLog(@"quelle:");
+      for (int i=0;i<quelle.count;i++)
+      {
+         fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[quelle objectAtIndex:i]objectForKey:@"x" ] floatValue],[[[quelle objectAtIndex:i]objectForKey:@"y" ] floatValue]);
+      }
+      
+      NSLog(@"OA");
+ 
+      float maxdiff = 0;
+      int maxindex = 0;
+      int insertindex = 0;
+      NSMutableArray* changedarray =  [NSMutableArray new]; // soll mit Interpolationswerten aus quelle an positionen von soll aufgebaut werden
+      int sollstart = 0; // aktuelle Pos der Interpolation
+      NSDictionary* startdic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:0.0],@"x", [NSNumber numberWithFloat:0.0],@"y", nil];
+  //    [changedarray addObject:startdic];
+      for (int sollpos = 0;sollpos < soll.count; sollpos++)
+      {
+         NSLog(@"sollpos: %d",sollpos);
+         
+         float sollx = [[soll[sollpos]objectForKey:@"x"] floatValue]; // fuer diese pos den Wert auf quelle bestimmen
+         float quellposU = 0;
+         float changexU, changexO = 0; // Pos auf quelle vor und nach sollx
+         int quellestartpos = 1;
+         int quellesucherfolg = 0;
+         for (int quellepos = quellestartpos;quellepos < quelle.count; quellepos++)// Positionen auf quelle vor und nach sollx suchen, Beginn ab 1
+         {
+            float quellex = [[quelle[quellepos]objectForKey:@"x"] floatValue]; 
+            if((quellex > sollx) && (quellesucherfolg == 0) ) // Wert gefunden
+            {
+               changexO = quellex;
+               changexU = [[quelle[quellepos-1]objectForKey:@"x"] floatValue];
+               float diffx = changexO - changexU;
+               
+               
+               quellestartpos = quellepos;
+               NSLog(@"Wert gefunden quellepos bei %d: sollx: %2.6f changexO: %2.6f changexU: %2.6f",quellepos, sollx, changexO, changexU);
+               float changeyO = [[quelle[quellepos]objectForKey:@"y"] floatValue];
+               float changeyU = [[quelle[quellepos-1]objectForKey:@"y"] floatValue];
+               float diffy = changeyO - changeyU;
+               NSLog(@"diffx: %2.6f diffy: %2.6f",diffx, diffy);
+               float interpolY = changeyU + (diffy)/(diffx)*(sollx - changexU);
+               NSLog(@"changeyO: %2.6f changeyU: %2.6f  interpolY: %2.6f",changeyO,changeyU,interpolY);
+               
+               NSDictionary* tempdic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:sollx],@"x", [NSNumber numberWithFloat:interpolY],@"y", nil];
+               [changedarray addObject:tempdic];
+
+               
+               
+               quellesucherfolg = 1;
+               continue;
+            }
+            
+         } // Interpolationswerte finden
+         
+         
+          //    sollstart = sollpos; // naechste loop beginnt hier
+      }
+      NSLog(@"OB");
+      // letztes El einfuegen
+      NSDictionary* lastdic = [NSDictionary dictionaryWithObjectsAndKeys:[[quelle lastObject]objectForKey:@"x"],@"x", [[quelle lastObject]objectForKey:@"y"],@"y", nil];
+     [changedarray addObject:lastdic];
+
+      NSLog(@"changedarray:");
+      for (int i=0;i<changedarray.count;i++)
+      {
+         fprintf(stderr,"%d \t %2.6f \t %2.6f \n",i,[[[changedarray objectAtIndex:i]objectForKey:@"x"]floatValue], [[[changedarray objectAtIndex:i]objectForKey:@"y"]floatValue]);
+      }
+      NSLog(@"OC");
+      NSLog(@"werteanpassenOberseiteVon end");
+      if (changedarraypos == 1) // pos 1 fuer changedarray
+      {
+         return [NSArray arrayWithObjects: soll, changedarray, nil];
+      }
+      else if (changedarraypos == 0)
+      {
+         return [NSArray arrayWithObjects: changedarray,soll, nil];
+      }
+      
+   }
+   
+  
+   return nil;
+}
 - (NSArray*)anzahlwerteanpassenVon:(NSArray*) syncarray
 {
    NSMutableArray* returncarray = [NSMutableArray new];
@@ -491,6 +767,19 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
       NSArray* B = [syncarray objectAtIndex:1];
       long maxcount = 0;
       
+      for (int i=0;i<A.count;i++)
+      {
+         fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[A objectAtIndex:i]objectForKey:@"x"] floatValue],[[[A objectAtIndex:i]objectForKey:@"y"] floatValue]);
+      }
+
+      for (int i=0;i<B.count;i++)
+      {
+         fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[B objectAtIndex:i]objectForKey:@"x" ] floatValue],[[[B objectAtIndex:i]objectForKey:@"y" ] floatValue]);
+      }
+      
+      
+      
+      // profil Richtung rechts
       NSArray* soll = [NSArray array]; // zu erreichen
       NSArray* quelle = [NSArray array]; // 
       
@@ -517,66 +806,64 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
       }
       NSLog(@"A count: %d B count: %d \t code: %@ ",A.count, B.count, code );
       
-      // Ober- und unterseite trennen. Grenze bei x = 0
-      NSMutableArray* OberseiteQuelle = [NSMutableArray new];
-      NSMutableArray* UnterseiteQuelle = [NSMutableArray new];
-      int nasenindexQuelle = 0;
-      for (int i=0;i<quelle.count;i++)
-      {
-         NSLog(@"i: %d x: %2.4f",i,[[quelle [i]objectForKey:@"x"] floatValue]);
-         if ((i > 0) && ([[quelle [i]objectForKey:@"x"] floatValue] == 0))
-         {
-            nasenindexQuelle = i;
-            NSLog(@"nase: i: %d",i);
-            // wert noch in Oberseite einsetzen
-            [OberseiteQuelle addObject:quelle [i]];
-         }
-         if (nasenindexQuelle == 0) // oberseite
-         {
-            [OberseiteQuelle addObject:quelle [i]];
-         }
-         else // unterseite
-         {
-            [UnterseiteQuelle addObject:quelle [i]];
-         }
-      }
-      
-      NSLog(@"OberseiteQuelle count: %d UnterseiteQuelle count: %d", OberseiteQuelle.count, UnterseiteQuelle.count);
-      
-      
-      
-      NSMutableArray* OberseiteSoll = [NSMutableArray new];
-      NSMutableArray* UnterseiteSoll = [NSMutableArray new];
-      
-      
+       
       float maxdiff = 0;
       int maxindex = 0;
       int insertindex = 0;
-      NSMutableArray* changedarray =  [NSMutableArray arrayWithArray:quelle]; // soll mit Interpolationswerten ergaenzt werden
+      NSMutableArray* changedarray =  [NSMutableArray arrayWithArray:soll]; // soll mit Interpolationswerten reduziert werden
       
       int missing = (float)maxcount - (int)mincount; // anzahl Einschiebungen
       NSLog(@"missing: %d",missing);
       
+      // 
       for (int pos = 0;pos < missing;pos++)
       {
-         maxindex = 0; // index am Ende des groessten Intervalls
+         maxindex = 0; // index am Ende des groessten Intervalls in quelle
          maxdiff = 0; // max Intervall x
          float now = 0;
-         float last = 0;
-         for(int i=1;i<changedarray.count;i++)
+         float prev = 0;
+         // 
+         for(int i=1;i<changedarray.count;i++) // index 0 ueberspringen
          {
-            now = [[changedarray[i]objectForKey:@"x"] floatValue];
-            last = [[changedarray[i-1]objectForKey:@"x"] floatValue];
+            now = [[soll[i]objectForKey:@"x"] floatValue];
+            prev = [[soll[i-1]objectForKey:@"x"] floatValue];
             
-            float diff = now - last;
+            float diff = fabsf(now - prev);
+            //NSLog(@"%d now: %2.4f prev: %2.4f  diff: %2.4f ",i,now, prev, diff);
             if(diff > maxdiff)
             {
                maxdiff = diff;
                maxindex = i;
+               //continue;
             }
          }
          
-         // Groesstes Intevall liegt zwischen maxindex-1 und maxindex
+         // Groesstes Intevall in quelle liegt zwischen maxindex-1 und maxindex
+         
+         // Wert auf changedarray suchen, der nach x von maxindex-1 kommt
+         // x-Intervall auf quelle
+         float checkx0 = [[soll[maxindex-1]objectForKey:@"x"]floatValue];
+         float checkx1 = [[soll[maxindex]objectForKey:@"x"]floatValue];
+         NSLog(@"maxindex: %d checkx0: %2.4f checkx1: %2.4f",maxindex, checkx0, checkx1);
+         int nextx = 0;
+         
+         for(int k=0;k<changedarray.count-1;k++) // letztes Element auslassen
+         {
+             fprintf(stderr,"%d \t%2.6f \t%2.6f\n",k,[[[changedarray objectAtIndex:k]objectForKey:@"x"]floatValue],[[[changedarray objectAtIndex:k]objectForKey:@"y"]floatValue]);
+            if ([[[changedarray objectAtIndex:k]objectForKey:@"x"]floatValue] > checkx0) // x liegt ueber checkx0
+            {
+               // bingo
+               nextx = k;
+               // next x auf changedarray suchen
+               if([[[changedarray objectAtIndex:k+1]objectForKey:@"x"]floatValue] < checkx1)
+               {
+                  NSLog(@"Punkt %d auf changedarray liegt innerhalb intervall", k);
+               }
+               
+            }
+         }
+         
+         
          // Mittelwert x
          float midx = ([[changedarray[maxindex]objectForKey:@"x"] floatValue] + [[changedarray[maxindex-1]objectForKey:@"x"] floatValue])/2;
          

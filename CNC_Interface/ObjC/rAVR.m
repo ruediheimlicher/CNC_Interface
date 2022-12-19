@@ -7861,7 +7861,7 @@ return returnInt;
    if (Profil1Array.count != Profil2Array.count)
    {
       NSLog(@"LibProfileingabeAktion count ungleich");
-      NSArray* redarray  = [Utils anzahlwerteanpassenVon:[NSArray arrayWithObjects:Profil1Array, Profil2Array,nil]];
+      NSArray* redarray  = [Utils werteanpassenOberseiteVon:[NSArray arrayWithObjects:Profil1Array, Profil2Array,nil]];
  
       Profil1Array = [redarray objectAtIndex:0];
       Profil2Array = [redarray objectAtIndex:1];
@@ -10818,7 +10818,7 @@ return returnInt;
    if ([Profil1Pop indexOfSelectedItem])
    {
       profil1popindex=[Profil1Pop indexOfSelectedItem]; // Item 0 ist Titel
-      NSLog(@"reportProfilOberseiteTask profil1popindex: %d Profil aus Pop: %@",profil1popindex,[Profil1Pop itemTitleAtIndex:profil1popindex]);
+      NSLog(@"reportProfilOberseiteTask profil1popindex: %d Profil1 aus Pop: %@  Profil2 aus Pop: %@",profil1popindex,[Profil1Pop itemTitleAtIndex:profil1popindex],[Profil2Pop itemTitleAtIndex:profil2popindex]);
    }
    else
    {

@@ -582,13 +582,13 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
                
                
                quellestartpos = quellepos;
-               NSLog(@"Wert gefunden quellepos bei %d: sollx: %2.6f changexO: %2.6f changexU: %2.6f",quellepos, sollx, changexO, changexU);
+               //NSLog(@"Wert gefunden quellepos bei %d: sollx: %2.6f changexO: %2.6f changexU: %2.6f",quellepos, sollx, changexO, changexU);
                float changeyO = [[quelle[quellepos]objectForKey:@"y"] floatValue];
                float changeyU = [[quelle[quellepos-1]objectForKey:@"y"] floatValue];
                float diffy = changeyO - changeyU;
-               NSLog(@"diffx: %2.6f diffy: %2.6f",diffx, diffy);
+               //NSLog(@"diffx: %2.6f diffy: %2.6f",diffx, diffy);
                float interpolY = changeyU + (diffy)/(diffx)*(sollx - changexU);
-               NSLog(@"changeyO: %2.6f changeyU: %2.6f  interpolY: %2.6f",changeyO,changeyU,interpolY);
+               //NSLog(@"changeyO: %2.6f changeyU: %2.6f  interpolY: %2.6f",changeyO,changeyU,interpolY);
                
                NSDictionary* tempdic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:sollx],@"x", [NSNumber numberWithFloat:interpolY],@"y", nil];
                [changedarray addObject:tempdic];
@@ -709,13 +709,13 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
                
                
                quellestartpos = quellepos;
-               NSLog(@"Wert gefunden quellepos bei %d: sollx: %2.6f changexO: %2.6f changexU: %2.6f",quellepos, sollx, changexO, changexU);
+               //NSLog(@"Wert gefunden quellepos bei %d: sollx: %2.6f changexO: %2.6f changexU: %2.6f",quellepos, sollx, changexO, changexU);
                float changeyO = [[quelle[quellepos]objectForKey:@"y"] floatValue];
                float changeyU = [[quelle[quellepos-1]objectForKey:@"y"] floatValue];
                float diffy = changeyO - changeyU;
-               NSLog(@"diffx: %2.6f diffy: %2.6f",diffx, diffy);
+               //NSLog(@"diffx: %2.6f diffy: %2.6f",diffx, diffy);
                float interpolY = changeyU + (diffy)/(diffx)*(sollx - changexU);
-               NSLog(@"changeyO: %2.6f changeyU: %2.6f  interpolY: %2.6f",changeyO,changeyU,interpolY);
+               //NSLog(@"changeyO: %2.6f changeyU: %2.6f  interpolY: %2.6f",changeyO,changeyU,interpolY);
                
                NSDictionary* tempdic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:sollx],@"x", [NSNumber numberWithFloat:interpolY],@"y", nil];
                [changedarray addObject:tempdic];

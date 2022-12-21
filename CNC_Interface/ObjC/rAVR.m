@@ -7619,8 +7619,8 @@ return returnInt;
    
    NSString* ProfilNameA;
    NSString* ProfilNameB;
-   NSArray* ProfilArrayA;
-   NSArray* ProfilArrayB;
+   NSMutableArray* ProfilArrayA;
+   NSMutableArray* ProfilArrayB;
    
    // NSArray* ProfilUArray;
    float offsetx = [ProfilBOffsetXFeld floatValue];
@@ -7659,6 +7659,15 @@ return returnInt;
    float abrby = 0;;
    
    
+   NSMutableArray* Profil1Array = [[NSMutableArray alloc]initWithCapacity:0];
+   NSMutableArray* Profil1UnterseiteArray = [NSMutableArray new];
+   NSMutableArray* Profil1OberseiteArray = [NSMutableArray new];
+   NSMutableArray* Profil2UnterseiteArray = [NSMutableArray new];
+   NSMutableArray* Profil2OberseiteArray = [NSMutableArray new];
+   
+   
+   NSMutableArray* Profil2Array = [[NSMutableArray alloc]initWithCapacity:0];
+
    
    NSPoint AbbrandStartpunktA;
    NSPoint AbbrandStartpunktB;
@@ -7669,7 +7678,7 @@ return returnInt;
    
    float origpwm=[DC_PWM intValue];
    
-   if ([KoordinatenTabelle count])
+   if ([KoordinatenTabelle count]) // 6 elements ax ay bx by pwm index
    {
       ax = [[[KoordinatenTabelle lastObject]objectForKey:@"ax"]floatValue];
       ay = [[[KoordinatenTabelle lastObject]objectForKey:@"ay"]floatValue];
@@ -7724,8 +7733,6 @@ return returnInt;
       ProfilNameA=[ProfilDic objectForKey:@"profil1name"]; //Dic mit Keys x,y. Werte sind normiert auf Bereich 0-1
       [ProfilNameFeldA setStringValue:ProfilNameA];
       [[ProfilGraph viewWithTag:1001]setStringValue:ProfilNameA];
-      
-      
    }
    
    if ([ProfilDic objectForKey:@"profil2name"])
@@ -7733,6 +7740,7 @@ return returnInt;
       ProfilNameB=[ProfilDic objectForKey:@"profil2name"]; //Dic mit Keys x,y. Werte sind normiert auf Bereich 0-1
       [ProfilNameFeldB setStringValue:ProfilNameB];
    }
+   /*
    
    // Dic mit keys x,y,index, Werte mit wahrer laenge in mm proportional Profiltiefe
    
@@ -7745,6 +7753,7 @@ return returnInt;
       //NSLog(@"Profil1RawArray: %d",[Profil1RawArray count]);
       [AnzahlFeld setIntValue:[Profil1RawArray count]];
    }
+   
    NSArray* Profil2RawArray=[NSArray array];
    if ([ProfilDic objectForKey:@"profil2array"])
    {
@@ -7753,9 +7762,7 @@ return returnInt;
    
    
    
-   NSMutableArray* Profil1Array = [[NSMutableArray alloc]initWithCapacity:0];
-   NSMutableArray* Profil2Array = [[NSMutableArray alloc]initWithCapacity:0];
-   //NSLog(@"Profil1RawArray %@",[Profil1RawArray valueForKey:@"x"]);
+    //NSLog(@"Profil1RawArray %@",[Profil1RawArray valueForKey:@"x"]);
    
    float minabstand=[MinimaldistanzFeld floatValue];
    
@@ -7861,20 +7868,20 @@ return returnInt;
    if (Profil1Array.count != Profil2Array.count)
    {
       NSLog(@"LibProfileingabeAktion count ungleich");
-      NSArray* redarray  = [Utils werteanpassenOberseiteVon:[NSArray arrayWithObjects:Profil1Array, Profil2Array,nil]];
- 
-      Profil1Array = [redarray objectAtIndex:0];
-      Profil2Array = [redarray objectAtIndex:1];
- 
-       
-      //NSArray* syncarray  = [Utils anzahlwertesynchronisierenVon:[NSArray arrayWithObjects:Profil1Array, Profil2Array,nil]];
-
-      //Profil1Array = [syncarray objectAtIndex:0];
-      //Profil2Array = [syncarray objectAtIndex:1];
-      
+      return;     
        
    }
+   */
+   //end
    
+   Profil1Array=[ProfilDic objectForKey:@"profil1array"];
+   Profil1UnterseiteArray=[ProfilDic objectForKey:@"unterseitearrayA"];
+   Profil1OberseiteArray=[ProfilDic objectForKey:@"oberseitearrayA"];
+    
+   Profil2Array=[ProfilDic objectForKey:@"profil1array"];
+   Profil2UnterseiteArray=[ProfilDic objectForKey:@"unterseitearrayB"];
+   Profil2OberseiteArray=[ProfilDic objectForKey:@"oberseitearrayB"];
+  
    float pfeilung = (ProfiltiefeA - ProfiltiefeB)/[Spannweite intValue];
    float arc=atan(pfeilung);
    //NSLog(@"pfeilung: %2.8f arc: %2.8f sinus: %2.8f",pfeilung,arc,sinus);
@@ -7904,30 +7911,7 @@ return returnInt;
    
    // NSLog(@"pfeilung 2: %2.4f TiefeA: %2.2f TiefeB: %2.2f testB: %2.2f",pfeilung,TiefeA,TiefeB, testB);
    
-   /*
-    switch ([GleichesProfilRadioKnopf selectedRow])
-    {
-    case 0: // beide gleich
-    {
-    [ProfilNameFeldA setStringValue:Profil1Name];
-    [ProfilNameFeldB setStringValue:Profil1Name];
-    
-    }break;
-    case 1: // Profil A
-    {
-    [ProfilNameFeldB setStringValue:Profil1Name];
-    
-    }break;
-    case 2: // Profil B
-    {
-    [ProfilNameFeldB setStringValue:Profil2Name];
-    
-    }break;
-    
-    
-    } // switch radio
-    */
-   
+  
    einlauflaenge = [[ProfilDic objectForKey:@"einlauflaenge"]intValue];
    einlauftiefe = [[ProfilDic objectForKey:@"einlauftiefe"]intValue];
    einlaufrand = [[ProfilDic objectForKey:@"einlaufrand"]intValue];
@@ -8044,10 +8028,22 @@ return returnInt;
     Profil2Array = [Utils wrenchProfil:Profil2Array mitWrench:[ProfilWrenchFeld floatValue]];
     }
     */
-   //NSDictionary* ProfilpunktDicA=[CNC ProfilDicVonPunkt:StartpunktA mitProfil:Profil1Array mitProfiltiefe:ProfiltiefeA mitScale:[[ScalePop selectedItem]tag]];
+   
+   // auf Profiltiefe umrechnen
+   
+   Profil1UnterseiteArray=(NSMutableArray*)[CNC ProfilArrayVonPunkt:StartpunktA mitProfil:Profil1UnterseiteArray mitProfiltiefe:ProfiltiefeA mitScale:[[ScalePop selectedItem]tag]];
+   Profil1OberseiteArray=(NSMutableArray*)[CNC ProfilArrayVonPunkt:StartpunktA mitProfil:Profil1OberseiteArray mitProfiltiefe:ProfiltiefeA mitScale:[[ScalePop selectedItem]tag]];
+
+   Profil2UnterseiteArray=(NSMutableArray*)[CNC ProfilArrayVonPunkt:StartpunktB mitProfil:Profil2UnterseiteArray mitProfiltiefe:ProfiltiefeB mitScale:[[ScalePop selectedItem]tag]];
+   Profil2OberseiteArray=(NSMutableArray*)[CNC ProfilArrayVonPunkt:StartpunktB mitProfil:Profil2OberseiteArray mitProfiltiefe:ProfiltiefeB mitScale:[[ScalePop selectedItem]tag]];
+
+   
+   
    int tag = [[ScalePop selectedItem]tag];
    NSLog(@"ScalePop selectedItem]tag: %d",tag);
    
+   
+   /*
    // Koordinaten aufteilen auf ober- und unterseite: 
    NSDictionary* ProfilpunktDicA=[CNC ProfilDicVonPunkt:StartpunktA mitProfil:Profil1Array mitProfiltiefe:TiefeA mitScale:[[ScalePop selectedItem]tag]];
    
@@ -8055,17 +8051,23 @@ return returnInt;
    
    
    //NSLog(@"ProfilpunktDicA %@",[ProfilpunktDicA description]);
-   ProfilArrayA = [ProfilpunktDicA objectForKey:@"profilpunktarray"];
+    */
+   ProfilArrayA = [ProfilDic objectForKey:@"profil1array"];
    
-   ProfilArrayB = [ProfilpunktDicB objectForKey:@"profilpunktarray"];
+   ProfilArrayB = [ProfilDic objectForKey:@"profil2array"];
    
+   
+  
+    
    //NSLog(@"wrench: %2.2f",[ProfilWrenchFeld floatValue]);
    
    //NSLog(@"wrench: %2.2f ProfilArrayB %@",[ProfilWrenchFeld floatValue],[ProfilArrayB description]);
    
    
    
-   int Nasenindex=[[ProfilpunktDicA objectForKey:@"nase"]intValue];
+   int Nasenindex = [[ProfilDic objectForKey:@"unterseitearrayA"]count];
+   
+   
    //NSLog(@"AVR ProfilArrayA count: %d",[ProfilArrayA count]);
    
    // NSLog(@"AVR ProfilOArray: %@",[ProfilOArray description]);
@@ -8092,24 +8094,29 @@ return returnInt;
       // Startindex fixieren, wird fuer Abbrand gebraucht fuer 'von'
       profilstartindex = [[[KoordinatenTabelle lastObject]objectForKey:@"index"]intValue];
       profilstartindex =[KoordinatenTabelle count];
-      
+
+      // mit unter/oberseitearrayA/B abarbeiten
       //NSLog(@"profilstartindex: %d",profilstartindex);
-      for (index=0;index<= Nasenindex;index++) // Punkte der Oberseite
+      for (index=0;index< Profil1OberseiteArray.count;index++) // Punkte der Oberseite
       {
-         NSDictionary* tempZeilenDicA = [ProfilArrayA objectAtIndex:index];
-         NSDictionary* tempZeilenDicB = [ProfilArrayB objectAtIndex:index];
+         //NSLog(@"Profil1OberseiteArray index: %d",index);
+         NSDictionary* tempZeilenDicA = [Profil1OberseiteArray objectAtIndex:index];
+         
+         NSDictionary* tempZeilenDicB = [Profil2OberseiteArray objectAtIndex:index];
          NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"x"] forKey:@"ax"];
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"y"] forKey:@"ay"];
          [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
          [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"y"] forKey:@"by"];
-         [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"index"] forKey:@"index"];
+        // [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"index"] forKey:@"index"];
          [tempZeilenDic setObject:[NSNumber numberWithInt:20] forKey:@"teil"]; // Kennzeichnung Oberseite
          // pwm
          [tempZeilenDic setObject:[NSNumber numberWithInt:origpwm] forKey:@"pwm"];
          [KoordinatenTabelle addObject:tempZeilenDic];
          //NSLog(@"index: %d x: %1.3f",index,[[[ProfilArrayA objectAtIndex:index]objectForKey:@"ax"]floatValue]);
       }
+ 
+      NSLog(@"Profil1OberseiteArray end");
    }
    
    
@@ -8154,11 +8161,12 @@ return returnInt;
          NSDictionary* tempZeilenDicA = [ProfilArrayA objectAtIndex:unterseiteindex];
          NSDictionary* tempZeilenDicB = [ProfilArrayB objectAtIndex:unterseiteindex];
          NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
+         
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"x"] forKey:@"ax"];
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"y"] forKey:@"ay"];
          [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
          [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"y"] forKey:@"by"];
-         [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"index"] forKey:@"index"];
+         //[tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"index"] forKey:@"index"];
          [tempZeilenDic setObject:[NSNumber numberWithInt:30] forKey:@"teil"];
          // pwm
          [tempZeilenDic setObject:[NSNumber numberWithInt:origpwm] forKey:@"pwm"];
@@ -8764,7 +8772,7 @@ return returnInt;
    
    float maxx=0,minx=MAXFLOAT; // Startwerte fuer Suche nach Rand
    float maxy=0,miny=MAXFLOAT;
-   
+   NSLog(@"KoordinatenTabelle count: %d",KoordinatenTabelle.count);
    if ([KoordinatenTabelle count])
    {
       // Beginn der Schnittlinie des Profils incl. Einlauf, wird vom Block angefahren
@@ -8820,10 +8828,10 @@ return returnInt;
       
       float ausmassx = maxx-minx;
       float ausmassy = maxy-miny;
-      //NSLog(@"reportBlockkonfigurieren ausmassx: %2.2f ausmassy: %2.2f",ausmassx,ausmassy);
+      NSLog(@"reportBlockkonfigurieren ausmassx: %2.2f ausmassy: %2.2f",ausmassx,ausmassy);
       
-      //NSLog(@"reportBlockkonfigurieren maxy: %2.2f miny: %2.2f",maxy,miny);
-      //NSLog(@"reportBlockkonfigurieren maxx: %2.2f minx: %2.2f",maxx,minx);
+      NSLog(@"reportBlockkonfigurieren maxy: %2.2f miny: %2.2f",maxy,miny);
+      NSLog(@"reportBlockkonfigurieren maxx: %2.2f minx: %2.2f",maxx,minx);
       
       //      maxy -= fmax(einlaufAY,einlaufBY);       // Abstand von Einlauf bis oberster Punkt 
       float abstandoben = maxy - fmax(einlaufAY,einlaufBY);       // Abstand von Einlauf bis oberster Punkt 
@@ -9075,9 +9083,9 @@ return returnInt;
    [self reportBlockkonfigurieren:NULL];
    NSLog(@"reportBlockanfuegen nach Blockkonfig");
    
-   if ([KoordinatenTabelle count])
+   if ([KoordinatenTabelle count])// 41 el
    {
-      if ([BlockKoordinatenTabelle count])
+      if ([BlockKoordinatenTabelle count]) // 7 El
       {
          //NSLog(@"BlockKoordinatenTabelle: %@",[BlockKoordinatenTabelle description]);
          int i=0;
@@ -10859,7 +10867,7 @@ return returnInt;
       //NSLog(@"reportProfilOberseiteTask profilpopindex: %d Profil aus ProfilNameFeldA: %@",profilpopindex,Profil1Name);
       if (profil1popindex == NSNotFound)
       {
-         NSLog(@"reportProfilPop kein Profil");
+         NSLog(@"reportProfilPop kein Profil1");
          return;
       }
       
@@ -10872,7 +10880,7 @@ return returnInt;
    [CNC_Eingabe doProfilPopTaskMitProfil1:profil1popindex mitProfil2:profil2popindex];
    
    [CNC_Eingabe doProfilSpiegelnVertikalTask];
-   [CNC_Eingabe doProfilEinfuegenTask]; 
+   //[CNC_Eingabe doProfilEinfuegenTask]; 
    
    
    

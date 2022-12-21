@@ -2347,11 +2347,102 @@ PortA=vs[n & 3]; warte10ms(); n++;
    
 }
 
-- (NSDictionary*)ProfilDicVonPunkt:(NSPoint)Startpunkt mitProfil:(NSArray*)ProfilArray mitProfiltiefe:(int)Profiltiefe mitScale:(int)Scale
+- (NSArray*)ProfilArrayVonPunkt:(NSPoint)Startpunkt mitProfil:(NSArray*)ProfilArray mitProfiltiefe:(int)Profiltiefe mitScale:(int)Scale
 {
    //NSLog(@"AVR ProfilDicVonPunkt");
    
-   float x = [self EndleistenwinkelvonProfil:ProfilArray];
+    int i;
+    float maxX=0;   // Startwert fuer Suche nach vordestem Punkt des Profils. Muss nicht 0.0 sein.
+   int minIndex=0;   // Index des vordersten Punktes im Array
+   
+   NSMutableArray* ProfilpunktArray=[[NSMutableArray alloc]initWithCapacity:0];
+   NSMutableArray* MittellinieArray=[[NSMutableArray alloc]initWithCapacity:0];
+
+   
+   float lastX=0;
+   float lastY=0;
+   NSMutableDictionary* ProfilpunktDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+
+   for (i=0;i<[ProfilArray count];i++)
+   {
+      // Profildatenpaare aus Datei mit dem Offset des Profilnullpunktes versehen
+      
+      //NSLog(@"ProfilArray index: %d Data: %@",i,[[ProfilArray objectAtIndex:i]description]);
+      // X-Achse, 
+      float tempX = [[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue];
+      //NSLog(@"tempX: %2.2f ",tempX);
+      float tempY = [[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue];
+     
+      
+       
+      // Mittellinie
+      if ((i<5)|| (i> [ProfilArray count]-5))
+      {
+         float mittelwinkel = atanf(tempY/tempX);
+         
+         NSDictionary* tempMittellinienDic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:mittelwinkel],@"m",[NSNumber numberWithInt:i],@"index", nil];
+         [MittellinieArray addObject:tempMittellinienDic];
+      
+      }
+      
+      
+      //[ProfilpunktDic setObject:[NSNumber numberWithInt:minIndex] forKey:@"nase"];
+      //NSLog(@"maxX: %2.2f ",maxX);
+      tempX *= Profiltiefe;                  // Wert in mm 
+      // NSLog(@"tempX: %2.2f ",tempX);
+      tempX += Startpunkt.x;   // offset in mm
+      
+      
+      NSNumber* tempNumberX=[NSNumber numberWithFloat:tempX];
+      //NSLog(@"tempX: %2.2f tempNumberX: %@",tempX, tempNumberX);
+      //Y-Achse
+      
+      tempY *= Profiltiefe;                  // Wert in mm 
+      tempY += Startpunkt.y;   // Offset in mm
+      
+      // Weg berechnen
+      if (i==0)
+      {
+         lastX = tempX;
+         lastY = tempY;
+      }
+      else
+      {
+         float tempweg = hypotf((tempY - lastY),(tempX - lastX));
+         
+      }
+      
+      NSNumber* tempNumberY=[NSNumber numberWithFloat:tempY];
+      
+      //ProfilpunktArray fuellen
+      
+      NSDictionary* tempDic=[NSDictionary dictionaryWithObjectsAndKeys:tempNumberX, @"x",tempNumberY,@"y" ,[NSNumber numberWithInt:i],@"index", nil];
+      
+      [ProfilpunktArray addObject: tempDic];
+       
+   } // for i
+   
+   //NSLog(@"minIndex: %d minX: %2.2f ",minIndex, minX);
+   // Profillinie schliessen:
+   
+    //[ProfilpunktArray addObject: [ProfilpunktArray objectAtIndex:0]];
+   
+   [ProfilpunktDic setObject:ProfilpunktArray forKey:@"profilpunktarray"];
+   [ProfilpunktDic setObject:MittellinieArray forKey:@"mittelliniearray"];
+ //  [ProfilpunktDic setObject:ProfilOpunktArray forKey:@"profilopunktarray"];
+   //NSLog(@"ProfilUpunktArray x: %@",[[ProfilUpunktArray valueForKey:@"x"]description]);
+   //NSLog(@"ProfilOpunktArray x: %@",[[ProfilOpunktArray valueForKey:@"x"]description]);
+   //NSLog(@"MittellinieArray x: %@",[MittellinieArray description]);
+
+   //NSLog(@"ProfilpunktArray x: %@",[[ProfilpunktArray valueForKey:@"x"]description]);
+   return ProfilpunktArray;
+}
+
+- (NSDictionary*)ProfilDicVonPunkt_old:(NSPoint)Startpunkt mitProfil:(NSArray*)ProfilArray mitProfiltiefe:(int)Profiltiefe mitScale:(int)Scale
+{
+   //NSLog(@"AVR ProfilDicVonPunkt");
+   
+  // float x = [self EndleistenwinkelvonProfil:ProfilArray];
    
    //	[ProfilNameFeldA setStringValue:ProfilName];
 	//ProfilArray=[Utils readProfil];
@@ -2421,6 +2512,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
          // TODO: Ersten Punkt einfuegen
          
       }
+      
       [ProfilpunktDic setObject:[NSNumber numberWithInt:minIndex] forKey:@"nase"];
       //NSLog(@"maxX: %2.2f ",maxX);
       tempX *= Profiltiefe;						// Wert in mm 

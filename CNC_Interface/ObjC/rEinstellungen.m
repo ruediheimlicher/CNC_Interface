@@ -2241,6 +2241,29 @@
 
 #pragma mark Profiltask
 
+-(NSArray*)vertikalspiegelnVonProfil:(NSArray*)profilflipArray
+{
+   NSMutableArray* flipArray = [NSMutableArray new];
+   
+   if ([profilflipArray count]==0)
+   {
+      NSLog(@"vertokalspiegelnVonProfil kein profil1array");
+      return flipArray;
+   }   
+   for (int i=0;i< [profilflipArray count];i++)
+   {
+      NSMutableDictionary* tempZeilenDic = [NSMutableDictionary dictionaryWithDictionary:[profilflipArray objectAtIndex:i]];
+      float tempy=[[tempZeilenDic objectForKey:@"y"]floatValue];
+      tempy *= -1;
+      [tempZeilenDic setObject:[NSNumber numberWithFloat:tempy]forKey:@"y"];
+      [flipArray addObject:tempZeilenDic];
+   }
+   return flipArray;
+   
+   
+}
+
+
 - (void)doProfilSpiegelnVertikalTask
 {
    if ([Profil1Array count]==0)
@@ -2279,6 +2302,7 @@
       [Profil2Array replaceObjectAtIndex:i withObject:tempZeilenDic];
    }
 
+   
    
    [self setProfilGraphDaten];
    [ProfilGraph setNeedsDisplay:YES];
@@ -2327,6 +2351,238 @@
    [NSApp stopModalWithCode:1];
 }
 
+- (NSDictionary*)ProfilPopTaskMitProfil1:(int)profil1 mitProfil2: (int)profil2
+{
+   NSLog(@"doProfilPopTaskMitProfil1 start");
+   
+   [FlipHTaste setState:0];
+   [FlipVTaste setState:0];
+   [ReverseTaste setState:0];
+   NSLog(@"profil1: %d profil2: %d",profil1, profil2);
+   //profil2 = profil1;
+   [EinstellungenTab selectTabViewItemAtIndex:3];
+   
+   NSMutableArray* oberseitearrayA = [NSMutableArray new];
+   NSMutableArray* unterseitearrayA = [NSMutableArray new];
+   NSMutableArray* oberseitearrayB = [NSMutableArray new];
+   NSMutableArray* unterseitearrayB = [NSMutableArray new];
+   
+   if (profil1)
+   {
+      
+      //NSLog(@"xA");
+      [Profile1 selectItemAtIndex:profil1];
+      
+      //NSLog(@"doProfil1PopTaskMitProfil Profil aus Pop: %@",[Profile1 itemTitleAtIndex:index]);
+      Profil1Name=[Profile1 itemTitleAtIndex:profil1];
+      //Profil1Name = [Profil1Name stringByAppendingPathExtension:@"txt"];
+      
+      NSString* Profil1pfad = [[ProfilLibPfad stringByAppendingPathComponent:Profil1Name]stringByAppendingPathExtension:@"txt"];
+      NSLog(@"doProfil1PopTaskMitProfil Profilpfad: %@",Profil1pfad);
+      NSFileManager *Filemanager = [NSFileManager defaultManager];
+      int Profil1OK= [Filemanager fileExistsAtPath:Profil1pfad];
+      
+      NSMutableDictionary* ProfilDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+      [ProfilDic setObject:@"LibProfil"  forKey:@"quelle"];
+
+      if (Profil1OK)
+      {
+         NSDictionary* Profil1Dic = [Utils floatProfilDatenAnPfad:Profil1pfad];
+         
+         //NSLog(@"reportProfilPop Profil1Dic: %@",[ProfilDic description]);
+         //NSLog(@"SplinekoeffizientenVonArray profilarray: %@",[[ProfilDic objectForKey:@"profilarray"] description]);
+         
+         NSLog(@"doProfil1PopTaskMitProfil ProfilName1: %@",Profil1Name);
+         
+         if ([Profil1Dic objectForKey:@"oberseitearray"]) 
+         {
+            oberseitearrayA = [Profil1Dic objectForKey:@"oberseitearray"];
+         }
+         if ([Profil1Dic objectForKey:@"unterseitearray"]) 
+         {
+            unterseitearrayA = [Profil1Dic objectForKey:@"unterseitearray"];
+         }
+         
+         
+         if ([Profil1Dic objectForKey:@"profilarray"]) 
+         {
+            [Profil1Array removeAllObjects];
+            [Profil1Array addObjectsFromArray:[Profil1Dic objectForKey:@"profilarray"]];
+            
+            
+            
+            
+            
+            if ([Profil1Array count])
+            {
+               [ProfilStartpunktX setFloatValue:[[[Profil1Array objectAtIndex:0]objectForKey:@"x"]floatValue]];
+               [ProfilStartpunktY setFloatValue:[[[Profil1Array objectAtIndex:0]objectForKey:@"y"]floatValue]];
+               [ProfilEndpunktX setFloatValue:[[[Profil1Array lastObject]objectForKey:@"x"]floatValue]];
+               [ProfilEndpunktY setFloatValue:[[[Profil1Array lastObject]objectForKey:@"y"]floatValue]];
+               
+            }
+            //NSLog(@"doProfil1PopTaskMitProfil Profil1Array LAST: %@",[[Profil1Array lastObject]description]);
+         }
+      } // if Profil1OK
+      
+      /*
+      if(profil2 == profil1) // beide Profile gleich, kein ausgleich erforderlich
+      {
+         NSLog(@"doProfil1PopTaskMitProfil mitProfil2 beide gleich");
+         [Profil2Array removeAllObjects];
+         [Profil2Array addObjectsFromArray:Profil1Array];
+         
+         [Profile2 selectItemAtIndex:profil1];    // Profil 2 ist  gleich
+         
+      }
+      
+      else // Profile ungleich 
+      */ 
+      
+      {
+         [Profile2 selectItemAtIndex:profil2];
+         Profil2Name=[Profile2 itemTitleAtIndex:profil2];
+         //Profil2Name = [Profil2Name stringByAppendingPathExtension:@"txt"];
+         NSString* Profil2pfad = [[ProfilLibPfad stringByAppendingPathComponent:Profil2Name]stringByAppendingPathExtension:@"txt"];
+         NSLog(@"doProfil1,2 PopTaskMitProfil Profil2pfad: %@",Profil2pfad);
+         NSFileManager *Filemanager = [NSFileManager defaultManager];
+         int Profil2OK= [Filemanager fileExistsAtPath:Profil2pfad];
+         NSLog(@"doProfi Profil2OK: %d",Profil2OK);
+         if (Profil2OK)
+         {
+            // Daten von Profil2 holen
+            NSDictionary* Profil2Dic = [Utils ProfilDatenAnPfad:Profil2pfad];
+            
+            if ([Profil2Dic objectForKey:@"oberseitearray"]) 
+            {
+               oberseitearrayB = [Profil2Dic objectForKey:@"oberseitearray"];
+            }
+            if ([Profil2Dic objectForKey:@"unterseitearray"]) 
+            {
+               unterseitearrayB = [Profil2Dic objectForKey:@"unterseitearray"];
+            }
+            
+            
+            //NSLog(@"doProfil1PopTaskMitProfil ProfilName1: %@",Profil1Name);
+            if ([Profil2Dic objectForKey:@"profilarray"])
+            {
+               [Profil2Array removeAllObjects];
+               [Profil2Array addObjectsFromArray:[Profil2Dic objectForKey:@"profilarray"]];
+               
+               
+               if ([Profil2Array count])
+               {
+                  /*
+                   [ProfilStartpunktX setFloatValue:[[[Profil1Array objectAtIndex:0]objectForKey:@"x"]floatValue]];
+                   [ProfilStartpunktY setFloatValue:[[[Profil1Array objectAtIndex:0]objectForKey:@"y"]floatValue]];
+                   [ProfilEndpunktX setFloatValue:[[[Profil1Array lastObject]objectForKey:@"x"]floatValue]];
+                   [ProfilEndpunktY setFloatValue:[[[Profil1Array lastObject]objectForKey:@"y"]floatValue]];
+                   */
+               }
+               //NSLog(@"doProfil1PopTaskMitProfil Profil1Array LAST: %@",[[Profil1Array lastObject]
+            }
+         }
+         
+         
+         
+         
+         
+         // Oberseitenprofile angleichen
+         if (oberseitearrayA.count && oberseitearrayB.count) // beide vorhanden
+         {
+            NSLog(@"Oberseite abgleichen");
+            
+            NSArray* redarray  = [Utils werteanpassenOberseiteVon:[NSArray arrayWithObjects:oberseitearrayA, oberseitearrayB,nil]];
+            oberseitearrayA = redarray[0];
+            
+            oberseitearrayB = redarray[1];
+ 
+            
+            
+            [ProfilDic setObject:redarray[0] forKey:@"oberseitearrayA"];
+            
+            [ProfilDic setObject:redarray[1] forKey:@"oberseitearrayB"];
+            
+
+         }
+         
+         // Unterseitenprofile angleichen
+         if (unterseitearrayA.count && unterseitearrayB.count) // beide vorhanden
+         {
+            NSLog(@"unterseite abgleichen");
+            
+            NSArray* redarray  = [Utils werteanpassenUnterseiteVon:[NSArray arrayWithObjects:unterseitearrayA, unterseitearrayB,nil]];
+            unterseitearrayA = redarray[0];
+            unterseitearrayB = redarray[1];
+            [ProfilDic setObject:redarray[0] forKey:@"unterseitearrayA"];
+            [ProfilDic setObject:redarray[1] forKey:@"unterseitearrayB"];
+            NSLog(@"unterseite abgleichen end");
+            
+         }
+ 
+         //NSMutableArray* newProfil1Array = [NSArray arrayWithObjec
+      } // Profile ungleich
+      
+   
+      
+      [ProfilDic setObject:@"LibProfil"  forKey:@"quelle"];
+      [ProfilDic setObject:Profil1Name forKey:@"profil1name"];
+      [ProfilDic setObject:Profil2Name forKey:@"profil2name"];
+      
+      // von doProfilEinfuegenTask
+      
+      // Profile wieder zusammensetzen
+      [Profil1Array removeAllObjects];
+      [Profil1Array addObjectsFromArray:unterseitearrayA];
+      [Profil1Array addObjectsFromArray:oberseitearrayA];
+      [ProfilDic setObject:Profil1Array forKey:@"profil1array"];
+      
+      [Profil2Array removeAllObjects];
+      
+      [Profil2Array addObjectsFromArray:unterseitearrayB];
+      [Profil2Array addObjectsFromArray:oberseitearrayB];
+      [ProfilDic setObject:Profil2Array forKey:@"profil2array"];
+
+      [ProfilDic setObject:[NSNumber numberWithInt:[OberseiteCheck state]] forKey:@"oberseite"];
+      [ProfilDic setObject:[NSNumber numberWithInt:[UnterseiteCheck state]] forKey:@"unterseite"];
+      
+      [ProfilDic setObject:[NSNumber numberWithInt:[EinlaufCheck state]] forKey:@"einlauf"];
+      [ProfilDic setObject:[NSNumber numberWithInt:[AuslaufCheck state]] forKey:@"auslauf"];
+      
+      [ProfilDic setObject:[NSNumber numberWithFloat:[Einlauflaenge floatValue]] forKey:@"einlauflaenge"];
+      [ProfilDic setObject:[NSNumber numberWithFloat:[Einlauftiefe floatValue]] forKey:@"einlauftiefe"];
+      [ProfilDic setObject:[NSNumber numberWithFloat:[Auslauflaenge floatValue]] forKey:@"auslauflaenge"];
+      [ProfilDic setObject:[NSNumber numberWithFloat:[Auslauftiefe floatValue]] forKey:@"auslauftiefe"];
+      [ProfilDic setObject:[NSNumber numberWithInt:flipH] forKey:@"fliph"];
+      [ProfilDic setObject:[NSNumber numberWithInt:flipV] forKey:@"flipv"];
+      [ProfilDic setObject:[NSNumber numberWithInt:reverse] forKey:@"reverse"];
+      [ProfilDic setObject:[NSNumber numberWithFloat:[Einlaufrand floatValue]] forKey:@"einlaufrand"];
+      [ProfilDic setObject:[NSNumber numberWithFloat:[Auslaufrand floatValue]] forKey:@"auslaufrand"];
+
+      
+      
+  
+      
+      //[ProfilEinfuegenTaste setEnabled:1]; 
+      
+      [[self window]orderOut:NULL];
+      [NSApp stopModalWithCode:1];
+      //NSLog(@"reportProfilEinfuegen end");
+
+      
+      
+      
+     // [self setProfilGraphDaten];
+    //  [ProfilGraph setNeedsDisplay:YES];
+      return ProfilDic;
+   }
+   else
+   {
+      NSLog(@"doProfil1PopTaskMitProfil: Kein Profil *** ");
+      return NULL;
+   }
+   
+}
 
 - (void)doProfilPopTaskMitProfil1:(int)profil1 mitProfil2: (int)profil2
 {
@@ -2385,13 +2641,10 @@
          {
             [Profil1Array removeAllObjects];
             [Profil1Array addObjectsFromArray:[Profil1Dic objectForKey:@"profilarray"]];
-            
-            
-            
-            
-            
+             
             if ([Profil1Array count])
             {
+               
                [ProfilStartpunktX setFloatValue:[[[Profil1Array objectAtIndex:0]objectForKey:@"x"]floatValue]];
                [ProfilStartpunktY setFloatValue:[[[Profil1Array objectAtIndex:0]objectForKey:@"y"]floatValue]];
                [ProfilEndpunktX setFloatValue:[[[Profil1Array lastObject]objectForKey:@"x"]floatValue]];
@@ -2414,7 +2667,8 @@
       }
       
       else // Profile ungleich 
-      */   
+      */ 
+      
       {
          [Profile2 selectItemAtIndex:profil2];
          Profil2Name=[Profile2 itemTitleAtIndex:profil2];
@@ -2470,13 +2724,16 @@
             
             NSArray* redarray  = [Utils werteanpassenOberseiteVon:[NSArray arrayWithObjects:oberseitearrayA, oberseitearrayB,nil]];
             oberseitearrayA = redarray[0];
+            
             oberseitearrayB = redarray[1];
  
             
             
             [ProfilDic setObject:redarray[0] forKey:@"oberseitearrayA"];
+            
             [ProfilDic setObject:redarray[1] forKey:@"oberseitearrayB"];
             
+
          }
          
          // Unterseitenprofile angleichen
@@ -2511,6 +2768,7 @@
       [ProfilDic setObject:Profil1Array forKey:@"profil1array"];
       
       [Profil2Array removeAllObjects];
+      
       [Profil2Array addObjectsFromArray:unterseitearrayB];
       [Profil2Array addObjectsFromArray:oberseitearrayB];
       [ProfilDic setObject:Profil2Array forKey:@"profil2array"];
@@ -2531,6 +2789,9 @@
       [ProfilDic setObject:[NSNumber numberWithFloat:[Einlaufrand floatValue]] forKey:@"einlaufrand"];
       [ProfilDic setObject:[NSNumber numberWithFloat:[Auslaufrand floatValue]] forKey:@"auslaufrand"];
 
+      
+      
+      
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"LibProfileingabe" object:self userInfo: ProfilDic];
 

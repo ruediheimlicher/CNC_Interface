@@ -300,6 +300,8 @@
 //- (IBAction)reportProfilPop:(id)sender;
 - (IBAction)reportProfilEinfuegen:(id)sender;
 - (IBAction)reportProfilLoeschen:(id)sender;
+- (NSArray*)vertikalspiegelnVonProfil:(NSArray*)profilflipArray;
+
 - (IBAction)reportProfilSpiegelnHorizontal:(id)sender;
 - (IBAction)reportProfilSpiegelnVertikal:(id)sender;
 - (void)doProfilSpiegelnVertikalTask;
@@ -311,6 +313,9 @@
 // von 32
 - (void)doProfil1PopTaskMitProfil:(int)profil1;
 - (void)doProfilPopTaskMitProfil1:(int)profil1 mitProfil2: (int)profil2;
+
+- (NSDictionary*)ProfilPopTaskMitProfil1:(int)profil1 mitProfil2: (int)profil2;
+
 - (void)doProfilEinfuegenTask;
 - (void)setOberseite:(int) ein;
 - (void)setUnterseite:(int) ein;

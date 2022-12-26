@@ -15,8 +15,10 @@
 }
 - (void) logRect:(NSRect)r;
 - (NSDictionary*)ProfilDatenAnPfad:(NSString*)profilpfad;
+- (NSDictionary*)floatProfilDatenAnPfad:(NSString*)profilpfad;
 - (NSArray*)readProfil:(NSString*)profilname;
 - (NSDictionary*)readProfilMitName;
+- (NSArray*)anzahlPunktereduzierenVon:(NSArray*) bigarray;
 - (NSArray*)anzahlwertesynchronisierenVon:(NSArray*) syncarray;
 - (NSArray*)anzahlwerteanpassenVon:(NSArray*) syncarray;
 - (NSArray*)werteanpassenUnterseiteVon:(NSArray*) syncarray;

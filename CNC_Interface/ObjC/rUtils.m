@@ -124,6 +124,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    NSMutableArray* flipProfilArray = [[NSMutableArray alloc]initWithCapacity:0];
    int i;
    
+   
    for (i=0;i< [profilArray count];i++)
    {
       NSMutableDictionary* tempZeilenDic = [NSMutableDictionary dictionaryWithDictionary:[profilArray objectAtIndex:i]];
@@ -140,6 +141,166 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    return flipProfilArray;
 }
 
+- (NSDictionary*)floatProfilDatenAnPfad:(NSString*)profilpfad
+{
+   NSMutableArray* ProfilArray=[NSMutableArray new];
+   NSLog(@"ProfilDatenAnPfad: URL: %@",profilpfad);
+   NSError* err=0;
+   NSString* ProfilString=[NSString stringWithContentsOfURL:[NSURL fileURLWithPath:profilpfad] encoding:NSUTF8StringEncoding error:&err]; // String des Speicherpfads
+   //NSLog(@"Utils openProfil ProfilString: \n%@ err: %@",ProfilString, [err description]);
+   if (ProfilString==NULL)
+   {
+      return NULL;
+   }
+   
+   NSString* stringterm;
+   if ([[ProfilString componentsSeparatedByString:@"\r"]count]==1)
+   {
+      stringterm = @"\n";
+   }
+   else {
+      stringterm = @"\r";
+   }
+   
+   NSArray* tempArray=[ProfilString componentsSeparatedByString:stringterm];
+   NSString* firstString = [tempArray objectAtIndex:0];
+   NSString* ProfilName=[NSString string];
+   
+   NSRange nameRange;
+   nameRange=[firstString rangeOfString:@"\n"];
+   //NSLog(@"nameRange start loc: %u l: %u",nameRange.location, nameRange.length);   
+   
+   if (nameRange.location < NSNotFound)
+   {
+      ProfilName = [firstString substringToIndex:nameRange.location];
+      
+      //NSLog(@"firstString mit n: %@ ProfilName:%@",firstString,ProfilName);
+   }
+   else if (!([[firstString componentsSeparatedByString:@"\t"]count]==2)) // Titel
+   {
+      ProfilName = firstString;
+      NSRange titelRange;
+      
+      titelRange.location = 1;
+      titelRange.length = [tempArray count]-1;
+      
+      tempArray = [tempArray subarrayWithRange:titelRange];
+      
+   }
+   else
+   {
+      ProfilName =@"Profil";
+   }
+
+   // Nasenindex suchen
+   float minx=NSNotFound;
+   int Nasenindex=0;
+   
+   for (int i=0;i<[tempArray count];i++)
+   {
+      
+      NSString* tempZeilenString=[tempArray objectAtIndex:i];
+      nameRange=[tempZeilenString rangeOfString:@"\n"];
+      //NSLog(@"nameRange start loc: %d l: %d",nameRange.location, nameRange.length);   
+      
+      if (nameRange.location < NSNotFound)
+      {
+         //NSLog(@"i: %d String mit n: %@ ",i,tempZeilenString);
+         tempZeilenString = [tempZeilenString substringFromIndex:nameRange.location];
+         
+         //NSLog(@"i: %d String ohne n: %@ ",i,tempZeilenString);
+      }
+      
+      //NSLog(@"i: %d Utils tempZeilenString l: %d",i,[tempZeilenString length]);
+      
+      if ((tempZeilenString==NULL)|| ([tempZeilenString length]==1))
+      {
+         //NSLog(@"i: %d ((tempZeilenString==NULL)|| ([tempZeilenString length]==1))",i);
+         continue;
+      }
+      //NSLog(@"char 0: %d",[tempZeilenString characterAtIndex:0]);
+      if ([tempZeilenString characterAtIndex:0]==10)
+      {
+         //NSLog(@"char 0 weg");
+         tempZeilenString=[tempZeilenString substringFromIndex:1];
+      }
+      
+      while ([tempZeilenString characterAtIndex:0]==' ')
+      {
+         tempZeilenString=[tempZeilenString substringFromIndex:1];
+      }
+      //NSLog(@"%d tempZeilenString A: %@",i,tempZeilenString);
+      NSRange LeerschlagRange=[tempZeilenString rangeOfString:@"  "];
+      //NSLog(@"LeerschlagRange start loc: %d l: %d",LeerschlagRange.location, LeerschlagRange.length);
+      while(LeerschlagRange.length )
+      {
+         //if (LeerschlagRange.length==1)
+         {
+            //tempZeilenString=[tempZeilenString stringByReplacingOccurrencesOfString:@" " withString:@"\t"];
+            
+         }
+         //else
+         {
+            tempZeilenString=[tempZeilenString stringByReplacingOccurrencesOfString:@"  " withString:@" "];
+         }
+         LeerschlagRange=[tempZeilenString rangeOfString:@"  "];
+         //NSLog(@"LeerschlagRange loop loc: %d l: %d",LeerschlagRange.location, LeerschlagRange.length);
+      }
+      //NSLog(@"tempZeilenString B: %@",tempZeilenString);
+      tempZeilenString=[tempZeilenString stringByReplacingOccurrencesOfString:@" " withString:@"\t"];
+      //NSLog(@"i: %d tempZeilenString C: %@",i,tempZeilenString);
+      
+      NSArray* tempZeilenArray=[tempZeilenString componentsSeparatedByString:@"\t"];
+      float wertx=[[tempZeilenArray objectAtIndex:0]floatValue];
+      float werty=[[tempZeilenArray objectAtIndex:1]floatValue];
+      
+      if ((wertx == 0) && (Nasenindex == 0))
+      {
+         minx=wertx;
+         Nasenindex=i;
+         
+      }
+      NSDictionary* tempDic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:wertx], @"x",[NSNumber numberWithFloat:werty], @"y",[NSNumber numberWithFloat:1], @"data",NULL];
+      [ProfilArray addObject:tempDic];
+    
+      
+      
+   }// for i
+   
+   
+   // Profil umdrehen
+   //ProfilArray = (NSMutableArray*)[self flipProfil:ProfilArray];
+   //NSLog(@"Utils openProfil ProfilArray: \n%@",[ProfilArray description]);
+
+   NSLog(@"OberseiteArray");
+   NSArray* OberseiteArray=[ProfilArray subarrayWithRange:NSMakeRange(0, Nasenindex+1)];
+   
+   for (int i=0;i<OberseiteArray.count;i++)
+   {
+      fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[OberseiteArray objectAtIndex:i]objectForKey:@"x"] floatValue],[[[OberseiteArray objectAtIndex:i]objectForKey:@"y"] floatValue]);
+   }
+
+   NSLog(@"UnterseiteArray");
+   NSArray* UnterseiteArray=[ProfilArray subarrayWithRange:NSMakeRange(Nasenindex, [ProfilArray count]-Nasenindex)];
+   NSMutableArray * revUnterseiteArray = [NSMutableArray new];
+   int i=0;
+   for( i = 0; i < [UnterseiteArray count]; i++) 
+   {
+      [revUnterseiteArray addObject:[UnterseiteArray objectAtIndex:[UnterseiteArray count] - i - 1]];
+   }
+
+   for (int i=0;i<UnterseiteArray.count;i++)
+   {
+      fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[UnterseiteArray objectAtIndex:i]objectForKey:@"x"] floatValue],[[[UnterseiteArray objectAtIndex:i]objectForKey:@"y"] floatValue]);
+   }
+
+   NSDictionary* floatProfilDic=[NSDictionary dictionaryWithObjectsAndKeys:ProfilArray,@"profilarray", OberseiteArray,@"oberseitearray",UnterseiteArray, @"unterseitearray",ProfilName, @"profilname",NULL];
+
+
+   return floatProfilDic;
+   
+   
+}
 
 - (NSDictionary*)ProfilDatenAnPfad:(NSString*)profilpfad
 {
@@ -216,10 +377,13 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    float minx=NSNotFound;
    int Nasenindex=0;
    
+   
+   
 	for (i=0;i<[tempArray count];i++)
 	{
 		
 		NSString* tempZeilenString=[tempArray objectAtIndex:i];
+      NSLog(@"%d tempZeilenString raw: %@",i,tempZeilenString);
 		nameRange=[tempZeilenString rangeOfString:@"\n"];
 		//NSLog(@"nameRange start loc: %d l: %d",nameRange.location, nameRange.length);	
 		
@@ -249,7 +413,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 		{
 			tempZeilenString=[tempZeilenString substringFromIndex:1];
 		}
-		//NSLog(@"%d tempZeilenString A: %@",i,tempZeilenString);
+		NSLog(@"%d tempZeilenString A: %@",i,tempZeilenString);
 		NSRange LeerschlagRange=[tempZeilenString rangeOfString:@"  "];
 		//NSLog(@"LeerschlagRange start loc: %d l: %d",LeerschlagRange.location, LeerschlagRange.length);
 		while(LeerschlagRange.length )
@@ -266,9 +430,9 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 			LeerschlagRange=[tempZeilenString rangeOfString:@"  "];
 			//NSLog(@"LeerschlagRange loop loc: %d l: %d",LeerschlagRange.location, LeerschlagRange.length);
 		}
-		//NSLog(@"tempZeilenString B: %@",tempZeilenString);
+		NSLog(@"tempZeilenString B: %@",tempZeilenString);
 		tempZeilenString=[tempZeilenString stringByReplacingOccurrencesOfString:@" " withString:@"\t"];
-		//NSLog(@"i: %d tempZeilenString C: %@",i,tempZeilenString);
+		NSLog(@"i: %d tempZeilenString C: %@",i,tempZeilenString);
 		
 		NSArray* tempZeilenArray=[tempZeilenString componentsSeparatedByString:@"\t"];
 		float wertx=[[tempZeilenArray objectAtIndex:0]floatValue];
@@ -287,14 +451,55 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
          
       }
 
-		NSDictionary* tempDic = [NSDictionary dictionaryWithObjectsAndKeys:tempX, @"x",tempY, @"y",[NSNumber numberWithFloat:1], @"data",NULL];
-		[ProfilArray addObject:tempDic];
+      NSDictionary* tempDic = [NSDictionary dictionaryWithObjectsAndKeys:tempX, @"x",tempY, @"y",[NSNumber numberWithFloat:1], @"data",NULL];
+ //     NSDictionary* tempDic = [NSDictionary dictionaryWithObjectsAndKeys:[tempZeilenArray objectAtIndex:1], @"x",[tempZeilenArray objectAtIndex:0], @"y",[NSNumber numberWithFloat:1], @"data",NULL];
+		
+      
+      [ProfilArray addObject:tempDic];
      
       
       //[ProfilArray insertObject:tempDic atIndex:0];
-	}
+	} // for i
 	
-   NSLog(@"Profilarray %@:",ProfilName);
+   Nasenindex = 0;
+   for (int i=0;i<ProfilArray.count;i++)
+   {
+      float wertx=[[[ProfilArray objectAtIndex:i]objectForKey:@"x"] floatValue];
+      float werty=[[[ProfilArray objectAtIndex:i]objectForKey:@"y"] floatValue];
+      if ((wertx == 0) && (Nasenindex == 0))
+      {
+         minx=wertx;
+         Nasenindex=i;
+         
+      }
+
+
+   }
+   
+   if(ProfilArray.count > 200)
+   {
+      ProfilArray = [self anzahlPunktereduzierenVon:ProfilArray];
+   }
+   
+   Nasenindex = 0;
+   for (int i=0;i<ProfilArray.count;i++)
+   {
+      float wertx=[[[ProfilArray objectAtIndex:i]objectForKey:@"x"] floatValue];
+      float werty=[[[ProfilArray objectAtIndex:i]objectForKey:@"y"] floatValue];
+      if ((wertx == 0) && (Nasenindex == 0))
+      {
+         minx=wertx;
+         Nasenindex=i;
+         
+      }
+
+
+   }
+   
+
+      
+   
+   NSLog(@"Profilarray name: %@:",ProfilName);
    for (int i=0;i<ProfilArray.count;i++)
    {
       fprintf(stderr,"%d \t %2.6f \t %2.6f \n",i,[[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue], [[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue]);
@@ -310,14 +515,13 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    
    NSLog(@"OberseiteArray");
    NSArray* OberseiteArray=[ProfilArray subarrayWithRange:NSMakeRange(0, Nasenindex+1)];
-   
+   NSLog(@"OberseiteArray count: %d",OberseiteArray.count);
    for (int i=0;i<OberseiteArray.count;i++)
    {
       fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[OberseiteArray objectAtIndex:i]objectForKey:@"x"] floatValue],[[[OberseiteArray objectAtIndex:i]objectForKey:@"y"] floatValue]);
    }
-  //NSDictionary* OberseiteSplineKoeffArray=[self SplinekoeffizientenVonArray:OberseiteArray];
    
-   NSLog(@"OberseiteArray");
+   NSLog(@"UnterseiteArray");
    NSArray* UnterseiteArray=[ProfilArray subarrayWithRange:NSMakeRange(Nasenindex, [ProfilArray count]-Nasenindex)];
    NSMutableArray * revUnterseiteArray = [NSMutableArray new];
    //int i=0;
@@ -334,9 +538,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    
    // End Spline
    
-   
-   
-   
+    
    NSDictionary* ProfilDic=[NSDictionary dictionaryWithObjectsAndKeys:ProfilArray,@"profilarray", OberseiteArray,@"oberseitearray",UnterseiteArray, @"unterseitearray",ProfilName, @"profilname",NULL];
    //NSLog(@"Utils openProfil ProfilDic: \n%@",[ProfilDic description]);
 	return ProfilDic;
@@ -499,6 +701,34 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 	return ProfilDic;
 }
 
+- (NSArray*)anzahlPunktereduzierenVon:(NSArray*) bigarray
+{
+   int even = (bigarray.count % 2 == 0);
+   NSDictionary* last = [bigarray lastObject];
+   
+   NSMutableArray* returnarray = [NSMutableArray new];
+   for(int i=0;i<bigarray.count;i++)
+   {
+      if([[[bigarray objectAtIndex:i]objectForKey:@"x"]floatValue] == 0)
+      {
+         [returnarray addObject:bigarray[i]];
+      }
+      else if(i%2 == 0)
+      {
+         [returnarray addObject:bigarray[i] ];
+      }
+         
+   }
+   
+   if (even)
+   {
+      [returnarray addObject:last];
+   }
+
+   return returnarray;
+}
+
+
 - (NSArray*)werteanpassenUnterseiteVon:(NSArray*) syncarray
 {
    NSLog(@"werteanpassenUnterseiteVon start");
@@ -564,7 +794,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
   //    [changedarray addObject:startdic];
       for (int sollpos = 0;sollpos < soll.count; sollpos++)
       {
-         NSLog(@"sollpos: %d",sollpos);
+         //NSLog(@"sollpos: %d",sollpos);
          
          float sollx = [[soll[sollpos]objectForKey:@"x"] floatValue]; // fuer diese pos den Wert auf quelle bestimmen
          float quellposU = 0;
@@ -681,61 +911,70 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
       }
       
       NSLog(@"OA");
- 
-      float maxdiff = 0;
-      int maxindex = 0;
-      int insertindex = 0;
       NSMutableArray* changedarray =  [NSMutableArray new]; // soll mit Interpolationswerten aus quelle an positionen von soll aufgebaut werden
-      int sollstart = 0; // aktuelle Pos der Interpolation
-      NSDictionary* startdic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:0.0],@"x", [NSNumber numberWithFloat:0.0],@"y", nil];
-  //    [changedarray addObject:startdic];
-      for (int sollpos = 0;sollpos < soll.count; sollpos++)
+
+      if (A.count == B.count)
       {
-         NSLog(@"sollpos: %d",sollpos);
+         NSLog(@"count gleich");
+         return [NSArray arrayWithObjects: soll, quelle, nil];
          
-         float sollx = [[soll[sollpos]objectForKey:@"x"] floatValue]; // fuer diese pos den Wert auf quelle bestimmen
-         float quellposU = 0;
-         float changexU, changexO = 0; // Pos auf quelle vor und nach sollx
-         int quellestartpos = 1;
-         int quellesucherfolg = 0;
-         for (int quellepos = quellestartpos;quellepos < quelle.count; quellepos++)// Positionen auf quelle vor und nach sollx suchen, Beginn ab 1
-         {
-            float quellex = [[quelle[quellepos]objectForKey:@"x"] floatValue]; 
-            if((quellex > sollx) && (quellesucherfolg == 0) ) // Wert gefunden
-            {
-               changexO = quellex;
-               changexU = [[quelle[quellepos-1]objectForKey:@"x"] floatValue];
-               float diffx = changexO - changexU;
-               
-               
-               quellestartpos = quellepos;
-               //NSLog(@"Wert gefunden quellepos bei %d: sollx: %2.6f changexO: %2.6f changexU: %2.6f",quellepos, sollx, changexO, changexU);
-               float changeyO = [[quelle[quellepos]objectForKey:@"y"] floatValue];
-               float changeyU = [[quelle[quellepos-1]objectForKey:@"y"] floatValue];
-               float diffy = changeyO - changeyU;
-               //NSLog(@"diffx: %2.6f diffy: %2.6f",diffx, diffy);
-               float interpolY = changeyU + (diffy)/(diffx)*(sollx - changexU);
-               //NSLog(@"changeyO: %2.6f changeyU: %2.6f  interpolY: %2.6f",changeyO,changeyU,interpolY);
-               
-               NSDictionary* tempdic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:sollx],@"x", [NSNumber numberWithFloat:interpolY],@"y", nil];
-               [changedarray addObject:tempdic];
-
-               
-               
-               quellesucherfolg = 1;
-               continue;
-            }
-            
-         } // Interpolationswerte finden
-         
-         
-          //    sollstart = sollpos; // naechste loop beginnt hier
       }
-      NSLog(@"OB");
-      // letztes El einfuegen
-      NSDictionary* lastdic = [NSDictionary dictionaryWithObjectsAndKeys:[[quelle lastObject]objectForKey:@"x"],@"x", [[quelle lastObject]objectForKey:@"y"],@"y", nil];
-     [changedarray addObject:lastdic];
-
+         
+       //  else
+      {
+         float maxdiff = 0;
+         int maxindex = 0;
+         int insertindex = 0;
+          int sollstart = 0; // aktuelle Pos der Interpolation
+         NSDictionary* startdic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:0.0],@"x", [NSNumber numberWithFloat:0.0],@"y", nil];
+         //    [changedarray addObject:startdic];
+         for (int sollpos = 0;sollpos < soll.count; sollpos++)
+         {
+            //NSLog(@"sollpos: %d",sollpos);
+            
+            float sollx = [[soll[sollpos]objectForKey:@"x"] floatValue]; // fuer diese pos den Wert auf quelle bestimmen
+            float quellposU = 0;
+            float changexU, changexO = 0; // Pos auf quelle vor und nach sollx
+            int quellestartpos = 1;
+            int quellesucherfolg = 0;
+            for (int quellepos = quellestartpos;quellepos < quelle.count; quellepos++)// Positionen auf quelle vor und nach sollx suchen, Beginn ab 1
+            {
+               float quellex = [[quelle[quellepos]objectForKey:@"x"] floatValue]; 
+               if((quellex > sollx) && (quellesucherfolg == 0) ) // Wert gefunden
+               {
+                  changexO = quellex;
+                  changexU = [[quelle[quellepos-1]objectForKey:@"x"] floatValue];
+                  float diffx = changexO - changexU;
+                  
+                  
+                  quellestartpos = quellepos;
+                  //NSLog(@"Wert gefunden quellepos bei %d: sollx: %2.6f changexO: %2.6f changexU: %2.6f",quellepos, sollx, changexO, changexU);
+                  float changeyO = [[quelle[quellepos]objectForKey:@"y"] floatValue];
+                  float changeyU = [[quelle[quellepos-1]objectForKey:@"y"] floatValue];
+                  float diffy = changeyO - changeyU;
+                  //NSLog(@"diffx: %2.6f diffy: %2.6f",diffx, diffy);
+                  float interpolY = changeyU + (diffy)/(diffx)*(sollx - changexU);
+                  //NSLog(@"changeyO: %2.6f changeyU: %2.6f  interpolY: %2.6f",changeyO,changeyU,interpolY);
+                  
+                  NSDictionary* tempdic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:sollx],@"x", [NSNumber numberWithFloat:interpolY],@"y", nil];
+                  [changedarray addObject:tempdic];
+                  
+                  
+                  
+                  quellesucherfolg = 1;
+                  continue;
+               }
+               
+            } // Interpolationswerte finden
+            
+            
+            //    sollstart = sollpos; // naechste loop beginnt hier
+         }
+         NSLog(@"OB");
+         // letztes El einfuegen
+         NSDictionary* lastdic = [NSDictionary dictionaryWithObjectsAndKeys:[[quelle lastObject]objectForKey:@"x"],@"x", [[quelle lastObject]objectForKey:@"y"],@"y", nil];
+         [changedarray addObject:lastdic];
+      } // if ungleich
       NSLog(@"changedarray:");
       for (int i=0;i<changedarray.count;i++)
       {
@@ -752,7 +991,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
          return [NSArray arrayWithObjects: changedarray,soll, nil];
       }
       
-   }
+   }// if count == 2
    
   
    return nil;

@@ -102,8 +102,9 @@ return NULL;
    int anzWerte=0;
    int anfangsindex=4;
    // Bereich der Berechnung festlegen
-   int endindex=7;
-   int anzPunkte=5;
+   int endindex=8;
+   int anzPunkte=4;
+   float steigung = 0;
    for (i=anfangsindex;i<endindex;i++)
    {
       float deltax = [[[profil objectAtIndex:i]objectForKey:@"x"]floatValue] - [[[profil objectAtIndex:i-1]objectForKey:@"x"]floatValue];
@@ -114,12 +115,13 @@ return NULL;
       else
       {
          float deltay = [[[profil objectAtIndex:i]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:i-1]objectForKey:@"y"]floatValue];
-         float steigung= atanf(deltay/deltax);
+         float arc = deltay/deltax;
+         steigung = atanf(deltay/deltax);
          //      steigung *= -1;
          steigungo+=steigung;
          anzWerte++;
       }
-      //NSLog(@"start i: %d steigung o: %2.3f grad: %2.3f",i,steigung, steigung/M_PI*180);
+      NSLog(@"start i: %d steigung o: %2.3f grad: %2.3f",i,steigung, steigung/M_PI*180);
    }
 
    // Unterseite
@@ -134,10 +136,10 @@ return NULL;
       else
       {
          float deltay = [[[profil objectAtIndex:[profil count]-1-i-1]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:[profil count]-1-i]objectForKey:@"y"]floatValue];
-         float steigung= atanf(deltay/deltax);
+         steigung = atanf(deltay/deltax);
          //      steigung *= -1;
          steigungu+= steigung;
-         //NSLog(@"end i: %d steigung u: %2.3f grad: %2.3f",endi,steigung, steigung/M_PI*180);
+         NSLog(@"end i: %d steigung u: %2.3f grad: %2.3f",endi,steigung, steigung/M_PI*180);
       }
    }
    if (anzWerte == 0)
@@ -147,8 +149,9 @@ return NULL;
    }
    steigungo /=anzWerte;
    steigungu /=anzWerte;
-  // NSLog(@"steigungo: %1.2f steigungu: %2.2f",steigungo*180/M_PI,steigungu*180/M_PI);
-   float mittelwert = (steigungo+steigungu)/2;
+   NSLog(@"Steigung raw steigungo: %1.2f steigungu: %2.2f",steigungo,steigungu);
+   NSLog(@"steigungo: %1.2f steigungu: %2.2f",steigungo*180/M_PI,steigungu*180/M_PI);
+   float mittelwert = (steigungo+steigungu)/2; // Winkelhalbierende
    return mittelwert;
 }
 

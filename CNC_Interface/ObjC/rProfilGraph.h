@@ -30,8 +30,8 @@
    int         anzahlmaschen;
    
    int         graphstatus;
-    int screen ;
-   int GraphOffset;
+   int         screen ;
+   int         GraphOffset;
    
 }
 - (void)setDatenArray:(NSArray*)derDatenArray;

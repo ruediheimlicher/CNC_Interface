@@ -10925,7 +10925,7 @@ return returnInt;
    //[self reportOberkanteAnfahren:NULL];
    [CNC_Neutaste performClick:NULL];
    [CNC_Starttaste performClick:NULL];
-   //[CNC_Starttaste setEnabled:NO];
+   [CNC_Starttaste setEnabled:NO];
    
    [self reportNeueLinie:NULL]; // Einstellungen aktivieren
    

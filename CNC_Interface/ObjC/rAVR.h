@@ -153,7 +153,7 @@ int globalcounter = 0;
    int                     cncposition;
    int                     cncstatus;
    
-   NSString*            ProfilLibPfad;
+   NSString*               ProfilLibPfad;
     
    NSString*               CNCdataPfad;
    NSMutableArray*         EEPROMArray;

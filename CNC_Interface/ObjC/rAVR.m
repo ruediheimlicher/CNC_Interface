@@ -8059,49 +8059,7 @@ return returnInt;
          fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
       }
 */
-      
-      /*
-      for(k=1;k<[EndleistenEinlaufArrayB count];k++)
-      {
-         NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
-         
-         float tempax = [[[EndleistenEinlaufArrayB objectAtIndex:k]objectAtIndex:0]floatValue];
-         float tempay = [[[EndleistenEinlaufArrayB objectAtIndex:k]objectAtIndex:1]floatValue];
-         //NSLog(@"tempx: %2.2f tempy: %2.2f",tempx, tempy);
-         [tempZeilenDic setObject:[NSNumber numberWithFloat:ax+tempax]forKey:@"ax"];
-         [tempZeilenDic setObject:[NSNumber numberWithFloat:ay+tempay]forKey:@"ay"];
-         
-         // reduziertes pwm: Schneiden aus dem Einstich heraus 
-         if ([[EndleistenEinlaufArrayA objectAtIndex:k]count]>2) // Angaben fuer pwm an index 2
-         {
-            //NSLog(@"EndleistenEinlaufArrayA pwm: %2.2f",[[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:2]floatValue]);
-            int temppwm = [[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:2]floatValue]*origpwm;
-            
-            [tempZeilenDic setObject:[NSNumber numberWithInt:temppwm] forKey:@"pwm"];
-            //NSLog(@"EndleistenEinlaufArrayA pwm: %2.2f",temppwm);
-            
-         }
-         else 
-         {
-            [tempZeilenDic setObject:[NSNumber numberWithInt:origpwm] forKey:@"pwm"];
-         }
-         
-         float tempbx = [[[EndleistenEinlaufArrayB objectAtIndex:k]objectAtIndex:0]floatValue];
-         float tempby = [[[EndleistenEinlaufArrayB objectAtIndex:k]objectAtIndex:1]floatValue];
-         
-         [tempZeilenDic setObject:[NSNumber numberWithFloat:bx+tempbx]forKey:@"bx"];
-         [tempZeilenDic setObject:[NSNumber numberWithFloat:by+tempby]forKey:@"by"];
-         
-         
-         [tempZeilenDic setObject:[NSNumber numberWithInt:k] forKey:@"index"];
-         [tempZeilenDic setObject:[NSNumber numberWithInt:10] forKey:@"teil"];
-         // pwm
-         
-         [KoordinatenTabelle addObject:tempZeilenDic];
-      }
-      */
-
-      
+ 
       
       
       
@@ -8161,16 +8119,7 @@ return returnInt;
    NSLog(@"ScalePop selectedItem]tag: %d",tag);
    
    
-   /*
-   // Koordinaten aufteilen auf ober- und unterseite: 
-   NSDictionary* ProfilpunktDicA=[CNC ProfilDicVonPunkt:StartpunktA mitProfil:Profil1Array mitProfiltiefe:TiefeA mitScale:[[ScalePop selectedItem]tag]];
-   
-    NSDictionary* ProfilpunktDicB=[CNC ProfilDicVonPunkt:StartpunktB mitProfil:Profil2Array mitProfiltiefe:TiefeB mitScale:[[ScalePop selectedItem]tag]];
-   
-   
-   //NSLog(@"ProfilpunktDicA %@",[ProfilpunktDicA description]);
-    */
-   ProfilArrayA = [ProfilDic objectForKey:@"profil1array"];
+    ProfilArrayA = [ProfilDic objectForKey:@"profil1array"];
    
    ProfilArrayB = [ProfilDic objectForKey:@"profil2array"];
    

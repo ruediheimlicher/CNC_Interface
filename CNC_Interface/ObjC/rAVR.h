@@ -349,6 +349,8 @@ int globalcounter = 0;
    IBOutlet id             KoteFeld;
    IBOutlet id             KoteStepper;
    
+   
+   
    // Rumpf
    IBOutlet id               RandFeld;
    IBOutlet id               EinlaufFeld;
@@ -375,6 +377,10 @@ int globalcounter = 0;
    
    int                     boardindex; // teensy""2: 0  teensy3: 1
    
+   
+   float einfahrtx;
+   float einfahrty;
+
  
    }
    @property (nonatomic)  int    Kote;

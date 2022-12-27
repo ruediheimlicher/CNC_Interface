@@ -867,7 +867,7 @@ void plot_line (int x0, int y0, int x1, int y1)
    Titelrect.origin.y += Titelrect.size.height -40;
    Titelrect.origin.x += 10;
    Titelrect.size.height = 20;
-   Titelrect.size.width = 200;
+   Titelrect.size.width = 100;
    NSTextField* Titelfeld = [[NSTextField alloc]initWithFrame:Titelrect];
    NSFont* TitelFont=[NSFont fontWithName:@"Helvetica" size: 14];
    [Titelfeld setFont:TitelFont];
@@ -876,6 +876,22 @@ void plot_line (int x0, int y0, int x1, int y1)
    [Titelfeld setTag:1001];
    [Titelfeld setStringValue:@""];
    [ProfilGraph addSubview:Titelfeld];
+
+   NSRect Titel2rect = [ProfilGraph bounds];// Profil 2
+   Titelrect.origin.y += Titelrect.size.height -40;
+   Titelrect.origin.x += 120;
+   Titelrect.size.height = 20;
+   Titelrect.size.width = 100;
+   NSTextField* Titel2feld = [[NSTextField alloc]initWithFrame:Titel2rect];
+   [Titel2feld setFont:TitelFont];
+   [Titel2feld setBordered:NO];
+   [Titel2feld setDrawsBackground:NO];
+   [Titel2feld setTag:1002];
+   [Titel2feld setStringValue:@""];
+   [ProfilGraph addSubview:Titel2feld];
+   
+   
+   
    
    //   [[self window]makeKeyAndOrderFront:self];
    [[[self view] window]makeFirstResponder:ProfilGraph];
@@ -2319,7 +2335,7 @@ return returnInt;
     
    {
       //NSLog(@"reportStartKnopf start: %@",[KoordinatenTabelle description]);
-      if ([KoordinatenTabelle count]==0)
+      //if ([KoordinatenTabelle count]==0)
       {
          //NSLog(@"reportStartKnopf count 0");
          NSPoint tempStartPunkt=NSMakePoint(0, 0);
@@ -2335,7 +2351,7 @@ return returnInt;
          [WertBXStepper setFloatValue:[WertBXFeld intValue]];
          [WertBYStepper setFloatValue:[WertBYFeld intValue]];
 
-         
+       
          
          [IndexStepper setIntValue:0];
         
@@ -2359,6 +2375,7 @@ return returnInt;
          //NSLog(@"reportStartKnopf KoordinatenTabelle: %@",KoordinatenTabelle);
          [CNCDatenArray removeAllObjects];
          [CNCTable reloadData];
+         
          if ([KoordinatenTabelle count])
          {
             [ProfilGraph setDatenArray:KoordinatenTabelle];
@@ -2369,10 +2386,12 @@ return returnInt;
          [NeuesElementTaste setEnabled:YES];
          
       }
+      /*
       else 
       {
          [NeuesElementTaste setEnabled:YES];
       }
+       */
    //   [DC_Taste setState:0];
       [CNC_Stoptaste setEnabled:YES];
       [CNC_Halttaste setState:0];
@@ -8948,7 +8967,7 @@ return returnInt;
       }
       
       
-
+      dicke = 50;
       //NSLog(@"reportBlockkonfigurieren dicke: %2.2f",dicke);
       [Blockoberkante setIntValue:dicke];
       //[Blockoberkante setIntValue:plattendicke-5];
@@ -8963,9 +8982,10 @@ return returnInt;
       [AbmessungX setIntValue:[Blockbreite intValue] + einstichx];
       
       // neue Berechnung
-      
+     
             
       NSPoint EckeLinksUnten = NSMakePoint(einlaufAX - rand, fmax(einlaufAY,einlaufBY) - abstandunten  - zugabeunten);
+      EckeLinksUnten.x = 20;
       NSPoint EckeLinksOben = NSMakePoint(EckeLinksUnten.x, EckeLinksUnten.y + dicke);
       
       NSPoint EckeRechtsOben = NSMakePoint(EckeLinksOben.x + ausmassx + einlaufrand + auslaufrand, EckeLinksOben.y);
@@ -8976,7 +8996,7 @@ return returnInt;
       BlockrahmenArray = [NSMutableArray arrayWithObjects:NSStringFromPoint(EckeLinksOben),NSStringFromPoint(EckeRechtsOben),NSStringFromPoint(EckeRechtsUnten),NSStringFromPoint(EckeLinksUnten), nil];
       
       
-      //NSLog(@"reportBlockkonfigurieren RahmenArray: %@",[BlockrahmenArray description]);
+      NSLog(@"reportBlockkonfigurieren RahmenArray: %@",[BlockrahmenArray description]);
       
       [ProfilGraph setRahmenArray:BlockrahmenArray];
       
@@ -9417,6 +9437,7 @@ return returnInt;
    
    int saveOK=[saveElementArray writeToURL:ElementURL atomically:YES];
    NSLog(@"saveElement saveOK: %d",saveOK);
+  
 
 }
 
@@ -9447,6 +9468,8 @@ return returnInt;
    [[StartKoordinate cellAtIndex:0]setStringValue:@""];
    [[StartKoordinate cellAtIndex:1]setStringValue:@""];
 
+//   [WertAXFeld setFloatValue:(20.0+ einlauflaenge)];
+//   [WertAYFeld setFloatValue:50.0];
    
    //[CNC_Starttaste setEnabled:NO];
    [CNC_Terminatetaste setEnabled:NO];
@@ -9454,7 +9477,7 @@ return returnInt;
    [DC_Taste setState:0];
     
    [KoordinatenTabelle removeAllObjects];
-   if (BlockrahmenArray&&[BlockrahmenArray count])
+   if (BlockrahmenArray)//&&[BlockrahmenArray count])
    {
       [BlockrahmenArray removeAllObjects];
       [ProfilGraph setRahmenArray:BlockrahmenArray];
@@ -10917,7 +10940,21 @@ return returnInt;
 {
    NSDate *anfang = [NSDate date];
 
-   NSLog(@"reportProfilOberseiteTask ");
+   NSLog(@"reportProfilOberseiteTask Koordinatentabelle: count: %d",KoordinatenTabelle.count);
+   for (int i=0;i<KoordinatenTabelle.count;i++)
+   {
+      float ax = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
+      float ay = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ay"]floatValue];
+      float bx = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
+      float by = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
+      
+      fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
+   }
+   
+//   [WertAXFeld setFloatValue:(20.0+ einlauflaenge)];
+//   [WertAYFeld setFloatValue:50.0];
+
+   
    NSLog(@"ProfilNameFeldA: %@ ProfilNameFeldB: %@ ",[ProfilNameFeldA stringValue],[ProfilNameFeldB stringValue]);
    [CNC_Stoptaste setState:0];
    //[self reportOberkanteAnfahren:NULL];
@@ -10984,7 +11021,7 @@ return returnInt;
    [CNC_Eingabe setOberseite:1];
    [CNC_Eingabe setUnterseite:0];
 
-   NSLog(@"reportBlockanfuegen VOR doProfil: KoordinatenTabelle");
+   NSLog(@"reportProfilOberseiteTask VOR doProfil: KoordinatenTabelle");
    for (int i=0;i<KoordinatenTabelle.count;i++)
    {
       float ax = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
@@ -11046,6 +11083,7 @@ return returnInt;
    
    [CNC_Starttaste performClick:NULL]; // Startpunkt fixieren
    [self reportNeueLinie:NULL];
+   
   //[[CNC_Eingabe EinstellungenTab]selectItemAtIndex:3];
 
    //long profilpopindex =0;
@@ -12220,7 +12258,7 @@ return returnInt;
       NSRect Profilrect = [Druckfeld bounds];
       Profilrect.origin.y =  10;
       Profilrect.origin.x =  10;
-      Profilrect.size.height -= 60;
+      Profilrect.size.height -= 40;
       Profilrect.size.width -= 30;
       
       
@@ -12241,22 +12279,38 @@ return returnInt;
       
       [Profilfeld setNeedsDisplay:YES];
    }
+  
+   
    [Druckfeld addSubview:Profilfeld];
    
-   
    NSRect Titelrect =  NSMakeRect(30, 80, 60, 60);
-   Titelrect.origin.y =  30;
-   Titelrect.origin.x =  80;
-   Titelrect.size.height= 60;
-   Titelrect.size.width= 240;
-   NSString*titel = [NSString stringWithString:[ProfilNameFeldA stringValue]];
-
-  
-   NSTextField* Titelfeld = [[NSTextField alloc]initWithFrame:Titelrect];
+   Titelrect.origin.y =  300;
+   Titelrect.origin.x =  20;
+   Titelrect.size.height= 30;
+   Titelrect.size.width= 100;
+   
+   NSString*titel1 = [NSString stringWithString:[ProfilNameFeldA stringValue]];  
+   NSTextField* Titel1feld = [[NSTextField alloc]initWithFrame:Titelrect];
    NSFont* TitelFont=[NSFont fontWithName:@"Helvetica" size: 14];
-   [Titelfeld setFont:TitelFont];
-   [Titelfeld setStringValue:@""];
-//   [Druckfeld addSubview:Titelfeld];
+   [Titel1feld setFont:TitelFont];
+   [Titel1feld setStringValue:titel1];
+   Titel1feld.bezeled         = NO;
+   Titel1feld.editable        = NO;
+   Titel1feld.drawsBackground = NO;
+   [Druckfeld addSubview:Titel1feld];
+   
+   Titelrect.origin.x += 120;
+   
+   NSString*titel2 = [NSString stringWithString:[ProfilNameFeldB stringValue]];
+   NSTextField* Titel2feld = [[NSTextField alloc]initWithFrame:Titelrect];
+   [Titel2feld setFont:TitelFont];
+   [Titel2feld setStringValue:titel2];
+   Titel2feld.bezeled         = NO;
+   Titel2feld.editable        = NO;
+   Titel2feld.drawsBackground = NO;
+   [Druckfeld addSubview:Titel2feld];
+
+   
    
    NSImageView* Bildfeld;
    NSRect Bildrect = NSMakeRect(230, 80, 60, 60);

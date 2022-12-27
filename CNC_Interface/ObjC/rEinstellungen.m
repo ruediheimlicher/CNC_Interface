@@ -2960,7 +2960,7 @@
       [ProfilDic setObject:[NSNumber numberWithInt:reverse] forKey:@"reverse"];
       [ProfilDic setObject:[NSNumber numberWithFloat:[Einlaufrand floatValue]] forKey:@"einlaufrand"];
       [ProfilDic setObject:[NSNumber numberWithFloat:[Auslaufrand floatValue]] forKey:@"auslaufrand"];
-      
+     /* 
       [PList setObject:[NSNumber numberWithInt:[Einlauflaenge intValue]] forKey:@"einlauflaenge"];
       [PList setObject:[NSNumber numberWithInt:[Einlauftiefe intValue]] forKey:@"einlauftiefe"];
       [PList setObject:[NSNumber numberWithInt:[Auslauflaenge intValue]] forKey:@"auslauflaenge"];
@@ -2968,7 +2968,7 @@
       
       [PList setObject:[NSNumber numberWithInt:[Einlaufrand intValue]] forKey:@"einlaufrand"];
       [PList setObject:[NSNumber numberWithInt:[Auslaufrand intValue]] forKey:@"auslaufrand"];
-      
+      */
        //NSLog(@"doProfilEinfuegenTask userInfo:ProfilDic count: %ld",(unsigned long)[ProfilDic count]);
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"LibProfileingabe" object:self userInfo: ProfilDic];
@@ -3581,6 +3581,7 @@
       [ProfilDic setObject:[NSNumber numberWithInt:flipV] forKey:@"flipv"];
       [ProfilDic setObject:[NSNumber numberWithInt:reverse] forKey:@"reverse"];
       
+      /*
       [PList setObject:[NSNumber numberWithInt:[Einlauflaenge intValue]] forKey:@"einlauflaenge"];
       [PList setObject:[NSNumber numberWithInt:[Einlauftiefe intValue]] forKey:@"einlauftiefe"];
       [PList setObject:[NSNumber numberWithInt:[Einlaufrand intValue]] forKey:@"einlaufrand"];
@@ -3589,7 +3590,7 @@
       [PList setObject:[NSNumber numberWithInt:[Auslauftiefe intValue]] forKey:@"auslauftiefe"];
       [PList setObject:[NSNumber numberWithInt:[Auslaufrand intValue]] forKey:@"auslaufrand"];
       [PList setObject:[NSNumber numberWithFloat:[AbbrandmassA floatValue]] forKey:@"abbranda"];
-    
+    */
 
       
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];

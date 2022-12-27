@@ -383,7 +383,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 	{
 		
 		NSString* tempZeilenString=[tempArray objectAtIndex:i];
-      NSLog(@"%d tempZeilenString raw: %@",i,tempZeilenString);
+      //NSLog(@"%d tempZeilenString raw: %@",i,tempZeilenString);
 		nameRange=[tempZeilenString rangeOfString:@"\n"];
 		//NSLog(@"nameRange start loc: %d l: %d",nameRange.location, nameRange.length);	
 		
@@ -413,7 +413,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 		{
 			tempZeilenString=[tempZeilenString substringFromIndex:1];
 		}
-		NSLog(@"%d tempZeilenString A: %@",i,tempZeilenString);
+		//NSLog(@"%d tempZeilenString A: %@",i,tempZeilenString);
 		NSRange LeerschlagRange=[tempZeilenString rangeOfString:@"  "];
 		//NSLog(@"LeerschlagRange start loc: %d l: %d",LeerschlagRange.location, LeerschlagRange.length);
 		while(LeerschlagRange.length )
@@ -430,9 +430,9 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 			LeerschlagRange=[tempZeilenString rangeOfString:@"  "];
 			//NSLog(@"LeerschlagRange loop loc: %d l: %d",LeerschlagRange.location, LeerschlagRange.length);
 		}
-		NSLog(@"tempZeilenString B: %@",tempZeilenString);
+		//NSLog(@"tempZeilenString B: %@",tempZeilenString);
 		tempZeilenString=[tempZeilenString stringByReplacingOccurrencesOfString:@" " withString:@"\t"];
-		NSLog(@"i: %d tempZeilenString C: %@",i,tempZeilenString);
+		//NSLog(@"i: %d tempZeilenString C: %@",i,tempZeilenString);
 		
 		NSArray* tempZeilenArray=[tempZeilenString componentsSeparatedByString:@"\t"];
 		float wertx=[[tempZeilenArray objectAtIndex:0]floatValue];
@@ -498,13 +498,13 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    
 
       
-   
-   NSLog(@"Profilarray name: %@:",ProfilName);
+   /*
+   NSLog(@"Profildaten Profilarray name: %@:",ProfilName);
    for (int i=0;i<ProfilArray.count;i++)
    {
       fprintf(stderr,"%d \t %2.6f \t %2.6f \n",i,[[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue], [[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue]);
    }
-
+*/
    // Profil umdrehen
    ProfilArray = (NSMutableArray*)[self flipProfil:ProfilArray];
 	//NSLog(@"Utils openProfil ProfilArray: \n%@",[ProfilArray description]);
@@ -513,22 +513,27 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    
    //NSLog(@"count: %d Nasenindex: %d",[ProfilArray count],Nasenindex);
    
+   
    NSLog(@"OberseiteArray");
    NSArray* OberseiteArray=[ProfilArray subarrayWithRange:NSMakeRange(0, Nasenindex+1)];
+   
    NSLog(@"OberseiteArray count: %d",OberseiteArray.count);
+   /*
    for (int i=0;i<OberseiteArray.count;i++)
    {
       fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[OberseiteArray objectAtIndex:i]objectForKey:@"x"] floatValue],[[[OberseiteArray objectAtIndex:i]objectForKey:@"y"] floatValue]);
    }
-   
+   */
    NSLog(@"UnterseiteArray");
    NSArray* UnterseiteArray=[ProfilArray subarrayWithRange:NSMakeRange(Nasenindex, [ProfilArray count]-Nasenindex)];
    NSMutableArray * revUnterseiteArray = [NSMutableArray new];
    //int i=0;
+   /*
    for( i = 0; i < [UnterseiteArray count]; i++) 
    {
       [revUnterseiteArray addObject:[UnterseiteArray objectAtIndex:[UnterseiteArray count] - i - 1]];
    }
+    */
    NSLog(@"revUnterseiteArray");
    
    //NSLog(@"Spline Unterseite");

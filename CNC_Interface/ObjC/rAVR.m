@@ -8022,6 +8022,11 @@ return returnInt;
       //float winkelB = [CNC EndleistenwinkelvonProfil:Profil2Array];
       NSLog(@"Endleistenwinkel B: %2.2f",winkelB*180/M_PI);
       
+      if (mitUnterseite)
+      {
+         winkelA *= (-1);
+         winkelB *= (-1);
+      }
       // if ([OberseiteCheckbox state]&& (![OberseiteCheckbox state]))
       //if (mitOberseite && (!mitUnterseite)) 
       {
@@ -8263,7 +8268,7 @@ return returnInt;
    if (mitUnterseite)
    {
       NSLog(@"Unterseite einfuegenNasenindex: %d",Nasenindex);
-      
+      /*
       for (index=Nasenindex;index< [ProfilArrayA count];index++) // Alle Punkte abfahren
       {
          NSLog(@"Unterseite einfuegen for index: %d",index);
@@ -8284,10 +8289,12 @@ return returnInt;
             //NSLog(@"index: %d rueckwaertsindex: %d x: %1.1f",index,rueckwaertsindex,[[[ProfilArray objectAtIndex:rueckwaertsindex]objectForKey:@"ax"]floatValue]);         
          }
          NSLog(@"Unterseite einfuegen for A index: %d unterseiteindex: %d", index, unterseiteindex);
-        
-         
-         NSDictionary* tempZeilenDicA = [Profil1UnterseiteArray objectAtIndex:unterseiteindex];
-         NSDictionary* tempZeilenDicB = [Profil2UnterseiteArray objectAtIndex:unterseiteindex];
+        */
+      for (index = Profil1UnterseiteArray.count-1;index >= 0; index--)
+         {
+            NSLog(@"Unterseite einfuegen A index: %d ", index);
+         NSDictionary* tempZeilenDicA = [Profil1UnterseiteArray objectAtIndex:index];
+         NSDictionary* tempZeilenDicB = [Profil2UnterseiteArray objectAtIndex:index];
          NSLog(@"Unterseite einfuegen for B");
          
          NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];

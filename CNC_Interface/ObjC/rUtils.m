@@ -767,7 +767,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
          mincount = A.count;
       }
       NSLog(@"A count: %d B count: %d \t code: %@ ",A.count, B.count, code );
-      
+      /*
       NSLog(@"soll:");
       for (int i=0;i<soll.count;i++)
       {
@@ -778,7 +778,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
       {
          fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[quelle objectAtIndex:i]objectForKey:@"x" ] floatValue],[[[quelle objectAtIndex:i]objectForKey:@"y" ] floatValue]);
       }
-      
+      */
       NSLog(@"UA");
       if ([[soll[0]objectForKey:@"x"] floatValue] > 0)
       {
@@ -836,13 +836,14 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
       // letztes El einfuegen
       NSDictionary* lastdic = [NSDictionary dictionaryWithObjectsAndKeys:[[quelle lastObject]objectForKey:@"x"],@"x", [[quelle lastObject]objectForKey:@"y"],@"y", nil];
      [changedarray addObject:lastdic];
-
+/*
       NSLog(@"changedarray:");
       for (int i=0;i<changedarray.count;i++)
       {
          fprintf(stderr,"%d \t %2.6f \t %2.6f \n",i,[[[changedarray objectAtIndex:i]objectForKey:@"x"]floatValue], [[[changedarray objectAtIndex:i]objectForKey:@"y"]floatValue]);
       }
       NSLog(@"UC");
+ */
       NSLog(@"werteanpassenUnterseiteVon end");
       if (changedarraypos == 1) // pos 1 fuer changedarray
       {

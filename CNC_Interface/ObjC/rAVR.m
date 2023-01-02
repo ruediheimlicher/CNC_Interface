@@ -7996,7 +7996,7 @@ return returnInt;
    //NSLog(@"einlaufrand: %d auslaufrand: %d",einlaufrand,auslaufrand);
    
    // Einlauf-Schnittlinie
-   
+   /*
    NSLog(@"profil1array: ");
    for (int i=0;i<[[ProfilDic objectForKey:@"profil1array"] count ];i++)
    {
@@ -8009,7 +8009,7 @@ return returnInt;
       fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[[ProfilDic objectForKey:@"profil2array"] objectAtIndex:i]objectForKey:@"x"] floatValue],[[[[ProfilDic objectForKey:@"profil2array"] objectAtIndex:i]objectForKey:@"y"] floatValue]);
    }
 
-
+*/
    
    if (!(mitOberseite && mitUnterseite) && mitEinlauf) // Nur Ober- ODER Unterseite
    {
@@ -8192,9 +8192,13 @@ return returnInt;
    // NSLog(@"AVR ProfilUArray: %@",[ProfilUArray description]);
    // Letzten Punkt der Koordinatentabelle entfernen, wird zu erstem Punkt des Profils
    
-   if ([KoordinatenTabelle count])
+   if ([KoordinatenTabelle count]>2)
    {
       [KoordinatenTabelle removeObjectAtIndex:[KoordinatenTabelle count]-1]; // Letzen Punkt entfernen
+   }
+   else
+   {
+      
    }
    [self updateIndex];
    
@@ -8258,6 +8262,7 @@ return returnInt;
       //NSLog(@"ProfilArrayA count-1: %@",[ProfilArrayA objectAtIndex:[ProfilArrayA count]-1]);
       
       //NSLog(@"Nase weg index: %d x: %1.1f",index,[[[ProfilArrayA objectAtIndex:[ProfilArrayA count]-1]objectForKey:@"ax"]floatValue]);
+      
       [KoordinatenTabelle removeObjectAtIndex:[KoordinatenTabelle count]-1]; // Letzen Punkt entfernen
    }
    

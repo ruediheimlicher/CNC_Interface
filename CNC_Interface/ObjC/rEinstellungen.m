@@ -2914,6 +2914,11 @@
 - (void)doProfilEinfuegenTask
 {
    NSLog(@"doProfilEinfuegenTask start");
+   NSMutableArray* oberseitearrayA = [NSMutableArray new];
+   NSMutableArray* unterseitearrayA = [NSMutableArray new];
+   NSMutableArray* oberseitearrayB = [NSMutableArray new];
+   NSMutableArray* unterseitearrayB = [NSMutableArray new];
+
    if ([Profil1Array count])
    {
       NSMutableDictionary* ProfilDic=[[NSMutableDictionary alloc]initWithCapacity:0];
@@ -2921,6 +2926,13 @@
       //NSLog(@"reportLibElementEinfuegen LibElementArray: %@",[LibElementArray description]);
      // [ProfilDic setObject:Profil1Name forKey:@"profilname"];
       [ProfilDic setObject:Profil1Name forKey:@"profil1name"];
+      
+      if(Profil1Array.count > 200)
+      {
+         Profil1Array = [self anzahlPunktereduzierenVon:Profil1Array];
+      }
+
+      
       
       //NSLog(@"reportProfilEinfuegen Profil1Array: %@",[Profil1Array description]);
       //[ProfilDic setObject:Profil1Array forKey:@"profilarray"];

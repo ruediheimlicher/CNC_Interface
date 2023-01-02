@@ -141,6 +141,30 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    return flipProfilArray;
 }
 
+
+- (NSArray*)spiegelnProfilVertikal:(NSArray*)profilArray
+{
+   NSMutableArray* flipProfilArray = [[NSMutableArray alloc]initWithCapacity:0];
+   int i;
+   
+   
+   for (i=0;i< [profilArray count];i++)
+   {
+      NSMutableDictionary* tempZeilenDic = [NSMutableDictionary dictionaryWithDictionary:[profilArray objectAtIndex:i]];
+      float tempy=[[tempZeilenDic objectForKey:@"y"]floatValue];
+      
+      tempy *= -1;
+      //tempx += 1;
+      float tempx=[[tempZeilenDic objectForKey:@"x"]floatValue];
+      [tempZeilenDic setObject:[NSNumber numberWithFloat:tempx]forKey:@"x"];
+      [tempZeilenDic setObject:[NSNumber numberWithFloat:tempy]forKey:@"y"];
+      [flipProfilArray addObject:tempZeilenDic];
+   }
+   
+   return flipProfilArray;
+}
+
+
 - (NSDictionary*)floatProfilDatenAnPfad:(NSString*)profilpfad
 {
    NSMutableArray* ProfilArray=[NSMutableArray new];
@@ -383,7 +407,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 	{
 		
 		NSString* tempZeilenString=[tempArray objectAtIndex:i];
-      NSLog(@"%d tempZeilenString raw: %@",i,tempZeilenString);
+  //    NSLog(@"%d tempZeilenString raw: %@",i,tempZeilenString);
 		nameRange=[tempZeilenString rangeOfString:@"\n"];
 		//NSLog(@"nameRange start loc: %d l: %d",nameRange.location, nameRange.length);	
 		
@@ -413,7 +437,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 		{
 			tempZeilenString=[tempZeilenString substringFromIndex:1];
 		}
-		NSLog(@"%d tempZeilenString A: %@",i,tempZeilenString);
+//		NSLog(@"%d tempZeilenString A: %@",i,tempZeilenString);
 		NSRange LeerschlagRange=[tempZeilenString rangeOfString:@"  "];
 		//NSLog(@"LeerschlagRange start loc: %d l: %d",LeerschlagRange.location, LeerschlagRange.length);
 		while(LeerschlagRange.length )
@@ -430,9 +454,9 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 			LeerschlagRange=[tempZeilenString rangeOfString:@"  "];
 			//NSLog(@"LeerschlagRange loop loc: %d l: %d",LeerschlagRange.location, LeerschlagRange.length);
 		}
-		NSLog(@"tempZeilenString B: %@",tempZeilenString);
+//		NSLog(@"tempZeilenString B: %@",tempZeilenString);
 		tempZeilenString=[tempZeilenString stringByReplacingOccurrencesOfString:@" " withString:@"\t"];
-		NSLog(@"i: %d tempZeilenString C: %@",i,tempZeilenString);
+//		NSLog(@"i: %d tempZeilenString C: %@",i,tempZeilenString);
 		
 		NSArray* tempZeilenArray=[tempZeilenString componentsSeparatedByString:@"\t"];
 		float wertx=[[tempZeilenArray objectAtIndex:0]floatValue];
@@ -514,7 +538,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    //NSLog(@"count: %d Nasenindex: %d",[ProfilArray count],Nasenindex);
    
    NSLog(@"OberseiteArray");
-   NSArray* OberseiteArray=[ProfilArray subarrayWithRange:NSMakeRange(0, Nasenindex+1)];
+   NSArray* OberseiteArray=[NSArray arrayWithArray:[ProfilArray subarrayWithRange:NSMakeRange(0, Nasenindex+1)]];
    NSLog(@"OberseiteArray count: %d",OberseiteArray.count);
    for (int i=0;i<OberseiteArray.count;i++)
    {
@@ -522,7 +546,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    }
    
    NSLog(@"UnterseiteArray");
-   NSArray* UnterseiteArray=[ProfilArray subarrayWithRange:NSMakeRange(Nasenindex, [ProfilArray count]-Nasenindex)];
+   NSArray* UnterseiteArray=[NSArray arrayWithArray:[ProfilArray subarrayWithRange:NSMakeRange(Nasenindex, [ProfilArray count]-Nasenindex)]];
    NSMutableArray * revUnterseiteArray = [NSMutableArray new];
    //int i=0;
    for( i = 0; i < [UnterseiteArray count]; i++) 
@@ -773,6 +797,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
       {
          fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[soll objectAtIndex:i]objectForKey:@"x"] floatValue],[[[soll objectAtIndex:i]objectForKey:@"y"] floatValue]);
       }
+       
       NSLog(@"quelle:");
       for (int i=0;i<quelle.count;i++)
       {
@@ -900,6 +925,8 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
       }
       NSLog(@"A count: %d B count: %d \t code: %@ ",A.count, B.count, code );
       
+      
+      /*
       NSLog(@"soll:");
       for (int i=0;i<soll.count;i++)
       {
@@ -910,7 +937,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
       {
          fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[quelle objectAtIndex:i]objectForKey:@"x" ] floatValue],[[[quelle objectAtIndex:i]objectForKey:@"y" ] floatValue]);
       }
-      
+      */
       NSLog(@"OA");
       NSMutableArray* changedarray =  [NSMutableArray new]; // soll mit Interpolationswerten aus quelle an positionen von soll aufgebaut werden
 

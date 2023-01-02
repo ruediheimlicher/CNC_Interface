@@ -1871,7 +1871,7 @@ return returnInt;
          if ([Filemanager fileExistsAtPath:PListPfad])
          {
             tempPListDic=[NSMutableDictionary dictionaryWithContentsOfFile:PListPfad];
-            NSLog(@"saveCNCPlist: vorhandener PListDic: %@",[tempPListDic description]);
+            //NSLog(@"saveCNCPlist: vorhandener PListDic: %@",[tempPListDic description]);
             
             
          } // if fileExits
@@ -5273,6 +5273,7 @@ return returnInt;
    if ([OberseiteCheckbox state]&& [UnterseiteCheckbox state]) // Oberseite schon eingefuegt, letztes Element entfernen, vor Unterseite anfuegen
    {
       NSLog(@"Nase weg index: %d x: %1.1f",index,[[[ProfilArrayA objectAtIndex:[KoordinatenTabelle count]-1]objectForKey:@"ax"]floatValue]);
+      
       [KoordinatenTabelle removeObjectAtIndex:[KoordinatenTabelle count]-1]; // Letzen Punkt entfernen
    }   
    
@@ -7347,6 +7348,10 @@ return returnInt;
    [datenDic setObject:[NSNumber numberWithInt:[Auslauftiefe intValue]] forKey:@"auslauftiefe"];
 
    [datenDic setObject:[NSNumber numberWithFloat:[AbbrandFeld floatValue]] forKey:@"abbranda"];
+   [datenDic setObject:[NSNumber numberWithInt:1] forKey:@"mitoberseite"];
+   [datenDic setObject:[NSNumber numberWithInt:1] forKey:@"mitunterseite"];
+   [OberseiteCheckbox setState:1];
+   [UnterseiteCheckbox setState:1];
    
    if ([Profil1Pop indexOfSelectedItem])
    {
@@ -7780,6 +7785,7 @@ return returnInt;
    
    [OberseiteCheckbox  setState:[[ProfilDic objectForKey:@"oberseite"]intValue]];
    [UnterseiteCheckbox  setState:[[ProfilDic objectForKey:@"unterseite"]intValue]];
+   
    [EinlaufCheckbox  setState:[[ProfilDic objectForKey:@"einlauf"]intValue]];
    [AuslaufCheckbox  setState:[[ProfilDic objectForKey:@"auslauf"]intValue]];
    
@@ -7943,6 +7949,7 @@ return returnInt;
    
    Profil1Array=[ProfilDic objectForKey:@"profil1array"];
    Profil1UnterseiteArray=[ProfilDic objectForKey:@"unterseitearrayA"];
+   
    Profil1OberseiteArray=(NSMutableArray*)[CNC_Eingabe vertikalspiegelnVonProfil:[ProfilDic objectForKey:@"oberseitearrayA"]];
     
    Profil2Array=[ProfilDic objectForKey:@"profil1array"];
@@ -8168,7 +8175,7 @@ return returnInt;
    NSLog(@"ScalePop selectedItem]tag: %d",tag);
    
    
-    ProfilArrayA = [ProfilDic objectForKey:@"profil1array"];
+   ProfilArrayA = [ProfilDic objectForKey:@"profil1array"];
    
    ProfilArrayB = [ProfilDic objectForKey:@"profil2array"];
    
@@ -8194,6 +8201,7 @@ return returnInt;
    
    if ([KoordinatenTabelle count]>2)
    {
+     
       [KoordinatenTabelle removeObjectAtIndex:[KoordinatenTabelle count]-1]; // Letzen Punkt entfernen
    }
    else
@@ -8213,6 +8221,8 @@ return returnInt;
    //if ([OberseiteCheckbox state])
    if (mitOberseite)
    {
+      NSLog(@"Oberseite einfuegen Profil1OberseiteArray count: %d Profil2OberseiteArray count: %d",Profil1OberseiteArray.count,Profil2OberseiteArray.count);
+
       int flipfaktor = 1;
       if (!(mitUnterseite))
       {
@@ -8223,23 +8233,27 @@ return returnInt;
       profilstartindex =[KoordinatenTabelle count];
 
       // mit unter/oberseitearrayA/B abarbeiten
-      //NSLog(@"profilstartindex: %d",profilstartindex);
+      NSLog(@"profilstartindex: %d",profilstartindex);
       for (index=0;index< Profil1OberseiteArray.count;index++) // Punkte der Oberseite
       {
          //NSLog(@"Profil1OberseiteArray index: %d",index);
          NSDictionary* tempZeilenDicA = [Profil1OberseiteArray objectAtIndex:index];
-         
-         NSDictionary* tempZeilenDicB = [Profil2OberseiteArray objectAtIndex:index];
+            
          NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"x"] forKey:@"ax"];
          float ay = [[tempZeilenDicA objectForKey:@"y"]floatValue];
          //ay *= flipfaktor;
          [tempZeilenDic setObject:[NSNumber numberWithFloat:ay]forKey:@"ay"];
-         [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
          
-         float by = [[tempZeilenDicB objectForKey:@"y"]floatValue];
-         //by *= flipfaktor;
-         [tempZeilenDic setObject:[NSNumber numberWithFloat:by] forKey:@"by"];
+         if(index < Profil2OberseiteArray.count)
+         {
+            NSDictionary* tempZeilenDicB = [Profil2OberseiteArray objectAtIndex:index];
+            [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
+
+            float by = [[tempZeilenDicB objectForKey:@"y"]floatValue];
+            //by *= flipfaktor;
+            [tempZeilenDic setObject:[NSNumber numberWithFloat:by] forKey:@"by"];
+         }
         // [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"index"] forKey:@"index"];
          [tempZeilenDic setObject:[NSNumber numberWithInt:20] forKey:@"teil"]; // Kennzeichnung Oberseite
          // pwm
@@ -8257,13 +8271,15 @@ return returnInt;
    //if ([OberseiteCheckbox state]&& [UnterseiteCheckbox state]) // Oberseite schon eingefuegt, letztes Element entfernen, vor Unterseite anfuegen
    if (mitOberseite&& mitUnterseite) // Oberseite schon eingefuegt, letztes Element entfernen, vor Unterseite anfuegen
    {
-      NSLog(@"mitOberseite und mitUnterseite: %d",index);
+      //NSLog(@"mitOberseite und mitUnterseite: %d",index);
       //NSLog(@"ProfilArrayA count: %d",[ProfilArrayA count]);
       //NSLog(@"ProfilArrayA count-1: %@",[ProfilArrayA objectAtIndex:[ProfilArrayA count]-1]);
       
       //NSLog(@"Nase weg index: %d x: %1.1f",index,[[[ProfilArrayA objectAtIndex:[ProfilArrayA count]-1]objectForKey:@"ax"]floatValue]);
-      
-      [KoordinatenTabelle removeObjectAtIndex:[KoordinatenTabelle count]-1]; // Letzen Punkt entfernen
+      if ([KoordinatenTabelle count]>2)
+      {
+         [KoordinatenTabelle removeObjectAtIndex:[KoordinatenTabelle count]-1]; // Letzen Punkt entfernen
+      }
    }
    
    
@@ -8272,51 +8288,39 @@ return returnInt;
    
    if (mitUnterseite)
    {
-      NSLog(@"Unterseite einfuegenNasenindex: %d",Nasenindex);
-      /*
-      for (index=Nasenindex;index< [ProfilArrayA count];index++) // Alle Punkte abfahren
-      {
-         NSLog(@"Unterseite einfuegen for index: %d",index);
-         int unterseiteindex=index;
-         //         if ([OberseiteCheckbox state]) // Unterseite anschliessen
-         if (mitOberseite) // Unterseite anschliessen
-         {
-            //[KoordinatenTabelle addObject:[ProfilArrayA objectAtIndex:index]];
-            //NSLog(@"index: %d x: %1.1f",index,[[[ProfilArray objectAtIndex:index]objectForKey:@"ax"]floatValue]);         
-         }
-         else // Unterseite rueckwäerts einsetzen
-         {
-            unterseiteindex = [ProfilArrayA count]-(index-Nasenindex)-1;
-            //unterseiteindex = [Profil1UnterseiteArray count]-(index)-1;
-
-            
-            //[KoordinatenTabelle addObject:[ProfilArrayA objectAtIndex:rueckwaertsindex]];
-            //NSLog(@"index: %d rueckwaertsindex: %d x: %1.1f",index,rueckwaertsindex,[[[ProfilArray objectAtIndex:rueckwaertsindex]objectForKey:@"ax"]floatValue]);         
-         }
-         NSLog(@"Unterseite einfuegen for A index: %d unterseiteindex: %d", index, unterseiteindex);
-        */
+      NSLog(@"Unterseite einfuegen Profil1UnterseiteArray count: %d Profil2UnterseiteArray count: %d",Profil1UnterseiteArray.count,Profil2UnterseiteArray.count);
+  
+      
       for (index = Profil1UnterseiteArray.count-1;index >= 0; index--)
-         {
-            NSLog(@"Unterseite einfuegen A index: %d ", index);
+      {
+         //NSLog(@"Unterseite einfuegen A index: %d ", index);
          NSDictionary* tempZeilenDicA = [Profil1UnterseiteArray objectAtIndex:index];
-         NSDictionary* tempZeilenDicB = [Profil2UnterseiteArray objectAtIndex:index];
-         NSLog(@"Unterseite einfuegen for B");
          
+          
          NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
          
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"x"] forKey:@"ax"];
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"y"] forKey:@"ay"];
-         [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
-         [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"y"] forKey:@"by"];
+         
+         if (index < Profil2UnterseiteArray.count)
+         {
+            NSDictionary* tempZeilenDicB = [Profil2UnterseiteArray objectAtIndex:index];
+           // NSLog(@"Unterseite einfuegen for B");
+            
+            [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
+            [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"y"] forKey:@"by"];
+         }
          //[tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"index"] forKey:@"index"];
          [tempZeilenDic setObject:[NSNumber numberWithInt:30] forKey:@"teil"];
          // pwm
          [tempZeilenDic setObject:[NSNumber numberWithInt:origpwm] forKey:@"pwm"];
-         NSLog(@"Unterseite einfuegen for C");
+         //NSLog(@"Unterseite einfuegen for C");
          [KoordinatenTabelle addObject:tempZeilenDic];
          //NSLog(@"index: %d x: %1.1f",index,[[[ProfilArrayA objectAtIndex:index]objectForKey:@"ax"]floatValue]);
-         NSLog(@"Unterseite einfuegen for end index: %d",index);
+         //NSLog(@"Unterseite einfuegen for end index: %d",index);
       }
+      
+      
       // Endindex fixieren, wird fuer Abbrand gebraucht fuer 'bis'
       profilendindex = [[[KoordinatenTabelle lastObject]objectForKey:@"index"]intValue];
       profilendindex = [KoordinatenTabelle count];
@@ -8585,7 +8589,7 @@ return returnInt;
 }
 - (void)BlockeingabeAktion:(NSNotification*)note
 {
-   NSLog(@"BlockeingabeAktion note: %@",[[note userInfo] description]);
+   //NSLog(@"BlockeingabeAktion note: %@",[[note userInfo] description]);
    [Blockoberkante setIntValue:[[[note userInfo]objectForKey:@"blockoberkante"]intValue]];
    [OberkantenStepper setIntValue:[Blockoberkante intValue]];
 
@@ -9226,7 +9230,7 @@ return returnInt;
 - (IBAction)reportBlockanfuegen:(id)sender
 {
    
-   NSLog(@"reportBlockanfuegen VOR Blockkonfig");
+   //NSLog(@"reportBlockanfuegen VOR Blockkonfig");
    [self KT];
    
    [self reportBlockkonfigurieren:NULL];
@@ -9241,7 +9245,7 @@ return returnInt;
 
    }
    
-   NSLog(@"reportBlockanfuegen NACH Blockkonfig : KoordinatenTabelle");
+   //NSLog(@"reportBlockanfuegen NACH Blockkonfig : KoordinatenTabelle");
    
    for (int i=0;i<KoordinatenTabelle.count;i++)
    {
@@ -11065,7 +11069,7 @@ return returnInt;
    [CNC_Eingabe setUnterseite:0];
    
 
-   NSLog(@"reportBlockanfuegen VOR doProfil: KoordinatenTabelle");
+   //NSLog(@"reportProfilOberseiteTask VOR doProfil: KoordinatenTabelle");
    for (int i=0;i<KoordinatenTabelle.count;i++)
    {
       float ax = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
@@ -11079,7 +11083,7 @@ return returnInt;
    
    [CNC_Eingabe doProfilPopTaskMitProfil1:profil1popindex mitProfil2:profil2popindex];
    
-   NSLog(@"reportBlockanfuegen NACH doProfil: KoordinatenTabelle");
+   //NSLog(@"reportBlockanfuegen NACH doProfil: KoordinatenTabelle");
    for (int i=0;i<KoordinatenTabelle.count;i++)
    {
       float ax = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
@@ -11195,7 +11199,7 @@ return returnInt;
    
    
    
-   NSLog(@"reportBlockanfuegen VOR doProfil: KoordinatenTabelle");
+   //NSLog(@"reportProfilUnterseiteTask: KoordinatenTabelle");
    for (int i=0;i<KoordinatenTabelle.count;i++)
    {
       float ax = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
@@ -11209,7 +11213,7 @@ return returnInt;
    
    [CNC_Eingabe doProfilPopTaskMitProfil1:profil1popindex mitProfil2:profil2popindex];
    
-   NSLog(@"reportBlockanfuegen NACH doProfil: KoordinatenTabelle");
+   //NSLog(@"reportBlockanfuegen NACH doProfil: KoordinatenTabelle");
    for (int i=0;i<KoordinatenTabelle.count;i++)
    {
       float ax = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];

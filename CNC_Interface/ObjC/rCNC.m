@@ -121,7 +121,7 @@ return NULL;
          steigungo+=steigung;
          anzWerte++;
       }
-      NSLog(@"start i: %d steigung o: %2.3f grad: %2.3f",i,steigung, steigung/M_PI*180);
+      //NSLog(@"start i: %d steigung o: %2.3f grad: %2.3f",i,steigung, steigung/M_PI*180);
    }
 
    // Unterseite
@@ -139,7 +139,7 @@ return NULL;
          steigung = atanf(deltay/deltax);
          //      steigung *= -1;
          steigungu+= steigung;
-         NSLog(@"end i: %d steigung u: %2.3f grad: %2.3f",endi,steigung, steigung/M_PI*180);
+         //NSLog(@"end i: %d steigung u: %2.3f grad: %2.3f",endi,steigung, steigung/M_PI*180);
       }
    }
    if (anzWerte == 0)

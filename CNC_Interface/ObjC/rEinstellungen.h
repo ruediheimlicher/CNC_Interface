@@ -220,6 +220,11 @@
    NSString*            Profil2Name;
    NSMutableArray*      Profil1Array;
    NSMutableArray*      Profil2Array;
+   NSArray*             Profil1OberseiteArray;
+   NSArray*             Profil1UnterseiteArray;
+   NSArray*             Profil2OberseiteArray;
+   NSArray*             Profil2UnterseiteArray;
+
    NSString*            ProfilLibPfad;
 
    // Form

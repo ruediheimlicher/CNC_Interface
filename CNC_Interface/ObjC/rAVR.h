@@ -365,6 +365,8 @@ int globalcounter = 0;
    //IBOutlet id               RumpfblockhoeheFeld;
    IBOutlet id               RumpfabstandFeld; // Abstand CNC zu Block
    IBOutlet id               ElementlaengeFeld; // Laenge des Rumpfabschnittes
+   IBOutlet id                OffsetXFeld;
+   IBOutlet id                OffsetYFeld;
    IBOutlet id                NutCheckbox;
    
     
@@ -418,8 +420,8 @@ int globalcounter = 0;
    - (IBAction)reportMicrosteps:(id)sender;
    - (IBAction)reportRandlinks:(id)sender;
 
-- (IBAction)reportRumpfteilPop:(id)sender;
-
+   - (IBAction)reportRumpfteilPop:(id)sender;
+   - (void)updateRumpfdatenArray;
 
    - (NSDictionary*)RahmenDic;
    - (void)DC_ON:(int)pwm;

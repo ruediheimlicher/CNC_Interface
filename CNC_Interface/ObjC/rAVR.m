@@ -1648,24 +1648,7 @@ return returnInt;
             }
             [self setRumpfteilDic:[RumpfdatenArray objectAtIndex:0] forPart:0];
             
-            NSString* rumpfteilpopkey = [NSString stringWithFormat: @"%d", 0];
-            if ([tempPListDic objectForKey:rumpfteilpopkey])
-            {
-               NSLog(@"rumpfteildic da");
-               NSDictionary* rumpfteildic = [tempPListDic objectForKey:rumpfteilpopkey];
-               
-               NSLog(@"rumpfteildic: %@",rumpfteildic);
-               
- //              [self setRumpfteilDic:rumpfteildic forPart:0];
-  
-               
-            }// rumpfteildic
-            
-
-    
-     
-  
-
+ 
 //end Rumpf
             
             
@@ -1690,6 +1673,8 @@ return returnInt;
 
 - (void)saveCNCPlist
 {
+   
+   [self updateRumpfdatenArray];
    
    BOOL CNCDatenDa=NO;
    BOOL istOrdner;
@@ -1751,11 +1736,13 @@ return returnInt;
 
          [tempPListDic setObject:[NSNumber numberWithFloat:[DC_PWM intValue]] forKey:@"pwm"];
          
+         // Rumpf
+         
          [tempPListDic setObject:RumpfdatenArray forKey:@"rumpfdatenarray"];
-          // Rumpf
+          
 
-         [tempPListDic setObject:[NSNumber numberWithInt:[RumpfBlockbreite intValue]] forKey:@"rumpfblockbreite"];
-         [tempPListDic setObject:[NSNumber numberWithInt:[RumpfBlockhoehe intValue]] forKey:@"rumpfblockhoehe"];
+      //   [tempPListDic setObject:[NSNumber numberWithInt:[RumpfBlockbreite intValue]] forKey:@"rumpfblockbreite"];
+       //  [tempPListDic setObject:[NSNumber numberWithInt:[RumpfBlockhoehe intValue]] forKey:@"rumpfblockhoehe"];
 
          
          [tempPListDic setObject:[NSNumber numberWithInt:[AuslaufFeld intValue]] forKey:@"auslauf"];
@@ -1953,6 +1940,43 @@ return returnInt;
    {
       [RumpfabstandFeld setIntValue:10];
    }
+   
+   if ([rumpfteildic objectForKey:@"rumpfblockbreite"])
+   {
+      [RumpfBlockbreite setIntValue:[[rumpfteildic objectForKey:@"rumpfblockbreite"]intValue]];
+   }
+   else
+   {
+      [RumpfBlockbreite setIntValue:100];
+   }
+
+   if ([rumpfteildic objectForKey:@"rumpfblockhoehe"])
+   {
+      [RumpfBlockhoehe setIntValue:[[rumpfteildic objectForKey:@"rumpfblockhoehe"]intValue]];
+   }
+   else
+   {
+      [RumpfBlockhoehe setIntValue:50];
+   }
+
+   if ([rumpfteildic objectForKey:@"offsety"])
+   {
+      [OffsetXFeld setIntValue:[[rumpfteildic objectForKey:@"offsetx"]intValue]];
+   }
+   else
+   {
+      [OffsetXFeld setIntValue:0];
+   }
+
+   if ([rumpfteildic objectForKey:@"offsety"])
+   {
+      [OffsetYFeld setIntValue:[[rumpfteildic objectForKey:@"offsety"]intValue]];
+   }
+   else
+   {
+      [OffsetYFeld setIntValue:0];
+   }
+
 
 }// setrumpfteildic
 
@@ -1976,7 +2000,8 @@ return returnInt;
    [RumpfBlockhoehe setIntValue: 50];//
    [AuslaufFeld setIntValue: 10];//
    
-   [ProfilBOffsetXFeld setIntValue: 0] ;
+   [OffsetXFeld setIntValue: 0] ;
+   [OffsetYFeld setIntValue: 0] ;
 
 }
 
@@ -2001,7 +2026,10 @@ return returnInt;
    [teildic setObject:[NSNumber numberWithInt:[RumpfBlockhoehe intValue]] forKey:@"rumpfblockhoehe"];//
    [teildic setObject:[NSNumber numberWithInt:[AuslaufFeld intValue]] forKey:@"auslauf"];//
    
-   [teildic setObject:[NSNumber numberWithInt:[ProfilBOffsetXFeld intValue]] forKey:@"offsetx"];
+   [teildic setObject:[NSNumber numberWithInt:[OffsetXFeld intValue]] forKey:@"offsetx"];
+   [teildic setObject:[NSNumber numberWithInt:[OffsetYFeld intValue]] forKey:@"offsety"];
+   
+   
    NSLog(@"teilDic : %@",teildic);
    return teildic;
 }
@@ -2064,12 +2092,7 @@ return returnInt;
    {
       tempPListDic=[NSMutableDictionary dictionaryWithContentsOfFile:PListPfad];
       //NSLog(@"saveCNCPlist: vorhandener PListDic: %@",[tempPListDic description]);
-            
-            
-       
-         
-         
-         
+           
          NSString* teilkey = [NSString stringWithFormat: @"%d", teil];
          
          NSDictionary* teilDic = [tempPListDic objectForKey:teilkey];
@@ -2078,6 +2101,25 @@ return returnInt;
       
    }// if (CNCDatenDa)
    return nil;
+}
+
+- (void)updateRumpfdatenArray
+{
+   NSLog(@"updateRumpfdatenArray");
+   NSDictionary* aktuellerDatenDic = [self rumpfteilDic];
+   NSLog(@"\naktuell: %@ \n Rumpdatenarray: %@",aktuellerDatenDic,[RumpfdatenArray objectAtIndex:aktuellerRumpfteil]);
+   
+   if ([aktuellerDatenDic isEqualToDictionary:[RumpfdatenArray objectAtIndex:aktuellerRumpfteil]])
+   {
+      NSLog(@"dics sind gleich");
+   }
+   else
+   {
+      NSLog(@"dics sind ungleich");
+      
+      [RumpfdatenArray replaceObjectAtIndex:aktuellerRumpfteil withObject:aktuellerDatenDic];
+   }
+ 
 }
 
 - (IBAction)reportRumpfteilTaste:(id)sender
@@ -2103,7 +2145,6 @@ return returnInt;
       [self reportNeuTaste:NULL];
       aktuellerRumpfteil = [sender indexOfSelectedItem];
    }
-   
    
    [self setRumpfteilDic:[RumpfdatenArray objectAtIndex:aktuellerRumpfteil] forPart:aktuellerRumpfteil];
 }
@@ -5503,9 +5544,9 @@ return returnInt;
    float hoeheA = hoeheAraw + rumpfbasisabstand * pfeilungV;
    float hoeheB = hoeheA  - portalabstand * pfeilungV;
    //float hoeheB = hoeheBraw - (portalabstand- rumpfbasisabstand - elementlaenge) * pfeilungV;
-
+   float faktorV = hoeheA/hoeheAraw;
    
-   NSLog(@"pfeilung V: %2.4f hoeheA: %2.2f  hoeheB: %2.2f ",pfeilungV,hoeheA,hoeheB);
+   NSLog(@"pfeilung V: %2.4f hoeheA: %2.2f  hoeheB: %2.2f faktorV: %2.2f",pfeilungV,hoeheA,hoeheB,faktorV);
    
    //rumpfDaten.
   // [KoordinatenTabelle removeAllObjects];
@@ -5513,7 +5554,7 @@ return returnInt;
    // Startpunkt fixieren
    [WertAXFeld setFloatValue:20.0 ];
    [WertAYFeld setFloatValue:20.0 ];
-//   [ProfilBOffsetXFeld setIntValue:(breiteA - breiteB)/2*(-1)];
+ //  [OffsetXFeld setIntValue:(breiteAraw - breiteBraw)/2*(-1)];
    float gfkbreiteA = 0; // Breite der GFK-Lage
    gfkbreiteA += 2 * (hoeheAraw - radiusAraw); // senkrechte teile
    gfkbreiteA += radiusAraw * M_PI; // beide Viertelkreise
@@ -6384,8 +6425,11 @@ return returnInt;
    float vertikaloffset = 3; // Schneiden ueber definitiver Oberseite
    float vertikalabstand = 3; // Abstand beim Zurueckschneiden
    float abstandoben = 5;
-   float abstandunten = 10; // Wasser unter Kiel
+   float abstanduntenraw = 10; // Wasser unter Kiel
+   float abstandunten = 10;
    float horizontaleinstich = 15;
+   
+   float horizontaleinstichkote = 10;
    
    float einfahrtx = 5;
    float einfahrty = 3;
@@ -6419,8 +6463,8 @@ return returnInt;
       int rahmenindex=0;
       
    // Einlauf
-   float offsetX = [ProfilBOffsetXFeld floatValue];
-   //float offsetY = [ProfilBOffsetXFeld floatValue];
+   float offsetX = [OffsetXFeld floatValue];
+   float offsetY = [OffsetYFeld floatValue];
    float einlaufA = 10; // Blockrand bis Einstich
    // EinlaufB symmetrisch
    float einlaufB = einlaufA + (breiteA - breiteB)/2 + offsetX;
@@ -6433,7 +6477,7 @@ return returnInt;
    float rand = [RandFeld floatValue]; // Einstich bis Rumpf
    
    float einstichx = 10;
-   float einstichy = 10;
+   float einstichy = 15;
    
             
       // Start
@@ -6470,8 +6514,8 @@ return returnInt;
    
    // B Hochfahren bis horizontaler Einstich fuer Schiene: Niveau von HoeheA
       rahmenindex++;
-      tempPunktA.y += blockhoehe-hoeheA;
-      tempPunktB.y += blockhoehe-hoeheA;
+   tempPunktA.y += horizontaleinstichkote; //blockhoehe-hoeheA;
+   tempPunktB.y += horizontaleinstichkote; //blockhoehe-hoeheA;
    [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
    
    // C horizontaler Einstich in
@@ -6492,8 +6536,8 @@ return returnInt;
    
    // E Hochfahren von horizontaler einstich bis Oberkante + vertikaloffset
    rahmenindex++;
-   tempPunktA.y += hoeheA + vertikaloffset;
-   tempPunktB.y += hoeheA + vertikaloffset;
+   tempPunktA.y += blockhoehe - horizontaleinstichkote + vertikaloffset;
+   tempPunktB.y += blockhoehe - horizontaleinstichkote + vertikaloffset;
    
    [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:30];
    
@@ -6792,8 +6836,8 @@ return returnInt;
                     
    // Herunterfahren bis horizontaler Einstich
    rahmenindex++;
-   tempPunktA.y -= hoeheA;
-   tempPunktB.y -= hoeheA;
+   tempPunktA.y -= (blockhoehe - horizontaleinstichkote); //hoeheA;
+   tempPunktB.y -= (blockhoehe - horizontaleinstichkote); //hoeheA;
 
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];
@@ -6839,8 +6883,8 @@ return returnInt;
     
    // Herunterfahren von horizontaler Einstich bis unten
    rahmenindex++;
-   tempPunktA.y -= blockhoehe-hoeheA;
-   tempPunktB.y -= blockhoehe-hoeheA;
+   tempPunktA.y -= horizontaleinstichkote; //blockhoehe-hoeheA;
+   tempPunktB.y -= horizontaleinstichkote; //blockhoehe-hoeheA;
 
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.x] forKey:@"ax"];
    [tempRahmenDic setObject:[NSNumber numberWithFloat:tempPunktA.y] forKey:@"ay"];

@@ -367,8 +367,7 @@ int globalcounter = 0;
    IBOutlet id               ElementlaengeFeld; // Laenge des Rumpfabschnittes
    IBOutlet id                NutCheckbox;
    
-   IBOutlet NSPopUpButton*    RumpfteilPop;
-   
+    
    IBOutlet NSSegmentedControl* RumpfteilTaste;
    
    int anzahlRumpfteile;

@@ -2006,7 +2006,6 @@ return returnInt;
    [teildic setObject:[NSNumber numberWithInt:[AuslaufFeld intValue]] forKey:@"auslauf"];//
    
    [teildic setObject:[NSNumber numberWithInt:[ProfilBOffsetXFeld intValue]] forKey:@"offsetx"];
-   //int rumpfteil = [RumpfteilPop indexOfSelectedItem];
    NSLog(@"teilDic : %@",teildic);
    return teildic;
 }
@@ -2092,10 +2091,12 @@ return returnInt;
 
 - (IBAction)reportRumpfteilTaste:(id)sender
 {
-   NSLog(@"reportRumpfteilTaste taste: %ld",(long)[sender indexOfSelectedItem]);
+   NSLog(@"reportRumpfteilTaste taste: %ld aktuellerRumpfteil; %d",(long)[sender indexOfSelectedItem],aktuellerRumpfteil);
    
-   aktuellerRumpfteil = [sender indexOfSelectedItem];
+   
    NSDictionary* aktuellerDatenDic = [self rumpfteilDic];
+   NSLog(@"\naktuell: %@ \n Rumpdatenarray: %@",aktuellerDatenDic,[RumpfdatenArray objectAtIndex:aktuellerRumpfteil]);
+   
    if ([aktuellerDatenDic isEqualToDictionary:[RumpfdatenArray objectAtIndex:aktuellerRumpfteil]])
    {
       NSLog(@"dics sind gleich");
@@ -2103,11 +2104,11 @@ return returnInt;
    else
    {
       NSLog(@"dics sind ungleich");
-   }
- // [RumpfdatenArray replaceObjectAtIndex:aktuellerRumpfteil withObject:aktuellerDatenDic];
    
-//   aktuellerRumpfteil = [sender indexOfSelectedItem];
-//   [self setRumpfteilDic:[RumpfdatenArray objectAtIndex:aktuellerRumpfteil] forPart:aktuellerRumpfteil];
+      [RumpfdatenArray replaceObjectAtIndex:aktuellerRumpfteil withObject:aktuellerDatenDic];
+   }
+  aktuellerRumpfteil = [sender indexOfSelectedItem];
+   [self setRumpfteilDic:[RumpfdatenArray objectAtIndex:aktuellerRumpfteil] forPart:aktuellerRumpfteil];
 }
 
 - (instancetype)init

@@ -1782,7 +1782,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    return EllipsenpunktKoordinatenArray;
 }
 
-- (NSArray*)SegmentKoordinatenMitRadiusA:(float)RadiusA mitRadiusB:(float)RadiusB mitWinkel:(float)Winkel mitLage:(int)Lage mitAnzahlPunkten:(int)anzahlPunkte vonStartpunktA:(NSPoint)startpunktA vonStartpunktB:(NSPoint)startpunktB
+- (NSArray*)SegmentKoordinatenMitRadiusA:(float)RadiusA mitRadiusB:(float)RadiusB mitWinkel:(float)Winkel mitLage:(int)Lage mitAnzahlPunkten:(int)anzahlPunkte vonStartpunktA:(NSPoint)startpunktA vonStartpunktB:(NSPoint)startpunktB 
 {
    NSMutableArray* segmentKoordinatenArray=[[NSMutableArray alloc]initWithCapacity:0]; // Dics 
  

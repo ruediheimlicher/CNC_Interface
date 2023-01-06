@@ -468,7 +468,7 @@ class rCNCViewController:rViewController
          else
          {
             let aktuellezeile:[UInt8] = usb_schnittdatenarray[Stepperposition]
-            print("aktuellezeile: \(aktuellezeile) 25: \(aktuellezeile[25])")
+            //print("aktuellezeile: \(aktuellezeile) 25: \(aktuellezeile[25])")
             let writecode = aktuellezeile[16]
             var string:String = ""
             var index=0

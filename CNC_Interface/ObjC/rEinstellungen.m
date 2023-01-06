@@ -2259,6 +2259,10 @@
   
 }
 
+
+
+
+
 #pragma mark Profiltask
 
 -(NSArray*)vertikalspiegelnVonProfil:(NSArray*)profilflipArray

@@ -282,7 +282,7 @@ int globalcounter = 0;
 
    IBOutlet id               AbbrandFeld;
     
-   IBOutlet  id               GleichesProfilRadioKnopf;
+   IBOutlet  id              GleichesProfilRadioKnopf;
    IBOutlet id               WertFeld;
    
    IBOutlet id               PositionFeld;
@@ -367,7 +367,17 @@ int globalcounter = 0;
    IBOutlet id               ElementlaengeFeld; // Laenge des Rumpfabschnittes
    IBOutlet id                NutCheckbox;
    
-   IBOutlet id                RumpfteilPop;
+   IBOutlet NSPopUpButton*    RumpfteilPop;
+   
+   IBOutlet NSSegmentedControl* RumpfteilTaste;
+   
+   int anzahlRumpfteile;
+   
+   NSString*               PListPfad;
+   
+   NSMutableArray*         RumpfdatenArray;
+   int                     aktuellerRumpfteil;
+ 
    //int                     _kote;
    int                     KoteWert;
    
@@ -393,6 +403,8 @@ int globalcounter = 0;
    - (void)setAVR;
    - (NSMutableDictionary*)readCNC_PList;
    - (NSArray*)readProfilLib;
+   - (void)setRumpfteilDic:(NSDictionary*) rumpfteildic forPart:(int) rumpfteil;
+
    - (IBAction)reportUSB:(id)sender;
    - (void)setUSB_Device_Status:(int)status;
 
@@ -406,6 +418,9 @@ int globalcounter = 0;
    - (IBAction)reportMotorsteps:(id)sender;
    - (IBAction)reportMicrosteps:(id)sender;
    - (IBAction)reportRandlinks:(id)sender;
+
+- (IBAction)reportRumpfteilPop:(id)sender;
+
 
    - (NSDictionary*)RahmenDic;
    - (void)DC_ON:(int)pwm;
@@ -434,6 +449,7 @@ int globalcounter = 0;
 
 - (IBAction)reportClearProfilTabelle:(id)sender;
 - (IBAction)reportScalePop:(id)sender;
+- (IBAction)reportRumpfteilTaste:(id)sender;
 - (IBAction)reportHaltTaste:(id)sender;
 - (IBAction)reportResetTaste:(id)sender;
 - (IBAction)reportIndexStepper:(id)sender;
@@ -512,7 +528,7 @@ int globalcounter = 0;
 - (IBAction)reportBlockanfuegen:(id)sender;
 
 - (int)saveStepperDic:(id)sender;
-
+- (void)setStartRumpfteildic;
 
 - (void)showEinstellungen;
 - (void)printGraph;

@@ -551,6 +551,8 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    //int i=0;
    for( i = 0; i < [UnterseiteArray count]; i++) 
    {
+      fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[UnterseiteArray objectAtIndex:i]objectForKey:@"x"] floatValue],[[[UnterseiteArray objectAtIndex:i]objectForKey:@"y"] floatValue]);
+
       [revUnterseiteArray addObject:[UnterseiteArray objectAtIndex:[UnterseiteArray count] - i - 1]];
    }
    NSLog(@"revUnterseiteArray");

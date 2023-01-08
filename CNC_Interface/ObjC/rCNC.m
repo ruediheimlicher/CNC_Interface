@@ -99,56 +99,59 @@ return NULL;
    float steigungo=0, steigungu=0;
    int i=0;
  // Oberseite
-   int anzWerte=0;
-   int anfangsindex=4;
+   int anzWerteO=0;
+   int anzWerteU=0;
+   int anfangsindex=1;
    // Bereich der Berechnung festlegen
-   int endindex=8;
-   int anzPunkte=4;
+   int endindex=5;
    float steigung = 0;
+   float deltay = 0;
+   float deltax = 0;
    for (i=anfangsindex;i<endindex;i++)
    {
-      float deltax = [[[profil objectAtIndex:i]objectForKey:@"x"]floatValue] - [[[profil objectAtIndex:i-1]objectForKey:@"x"]floatValue];
+      deltax = [[[profil objectAtIndex:i]objectForKey:@"x"]floatValue] - [[[profil objectAtIndex:i-1]objectForKey:@"x"]floatValue];
       if (deltax == 0)
       {
          NSLog(@"EndleistenwinkelvonProfil Oberseite deltax ist 0");
       }
       else
       {
-         float deltay = [[[profil objectAtIndex:i]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:i-1]objectForKey:@"y"]floatValue];
+         deltay = [[[profil objectAtIndex:i]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:i-1]objectForKey:@"y"]floatValue];
          float arc = deltay/deltax;
          steigung = atanf(deltay/deltax);
          //      steigung *= -1;
          steigungo+=steigung;
-         anzWerte++;
+         anzWerteO++;
       }
-      //NSLog(@"start i: %d steigung o: %2.3f grad: %2.3f",i,steigung, steigung/M_PI*180);
+      NSLog(@"end i: %d deltax: %2.3f deltay: %2.3f  steigung u: %2.3f grad: %2.3f",i,deltax,deltay,steigung, steigung/M_PI*180);
    }
 
    // Unterseite
    for (i=anfangsindex;i<endindex;i++)
    {
       int endi=[profil count]-1-i;
-      float deltax = [[[profil objectAtIndex:[profil count]-1-i-1]objectForKey:@"x"]floatValue] - [[[profil objectAtIndex:[profil count]-1-i]objectForKey:@"x"]floatValue];
+      deltax = [[[profil objectAtIndex:[profil count]-1-i-1]objectForKey:@"x"]floatValue] - [[[profil objectAtIndex:[profil count]-1-i]objectForKey:@"x"]floatValue];
       if (deltax == 0)
       {
          NSLog(@"EndleistenwinkelvonProfil Unterseite deltax ist 0");
       }
       else
       {
-         float deltay = [[[profil objectAtIndex:[profil count]-1-i-1]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:[profil count]-1-i]objectForKey:@"y"]floatValue];
+         deltay = [[[profil objectAtIndex:[profil count]-1-i-1]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:[profil count]-1-i]objectForKey:@"y"]floatValue];
          steigung = atanf(deltay/deltax);
          //      steigung *= -1;
          steigungu+= steigung;
-         //NSLog(@"end i: %d steigung u: %2.3f grad: %2.3f",endi,steigung, steigung/M_PI*180);
+         NSLog(@"end i: %d deltax: %2.3f deltay: %2.3f  steigung u: %2.3f grad: %2.3f",i,deltax,deltay,steigung, steigung/M_PI*180);
+         anzWerteU++;
       }
    }
-   if (anzWerte == 0)
+   if (anzWerteU == 0)
    {
       NSLog(@"EndleistenwinkelvonProfil anzwerte = 0");
       return 0;
    }
-   steigungo /=anzWerte;
-   steigungu /=anzWerte;
+   steigungo /=anzWerteO;
+   steigungu /=anzWerteU;
    NSLog(@"Steigung raw steigungo: %1.2f steigungu: %2.2f",steigungo,steigungu);
    NSLog(@"steigungo: %1.2f steigungu: %2.2f",steigungo*180/M_PI,steigungu*180/M_PI);
    float mittelwert = (steigungo+steigungu)/2; // Winkelhalbierende
@@ -2350,7 +2353,49 @@ PortA=vs[n & 3]; warte10ms(); n++;
    
 }
 
-- (NSArray*)ProfilArrayVonPunkt:(NSPoint)Startpunkt mitProfil:(NSArray*)ProfilArray mitProfiltiefe:(int)Profiltiefe mitScale:(int)Scale
+- (float)gfkVonProfil:(NSArray*) profilarray
+{
+   float gfkX = 0;   // aktueller wert
+   float lastgfkX = 0; // Wert aus vorheriger loop
+   float gfkY = 0;
+   float lastgfkY = 0;
+   
+   float gfkweg = 0;
+   int neg = 0; // Oberseite, x-Werte zunehmend
+   if (profilarray.count > 3 && ([[[profilarray objectAtIndex:3]objectForKey:@"x"]intValue] < [[[profilarray objectAtIndex:0]objectForKey:@"x"]intValue]))
+   {
+      neg = 1;
+   }
+   NSArray* arrayx = [profilarray valueForKey:@"x"];
+  int max = [[arrayx valueForKeyPath:@"@max.floatValue"] floatValue];
+   
+   
+   for (int i=0;i<[profilarray count];i++)
+   {
+      // Profildatenpaare aus Datei mit dem Offset des Profilnullpunktes versehen
+      
+      //NSLog(@"profilarray index: %d Data: %@",i,[[profilarray objectAtIndex:i]description]);
+      // X-Achse, 
+      gfkX = [[[profilarray objectAtIndex:i]objectForKey:@"x"]floatValue];
+      
+      //NSLog(@"tempX: %2.2f ",tempX);
+      float gfkY = [[[profilarray objectAtIndex:i]objectForKey:@"y"]floatValue];
+      
+      
+      float tempweg = hypotf((gfkY - lastgfkY),(gfkX - lastgfkX));
+      gfkweg += tempweg;
+      //fprintf(stderr, "%d \t %2.2f \t %2.2f \t %2.2f \t %2.2f \t  %2.2f \t  %2.2f \n",i,gfkX,lastgfkX,gfkY ,lastgfkY,tempweg,gfkweg);
+      
+      lastgfkX = gfkX;
+      lastgfkY = gfkY;
+
+      
+   } // for i
+   gfkweg -= neg;
+   return gfkweg;
+} // gfkVonProfil
+
+- (NSDictionary*)ProfilDicVonPunkt:(NSPoint)Startpunkt mitProfil:(NSArray*)ProfilArray mitProfiltiefe:(int)Profiltiefe mitScale:(int)Scale
 {
    //NSLog(@"AVR ProfilDicVonPunkt");
    
@@ -2361,11 +2406,22 @@ PortA=vs[n & 3]; warte10ms(); n++;
    NSMutableArray* ProfilpunktArray=[[NSMutableArray alloc]initWithCapacity:0];
    NSMutableArray* MittellinieArray=[[NSMutableArray alloc]initWithCapacity:0];
 
+   float gfkX = 0;   // aktueller wert
+   float lastgfkX = 0; // Wert aus vorheriger loop
+   float gfkY = 0;
+   float lastgfkY = 0;
+   
+   float gfkweg = 0;
    
    float lastX=0;
    float lastY=0;
+   int neg = 0; // Oberseite, x-Werte zunehmend
+   if (ProfilArray.count > 3 && ([[[ProfilArray objectAtIndex:3]objectForKey:@"x"]intValue] < [[[ProfilArray objectAtIndex:0]objectForKey:@"x"]intValue]))
+   {
+      neg = Profiltiefe;
+   }
    NSMutableDictionary* ProfilpunktDic=[[NSMutableDictionary alloc]initWithCapacity:0];
-
+   
    for (i=0;i<[ProfilArray count];i++)
    {
       // Profildatenpaare aus Datei mit dem Offset des Profilnullpunktes versehen
@@ -2373,7 +2429,8 @@ PortA=vs[n & 3]; warte10ms(); n++;
       //NSLog(@"ProfilArray index: %d Data: %@",i,[[ProfilArray objectAtIndex:i]description]);
       // X-Achse, 
       float tempX = [[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue];
-      //NSLog(@"tempX: %2.2f ",tempX);
+      
+       //NSLog(@"tempX: %2.2f ",tempX);
       float tempY = [[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue];
      
       
@@ -2392,15 +2449,19 @@ PortA=vs[n & 3]; warte10ms(); n++;
       //[ProfilpunktDic setObject:[NSNumber numberWithInt:minIndex] forKey:@"nase"];
       //NSLog(@"maxX: %2.2f ",maxX);
       tempX *= Profiltiefe;                  // Wert in mm 
+      gfkX = tempX;
+      
       // NSLog(@"tempX: %2.2f ",tempX);
-      tempX += Startpunkt.x;   // offset in mm
+      tempX += Startpunkt.x ;   // offset in mm
       
       
       NSNumber* tempNumberX=[NSNumber numberWithFloat:tempX];
       //NSLog(@"tempX: %2.2f tempNumberX: %@",tempX, tempNumberX);
       //Y-Achse
       
-      tempY *= Profiltiefe;                  // Wert in mm 
+      tempY *= Profiltiefe;    // Wert in mm 
+      gfkY = tempY;
+      
       tempY += Startpunkt.y;   // Offset in mm
       
       // Weg berechnen
@@ -2411,10 +2472,16 @@ PortA=vs[n & 3]; warte10ms(); n++;
       }
       else
       {
-         float tempweg = hypotf((tempY - lastY),(tempX - lastX));
-         
+         //float tempweg = hypotf((tempY - lastY),(tempX - lastX));
+         //gfk += tempweg;
       }
       
+      float tempweg = hypotf((gfkY - lastgfkY),(gfkX - lastgfkX));
+      gfkweg += tempweg;
+      //fprintf(stderr, "%d \t %2.2f \t %2.2f \t %2.2f \t %2.2f \t  %2.2f \t  %2.2f \n",i,gfkX,lastgfkX,gfkY ,lastgfkY,tempweg,gfkweg);
+      
+      lastgfkX = gfkX;
+      lastgfkY = gfkY;
       NSNumber* tempNumberY=[NSNumber numberWithFloat:tempY];
       
       //ProfilpunktArray fuellen
@@ -2424,7 +2491,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
       [ProfilpunktArray addObject: tempDic];
        
    } // for i
-   
+   NSLog(@" Profil end");
    //NSLog(@"minIndex: %d minX: %2.2f ",minIndex, minX);
    // Profillinie schliessen:
    
@@ -2438,31 +2505,133 @@ PortA=vs[n & 3]; warte10ms(); n++;
    //NSLog(@"MittellinieArray x: %@",[MittellinieArray description]);
 
    //NSLog(@"ProfilpunktArray x: %@",[[ProfilpunktArray valueForKey:@"x"]description]);
+   gfkweg -= neg;
+   NSLog(@"ProfilArrayVonPunkt gfkweg: %2.2f", gfkweg);
+   return [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:gfkweg],@"gfkweg",ProfilpunktArray,@"profilpunktarray", nil] ;
+}
+
+
+
+- (NSArray*)ProfilArrayVonPunkt:(NSPoint)Startpunkt mitProfil:(NSArray*)ProfilArray mitProfiltiefe:(int)Profiltiefe mitScale:(int)Scale
+{
+   //NSLog(@"AVR ProfilDicVonPunkt");
+   
+    int i;
+    float maxX=0;   // Startwert fuer Suche nach vordestem Punkt des Profils. Muss nicht 0.0 sein.
+   int minIndex=0;   // Index des vordersten Punktes im Array
+   
+   NSMutableArray* ProfilpunktArray=[[NSMutableArray alloc]initWithCapacity:0];
+   NSMutableArray* MittellinieArray=[[NSMutableArray alloc]initWithCapacity:0];
+
+   float gfkX = 0;   // aktueller wert
+   float lastgfkX = 0; // Wert aus vorheriger loop
+   float gfkY = 0;
+   float lastgfkY = 0;
+   
+   float gfkweg = 0;
+   
+   float lastX=0;
+   float lastY=0;
+   int neg = 0; // Oberseite, x-Werte zunehmend
+   if (ProfilArray.count > 3 && ([[[ProfilArray objectAtIndex:3]objectForKey:@"x"]intValue] < [[[ProfilArray objectAtIndex:0]objectForKey:@"x"]intValue]))
+   {
+      neg = Profiltiefe;
+   }
+   NSMutableDictionary* ProfilpunktDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+   
+   for (i=0;i<[ProfilArray count];i++)
+   {
+      // Profildatenpaare aus Datei mit dem Offset des Profilnullpunktes versehen
+      
+      //NSLog(@"ProfilArray index: %d Data: %@",i,[[ProfilArray objectAtIndex:i]description]);
+      // X-Achse, 
+      float tempX = [[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue];
+      
+       //NSLog(@"tempX: %2.2f ",tempX);
+      float tempY = [[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue];
+     
+      
+       
+      // Mittellinie
+      if ((i<5)|| (i> [ProfilArray count]-5))
+      {
+         float mittelwinkel = atanf(tempY/tempX);
+         
+         NSDictionary* tempMittellinienDic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:mittelwinkel],@"m",[NSNumber numberWithInt:i],@"index", nil];
+         [MittellinieArray addObject:tempMittellinienDic];
+      
+      }
+      
+      
+      //[ProfilpunktDic setObject:[NSNumber numberWithInt:minIndex] forKey:@"nase"];
+      //NSLog(@"maxX: %2.2f ",maxX);
+      tempX *= Profiltiefe;                  // Wert in mm 
+      gfkX = tempX;
+      
+      // NSLog(@"tempX: %2.2f ",tempX);
+      tempX += Startpunkt.x ;   // offset in mm
+      
+      
+      NSNumber* tempNumberX=[NSNumber numberWithFloat:tempX];
+      //NSLog(@"tempX: %2.2f tempNumberX: %@",tempX, tempNumberX);
+      //Y-Achse
+      
+      tempY *= Profiltiefe;    // Wert in mm 
+      gfkY = tempY;
+      
+      tempY += Startpunkt.y;   // Offset in mm
+      
+      // Weg berechnen
+      if (i==0)
+      {
+         lastX = tempX;
+         lastY = tempY;
+      }
+      else
+      {
+         //float tempweg = hypotf((tempY - lastY),(tempX - lastX));
+         //gfk += tempweg;
+      }
+      
+      float tempweg = hypotf((gfkY - lastgfkY),(gfkX - lastgfkX));
+      gfkweg += tempweg;
+      //fprintf(stderr, "%d \t %2.2f \t %2.2f \t %2.2f \t %2.2f \t  %2.2f \t  %2.2f \n",i,gfkX,lastgfkX,gfkY ,lastgfkY,tempweg,gfkweg);
+      
+      lastgfkX = gfkX;
+      lastgfkY = gfkY;
+      NSNumber* tempNumberY=[NSNumber numberWithFloat:tempY];
+      
+      //ProfilpunktArray fuellen
+      
+      NSDictionary* tempDic=[NSDictionary dictionaryWithObjectsAndKeys:tempNumberX, @"x",tempNumberY,@"y" ,[NSNumber numberWithInt:i],@"index", nil];
+      
+      [ProfilpunktArray addObject: tempDic];
+       
+   } // for i
+   NSLog(@" Profil end");
+   //NSLog(@"minIndex: %d minX: %2.2f ",minIndex, minX);
+   // Profillinie schliessen:
+   
+    //[ProfilpunktArray addObject: [ProfilpunktArray objectAtIndex:0]];
+   
+   [ProfilpunktDic setObject:ProfilpunktArray forKey:@"profilpunktarray"];
+   [ProfilpunktDic setObject:MittellinieArray forKey:@"mittelliniearray"];
+ //  [ProfilpunktDic setObject:ProfilOpunktArray forKey:@"profilopunktarray"];
+   //NSLog(@"ProfilUpunktArray x: %@",[[ProfilUpunktArray valueForKey:@"x"]description]);
+   //NSLog(@"ProfilOpunktArray x: %@",[[ProfilOpunktArray valueForKey:@"x"]description]);
+   //NSLog(@"MittellinieArray x: %@",[MittellinieArray description]);
+
+   //NSLog(@"ProfilpunktArray x: %@",[[ProfilpunktArray valueForKey:@"x"]description]);
+   NSLog(@"ProfilArrayVonPunkt gfkweg: %2.2f", gfkweg - neg);
    return ProfilpunktArray;
 }
+
+
 
 - (NSDictionary*)ProfilDicVonPunkt_old:(NSPoint)Startpunkt mitProfil:(NSArray*)ProfilArray mitProfiltiefe:(int)Profiltiefe mitScale:(int)Scale
 {
    //NSLog(@"AVR ProfilDicVonPunkt");
-   
-  // float x = [self EndleistenwinkelvonProfil:ProfilArray];
-   
-   //	[ProfilNameFeldA setStringValue:ProfilName];
-	//ProfilArray=[Utils readProfil];
-	//KoordinatenTabelle=(NSMutableArray*)[Utils readProfil];
-	//	[KoordinatenTabelle setArray:(NSMutableArray*)ProfilArray];
-	//NSLog(@"AVR ProfilArray: %@",[ProfilArray description]);
-	// Annahme fuer Nullpunkt des Profils
-	
-	// Listen leeren
 	int i;
-	//int maxX = 100;
-	//maxX = Profiltiefe; // Profiltiefe in mm
-   
-   // Startpunkt ist an Endleiste
-   //Startpunkt.x -= Profiltiefe;
-	
-   //float minX=1.1;	// Startwert fuer Suche nach vordestem Punkt des Profils. Muss nicht 0.0 sein.
    float maxX=0;	// Startwert fuer Suche nach vordestem Punkt des Profils. Muss nicht 0.0 sein.
 	int minIndex=0;	// Index des vordersten Punktes im Array
 	

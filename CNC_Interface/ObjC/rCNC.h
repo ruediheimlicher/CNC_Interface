@@ -55,7 +55,8 @@ float det(float v0[],float v1[]);
 - (NSArray*)ProfilVonPunkt:(NSPoint)Startpunkt mitProfil:(NSDictionary*)ProfilDic mitProfiltiefe:(int)Profiltiefe mitScale:(int)Scale;
 - (NSDictionary*)ProfilDicVonPunkt:(NSPoint)Startpunkt mitProfil:(NSArray*)ProfilArray mitProfiltiefe:(int)Profiltiefe mitScale:(int)Scale;
 - (NSArray*)ProfilArrayVonPunkt:(NSPoint)Startpunkt mitProfil:(NSArray*)ProfilArray mitProfiltiefe:(int)Profiltiefe mitScale:(int)Scale;
-
+- (NSDictionary*)ProfilDicVonPunkt:(NSPoint)Startpunkt mitProfil:(NSArray*)ProfilArray mitProfiltiefe:(int)Profiltiefe mitScale:(int)Scale;
+- (float)gfkVonProfil:(NSArray*) profilarray;
 - (float) EndleistenwinkelvonProfil:(NSArray*)profil;
 - (NSArray*)EndleisteneinlaufMitWinkel:(float)winkel mitLaenge:(float)laenge  mitTiefe:(float)tiefe;
 - (NSArray*)NasenleistenauslaufMitLaenge:(float)laenge  mitTiefe:(float)tiefe;

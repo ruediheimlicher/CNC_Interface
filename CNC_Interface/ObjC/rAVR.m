@@ -758,10 +758,6 @@ void plot_line (int x0, int y0, int x1, int y1)
               name:@"beenden"
             object:nil];
 
-   [nc addObserver:self
-          selector:@selector(popupAktion:)
-              name:@"NSPopUpButtonWillPopUpNotification"
-            object:nil];
    
    RumpfdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
    aktuellerRumpfteil = 0;
@@ -8123,14 +8119,41 @@ return returnInt;
     */
    
    // auf Profiltiefe umrechnen
-      
+   NSLog(@" Profil1UnterseiteArray start");
+   float gfko = [CNC gfkVonProfil:Profil1UnterseiteArray];
+   /*
    Profil1UnterseiteArray=(NSMutableArray*)[CNC ProfilArrayVonPunkt:StartpunktA mitProfil:Profil1UnterseiteArray mitProfiltiefe:ProfiltiefeA mitScale:[[ScalePop selectedItem]tag]];
-   Profil1OberseiteArray=(NSMutableArray*)[CNC ProfilArrayVonPunkt:StartpunktA mitProfil:Profil1OberseiteArray mitProfiltiefe:ProfiltiefeA mitScale:[[ScalePop selectedItem]tag]];
-
-   Profil2UnterseiteArray=(NSMutableArray*)[CNC ProfilArrayVonPunkt:StartpunktB mitProfil:Profil2UnterseiteArray mitProfiltiefe:ProfiltiefeB mitScale:[[ScalePop selectedItem]tag]];
-   Profil2OberseiteArray=(NSMutableArray*)[CNC ProfilArrayVonPunkt:StartpunktB mitProfil:Profil2OberseiteArray mitProfiltiefe:ProfiltiefeB mitScale:[[ScalePop selectedItem]tag]];
-
+   float gfko1 = [CNC gfkVonProfil:Profil1UnterseiteArray];
+   NSLog(@" Profil1UnterseiteArray gfko1: %2.2f",gfko1);
+   */
    
+   NSMutableDictionary* Profil1UnterseiteDic = (NSMutableDictionary*)[CNC ProfilDicVonPunkt:StartpunktA mitProfil:Profil1UnterseiteArray mitProfiltiefe:ProfiltiefeA mitScale:[[ScalePop selectedItem]tag]];
+   Profil1UnterseiteArray= (NSMutableArray*)[Profil1UnterseiteDic objectForKey:@"profilpunktarray"];
+   float gfkweg1U = [[Profil1UnterseiteDic objectForKey:@"gfkweg"]floatValue];
+
+   NSMutableDictionary* Profil1OberseiteDic =  (NSMutableDictionary*)[CNC ProfilDicVonPunkt:StartpunktA mitProfil:Profil1OberseiteArray mitProfiltiefe:ProfiltiefeA mitScale:[[ScalePop selectedItem]tag]];
+   Profil1OberseiteArray= (NSMutableArray*)[Profil1OberseiteDic objectForKey:@"profilpunktarray"];
+   float gfkweg1O = [[Profil1OberseiteDic objectForKey:@"gfkweg"]floatValue];
+
+   NSMutableDictionary* Profil2UnterseiteDic = [CNC ProfilDicVonPunkt:StartpunktB mitProfil:Profil2UnterseiteArray mitProfiltiefe:ProfiltiefeB mitScale:[[ScalePop selectedItem]tag]];
+   Profil2UnterseiteArray= (NSMutableArray*)[Profil2UnterseiteDic objectForKey:@"profilpunktarray"];
+   float gfkweg2U = [[Profil1UnterseiteDic objectForKey:@"gfkweg"]floatValue];
+
+   NSMutableDictionary* Profil2OberseiteDic = [CNC ProfilDicVonPunkt:StartpunktB mitProfil:Profil2OberseiteArray mitProfiltiefe:ProfiltiefeB mitScale:[[ScalePop selectedItem]tag]];
+   Profil2OberseiteArray= (NSMutableArray*)[Profil2OberseiteDic objectForKey:@"profilpunktarray"];
+   float gfkweg2O = [[Profil2OberseiteDic objectForKey:@"gfkweg"]floatValue];
+
+
+/*   
+   Profil1UnterseiteArray= (NSMutableArray*)[Profil1UnterseiteDic objectForKey:@"profilpunktarray"];
+   NSLog(@" Profil1OberseiteArray start");
+   Profil1OberseiteArray=(NSMutableArray*)[CNC ProfilArrayVonPunkt:StartpunktA mitProfil:Profil1OberseiteArray mitProfiltiefe:ProfiltiefeA mitScale:[[ScalePop selectedItem]tag]];
+   NSLog(@" Profil2UnterseiteArray start");
+   Profil2UnterseiteArray=(NSMutableArray*)[CNC ProfilArrayVonPunkt:StartpunktB mitProfil:Profil2UnterseiteArray mitProfiltiefe:ProfiltiefeB mitScale:[[ScalePop selectedItem]tag]];
+   NSLog(@" Profil2OberseiteArray start");
+   Profil2OberseiteArray=(NSMutableArray*)[CNC ProfilArrayVonPunkt:StartpunktB mitProfil:Profil2OberseiteArray mitProfiltiefe:ProfiltiefeB mitScale:[[ScalePop selectedItem]tag]];
+   NSLog(@" ProfilArray end");
+  */ 
    
    int tag = [[ScalePop selectedItem]tag];
    NSLog(@"ScalePop selectedItem]tag: %d",tag);
@@ -9185,7 +9208,7 @@ return returnInt;
    {
       return;
    }
-   NSLog(@"reportBlockkonfigurieren end");
+   //NSLog(@"reportBlockkonfigurieren end");
 }
 
 - (IBAction)reportBlockanfuegen:(id)sender
@@ -9212,11 +9235,12 @@ return returnInt;
    {
       float ax = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
       float ay = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ay"]floatValue];
+      
       float bx = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
       float by = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
       
       
-      fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
+    //  fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
    }
 
    
@@ -9248,7 +9272,9 @@ return returnInt;
                //NSLog(@"J");
                if ([BlockKoordinatenTabelle objectAtIndex:i])
                {
+                  
                [KoordinatenTabelle insertObject:[BlockKoordinatenTabelle objectAtIndex:i] atIndex:i];
+                  
                }
                else
                {

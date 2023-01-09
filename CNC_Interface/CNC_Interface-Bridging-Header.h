@@ -16,6 +16,8 @@
 #import "rCNC.h"
 #import "rVertikalanzeige.h"
 
+#import "spline.h"
+
 #include <IOKit/IOKitLib.h>
 #include <IOKit/usb/IOUSBLib.h>
 #include <IOKit/hid/IOHIDKeys.h>

@@ -59,8 +59,8 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 	int i=0;
 	
 	NSNumberFormatter *numberFormatter =[[NSNumberFormatter alloc] init];
-	[numberFormatter setMaximumFractionDigits:4];
-	[numberFormatter setFormat:@"##0.0000"];
+	[numberFormatter setMaximumFractionDigits:6];
+	[numberFormatter setFormat:@"##0.000000"];
 
 	for (i=0;i<[tempArray count];i++)
 	{

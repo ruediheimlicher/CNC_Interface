@@ -10,7 +10,7 @@
 #import "rElement.h"
 
 #import "hid.h"
-
+#import "spline.h"
 
 // https://dev.iachieved.it/iachievedit/using-swift-in-an-existing-objective-c-project/
 #import "CNC_Interface-Swift.h"
@@ -621,6 +621,9 @@ void plot_line (int x0, int y0, int x1, int y1)
       return;
    }
    globalcounter++;
+   
+   
+   splinefunc();
    
    NSColor* bgcolor = [NSColor colorWithCalibratedRed:0.3 green:0.5 blue:0.8 alpha:1.0f];
    //self = [super initWithWindowNibName:@"AVR"];
@@ -7723,7 +7726,7 @@ return returnInt;
       float bx = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
       float by = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
       
-      fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
+//      fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
    }
 
    NSDictionary* ProfilDic;
@@ -7979,6 +7982,7 @@ return returnInt;
    {
       
       // Endleistenwinkel bestimmen
+      NSLog(@"Endleistenwinkel A:");
       float winkelA = [CNC EndleistenwinkelvonProfil:[ProfilDic objectForKey:@"profil1array"]];
        NSLog(@"Endleistenwinkel A: %2.2f",winkelA*180/M_PI);
       

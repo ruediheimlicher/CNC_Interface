@@ -94,57 +94,95 @@ return NULL;
 }
 
 
-- (float) EndleistenwinkelvonProfil:(NSArray*)profil
+
+- (float) EndleistenwinkelvonProfil_old:(NSArray*)profil
 {
+   fprintf(stderr,"EndleistenwinkelvonProfil begin\n");
+   for (int i=0;i<profil.count;i++)
+   {
+      float ax = [[[profil objectAtIndex:i]objectForKey:@"x"]floatValue];
+      float ay = [[[profil objectAtIndex:i]objectForKey:@"y"]floatValue];
+       
+   fprintf(stderr,"%d \t%2.8f \t  %2.8f \n",i,ax,ay);
+
+   }
+   fprintf(stderr,"EndleistenwinkelvonProfil End\n");
+
    float steigungo=0, steigungu=0;
-   int i=0;
  // Oberseite
    int anzWerteO=0;
    int anzWerteU=0;
-   int anfangsindex=1;
+   int anfangsindex=3;
    // Bereich der Berechnung festlegen
-   int endindex=5;
+   int endindex=8;
    float steigung = 0;
    float deltay = 0;
    float deltax = 0;
-   for (i=anfangsindex;i<endindex;i++)
+   int oberseiteindex = anfangsindex;
+   int unterseiteindex = anfangsindex;
+   //for (i=anfangsindex;i<endindex;i++)
+   NSLog(@"EndleistenwinkelvonProfil Oberseite:");
+   
+   while (oberseiteindex < endindex)
    {
-      deltax = [[[profil objectAtIndex:i]objectForKey:@"x"]floatValue] - [[[profil objectAtIndex:i-1]objectForKey:@"x"]floatValue];
+      float xA = [[[profil objectAtIndex:oberseiteindex+1]objectForKey:@"x"]floatValue];
+      float xB = [[[profil objectAtIndex:oberseiteindex-1]objectForKey:@"x"]floatValue];
+
+      deltax = xA - xB;
       if (deltax == 0)
       {
          NSLog(@"EndleistenwinkelvonProfil Oberseite deltax ist 0");
       }
       else
       {
-         deltay = [[[profil objectAtIndex:i]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:i-1]objectForKey:@"y"]floatValue];
+         deltay = [[[profil objectAtIndex:oberseiteindex+1]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:oberseiteindex-1]objectForKey:@"y"]floatValue];
          float arc = deltay/deltax;
          steigung = atanf(deltay/deltax);
+         NSLog(@"O index: %d \t  %2.6f  \t %2.6f \t deltax:  \t %2.6f  \t deltay:  \t %2.6f  \t steigung u:  \t %2.6f  \t arc: %2.6f",oberseiteindex,xA,xB,deltax,deltay,steigung, arc);
+
          //      steigung *= -1;
          steigungo+=steigung;
          anzWerteO++;
       }
-      NSLog(@"end i: %d deltax: %2.3f deltay: %2.3f  steigung u: %2.3f grad: %2.3f",i,deltax,deltay,steigung, steigung/M_PI*180);
-   }
+ 
+ //     NSLog(@"O oberseiteindex: %d \t  %2.6f  \t %2.6f \t deltax:  \t %2.6f  \t deltay:  \t %2.6f  \t steigung u:  \t %2.6f  \t grad: %2.6f",oberseiteindex,xA,xB,deltax,deltay,steigung, steigung/M_PI*180);
+      oberseiteindex++;
+   }// while
+   NSLog(@"EndleistenwinkelvonProfil Oberseite end");
 
+   
+   
    // Unterseite
-   for (i=anfangsindex;i<endindex;i++)
+   //for (i=anfangsindex;i<endindex;i++)
+   NSLog(@"EndleistenwinkelvonProfil Unterseite:");
+   while (unterseiteindex < endindex)
+
    {
-      int endi=[profil count]-1-i;
-      deltax = [[[profil objectAtIndex:[profil count]-1-i-1]objectForKey:@"x"]floatValue] - [[[profil objectAtIndex:[profil count]-1-i]objectForKey:@"x"]floatValue];
+      float xA = [[[profil objectAtIndex:[profil count]-1-unterseiteindex-1]objectForKey:@"x"]floatValue];
+      float xB = [[[profil objectAtIndex:[profil count]-1-unterseiteindex+1]objectForKey:@"x"]floatValue];
+
+      int endi=[profil count]-1-unterseiteindex;
+      deltax = [[[profil objectAtIndex:[profil count]-1-unterseiteindex-1]objectForKey:@"x"]floatValue] - [[[profil objectAtIndex:[profil count]-1-unterseiteindex+1]objectForKey:@"x"]floatValue];
       if (deltax == 0)
       {
          NSLog(@"EndleistenwinkelvonProfil Unterseite deltax ist 0");
       }
       else
       {
-         deltay = [[[profil objectAtIndex:[profil count]-1-i-1]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:[profil count]-1-i]objectForKey:@"y"]floatValue];
+         deltay = [[[profil objectAtIndex:[profil count]-1-unterseiteindex-1]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:[profil count]-1-unterseiteindex+1]objectForKey:@"y"]floatValue];
+         float arc = deltay/deltax;
          steigung = atanf(deltay/deltax);
+         NSLog(@"U index: %d  \t %2.6f  \t %2.6f \t   deltax:  \t %2.6f  \t deltay:  \t %2.6f  \t steigung u:  \t %2.6f  \t arc: %2.6f",unterseiteindex,xA,xB,deltax,deltay,steigung, arc);
+
          //      steigung *= -1;
          steigungu+= steigung;
-         NSLog(@"end i: %d deltax: %2.3f deltay: %2.3f  steigung u: %2.3f grad: %2.3f",i,deltax,deltay,steigung, steigung/M_PI*180);
+         //NSLog(@"U unterseiteindex: %d  \t deltax:  \t %2.6f  \t deltay:  \t %2.6f   \t steigung u:  \t %2.6f  \t grad: %2.6f",unterseiteindex,deltax,deltay,steigung, steigung/M_PI*180);
          anzWerteU++;
+         unterseiteindex++;
       }
-   }
+      
+   }// while
+   NSLog(@"EndleistenwinkelvonProfil Unterseite end");
    if (anzWerteU == 0)
    {
       NSLog(@"EndleistenwinkelvonProfil anzwerte = 0");
@@ -155,6 +193,7 @@ return NULL;
    NSLog(@"Steigung raw steigungo: %1.2f steigungu: %2.2f",steigungo,steigungu);
    NSLog(@"steigungo: %1.2f steigungu: %2.2f",steigungo*180/M_PI,steigungu*180/M_PI);
    float mittelwert = (steigungo+steigungu)/2; // Winkelhalbierende
+   
    return mittelwert;
 }
 
@@ -2747,6 +2786,121 @@ PortA=vs[n & 3]; warte10ms(); n++;
    return ProfilpunktDic;
 }
 
+- (float) EndleistenwinkelvonProfil:(NSArray*)profil
+{
+   fprintf(stderr,"EndleistenwinkelvonProfil begin\n");
+   for (int i=0;i<10;i++)
+   {
+      float ax = [[[profil objectAtIndex:i]objectForKey:@"x"]floatValue];
+      float ay = [[[profil objectAtIndex:i]objectForKey:@"y"]floatValue];
+       
+   fprintf(stderr,"%d \t%2.4f \t  %2.4f \n",i,ax,ay);
+
+   }
+   fprintf(stderr,"EndleistenwinkelvonProfil End\n");
+
+   float steigungo=0, steigungu=0;
+   float arco=0, arcu=0;
+ // Oberseite
+   int anzWerteO=0;
+   int anzWerteU=0;
+   int anfangsindex=3;
+   // Bereich der Berechnung festlegen
+   int endindex=5;
+   float steigung = 0;
+   float deltay = 0;
+   float deltax = 0;
+   int oberseiteindex = anfangsindex+1;
+   int unterseiteindex = anfangsindex+1;
+   //for (i=anfangsindex;i<endindex;i++)
+   NSLog(@"EndleistenwinkelvonProfil Oberseite:");
+   
+   //while (oberseiteindex < endindex)
+   {
+      float xA = [[[profil objectAtIndex:anfangsindex]objectForKey:@"x"]floatValue];
+      float xB = [[[profil objectAtIndex:endindex]objectForKey:@"x"]floatValue];
+      float yA = [[[profil objectAtIndex:anfangsindex]objectForKey:@"y"]floatValue];
+      float yB = [[[profil objectAtIndex:endindex]objectForKey:@"y"]floatValue];
+
+      deltax = xA - xB;
+      deltax = [[[profil objectAtIndex:endindex]objectForKey:@"x"]floatValue] - [[[profil objectAtIndex:anfangsindex]objectForKey:@"x"]floatValue];
+ 
+      if (deltax == 0)
+      {
+         NSLog(@"EndleistenwinkelvonProfil Oberseite deltax ist 0");
+      }
+      else
+      {
+         deltay = [[[profil objectAtIndex:endindex]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:anfangsindex]objectForKey:@"y"]floatValue];
+         arco = deltay/deltax;
+         steigung = atanf(deltay/deltax);
+         NSLog(@"O index: %d \t  %2.6f  \t %2.6f \t %2.6f  \t %2.6f \t \tdeltax:  \t %2.6f  \t deltay:  \t %2.6f  \t steigung o:  \t %2.6f  \t arc: %2.6f",oberseiteindex,xA,yA,xB,yB,deltax,deltay,steigung, arco);
+
+         //      steigung *= -1;
+         steigungo=steigung;
+         anzWerteO++;
+      }
+ 
+ //     NSLog(@"O oberseiteindex: %d \t  %2.6f  \t %2.6f \t deltax:  \t %2.6f  \t deltay:  \t %2.6f  \t steigung u:  \t %2.6f  \t grad: %2.6f",oberseiteindex,xA,xB,deltax,deltay,steigung, steigung/M_PI*180);
+      oberseiteindex++;
+   }// while
+   //NSLog(@"EndleistenwinkelvonProfil Oberseite end");
+
+   
+   
+   // Unterseite
+   //for (i=anfangsindex;i<endindex;i++)
+   NSLog(@"EndleistenwinkelvonProfil Unterseite:");
+   //while (unterseiteindex < endindex)
+
+   {
+      float xA = [[[profil objectAtIndex:[profil count]-1-endindex]objectForKey:@"x"]floatValue];
+      float xB = [[[profil objectAtIndex:[profil count]-1-anfangsindex]objectForKey:@"x"]floatValue];
+
+      float yA = [[[profil objectAtIndex:[profil count]-1-endindex]objectForKey:@"y"]floatValue];
+      float yB = [[[profil objectAtIndex:[profil count]-1-anfangsindex]objectForKey:@"y"]floatValue];
+
+     // int endi=[profil count]-1-unterseiteindex;
+      // float deltax = [[[profil objectAtIndex:[profil count]-1-i-1]objectForKey:@"x"]floatValue] - [[[profil objectAtIndex:[profil count]-1-i]objectForKey:@"x"]floatValue];
+      
+      deltax = [[[profil objectAtIndex:[profil count]-1-endindex]objectForKey:@"x"]floatValue] - [[[profil objectAtIndex:[profil count]-1-anfangsindex]objectForKey:@"x"]floatValue];
+      if (deltax == 0)
+      {
+         NSLog(@"EndleistenwinkelvonProfil Unterseite deltax ist 0");
+      }
+      else
+      {
+         
+         deltay = [[[profil objectAtIndex:[profil count]-1-endindex]objectForKey:@"y"]floatValue] - [[[profil objectAtIndex:[profil count]-1-anfangsindex]objectForKey:@"y"]floatValue];
+         arcu = deltay/deltax;
+         steigung = atanf(deltay/deltax);
+         NSLog(@"U index: %d  \t %2.6f  \t %2.6f \t  \t %2.6f  \t %2.6f \t \t  deltax:  \t %2.6f  \t deltay:  \t %2.6f  \t steigung u:  \t %2.6f  \t arc: %2.6f",unterseiteindex,xA,yA,xB,yB,deltax,deltay,steigung, arcu);
+
+         //      steigung *= -1;
+         steigungu= steigung;
+         //NSLog(@"U unterseiteindex: %d  \t deltax:  \t %2.6f  \t deltay:  \t %2.6f   \t steigung u:  \t %2.6f  \t grad: %2.6f",unterseiteindex,deltax,deltay,steigung, steigung/M_PI*180);
+      }
+      
+   }// while
+   NSLog(@"EndleistenwinkelvonProfil Unterseite end");
+   if (anzWerteU == 0)
+   {
+      NSLog(@"EndleistenwinkelvonProfil anzwerte = 0");
+      return 0;
+   }
+   //steigungo /=anzWerteO;
+   //steigungu /=anzWerteU;
+   NSLog(@"Steigung raw steigungo: %1.2f steigungu: %2.2f",steigungo,steigungu);
+   //NSLog(@"steigungo: %1.2f steigungu: %2.2f",steigungo*180/M_PI,steigungu*180/M_PI);
+   float mittelwert = (steigungo+steigungu)/2; // Winkelhalbierende
+   NSLog(@"steigung M: %1.2f arc M: %2.2f",(steigungo+steigungu)/2,(arcu + arco)/2);
+   
+   
+   
+   return (arcu + arco)/2;
+   //return mittelwert;
+}
+
 - (NSArray*)EndleisteneinlaufMitWinkel:(float)winkel mitLaenge:(float)laenge mitTiefe:(float)tiefe 
 {
    //float tiefe=10;// Schlitztiefe
@@ -3015,7 +3169,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
                   //
                   if (radius < abbrandmassa )
                   {
-                     fprintf(stderr,"mittelpunkt \t%d\t%2.3f\t%2.3f\t%2.3f\t%2.3f\t%2.3f\t%2.3f\t%2.3f\n",i,ax,ay,detvor,detnach,mittelpunkt[0],mittelpunkt[1],radius);
+                     fprintf(stderr,"mittelpunkt \t%d\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\n",i,ax,ay,detvor,detnach,mittelpunkt[0],mittelpunkt[1],radius);
                   }
                   
                }

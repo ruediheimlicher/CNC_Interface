@@ -2814,17 +2814,17 @@
       [ProfilDic setObject:[NSNumber numberWithFloat:[Auslaufrand floatValue]] forKey:@"auslaufrand"];
 
       
-      
-      
+      [[self window]orderOut:NULL];
+      [NSApp stopModalWithCode:1];
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"LibProfileingabe" object:self userInfo: ProfilDic];
 
       
       //[ProfilEinfuegenTaste setEnabled:1]; 
       
-      [[self window]orderOut:NULL];
+     
       [NSApp stopModalWithCode:1];
-      //NSLog(@"reportProfilEinfuegen end");
+      NSLog(@"reportProfilEinfuegen end");
 
       
       

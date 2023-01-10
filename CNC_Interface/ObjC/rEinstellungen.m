@@ -2514,7 +2514,7 @@
          // Oberseitenprofile angleichen
          if (oberseitearrayA.count && oberseitearrayB.count) // beide vorhanden
          {
-            NSLog(@"Oberseite abgleichen");
+            //NSLog(@"Oberseite abgleichen");
             
             NSArray* redarray  = [Utils werteanpassenOberseiteVon:[NSArray arrayWithObjects:oberseitearrayA, oberseitearrayB,nil]];
             oberseitearrayA = redarray[0];
@@ -2533,14 +2533,14 @@
          // Unterseitenprofile angleichen
          if (unterseitearrayA.count && unterseitearrayB.count) // beide vorhanden
          {
-            NSLog(@"unterseite abgleichen");
+            //NSLog(@"unterseite abgleichen");
             
             NSArray* redarray  = [Utils werteanpassenUnterseiteVon:[NSArray arrayWithObjects:unterseitearrayA, unterseitearrayB,nil]];
             unterseitearrayA = redarray[0];
             unterseitearrayB = redarray[1];
             [ProfilDic setObject:redarray[0] forKey:@"unterseitearrayA"];
             [ProfilDic setObject:redarray[1] forKey:@"unterseitearrayB"];
-            NSLog(@"unterseite abgleichen end");
+            //NSLog(@"unterseite abgleichen end");
             
          }
  
@@ -2763,14 +2763,14 @@
          // Unterseitenprofile angleichen
          if (unterseitearrayA.count && unterseitearrayB.count) // beide vorhanden
          {
-            NSLog(@"unterseite abgleichen");
+           // NSLog(@"unterseite abgleichen");
             
             NSArray* redarray  = [Utils werteanpassenUnterseiteVon:[NSArray arrayWithObjects:unterseitearrayA, unterseitearrayB,nil]];
             unterseitearrayA = redarray[0];
             unterseitearrayB = redarray[1];
             [ProfilDic setObject:redarray[0] forKey:@"unterseitearrayA"];
             [ProfilDic setObject:redarray[1] forKey:@"unterseitearrayB"];
-            NSLog(@"unterseite abgleichen end");
+           // NSLog(@"unterseite abgleichen end");
             
          }
  
@@ -2824,7 +2824,7 @@
       
      
       [NSApp stopModalWithCode:1];
-      NSLog(@"reportProfilEinfuegen end");
+      //NSLog(@"reportProfilEinfuegen end");
 
       
       

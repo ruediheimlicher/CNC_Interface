@@ -757,7 +757,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 
 - (NSArray*)werteanpassenUnterseiteVon:(NSArray*) syncarray
 {
-   NSLog(@"werteanpassenUnterseiteVon start");
+   //NSLog(@"werteanpassenUnterseiteVon start");
    NSMutableArray* returncarray = [NSMutableArray new];
    if([syncarray count] == 2)
    {
@@ -792,7 +792,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
          quelle = B; // wird reduziert
          mincount = A.count;
       }
-      NSLog(@"A count: %d B count: %d \t code: %@ ",A.count, B.count, code );
+      //NSLog(@"A count: %d B count: %d \t code: %@ ",A.count, B.count, code );
       /*
       NSLog(@"soll:");
       for (int i=0;i<soll.count;i++)
@@ -806,10 +806,10 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
          fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[quelle objectAtIndex:i]objectForKey:@"x" ] floatValue],[[[quelle objectAtIndex:i]objectForKey:@"y" ] floatValue]);
       }
       */
-      NSLog(@"UA");
+      //NSLog(@"UA");
       if ([[soll[0]objectForKey:@"x"] floatValue] > 0)
       {
-         NSLog(@"soll an 0 > 0");
+         //NSLog(@"soll an 0 > 0");
       }
  
       float maxdiff = 0;
@@ -859,7 +859,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
          
           //    sollstart = sollpos; // naechste loop beginnt hier
       }
-      NSLog(@"UB");
+      //NSLog(@"UB");
       // letztes El einfuegen
       NSDictionary* lastdic = [NSDictionary dictionaryWithObjectsAndKeys:[[quelle lastObject]objectForKey:@"x"],@"x", [[quelle lastObject]objectForKey:@"y"],@"y", nil];
      [changedarray addObject:lastdic];
@@ -871,7 +871,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
       }
       NSLog(@"UC");
  */
-      NSLog(@"werteanpassenUnterseiteVon end");
+      //NSLog(@"werteanpassenUnterseiteVon end");
       if (changedarraypos == 1) // pos 1 fuer changedarray
       {
          return [NSArray arrayWithObjects: soll, changedarray, nil];
@@ -889,7 +889,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 
 - (NSArray*)werteanpassenOberseiteVon:(NSArray*) syncarray
 {
-   NSLog(@"werteanpassenOberseiteVon start");
+   //NSLog(@"werteanpassenOberseiteVon start");
    NSMutableArray* returncarray = [NSMutableArray new];
    if([syncarray count] == 2)
    {
@@ -925,7 +925,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
          quelle = B; // wird reduziert
          mincount = A.count;
       }
-      NSLog(@"A count: %d B count: %d \t code: %@ ",A.count, B.count, code );
+      //NSLog(@"A count: %d B count: %d \t code: %@ ",A.count, B.count, code );
       
       
       /*
@@ -940,12 +940,12 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
          fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[quelle objectAtIndex:i]objectForKey:@"x" ] floatValue],[[[quelle objectAtIndex:i]objectForKey:@"y" ] floatValue]);
       }
       */
-      NSLog(@"OA");
+      //NSLog(@"OA");
       NSMutableArray* changedarray =  [NSMutableArray new]; // soll mit Interpolationswerten aus quelle an positionen von soll aufgebaut werden
 
       if (A.count == B.count)
       {
-         NSLog(@"count gleich");
+         //NSLog(@"count gleich");
          return [NSArray arrayWithObjects: soll, quelle, nil];
          
       }
@@ -1000,7 +1000,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
             
             //    sollstart = sollpos; // naechste loop beginnt hier
          }
-         NSLog(@"OB");
+         //NSLog(@"OB");
          // letztes El einfuegen
          NSDictionary* lastdic = [NSDictionary dictionaryWithObjectsAndKeys:[[quelle lastObject]objectForKey:@"x"],@"x", [[quelle lastObject]objectForKey:@"y"],@"y", nil];
          [changedarray addObject:lastdic];

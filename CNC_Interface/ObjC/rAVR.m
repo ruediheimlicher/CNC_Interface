@@ -9821,6 +9821,7 @@ return returnInt;
    }
    int i=0;
    NSMutableArray* tempKoordinatenArray = [[NSMutableArray alloc]initWithArray: KoordinatenTabelle];
+  // if (
    
    //maximales x finden
    float maxX=0;

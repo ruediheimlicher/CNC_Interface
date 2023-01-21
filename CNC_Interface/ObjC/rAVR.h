@@ -83,7 +83,9 @@ int globalcounter = 0;
    
 //   IBOutlet id             BoardPop;
    
-   IBOutlet id               StepperTab;
+   IBOutlet id                StepperTab;
+   
+   IBOutlet id                TaskTab;
    IBOutlet   id               ProfilFeld;
    
    IBOutlet   id               GFKFeldA;

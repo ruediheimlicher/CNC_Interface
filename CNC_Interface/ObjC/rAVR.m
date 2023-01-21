@@ -2340,13 +2340,13 @@ return returnInt;
          //einlauflaenge = 15;
          //NSLog(@"reportStartKnopf count 0");
          NSPoint tempStartPunkt=NSMakePoint(0, 0);
-         [WertAXFeld setFloatValue:(20.0+ einlauflaenge)];
+         [WertAXFeld setFloatValue:(20.0+ einlauflaenge + [Einlaufrand intValue])];
          [WertAYFeld setFloatValue:50.0];
          
          [WertAXStepper setFloatValue:[WertAXFeld intValue]];
          [WertAYStepper setFloatValue:[WertAYFeld intValue]];
 
-         [WertBXFeld setFloatValue:(20.0 + einlauflaenge)];
+         [WertBXFeld setFloatValue:(20.0 + einlauflaenge + [Einlaufrand intValue])];
          [WertBYFeld setFloatValue:50.0];
          
          [WertBXStepper setFloatValue:[WertBXFeld intValue]];
@@ -7355,8 +7355,9 @@ return returnInt;
       //[CNC_Eingabe showWindow:NULL];
       //[self doSomeWork];
    }
-   
+   [[CNC_Eingabe window]orderOut:NULL];
    [NSApp endModalSession:session];
+   
    
   // [NSApp runModalForWindow:CNC_Eingabe];
    
@@ -8765,7 +8766,7 @@ return returnInt;
 
 - (IBAction)reportBlockkonfigurieren:(id)sender
 {
-   NSLog(@"reportBlockkonfigurieren Seite: %d",[RechtsLinksRadio selectedSegment]);
+   //NSLog(@"reportBlockkonfigurieren Seite: %d",[RechtsLinksRadio selectedSegment]);
    
    // Einlauf und Auslauf in gleicher funktion. Unterschieden durch Parameter 'Lage'.
    // Lage: 0: Einlauf 1: Auslauf
@@ -8809,7 +8810,7 @@ return returnInt;
       einlaufAY = [[[KoordinatenTabelle objectAtIndex:0]objectForKey:@"ay"]floatValue];
       einlaufBX = [[[KoordinatenTabelle objectAtIndex:0]objectForKey:@"bx"]floatValue];
       einlaufBY = [[[KoordinatenTabelle objectAtIndex:0]objectForKey:@"by"]floatValue];
-      NSLog(@"reportBlockkonfigurieren einlaufAX: %2.2f einlaufBX: %2.2f",einlaufAX,einlaufBX);
+      //NSLog(@"reportBlockkonfigurieren einlaufAX: %2.2f einlaufBX: %2.2f",einlaufAX,einlaufBX);
       //NSLog(@"reportBlockkonfigurieren einlaufAY: %2.2f einlaufBY: %2.2f",einlaufAY,einlaufBY);
       
       // Ende der Schnittlinie des Profils incl. Auslauf, anschliessend wird der Block fertiggestellt
@@ -8859,8 +8860,8 @@ return returnInt;
       float ausmassy = maxy-miny;
       NSLog(@"reportBlockkonfigurieren ausmassx: %2.2f ausmassy: %2.2f",ausmassx,ausmassy);
       
-      NSLog(@"reportBlockkonfigurieren maxy: %2.2f miny: %2.2f",maxy,miny);
-      NSLog(@"reportBlockkonfigurieren maxx: %2.2f minx: %2.2f",maxx,minx);
+      //NSLog(@"reportBlockkonfigurieren maxy: %2.2f miny: %2.2f",maxy,miny);
+      //NSLog(@"reportBlockkonfigurieren maxx: %2.2f minx: %2.2f",maxx,minx);
       
       //      maxy -= fmax(einlaufAY,einlaufBY);       // Abstand von Einlauf bis oberster Punkt 
       float abstandoben = maxy - fmax(einlaufAY,einlaufBY);       // Abstand von Einlauf bis oberster Punkt 
@@ -8959,7 +8960,7 @@ return returnInt;
       
       int index=0;
      
-      NSLog(@"Einstich: Werte in BlockKoordinatenTabelle einsetzen");
+      //NSLog(@"Einstich: Werte in BlockKoordinatenTabelle einsetzen");
 
       [BlockKoordinatenTabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:aktuellepwm*full_pwm],@"pwm",nil]];
       
@@ -8983,7 +8984,7 @@ return returnInt;
  */
      
 
-      NSLog(@"von Einstich zum Blockrand");
+      //NSLog(@"von Einstich zum Blockrand");
       
       // A Einstich  zum Blockrand
       PositionA.x +=einstichx;       
@@ -9004,7 +9005,7 @@ return returnInt;
 
       float deltaBY = einlaufBY - EckeLinksUnten.y;
       
-      NSLog(@"Anfahrt von unten bis profil");
+      //NSLog(@"Anfahrt von unten bis profil");
       
       PositionA.y +=deltaAY;
       PositionB.y +=deltaBY;
@@ -9012,7 +9013,7 @@ return returnInt;
       [BlockKoordinatenTabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:aktuellepwm * full_pwm],@"pwm",nil]];
       index++;
     
-      NSLog(@"Rand bei Einlauf");
+      //NSLog(@"Rand bei Einlauf");
       
       // Schneiden zum Einlauf. Kann in x und y unterschiedlich sein.
       //     NSLog(@"reportBlockkonfigurieren vor Schneiden zum Einlauf EckeRechtsOben x: %2.2f  y: %2.2f",EckeRechtsOben.x,EckeRechtsOben.y);
@@ -9032,7 +9033,7 @@ return returnInt;
       PositionB.x +=deltaBX;
       PositionB.y +=deltaBY;
       
-      NSLog(@"AAA");
+      //NSLog(@"AAA");
       
       //NSLog(@"nach index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
       
@@ -9064,7 +9065,7 @@ return returnInt;
        // Auslauf
       lage=1;
       
-      NSLog(@"BBB");
+      //NSLog(@"BBB");
       //Letzte Position
       PositionA = NSMakePoint(auslaufAX, auslaufAY);
       PositionB = NSMakePoint(auslaufBX, auslaufBY);
@@ -9085,19 +9086,9 @@ return returnInt;
       [BlockKoordinatenTabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:aktuellepwm*full_pwm],@"pwm",nil]];
 
       index++;
-      
-      /*
-       //Schneiden zu Blockoberkante rechts
-       
-       PositionA.y = EckeRechtsOben.y;
-       PositionB.y = EckeRechtsOben.y;
-       
-       [BlockKoordinatenTabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithInt:aktuellepwm*full_pwm],@"pwm",nil]];
-       index++;
-       */
       //Schneiden zu Blockunterkante rechts
       
-      NSLog(@"Schneiden zu Blockunterkante rechts");
+      //NSLog(@"Schneiden zu Blockunterkante rechts");
       PositionA.y = EckeRechtsUnten.y;// - einstichy + 3;
       PositionB.y = EckeRechtsUnten.y;// - einstichy + 3;
       
@@ -9106,7 +9097,7 @@ return returnInt;
       
 
       //Schneiden an Blockunterkante links - einstichy
-      NSLog(@"Schneiden zu Blockunterkante links");
+      //NSLog(@"Schneiden zu Blockunterkante links");
 
       //PositionA.x = EckeLinksUnten.x - 4;//-einstichx+1; // Nicht bis Anschlag fahren
       PositionA.x = EckeLinksUnten.x - einstichx; // Bis Anschlag fahren
@@ -9224,7 +9215,7 @@ return returnInt;
    {
       NSLog(@"reportBlockanfuegen keine KoordinatenTabelle");
    }
-   NSLog(@"reportBlockanfuegen end");
+   //NSLog(@"reportBlockanfuegen end");
 }
 
 
@@ -9506,7 +9497,9 @@ return returnInt;
 
    [tempDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-   [nc postNotificationName:@"usbschnittdaten" object:self userInfo:tempDic];
+   
+   // ***
+  // [nc postNotificationName:@"usbschnittdaten" object:self userInfo:tempDic];
 
    //  [nc postNotificationName:@"slavereset" object:self userInfo:tempDic];
    NSLog(@"reportNeuTaste END");
@@ -10894,7 +10887,7 @@ return returnInt;
 - (IBAction)reportProfilOberseiteTask:(id)sender
 {
    NSDate *anfang = [NSDate date];
-   
+ 
    //NSLog(@"reportProfilOberseiteTask start KT");
    //[self KT];
    NSLog(@"ProfilNameFeldA: %@ ProfilNameFeldB: %@ ",[ProfilNameFeldA stringValue],[ProfilNameFeldB stringValue]);
@@ -10903,7 +10896,7 @@ return returnInt;
    //NSLog(@"reportProfilOberseiteTask nach Neutaste KT");
    //[self KT];
 
-   [CNC_Starttaste setState:1];
+   [CNC_Starttaste setState:166];
    
    [CNC_Starttaste performClick:NULL]; // state wird 0
    //NSLog(@"reportProfilOberseiteTask nach Starttaste KT");

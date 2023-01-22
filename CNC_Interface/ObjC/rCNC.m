@@ -752,7 +752,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
    {
       [tempArray addObject:[NSNumber numberWithInt:1]];
    }
- /*
+ 
 // Steps einfuegen
    if ([derDatenDic objectForKey:@"steps"])
    {
@@ -766,13 +766,14 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
    // Faktor fuer microsteps einfuegen
    if ([derDatenDic objectForKey:@"micro"])
    {
-      [tempArray addObject:[derDatenDic objectForKey:@"micro"]];
+     // [tempArray addObject:[derDatenDic objectForKey:@"micro"]];
+      [tempArray addObject:[NSNumber numberWithInt:1]];
    }
    else 
    {
       [tempArray addObject:[NSNumber numberWithInt:1]];
    }
-*/
+
    
    // Zusaetzliche Objekte einfuegen bis 36
    //for (uint8_t addindex = 0;addindex < 14; addindex++)

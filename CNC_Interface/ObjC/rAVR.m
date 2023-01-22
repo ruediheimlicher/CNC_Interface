@@ -434,6 +434,25 @@ float det(float v0[],float v1[])
 }
 @end
 
+@implementation  rTabview
+- (void)awakeFromNib
+{
+   NSLog(@"rTabview awakeFromNib anz: %d", [[self tabViewItems]count]);
+   NSMutableArray* tabarray = [self tabViewItems];
+   
+   nummer = 1;
+   for (int i=0;i<tabarray.count;i++)
+   {
+      NSString* ident = [[tabarray objectAtIndex:i]identifier] ;
+      nummer = i;
+      NSLog(@"rTabview ident: %@ nummer: %d",ident,nummer);
+      
+   }
+}
+@end
+
+
+
 @implementation  rPfeiltaste  
 - (void)awakeFromNib
 {
@@ -9815,92 +9834,168 @@ return returnInt;
 - (IBAction)reportLinkeRechteSeite:(id)sender
 {
    //NSLog(@"AVR  reportLinkeRechteSeite %d",[sender selectedSegment]);
+   //NSLog(@"AVR  reportLinkeRechteSeite tab: %d", [TaskTab indexOfTabViewItemWithIdentifier:@"rumpf"]);
    if ([KoordinatenTabelle count]==0)
    {
       return;
    }
    int i=0;
    NSMutableArray* tempKoordinatenArray = [[NSMutableArray alloc]initWithArray: KoordinatenTabelle];
-  // if (
+  NSString* itemlabel = [[TaskTab selectedTabViewItem]label];
+   NSArray* tabarray = [TaskTab tabViewItems];
    
-   //maximales x finden
-   float maxX=0;
-   float minX=MAXFLOAT;
-   NSDictionary* RahmenDic = [self RahmenDic];
-   maxX = [[RahmenDic objectForKey:@"maxx"]floatValue];
-   minX = [[RahmenDic objectForKey:@"minx"]floatValue];
    
-   //NSLog(@"maxX: %2.2f minX: %2.2f",maxX,minX);
-   // x-Werte spiegeln und maxX addieren
-   for (i=0;i< [tempKoordinatenArray count];i++)
+   if ([itemlabel  isEqual: @"Profil"])
    {
-      NSMutableDictionary* tempZeilenDic = [NSMutableDictionary dictionaryWithDictionary:[KoordinatenTabelle objectAtIndex:i]];
-      if (i<5 || i> [tempKoordinatenArray count]-5)
+      
+      //maximales x finden
+      float maxX=0;
+      float minX=MAXFLOAT;
+      NSDictionary* RahmenDic = [self RahmenDic];
+      maxX = [[RahmenDic objectForKey:@"maxx"]floatValue];
+      minX = [[RahmenDic objectForKey:@"minx"]floatValue];
+      
+      //NSLog(@"maxX: %2.2f minX: %2.2f",maxX,minX);
+      // x-Werte spiegeln und maxX addieren
+      for (i=0;i< [tempKoordinatenArray count];i++)
       {
+         NSMutableDictionary* tempZeilenDic = [NSMutableDictionary dictionaryWithDictionary:[KoordinatenTabelle objectAtIndex:i]];
+         if (i<5 || i> [tempKoordinatenArray count]-5)
+         {
+            
+            // NSLog(@"tempZeilenDic vor: %@",[[tempKoordinatenArray objectAtIndex:i] description]);
+         }
          
-        // NSLog(@"tempZeilenDic vor: %@",[[tempKoordinatenArray objectAtIndex:i] description]);
-      }
-      
-      float tempax=[[tempZeilenDic objectForKey:@"ax"]floatValue]-minX;
-      tempax *= -1;
-      tempax += maxX;
-      [tempZeilenDic setObject:[NSNumber numberWithFloat:tempax]forKey:@"ax"];
-      
-      float tempbx=[[tempZeilenDic objectForKey:@"bx"]floatValue]-minX;
-      tempbx *= -1;
-      tempbx += maxX;
-      [tempZeilenDic setObject:[NSNumber numberWithFloat:tempbx]forKey:@"bx"];
-      
-      // Abbrand
-      if ([tempZeilenDic objectForKey:@"abrax"])
-      {
-         float tempax=[[tempZeilenDic objectForKey:@"abrax"]floatValue]-minX;
+         float tempax=[[tempZeilenDic objectForKey:@"ax"]floatValue]-minX;
          tempax *= -1;
          tempax += maxX;
-         [tempZeilenDic setObject:[NSNumber numberWithFloat:tempax]forKey:@"abrax"];
+         [tempZeilenDic setObject:[NSNumber numberWithFloat:tempax]forKey:@"ax"];
          
-         float tempbx=[[tempZeilenDic objectForKey:@"abrbx"]floatValue]-minX;
+         float tempbx=[[tempZeilenDic objectForKey:@"bx"]floatValue]-minX;
          tempbx *= -1;
          tempbx += maxX;
-         [tempZeilenDic setObject:[NSNumber numberWithFloat:tempbx]forKey:@"abrbx"];
+         [tempZeilenDic setObject:[NSNumber numberWithFloat:tempbx]forKey:@"bx"];
          
+         // Abbrand
+         if ([tempZeilenDic objectForKey:@"abrax"])
+         {
+            float tempax=[[tempZeilenDic objectForKey:@"abrax"]floatValue]-minX;
+            tempax *= -1;
+            tempax += maxX;
+            [tempZeilenDic setObject:[NSNumber numberWithFloat:tempax]forKey:@"abrax"];
+            
+            float tempbx=[[tempZeilenDic objectForKey:@"abrbx"]floatValue]-minX;
+            tempbx *= -1;
+            tempbx += maxX;
+            [tempZeilenDic setObject:[NSNumber numberWithFloat:tempbx]forKey:@"abrbx"];
+         }
          
+         [KoordinatenTabelle replaceObjectAtIndex:i withObject:tempZeilenDic];
+         
+         if (i<5 || i> [tempKoordinatenArray count]-5)
+         {
+            //NSLog(@"tempZeilenDic nach: %@",[tempZeilenDic  description]);
+         }
       }
       
-      [KoordinatenTabelle replaceObjectAtIndex:i withObject:tempZeilenDic];
-      
-      if (i<5 || i> [tempKoordinatenArray count]-5)
+       for (i=0;i<4;i++)
       {
-         //NSLog(@"tempZeilenDic nach: %@",[tempZeilenDic  description]);
+         NSPoint tempEcke = NSPointFromString([BlockrahmenArray objectAtIndex:i]);
+         float tempx = tempEcke.x-minX;
+         tempx *= -1;
+         tempx += maxX;
+         NSString* newEckestring = NSStringFromPoint(NSMakePoint(tempx, tempEcke.y));
+         [BlockrahmenArray replaceObjectAtIndex:i  withObject:newEckestring];
       }
+      [ProfilGraph setRahmenArray:BlockrahmenArray];
+      //NSLog(@"reportRechteSeiteLinkeSeite RahmenArray: %@",[BlockrahmenArray description]);
    }
+   else if ([itemlabel  isEqual: @"Rumpf"])
+   {
+      NSLog(@"reportRechteSeite Rumpf");
+      float maxX=0;
+      float minX=MAXFLOAT;
+      float maxY=0;
+      float minY=MAXFLOAT;
 
-   /*
-   for (i=0;i<[KoordinatenTabelle count]; i++) 
-   {
-      NSMutableDictionary* tempZeilenDic = (NSMutableDictionary*)[KoordinatenTabelle objectAtIndex:i];
-      NSLog(@"tempZeilenDic: %@",[tempZeilenDic description]);
-      NSNumber* tempax=(NSNumber*)[tempZeilenDic objectForKey:@"ax"];
-      NSNumber* tempay=(NSNumber*)[tempZeilenDic objectForKey:@"ay"];
-      NSNumber* tempbx=(NSNumber*)[tempZeilenDic objectForKey:@"bx"];
-      NSNumber* tempby=(NSNumber*)[tempZeilenDic objectForKey:@"by"];
-      NSNumber* tempindex=(NSNumber*)[tempZeilenDic objectForKey:@"index"];
-      NSMutableDictionary* neuerZeilenDic = [[NSMutableDictionary alloc]initWithCapacity:0];
-   }
-    */
-   //NSLog(@"maxX: %2.2f",maxX);
-   for (i=0;i<4;i++)
-   {
-      NSPoint tempEcke = NSPointFromString([BlockrahmenArray objectAtIndex:i]);
-      float tempx = tempEcke.x-minX;
-      tempx *= -1;
-      tempx += maxX;
-      NSString* newEckestring = NSStringFromPoint(NSMakePoint(tempx, tempEcke.y));
-      [BlockrahmenArray replaceObjectAtIndex:i  withObject:newEckestring];
-    }
-   [ProfilGraph setRahmenArray:BlockrahmenArray];
-   //NSLog(@"reportRechteSeiteLinkeSeite RahmenArray: %@",[BlockrahmenArray description]);
+      int maxi = 0;
+      int mini = 0;
+      
+      // max, min bestimmen
+      for (int i=0;i< [tempKoordinatenArray count];i++)
+      {
+         float ax = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
+         float bx = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
+         if (ax > maxX)
+         {
+            maxX = ax;
+            maxi = i;
+         }
+         if (ax < minX)
+         {
+            minX = ax;
+            mini = i;
+         }
+         
+         if (bx > maxX)
+         {
+            maxX = bx;
+            maxi = i;
+         }
+         if (bx < minX)
+         {
+            minX = bx;
+            mini = i;
+         }
+         
+         float ay = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ay"]floatValue];
+         float by = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
+         if (ay > maxY)
+         {
+            maxY = ay;
+            
+         }
+         if (ay < minY)
+         {
+            minY = ay;
+         }
+         
+         if (by > maxX)
+         {
+            maxY = by;
+            
+         }
+         if (by < minX)
+         {
+            minY = by;
+         }
+
+       
+      }
+      NSLog(@"maxX: %.2f minX: %.2f",maxX,minX);
+      [AbmessungX setIntValue:maxX - minX];
+      [AbmessungY setIntValue:maxY - minY];
+
+      for (int i=0;i< [tempKoordinatenArray count];i++)
+      {
+         NSMutableDictionary* tempZeilenDic = [NSMutableDictionary dictionaryWithDictionary:[KoordinatenTabelle objectAtIndex:i]];
+         
+         float tempax=[[tempZeilenDic objectForKey:@"ax"]floatValue]-minX;
+         tempax *= -1;
+         tempax += maxX;
+         [tempZeilenDic setObject:[NSNumber numberWithFloat:tempax]forKey:@"ax"];
+         
+         float tempbx=[[tempZeilenDic objectForKey:@"bx"]floatValue]-minX;
+         tempbx *= -1;
+         tempbx += maxX;
+         [tempZeilenDic setObject:[NSNumber numberWithFloat:tempbx]forKey:@"bx"];
    
+         //NSLog(@"tempZeilenDic nach:  tempax: %.2f tempax: %.2f",tempax, tempbx);
+         [KoordinatenTabelle replaceObjectAtIndex:i withObject:tempZeilenDic];
+         
+      } // for i
+      
+   }
    [ProfilGraph setNeedsDisplay:YES];
    [CNCTable reloadData];
 
@@ -10546,10 +10641,13 @@ return returnInt;
 
     
       NSDictionary* tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
-      //NSLog(@"AVR  reportHome tempSteuerdatenDic: %@",[tempSteuerdatenDic description]);
+      NSLog(@"AVR  reportHome tempSteuerdatenDic: %@",[tempSteuerdatenDic description]);
      
             
       [HomeSchnittdatenArray addObject:[CNC SchnittdatenVonDic:tempSteuerdatenDic]];
+      
+      NSLog(@"AVR  reportHome HomeSchnittdatenArray: %@",HomeSchnittdatenArray);
+      
       HomeSchnittdatenArray[i][24] = [NSNumber numberWithInt:homecode];
 
       //HomeSchnittdatenArray[0][31] = [NSNumber numberWithInt:richtung];
@@ -10561,7 +10659,7 @@ return returnInt;
    [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
 
-   
+   NSLog(@"reportHome HomeSchnittdatenDic: %@",HomeSchnittdatenDic);
    [nc postNotificationName:@"usbschnittdaten" object:self userInfo:HomeSchnittdatenDic];
 
 
@@ -10707,7 +10805,7 @@ return returnInt;
      }
  
    NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
-   [HomeSchnittdatenDic setObject:SchnittdatenStringArray forKey:@"schnittdatenstringarray"];
+  // [HomeSchnittdatenDic setObject:SchnittdatenStringArray forKey:@"schnittdatenstringarray"];
    //NSLog(@"AVR  reportHome SchnittdatenStringArray: %@",SchnittdatenStringArray);
 
    [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
@@ -11907,6 +12005,7 @@ return returnInt;
       [SchnittdatenDic setObject:[NSNumber numberWithInt:[self pwm]] forKey:@"pwm"];
       
       [SchnittdatenDic setObject:SchnittdatenArray forKey:@"schnittdatenarray"];
+      
       NSMutableArray* SchnittdatenStringArray = [[NSMutableArray alloc]initWithCapacity:0];
       
       int k = 0;

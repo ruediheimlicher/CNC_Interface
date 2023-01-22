@@ -74,7 +74,16 @@ int globalcounter = 0;
 }
 @end
 
-@interface rAVRview:NSViewController <NSTableViewDataSource,NSTableViewDelegate>
+@interface rTabview:NSTabView
+{
+   int nummer;
+   
+}
+@end
+
+
+
+@interface rAVRview:NSViewController <NSTableViewDataSource,NSTableViewDelegate,NSTabViewDelegate>
 {
    // https://dev.iachieved.it/iachievedit/using-swift-in-an-existing-objective-c-project/
    rTSP_NN* nn;
@@ -85,7 +94,7 @@ int globalcounter = 0;
    
    IBOutlet id                StepperTab;
    
-   IBOutlet id                TaskTab;
+   IBOutlet rTabview*            TaskTab;
    IBOutlet   id               ProfilFeld;
    
    IBOutlet   id               GFKFeldA;

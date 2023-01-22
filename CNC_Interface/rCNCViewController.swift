@@ -286,73 +286,73 @@ class rCNCViewController:rViewController
 
     
      @objc func usbschnittdatenAktion(_ notification:Notification) 
-     {
+   {
       // N
-        /*
+      /*
        Array:
-        
-        schritteax lb
-        schritteax hb
-        schritteay lb
-        schritteay hb
-        
-        delayax lb
-        delayax hb
-        delayay lb
-        delayay hb
-        
-        schrittebx lb
-        schrittebx hb
-        schritteby lb
-        schritteby hb
-        
-        delaybx lb
-        delaybx hb
-        delayby lb
-        delayby hb
-        
-        code
-        position // first, last, ...
-        indexh
-        indexl
-        
-        pwm (pos 20)
-        motorstatus (pos 21)
-
-         zoomfaktor  22
-         steps 25
-         micro 26
+       
+       schritteax lb
+       schritteax hb
+       schritteay lb
+       schritteay hb
+       
+       delayax lb
+       delayax hb
+       delayay lb
+       delayay hb
+       
+       schrittebx lb
+       schrittebx hb
+       schritteby lb
+       schritteby hb
+       
+       delaybx lb
+       delaybx hb
+       delayby lb
+       delayby hb
+       
+       code
+       position // first, last, ...
+       indexh
+       indexl
+       
+       pwm (pos 20)
+       motorstatus (pos 21)
+       
+       zoomfaktor  22
+       steps 25
+       micro 26
        */
       
       Stepperposition = 0
       //print("cncviewcontroller usbschnittdatenAktion")
-        
+      
        
         
    //     guard let steps:Int32 = AVR?.motorsteps()  else {return}
         
-        //print("cncviewcontroller usbschnittdatenAktion steps: \(steps)")
-       usb_schnittdatenarray.removeAll()
-        
-       let info = notification.userInfo
+      //print("cncviewcontroller usbschnittdatenAktion steps: \(steps)")
+      usb_schnittdatenarray.removeAll()
+      
+      let info = notification.userInfo
    //   print("info: \(info)")
-   //    let usb_pwm =  info?["pwm"] as! UInt8
-   //    let usb_delayok =  info?["delayok"] as! UInt8
-       
+      //    let usb_pwm =  info?["pwm"] as! UInt8
+      //    let usb_delayok =  info?["delayok"] as! UInt8
+      
       let usb_home =  info?["home"] as! UInt8
-        
-        if usb_home == 1
-        {
-           print("cncviewcontroller usbschnittdatenAktion usb_home: \(usb_home)")
-           Stepperposition = 0
-        }
-        //    let usb_art =  info?["art"] as! UInt8
-   //    let usb_cncposition =  info?["cncposition"]
-       
-       //print("usb_pwm: \(usb_pwm) usb_delayok: \(usb_delayok) usb_home: \(usb_home) usb_art: \(usb_art) usb_cncposition: \(usb_cncposition) ")
-//        let zeilenzahlarray = info?["schnittdatenarray"] as! [UInt8]
-        guard   let zeilenzahlarray = info?["schnittdatenarray"] as?[[UInt8]] else {return}
-        var zeilenindex = 0
+      
+      if usb_home == 1
+      {
+         print("cncviewcontroller usbschnittdatenAktion usb_home: \(usb_home)")
+         Stepperposition = 0
+      }
+      //    let usb_art =  info?["art"] as! UInt8
+      //    let usb_cncposition =  info?["cncposition"]
+      
+      //print("usb_pwm: \(usb_pwm) usb_delayok: \(usb_delayok) usb_home: \(usb_home) usb_art: \(usb_art) usb_cncposition: \(usb_cncposition) ")
+      //        let zeilenzahlarray = info?["schnittdatenarray"] as! [UInt8]
+      guard   let zeilenzahlarray = info?["schnittdatenarray"] as?[[UInt8]] else {return}
+      var zeilenindex = 0
       for zeile in   zeilenzahlarray
       {
          var wertarray = [UInt8]()
@@ -372,23 +372,23 @@ class rCNCViewController:rViewController
          wertarray[26] = UInt8(micro)
          usb_schnittdatenarray.append(wertarray)
       }
-       
+      
    //     print("usbschnittdatenAktion usb_schnittdatenarray: \(usb_schnittdatenarray )")
-   //     print("usbschnittdatenAktion Stepperposition: \(Stepperposition)")
+      //     print("usbschnittdatenAktion Stepperposition: \(Stepperposition)")
       
       //teensy.write_byteArray[0] = UInt8((0x00FF) & 0xFF) // lb
-
-       if (globalusbstatus == 0)
-       {
+      
+      if (globalusbstatus == 0)
+      {
          let warnung = NSAlert.init()
          
          warnung.informativeText = "USB_SchnittdatenAktion: USB ist noch nicht eingesteckt."
          warnung.messageText = "CNC Schnitt starten"
          warnung.addButton(withTitle: "Einstecken und einschalten")
          warnung.addButton(withTitle: "Zurück")
-
- //        AVR?.dc_(on: 0)
- //        AVR?.setStepperstrom(0)66
+         
+         //        AVR?.dc_(on: 0)
+         //        AVR?.setStepperstrom(0)66
          
          
          var openerfolg = 0
@@ -396,40 +396,36 @@ class rCNCViewController:rViewController
          switch (devicereturn)
          {
          case NSApplication.ModalResponse.alertFirstButtonReturn: // Einschalten
-               let device = teensyboardarray[boardindex]
+            let device = teensyboardarray[boardindex]
             openerfolg = Int(teensy.USBOpen(code: device, board: boardindex))
             break
             
          case NSApplication.ModalResponse.alertSecondButtonReturn:
-               return
+            return
             break
          case NSApplication.ModalResponse.alertThirdButtonReturn:
-               return
+            return
             break
          default:
             return
             break
          }
-         
-         
       }
-  
- 
+      
       var timerdic:[String:Any] = [String:Any]()
       timerdic["home"] = usb_home
       
-        if (teensy.read_OK.boolValue == false)
-        {
-           print("teensy.read_OK ist false")
-           teensy.start_read_USB(true, dic:timerdic)
-           
-        }
-        
-        writeCNCAbschnitt()
-     // readTimer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(teensy.cont_read_USB(_:)), userInfo: timerdic, repeats: true)
-
+      if (teensy.read_OK.boolValue == false)
+      {
+         print("teensy.read_OK ist false")
+         teensy.start_read_USB(true, dic:timerdic)
+      }
       
-     }
+      writeCNCAbschnitt()
+      // readTimer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(teensy.cont_read_USB(_:)), userInfo: timerdic, repeats: true)
+      
+      
+   }
 
     @objc func writeCNCAbschnitt()
    {
@@ -496,6 +492,7 @@ class rCNCViewController:rViewController
             var ausschlussindex:[UInt8] = [0xE2]
             if !(ausschlussindex.contains(writecode))
             {
+               
                Stepperposition += 1
             }
             

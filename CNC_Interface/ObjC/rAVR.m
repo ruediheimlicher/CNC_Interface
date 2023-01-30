@@ -2562,6 +2562,7 @@ return returnInt;
    //NSLog(@"reportStopKnopf KoordinatenTabelle teil: %@",[KoordinatenTabelle valueForKey:@"teil"]);
    //NSLog(@"reportStopKnopf KoordinatenTabelle data: %@",[[KoordinatenTabelle valueForKey:@"data"]description]);
    
+   // KoordinatenTabelle enthaelt Koord der angeklickten oder eingesetzten Punkte
    // Werte des ersten Datensatzes
    NSDictionary* tempPrevDic=[KoordinatenTabelle objectAtIndex:0];
    float prevax = [[tempPrevDic objectForKey:@"ax"]floatValue];
@@ -2592,9 +2593,10 @@ return returnInt;
       prevabrby=[[tempPrevDic objectForKey:@"abrby"]floatValue];
       
    }
+
+   // Filter: tempKoordinatenTabelle: Werte aus Koordinatentabelle mit Bedingungen (MiniDistanz)
    
-   
-   
+   // erstes element einsetzen
    [tempKoordinatenTabelle addObject:[KoordinatenTabelle objectAtIndex:0]];
    
    //   for (i=0;i<[KoordinatenTabelle count]-1;i++)
@@ -2609,7 +2611,7 @@ return returnInt;
       // NSLog(@"i: %d teil: %d",i,[[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"teil"]intValue] );
       int nextteil=-1;
       // Dic des aktuellen Datensatzes
-      NSDictionary* tempNowDic=[KoordinatenTabelle objectAtIndex:i+1];
+      NSDictionary* tempNowDic=[KoordinatenTabelle objectAtIndex:i+1]; // next punkt
       if (i< [KoordinatenTabelle count]-2) // noch nicht vorletztes El
       {
          nextteil = [[[KoordinatenTabelle objectAtIndex:i+2] objectForKey:@"teil"]intValue];
@@ -2620,6 +2622,8 @@ return returnInt;
       float noway = [[tempNowDic objectForKey:@"ay"]floatValue];
       float nowbx = [[tempNowDic objectForKey:@"bx"]floatValue];
       float nowby = [[tempNowDic objectForKey:@"by"]floatValue];
+      
+      
       
       if ([tempNowDic objectForKey:@"abrax"])
       {
@@ -2711,6 +2715,22 @@ return returnInt;
       {
          steigung = (noway-prevay)/(nowax-prevax);
       }
+      
+      if(nowax < 0)
+      {
+         fprintf(stderr,"nowax < 0 i: %d\n",i);
+      }
+      
+      // Winkel
+      
+      float skalarproda =  prevax * nowax + prevay*noway; // vektoren: (prevax,prevay), (nowax,noway)
+      fprintf(stderr,"prevax: %0.2f prevay: %.2f nowax: %.2f noway: %.2f skalarproda: %.2f\n",prevax,prevay,nowax,noway,skalarproda);
+      //float nennera = newhypa * lasthypa;
+      
+      
+      
+      
+      // end Winkel
       
       if ([[tempNowDic objectForKey:@"teil"]intValue]==20)
       {
@@ -3009,11 +3029,49 @@ return returnInt;
    
     //fprintf(stderr, "index: \t zeitax:\tzeitay:\tzeitbx:\tzeitby:\t\n");
    // Summierung der Werte
-   for (i=0;i<[CNCDatenArray count];i++)
+   float laststartpunktax = 0;
+   float laststartpunktay = 0;
+   float lastdistanzax = 0; // x-wert
+   float lastdistanzay = 0; // y-wert
+   float lastdistanza = 0;
+   float cos = 1;
+   for (int i=0;i<[CNCDatenArray count];i++)
    {
       NSDictionary* tempDic = [CNCDatenArray objectAtIndex:i];
       //NSLog(@"index: %d tempDic pwm: %2.2f",i,[[tempDic objectForKey:@"pwm"]floatValue]);
-      
+      if(i==0)
+      {
+         lastdistanza = [[tempDic objectForKey:@"distanza"]floatValue];
+         lastdistanzax = [[tempDic objectForKey:@"distanzax"]floatValue];
+         lastdistanzay = [[tempDic objectForKey:@"distanzay"]floatValue];
+ //        fprintf(stderr,"i: %d lastdistanzax: %.3f \t lastdistanzay: %.3f lastdistanza: %.3f\n",i,lastdistanzax,lastdistanzay,lastdistanza);
+      }
+      else 
+      {
+         float newdistanzax = [[tempDic objectForKey:@"distanzax"]floatValue];
+         float newdistanzay = [[tempDic objectForKey:@"distanzay"]floatValue];
+         float newdistanza = [[tempDic objectForKey:@"distanza"]floatValue];
+  //       fprintf(stderr,"i: %d newdistanzax: %.3f \t newdistanzay: %.3f newdistanza: %.3f\n",i,newdistanzax,newdistanzay,newdistanza);
+         float skalarproda =  lastdistanzax * newdistanzax + lastdistanzay * newdistanzay; // vektoren:
+         float nennera = lastdistanza * newdistanza;
+         
+         if(nennera)
+         {
+            cos = skalarproda/nennera;
+         }
+         float cosdegree = acosf(cos)/M_PI*180;
+         if(fabs(cos) > 0.98)
+         {
+            fprintf(stderr,"i: %d +++   +++   +++   \t wendepunkt cos: %.3f  arccos: %.3f cosdegree:\t %.2f\n",i,cos,acosf(cos),cosdegree);
+            SchnittdatenArray[i][35] = [NSNumber numberWithInt:1];
+         }
+         fprintf(stderr,"i: %d cos: %.3f  arccos: %.3f cosdegree:\t %.2f\n",i,cos,acosf(cos),cosdegree);
+         //fprintf(stderr,"i: %d lastdistanza: %.3f \t newdistanza: %.3f \t laststartpunktax: %.3f\t laststartpunktay: %.3f\t newstartpunktax: %.3f\t newstartpunktay: %.3f \n",i,lastdistanza,newdistanza,laststartpunktax,laststartpunktay,newstartpunktax,newstartpunktay);
+         
+         lastdistanza = newdistanza;
+         lastdistanzax = newdistanzax;
+         lastdistanzay = newdistanzay;
+      }
       
       
       wegax += [[tempDic objectForKey:@"schritteax"]floatValue]/motorsteps*[[tempDic objectForKey:@"delayax"]floatValue]/1000;
@@ -11579,6 +11637,7 @@ return returnInt;
        
        //NSLog(@"USB_SchnittdatenAktion Object 0 aus SchnittDatenArray aus note: %@",[[[[note userInfo]objectForKey:@"schnittdatenarray"]objectAtIndex:0] description]);
        [SchnittdatenArray setArray:[[note userInfo]objectForKey:@"schnittdatenarray"]];
+       
        //NSLog(@"USB_SchnittdatenAktion SchnittDatenArray %@",[[SchnittDatenArray objectAtIndex:0] description]);
        //NSLog(@"USB_SchnittdatenAktion SchnittDatenArray: %@",[SchnittDatenArray description]);
 

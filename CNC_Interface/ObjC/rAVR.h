@@ -407,6 +407,7 @@ int globalcounter = 0;
    float einfahrty;
 
  
+ 
    }
    @property (nonatomic)  int    Kote;
    @property (nonatomic) BOOL wantsLayer;

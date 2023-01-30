@@ -372,14 +372,15 @@ class rCNCViewController:rViewController
          wertarray[25] = UInt8(steps)
          wertarray[26] = UInt8(micro)
          
-         print("usbschnittdatenAktion usb_schnittdatenarray 0-48");
+         /*
+          print("usbschnittdatenAktion usb_schnittdatenarray 0-48");
          var zeile:Int=0
          for i in 0..<48
          {
             print("\(i)\t\(wertarray[i])")
             zeile += 1
          }
-
+          */
          usb_schnittdatenarray.append(wertarray)
    
       }

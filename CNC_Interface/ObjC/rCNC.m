@@ -228,7 +228,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 - (NSDictionary*)SteuerdatenVonDic:(NSDictionary*)derDatenDic
 {
 // Aufbereitung der Werte für die Uebergabe an Teensy, als uint8_t-Werte
-   uint16_t dicindex = [derDatenDic objectForKey:@"index"];
+   uint16_t dicindex = [[derDatenDic objectForKey:@"index"]intValue];
 //   NSLog(@"index: %d SteuerdatenVonDic: %@",dicindex, [derDatenDic description]);
 	int  anzSchritte;
    int  anzaxplus=0;
@@ -268,7 +268,8 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 	NSPoint EndPunkt=NSPointFromString([derDatenDic objectForKey:@"endpunkt"]);
 	NSPoint EndPunktA=NSPointFromString([derDatenDic objectForKey:@"endpunkta"]);
 	NSPoint EndPunktB=NSPointFromString([derDatenDic objectForKey:@"endpunktb"]);
-	//EndPunkt.x *=zoomfaktor;
+   
+  	//EndPunkt.x *=zoomfaktor;
 	//EndPunkt.y *=zoomfaktor;
 	//NSLog(@"StartPunkt x: %.2f y: %.2f EndPunkt.x: %.2f y: %.2f",StartPunkt.x,StartPunkt.y,EndPunkt.x, EndPunkt.y);
 	

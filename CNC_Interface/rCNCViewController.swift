@@ -322,6 +322,7 @@ class rCNCViewController:rViewController
        zoomfaktor  22
        steps 25
        micro 26
+       
        */
       
       Stepperposition = 0
@@ -370,13 +371,19 @@ class rCNCViewController:rViewController
          }
          wertarray[25] = UInt8(steps)
          wertarray[26] = UInt8(micro)
+         
+         print("usbschnittdatenAktion usb_schnittdatenarray 0-48");
+         var zeile:Int=0
+         for i in 0..<48
+         {
+            print("\(i)\t\(wertarray[i])")
+            zeile += 1
+         }
+
          usb_schnittdatenarray.append(wertarray)
+   
       }
       
-   //     print("usbschnittdatenAktion usb_schnittdatenarray: \(usb_schnittdatenarray )")
-      //     print("usbschnittdatenAktion Stepperposition: \(Stepperposition)")
-      
-      //teensy.write_byteArray[0] = UInt8((0x00FF) & 0xFF) // lb
       
       if (globalusbstatus == 0)
       {
@@ -386,10 +393,6 @@ class rCNCViewController:rViewController
          warnung.messageText = "CNC Schnitt starten"
          warnung.addButton(withTitle: "Einstecken und einschalten")
          warnung.addButton(withTitle: "Zurück")
-         
-         //        AVR?.dc_(on: 0)
-         //        AVR?.setStepperstrom(0)66
-         
          
          var openerfolg = 0
          let devicereturn = warnung.runModal()
@@ -422,10 +425,7 @@ class rCNCViewController:rViewController
       }
       
       writeCNCAbschnitt()
-      // readTimer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(teensy.cont_read_USB(_:)), userInfo: timerdic, repeats: true)
-      
-      
-   }
+     }
 
     @objc func writeCNCAbschnitt()
    {
@@ -450,7 +450,7 @@ class rCNCViewController:rViewController
       
       if Stepperposition < usb_schnittdatenarray.count
       {
-         print("Stepperposition < usb_schnittdatenarray.count")
+         //print("Stepperposition < usb_schnittdatenarray.count")
          if halt > 0
          {
             /*
@@ -479,14 +479,15 @@ class rCNCViewController:rViewController
                }
                index += 1
             }
-            print("\(string) code: \(aktuellezeile[16]) pos: \(aktuellezeile[17]) index: \(aktuellezeile[19])");
+            //print("\(string) code: \(aktuellezeile[16]) pos: \(aktuellezeile[17]) index: \(aktuellezeile[19])");
             schnittdatenstring.append(string)
             schnittdatenstring.append("\n")
+            
             //print("write_byteArray: \(teensy.write_byteArray)")
             if (globalusbstatus > 0)
             {
                let senderfolg = teensy.send_USB()
-               print("writeCNCAbschnitt senderfolg: \(senderfolg)")
+               //print("writeCNCAbschnitt senderfolg: \(senderfolg)")
             }
             // print("Stepperposition: \(Stepperposition) \n\(schnittdatenstring)");
             var ausschlussindex:[UInt8] = [0xE2]

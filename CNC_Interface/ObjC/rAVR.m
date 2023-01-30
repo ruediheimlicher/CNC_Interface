@@ -525,11 +525,7 @@ float det(float v0[],float v1[])
    [super mouseDown:theEvent];
    
    [self mouseUp:theEvent];
-
 }
-
-
-
 
 - (void)setRichtung:(int)dieRichtung
 {
@@ -2586,6 +2582,8 @@ return returnInt;
    float wegaoben=0, wegaunten = 0;
    float wegboben=0, wegbunten = 0;
    
+   
+   
    if ([tempPrevDic objectForKey:@"abrax"])
    {
       prevabrax=[[tempPrevDic objectForKey:@"abrax"]floatValue];
@@ -2708,8 +2706,11 @@ return returnInt;
       // Distanzen zum vorherigen Punkt
       float distA = hypot(nowax-prevax,noway-prevay);
       float distB = hypot(nowbx-prevbx,nowby-prevby);
-      
-      
+      float steigung = 0;
+      if((nowax-prevax))
+      {
+         steigung = (noway-prevay)/(nowax-prevax);
+      }
       
       if ([[tempNowDic objectForKey:@"teil"]intValue]==20)
       {
@@ -2885,7 +2886,7 @@ return returnInt;
       [tempDic setObject:tempEndPunktAString forKey:@"endpunkta"];
       [tempDic setObject:tempEndPunktBString forKey:@"endpunktb"];
       
-      
+      [tempDic setObject:[NSNumber numberWithFloat:steigung] forKey:@"steigung"];
       
       //      [tempDic setObject:[NSNumber numberWithInt:i] forKey:@"index"];
       [tempDic setObject:[NSNumber numberWithInt:cncindex] forKey:@"index"];
@@ -2980,12 +2981,11 @@ return returnInt;
       
       
       [CNCDatenArray addObject:tempSteuerdatenDic];
-      //NSLog(@"tempSchnittdatenArray: %@",[tempSchnittdatenArray description]);
+      //NSLog(@"tempSteuerdatenDic: %@",tempSteuerdatenDic);
+      
       
       [SchnittdatenArray addObject:[CNC SchnittdatenVonDic:tempSteuerdatenDic]];
-      
-      
-      
+       
       //NSLog(@"tempSteuerdatenDic: %@",[tempSteuerdatenDic description]);
       cncindex++;
    }
@@ -3013,6 +3013,9 @@ return returnInt;
    {
       NSDictionary* tempDic = [CNCDatenArray objectAtIndex:i];
       //NSLog(@"index: %d tempDic pwm: %2.2f",i,[[tempDic objectForKey:@"pwm"]floatValue]);
+      
+      
+      
       wegax += [[tempDic objectForKey:@"schritteax"]floatValue]/motorsteps*[[tempDic objectForKey:@"delayax"]floatValue]/1000;
       wegay += [[tempDic objectForKey:@"schritteay"]floatValue]/motorsteps*[[tempDic objectForKey:@"delayay"]floatValue]/1000;
       wegbx += [[tempDic objectForKey:@"schrittebx"]floatValue]/motorsteps*[[tempDic objectForKey:@"delaybx"]floatValue]/1000;
@@ -3052,6 +3055,7 @@ return returnInt;
    if (i==0 || i==[KoordinatenTabelle count]-1)
    {
       //NSLog(@"reportStopKnopf SchnittdatenArray: %@",[SchnittdatenArray description]);
+      
    }
    
    //NSLog(@"reportStopKnopf CNCDatenArray: %@",[CNCDatenArray description]);
@@ -3064,6 +3068,14 @@ return returnInt;
    
    [CNCStepXFeld setIntValue:[[[CNCDatenArray objectAtIndex:0]objectForKey:@"schrittex"]intValue]];
    [CNCStepYFeld setIntValue:[[[CNCDatenArray objectAtIndex:0]objectForKey:@"schrittey"]intValue]];
+   
+   fprintf(stderr,"tempKoordinatenTabelle: \n");
+   for(int i=0;i<tempKoordinatenTabelle.count;i++)
+   {
+      float ax = [[[tempKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
+      float ay = [[[tempKoordinatenTabelle objectAtIndex:i]objectForKey:@"ay"]floatValue];
+      fprintf(stderr,"%d\t %.2f\t %.2f\n",i,ax,ay);
+   }
    
    [KoordinatenTabelle setArray:tempKoordinatenTabelle];//index, pwm, ax,bx,ay,by
    [self updateIndex];
@@ -6502,8 +6514,10 @@ return returnInt;
    float horizontaleinstichkote = 8;
    float maxhoehe = 20;
    
-   float einfahrtx = 5;
-   float einfahrty = 3;
+   float einfahrtx = 3;
+   float einfahrty = 8;
+   
+   int anzahlPunkte = 5;
    
    float unterseiteeinstichAr = 0;
    float unterseiteeinstichAl = 0;
@@ -6659,7 +6673,7 @@ return returnInt;
    // Radius down
    float Winkel = 90;
    int Lage = 3;
-   int anzahlPunkte = 6;
+   
    
    float blockbreitefloat = 100;//breiteA +  2*profileinlauf + einlaufA + auslaufA;
    
@@ -7413,7 +7427,7 @@ return returnInt;
       //[CNC_Eingabe showWindow:NULL];
       //[self doSomeWork];
    }
-   [[CNC_Eingabe window]orderOut:NULL];
+   //[[CNC_Eingabe window]orderOut:NULL];
    [NSApp endModalSession:session];
    
    
@@ -11926,6 +11940,11 @@ return returnInt;
    
    if (AVR_USBStatus)
    {
+      for (int i=0;i<SchnittdatenArray.count;i++)
+      {
+         
+         //fprintf(stderr,"
+      }
       //NSLog(@"SchnittdatenArray 0: %@",[SchnittdatenArray description]);
       
       if (([[[SchnittdatenArray objectAtIndex:0]objectAtIndex:1]intValue] <= 0x7F) || ([[[SchnittdatenArray objectAtIndex:0]objectAtIndex:9]intValue] <= 0x7F))
@@ -12009,6 +12028,7 @@ return returnInt;
       NSMutableArray* SchnittdatenStringArray = [[NSMutableArray alloc]initWithCapacity:0];
       
       int k = 0;
+      NSLog(@"reportUSB_sendArray");
       for(k=0;k<[SchnittdatenArray count];k++)
       {
          NSString* tempzeilenstring = [[SchnittdatenArray objectAtIndex:k] componentsJoinedByString:@","] ;

@@ -286,6 +286,11 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 	float DistanzY= EndPunkt.y - StartPunkt.y;
 	float DistanzAY= EndPunktA.y - StartPunktA.y;
 	float DistanzBY= EndPunktB.y - StartPunktB.y;
+   float steigung = 0;
+   if(DistanzAX)
+   {
+      steigung = DistanzAY / DistanzAX;
+   }
    
    [tempDatenDic setObject:[NSNumber numberWithFloat:DistanzAX] forKey: @"distanzax"];
    [tempDatenDic setObject:[NSNumber numberWithFloat:DistanzAY] forKey: @"distanzay"];
@@ -296,9 +301,13 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 	float Distanz= sqrt(pow(DistanzX,2)+ pow(DistanzY,2));	// effektive Distanz
 	float DistanzA= hypotf(DistanzAX,DistanzAY);	// effektive Distanz A
 	float DistanzB= hypotf(DistanzBX,DistanzBY);	// effektive Distanz B
+   
+   
 
    [tempDatenDic setObject:[NSNumber numberWithFloat:DistanzA] forKey: @"distanza"];
    [tempDatenDic setObject:[NSNumber numberWithFloat:DistanzB] forKey: @"distanzb"];
+   
+   [tempDatenDic setObject:[NSNumber numberWithFloat:steigung] forKey:@"steigung"];
 
    if (DistanzA< 0.5 || DistanzB < 0.5)
    {
@@ -319,7 +328,6 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
       relevanteSeite=1; // Seite B
       if (fabs(DistanzBY) > fabs(DistanzBX))
       {
-         
          motorstatus |= (1<<MOTOR_D);
       }
       else 
@@ -574,6 +582,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 	float DistanzY= EndPunkt.y - StartPunkt.y;
 	//float Distanz= sqrt(pow(DistanzX,2)+ pow(DistanzY,2));         // effektive Distanz
    float Distanz = hypot(DistanzX,DistanzY);
+   
 	float Zeit = Distanz/speed;												//	Schnittzeit für Distanz
    
 	int SchritteX=steps*DistanzX;												//	Schritte in X-Richtung
@@ -607,7 +616,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
          stufe++;
       }
    }
-   
+   [tempDatenDic setObject:[NSNumber numberWithFloat:(float)Distanz] forKey: @"distanz"];
    [tempDatenDic setObject:[NSNumber numberWithFloat:(float)SchritteX] forKey: @"schrittex"];
 	[tempDatenDic setObject:[NSNumber numberWithFloat:(float)SchritteY] forKey: @"schrittey"];
 	//NSLog(@"SchritteY raw %d",SchritteY);
@@ -781,7 +790,33 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
    {
       [tempArray addObject:[NSNumber numberWithInt:0]];
    }
-  // [tempArray replaceObjectAtIndex:24 withObject:[NSNumber numberWithInt:17]];
+   // steigung einsetzen
+   uint8_t steigungh = 0;
+   uint8_t steigungl = 0;
+   int steigungint = [[derDatenDic objectForKey:@"steigung"]floatValue]*1000;
+   
+   NSLog(@"steigungint: %d steigungfloat: %.3f",steigungint,[[derDatenDic objectForKey:@"steigung"]floatValue]);
+   if (steigungint > 0)
+   {
+      int aa = (1234 & 0xFF00)>>8;
+      steigungl = (steigungint & 0xFF);
+      steigungh = (steigungint>>8) & 0xFF;
+   }
+   else
+   {
+      uint16_t steigunguint = abs(steigungint);
+      
+      NSLog(@"steigungin inv: %d steigunguint: %d",steigungint,steigunguint);
+      steigungl = (steigunguint & 0x00FF);
+      steigungh = (steigunguint>>8) & 0xFF;
+      steigungh |= 0x80;
+      
+   }
+   NSLog(@"steigungint: %d steigungfloat: %.3f steigungl: %d steigungh: %d",steigungint,[[derDatenDic objectForKey:@"steigung"]floatValue],steigungl, steigungh);
+   [tempArray replaceObjectAtIndex:33 withObject:[NSNumber numberWithInt:steigungl]];
+   [tempArray replaceObjectAtIndex:34 withObject:[NSNumber numberWithInt:steigungh]];
+   
+   [tempArray replaceObjectAtIndex:31 withObject:[NSNumber numberWithInt:17]];
 
    [tempArray replaceObjectAtIndex:32 withObject:[NSNumber numberWithInt:3]];
    

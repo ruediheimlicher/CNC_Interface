@@ -7945,6 +7945,10 @@ return returnInt;
    
    //NSLog(@"LibProfileingabeAktion startindexoffset: %d",startindexoffset);
    
+   int von=0;
+   int bis=[KoordinatenTabelle count];
+ 
+   
    NSString* ProfilNameA;
    NSString* ProfilNameB;
    NSMutableArray* ProfilArrayA;
@@ -8463,7 +8467,7 @@ return returnInt;
       }
       profilendindex = [[[KoordinatenTabelle lastObject]objectForKey:@"index"]intValue];
       NSLog(@"oberseite profilendindex : %d",profilendindex);
-
+      bis = profilendindex;
       NSLog(@"Profil1OberseiteArray end");
    }
    
@@ -8525,10 +8529,12 @@ return returnInt;
       
       // Endindex fixieren, wird fuer Abbrand gebraucht fuer 'bis'
       profilendindex = [[[KoordinatenTabelle lastObject]objectForKey:@"index"]intValue];
-      NSLog(@"profilendindex 1: %d",profilendindex);
       
+      NSLog(@"profilendindex 1: %d",profilendindex);
+      bis = profilendindex;
       profilendindex = [KoordinatenTabelle count];
       NSLog(@"profilendindex 2: %d",profilendindex);
+      
    } // mit Unterseite
    
    
@@ -8543,10 +8549,6 @@ return returnInt;
       bx = [[[KoordinatenTabelle lastObject]objectForKey:@"bx"]floatValue];
       by = [[[KoordinatenTabelle lastObject]objectForKey:@"by"]floatValue];
       
-    
-      
-      
-      
       
       NSArray* NasenleistenAuslaufArray=[CNC NasenleistenauslaufMitLaenge:auslauflaenge mitTiefe:auslauftiefe];
       //NSLog(@"AVR NasenleistenAuslaufArray: %@",[NasenleistenAuslaufArray description]);
@@ -8556,7 +8558,11 @@ return returnInt;
          NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
          float tempx = [[[NasenleistenAuslaufArray objectAtIndex:l]objectAtIndex:0]floatValue];
          float tempy = [[[NasenleistenAuslaufArray objectAtIndex:l]objectAtIndex:1]floatValue];
-         //NSLog(@"tempx: %2.2f tempy: %2.2f",tempx, tempy);
+         if ([AbbrandCheckbox state])
+         {
+            tempy += [AbbrandFeld floatValue];
+         }
+         NSLog(@"tempx: %2.2f tempy: %2.2f",tempx, tempy);
          [tempZeilenDic setObject:[NSNumber numberWithFloat:ax+tempx]forKey:@"ax"];
          [tempZeilenDic setObject:[NSNumber numberWithFloat:ay+tempy]forKey:@"ay"];
          [tempZeilenDic setObject:[NSNumber numberWithFloat:bx+tempx]forKey:@"bx"];
@@ -8626,9 +8632,11 @@ return returnInt;
 //   [WertAXFeld setFloatValue:[[[KoordinatenTabelle lastObject]objectForKey:@"ax"]floatValue]];
 //   [WertAYFeld setFloatValue:[[[KoordinatenTabelle lastObject]objectForKey:@"ay"]floatValue]];
    
-   int von=0;
-   int bis=[KoordinatenTabelle count];
+   //int von=0;
    
+   //int bis=[KoordinatenTabelle count];
+   
+  
    NSLog(@"bis def: %d",bis);
    
    //  if ((mitUnterseite ||  mitOberseite) &&! (mitOberseite && mitUnterseite)) // nur eine Seite
@@ -8646,7 +8654,7 @@ return returnInt;
       }
       if (mitAuslauf)
       {
-         bis=[KoordinatenTabelle count]-2;
+        // bis=[KoordinatenTabelle count]-2;
       }
    }
    

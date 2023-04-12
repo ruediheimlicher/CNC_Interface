@@ -416,10 +416,12 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 		SchritteAX &= 0x7FFF;
 		//NSLog(@"SchritteAX nach *-1 und 0x7FFFF %d",SchritteAX);
 		SchritteAX |= 0x8000;
+      NSLog(@"SchritteAX negativ");
 	}
    else
    {
       anzaxplus += SchritteAX;
+      //NSLog(@"SchritteAX positiv");
    }
    
  	if (SchritteBX < 0) // negative Zahl
@@ -428,10 +430,12 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 		SchritteBX *= -1;
 		SchritteBX &= 0x7FFF;
 		SchritteBX |= 0x8000;
+      //NSLog(@"SchritteBX negativ");
 	}
    else
    {
       anzbxplus += SchritteBX;
+      //NSLog(@"SchritteBX positiv");
    }
    
   
@@ -796,7 +800,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
    uint8_t steigungl = 0;
    int steigungint = [[derDatenDic objectForKey:@"steigung"]floatValue]*1000;
    
-   NSLog(@"steigungint: %d steigungfloat: %.3f",steigungint,[[derDatenDic objectForKey:@"steigung"]floatValue]);
+   //NSLog(@"steigungint: %d steigungfloat: %.3f",steigungint,[[derDatenDic objectForKey:@"steigung"]floatValue]);
    if (steigungint > 0)
    {
       int aa = (1234 & 0xFF00)>>8;
@@ -813,7 +817,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
       steigungh |= 0x80;
       
    }
-   NSLog(@"steigungint: %d steigungfloat: %.3f steigungl: %d steigungh: %d",steigungint,[[derDatenDic objectForKey:@"steigung"]floatValue],steigungl, steigungh);
+   //NSLog(@"steigungint: %d steigungfloat: %.3f steigungl: %d steigungh: %d",steigungint,[[derDatenDic objectForKey:@"steigung"]floatValue],steigungl, steigungh);
    [tempArray replaceObjectAtIndex:33 withObject:[NSNumber numberWithInt:steigungl]];
    [tempArray replaceObjectAtIndex:34 withObject:[NSNumber numberWithInt:steigungh]];
    
@@ -3305,11 +3309,11 @@ PortA=vs[n & 3]; warte10ms(); n++;
    NSArray* tempEinlaufArray0 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y], [NSNumber numberWithFloat:full_pwm],nil];
    [AuslaufpunkteArray addObject:tempEinlaufArray0];
   
-   Endpunkt.y += 4;
+   Endpunkt.y += 8;
    tempEinlaufArray0 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y], [NSNumber numberWithFloat:full_pwm],nil];
    [AuslaufpunkteArray addObject:tempEinlaufArray0];
-   Endpunkt.y -= 4;
-   tempEinlaufArray0 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y], [NSNumber numberWithFloat:full_pwm],nil];
+   Endpunkt.y -= 8;
+   tempEinlaufArray0 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y], [NSNumber numberWithFloat:red_pwm],nil];
    [AuslaufpunkteArray addObject:tempEinlaufArray0];
   
    
@@ -3337,6 +3341,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    
    return AuslaufpunkteArray;
 }
+
 
 
 - (NSMutableArray*)addAbbrandVonKoordinaten:(NSArray*)Koordinatentabelle mitAbbrandA:(float)abbrandmassa  mitAbbrandB:(float)abbrandmassb aufSeite:(int)seite von:(int)von bis:(int)bis

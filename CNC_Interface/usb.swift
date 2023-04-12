@@ -61,7 +61,19 @@ class rTimerInfo {
       print("func usb_teensy.USBOpen PID: \(PID) VID: \(VID)")
       // rawhid_open(int max, int vid, int pid, int usage_page, int usage)
       
-      
+      if (hid_usbstatus > 0)
+      {
+         print("func usb_teensy.USBOpen USB schon offen")
+         let alert = NSAlert()
+         alert.messageText = "USB Device"
+         alert.informativeText = "USB ist schon offen"
+         alert.alertStyle = .warning
+         alert.addButton(withTitle: "OK")
+        // alert.addButton(withTitle: "Cancel")
+         let antwort =  alert.runModal() == .alertFirstButtonReturn
+         return 1;
+      }
+
       
       
       let    out = rawhid_open(1,  VID, PID, 0xFFAB, 0x0200)
@@ -291,7 +303,7 @@ class rTimerInfo {
             //print("cont_read_USB new Data codehex: \(codehex) codehex: \(codehexstring)")
             
             
-            print("\n+++ cont_read_USB new read_byteArray in Timer. code: \(read_byteArray[0])")
+            //print("\n+++ cont_read_USB new read_byteArray in Timer. code: \(read_byteArray[0])")
             
             /*
             if (read_byteArray[0] == 0xBD)
@@ -357,7 +369,7 @@ class rTimerInfo {
       else
       {
          print("* usb cont_read_USB timer.invalidate")
-      //   timer.invalidate()
+         timer.invalidate()
       }
       //print("+++ end cont_read +++\n")
    }

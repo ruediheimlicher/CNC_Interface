@@ -5,7 +5,7 @@
 //  Created by Sysadmin on 01.02.08.
 //  Copyright 2008 Ruedi Heimlicher. All rights reserved.
 //
-
+#define TEST 1
 // https://developer.apple.com/documentation/swift/importing-swift-into-objective-c
 @class rTSP_NN;
 
@@ -357,8 +357,8 @@ int globalcounter = 0;
    IBOutlet id               MinimaldistanzFeld;
    float                   minimaldistanz; // minimaler abstand zwischen 2  Punkten, um in den Array aufgenommen zu werden
    
-   IBOutlet id             KoteFeld;
-   IBOutlet id             KoteStepper;
+   IBOutlet id             BlockbreiteFeld;
+   IBOutlet id             BlockbreiteStepper;
    
    
    

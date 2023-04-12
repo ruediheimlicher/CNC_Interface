@@ -2948,7 +2948,7 @@
    {
       NSMutableDictionary* ProfilDic=[[NSMutableDictionary alloc]initWithCapacity:0];
       [ProfilDic setObject:@"LibProfil"  forKey:@"quelle"];
-      //NSLog(@"reportLibElementEinfuegen LibElementArray: %@",[LibElementArray description]);
+      NSLog(@"reportLibElementEinfuegen LibElementArray: %@",[LibElementArray description]);
      // [ProfilDic setObject:Profil1Name forKey:@"profilname"];
       [ProfilDic setObject:Profil1Name forKey:@"profil1name"];
       

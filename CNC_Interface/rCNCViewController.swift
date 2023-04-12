@@ -9,6 +9,7 @@
 import Foundation
 import Cocoa
 
+let TEST = 1
 class rCNCViewController:rViewController
 {
    // von IOWarriorWindowController
@@ -339,8 +340,17 @@ class rCNCViewController:rViewController
    //   print("info: \(info)")
       //    let usb_pwm =  info?["pwm"] as! UInt8
       //    let usb_delayok =  info?["delayok"] as! UInt8
-      
-      let usb_home =  info?["home"] as! UInt8
+     
+      guard let usb_home = info?["home"] as? Int else {
+         print("Basis usbstatusAktion: kein home\n")
+         return
+      }
+         
+               
+               
+ 
+               
+   //   let usb_home =  info?["home"] as! UInt8
       
       if usb_home == 1
       {
@@ -424,6 +434,10 @@ class rCNCViewController:rViewController
          print("teensy.read_OK ist false")
          teensy.start_read_USB(true, dic:timerdic)
       }
+      else
+      {
+         print("teensy.read_OK ist true")
+      }
       
       writeCNCAbschnitt()
      }
@@ -432,7 +446,7 @@ class rCNCViewController:rViewController
    {
      //print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
       let count = usb_schnittdatenarray.count
-      print("writeCNCAbschnitt code: \(usb_schnittdatenarray[0][16]) Stepperposition: \(Stepperposition) count: \(count) ")
+      //print("writeCNCAbschnitt code: \(usb_schnittdatenarray[0][16]) Stepperposition: \(Stepperposition) count: \(count) ")
       
       if Stepperposition < count
       {
@@ -565,7 +579,7 @@ class rCNCViewController:rViewController
             //print("abschnittfertig wert: \(abschnittfertig)")
             // https://useyourloaf.com/blog/swift-string-cheat-sheet/
             //print("abschnittfertig: \(String(abschnittfertig, radix:16, uppercase:true))\n")
-            print("newDataAktion abschnittfertig: \(hex(abschnittfertig)) cncstatus: \(usbdata[22])\n")
+           //print("newDataAktion abschnittfertig: \(hex(abschnittfertig)) cncstatus: \(usbdata[22])\n")
             
             let home = Int(usbdata[13])
             
@@ -594,7 +608,7 @@ class rCNCViewController:rViewController
                
                NotificationDic["home"] = Int(usbdata[13])
                
-               print("newDataAktion cncstatus: \(usbdata[22])")
+               //print("newDataAktion cncstatus: \(usbdata[22])")
                var AnschlagSet = IndexSet()
                
                switch abschnittfertig
@@ -774,11 +788,11 @@ class rCNCViewController:rViewController
                   }
                   else
                   {
-                     print("newDataAktion vor writeCNCAbschnitt count: \(usb_schnittdatenarray.count)")
+                     //print("newDataAktion vor writeCNCAbschnitt count: \(usb_schnittdatenarray.count)")
                      if (usb_schnittdatenarray.count > 0) // nicht HALT
                      {
                      //if (Int(usbdata[10]) == 0)
-                        print("HomeAnschlagSet: \(HomeAnschlagSet)")
+                        //print("HomeAnschlagSet: \(HomeAnschlagSet)")
                            writeCNCAbschnitt()
                         
                      }

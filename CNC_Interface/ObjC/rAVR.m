@@ -2626,7 +2626,7 @@ return returnInt;
    int cncindex=0;
    int okindex=0;
    minimaldistanz = [MinimaldistanzFeld floatValue];
-   //NSLog(@"count: %d minimaldistanz: %2.2f",[KoordinatenTabelle count],minimaldistanz);
+   NSLog(@"count: %d minimaldistanz: %2.2f",[KoordinatenTabelle count],minimaldistanz);
    
    for (i=0;i<[KoordinatenTabelle count]-1;i++)
    {
@@ -8542,7 +8542,7 @@ return returnInt;
    
    //
    //   if (!([OberseiteCheckbox state]&&[UnterseiteCheckbox state])&&[AuslaufCheckbox state])
-   if (!(mitOberseite&&mitUnterseite) && mitAuslauf)
+   if (!(mitOberseite&&mitUnterseite) && mitAuslauf) // Nur eine Seite
    {
       ax = [[[KoordinatenTabelle lastObject]objectForKey:@"ax"]floatValue];
       ay = [[[KoordinatenTabelle lastObject]objectForKey:@"ay"]floatValue];
@@ -8670,6 +8670,18 @@ return returnInt;
    {
       KoordinatenTabelle = [CNC addAbbrandVonKoordinaten:KoordinatenTabelle mitAbbrandA:abbranda  mitAbbrandB:abbrandb aufSeite:0 von:von bis:bis];
    }
+   fprintf(stderr,"i: \t ax: \t abrax:  \t ay:\t abray:\n");
+   for (int i=0;i<20;i++)
+   {
+      //NSLog(@"i: %d,data: %@",i,[KoordinatenTabelle objectAtIndex:i]);
+       fprintf(stderr,"%d \t %2.2f \t %2.2f \t  %2.2f \t %2.2f\n",
+              i,
+              [[[KoordinatenTabelle objectAtIndex:i]valueForKey:@"ax"]floatValue],
+              [[[KoordinatenTabelle objectAtIndex:i]valueForKey:@"abrax"]floatValue],
+              [[[KoordinatenTabelle objectAtIndex:i]valueForKey:@"ay"]floatValue],
+              [[[KoordinatenTabelle objectAtIndex:i]valueForKey:@"abray"]floatValue]);
+   }
+
    //NSLog(@"AbbrandCheckbox end");
    
    NSDictionary* RahmenDic = [self RahmenDic];
@@ -12477,23 +12489,23 @@ return returnInt;
          }break;
          case 0xAA:
          {
-          //  NSLog(@"AVR End Abschnitt von A");
+            NSLog(@"AVR End Abschnitt von A");
             
          }break;
          
          case 0xAB:
          {
-          //  NSLog(@"AVR End Abschnitt von B");
+            NSLog(@"AVR End Abschnitt von B");
          }break;
             
          case 0xAC:
          {
-          //  NSLog(@"AVR End Abschnitt von C");
+            NSLog(@"AVR End Abschnitt von C");
          }break;
             
          case 0xAD:
          {
-          //  NSLog(@"AVR End Abschnitt von D");
+            NSLog(@"AVR End Abschnitt von D");
          }break;
             
          case 0xB5:

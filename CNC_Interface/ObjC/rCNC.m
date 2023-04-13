@@ -811,7 +811,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
    {
       uint16_t steigunguint = abs(steigungint);
       
-      NSLog(@"steigungin inv: %d steigunguint: %d",steigungint,steigunguint);
+      //NSLog(@"steigungin inv: %d steigunguint: %d",steigungint,steigunguint);
       steigungl = (steigunguint & 0x00FF);
       steigungh = (steigunguint>>8) & 0xFF;
       steigungh |= 0x80;

@@ -20,6 +20,7 @@
 - (NSDictionary*)readProfilMitName;
 - (NSArray*)anzahlPunktereduzierenVon:(NSArray*) bigarray;
 - (NSArray*)anzahlwertesynchronisierenVon:(NSArray*) syncarray;
+- (NSArray*)abstandcheckenVonarrayA:(NSArray*) profilarrayA arrayB:(NSArray*) profilarrayB teil: (int)teil abstand:(float) minimaldistanz;
 - (NSArray*)anzahlwerteanpassenVon:(NSArray*) syncarray;
 - (NSArray*)werteanpassenUnterseiteVon:(NSArray*) syncarray;
 - (NSArray*)werteanpassenOberseiteVon:(NSArray*) syncarray;

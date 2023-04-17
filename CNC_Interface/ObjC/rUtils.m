@@ -1486,6 +1486,10 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    
    // Aufraeumen
    NSMutableArray* returnarray = [NSMutableArray new];
+   
+   NSMutableArray* returnarray1 = [NSMutableArray new];
+   NSMutableArray* returnarray2 = [NSMutableArray new];
+   int okcounter = 0;
    for(int index = 0;index < rawarray.count;index++)
    {
    
@@ -1501,8 +1505,14 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
                  [[[rawarray objectAtIndex:index]objectForKey:@"ay"]floatValue],
                  [[[rawarray objectAtIndex:index]objectForKey:@"bx"]floatValue],
                  [[[rawarray objectAtIndex:index]objectForKey:@"by"]floatValue]);
-                 
-         [returnarray addObject:[rawarray objectAtIndex:index]];
+         NSMutableDictionary* seiteaDic = [NSMutableDictionary dictionaryWithObjectsAndKeys:[[rawarray objectAtIndex:index]objectForKey:@"ax"],@"ax",[[rawarray objectAtIndex:index]objectForKey:@"ay"],@"ay", [NSNumber numberWithInt:okcounter],@"index",nil ];    
+         [returnarray1 addObject:seiteaDic];
+         
+         NSMutableDictionary* seitebDic = [NSMutableDictionary dictionaryWithObjectsAndKeys:[[rawarray objectAtIndex:index]objectForKey:@"bx"],@"ax",[[rawarray objectAtIndex:index]objectForKey:@"by"],@"ay", [NSNumber numberWithInt:okcounter],@"index",nil ];    
+         [returnarray2 addObject:seitebDic];
+
+         okcounter++;
+         //[returnarray addObject:[rawarray objectAtIndex:index]];
       }
       else
       {
@@ -1510,7 +1520,8 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
       }
       
    }
-   
+   [returnarray addObject:returnarray1];
+   [returnarray addObject:returnarray2];
    return returnarray;
 }
 

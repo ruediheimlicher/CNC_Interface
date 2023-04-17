@@ -8226,7 +8226,7 @@ return returnInt;
  
       
       
-      NSLog(@"LibProfileingabeAktion vor endleistenarray: KoordinatenTabelle");   for (int i=0;i<KoordinatenTabelle.count;i++)
+      NSLog(@"LibProfileingabeAktion vor endleistenarray: KoordinatenTabelle");  
       for (int i=0;i<KoordinatenTabelle.count;i++)
       {
          float ax = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
@@ -8435,6 +8435,10 @@ return returnInt;
       NSLog(@"oberseite profilstartindex 1: %d",profilstartindex);
       profilstartindex =[KoordinatenTabelle count];
 
+        NSArray* redOberseiteArray = [Utils abstandcheckenVonarrayA:Profil1OberseiteArray arrayB:Profil2OberseiteArray teil: 20 abstand:minimaldistanz];
+
+      
+      
       // mit unter/oberseitearrayA/B abarbeiten
       NSLog(@"profilstartindex 2: %d",profilstartindex);
       for (index=0;index< Profil1OberseiteArray.count;index++) // Punkte der Oberseite
@@ -8449,7 +8453,7 @@ return returnInt;
          //ay *= flipfaktor;
          [tempZeilenDic setObject:[NSNumber numberWithFloat:ay]forKey:@"ay"];
          
-         if(index < Profil2OberseiteArray.count)
+    //     if(index < Profil2OberseiteArray.count)
          {
             NSDictionary* tempZeilenDicB = [Profil2OberseiteArray objectAtIndex:index];
             [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
@@ -8469,7 +8473,7 @@ return returnInt;
       NSLog(@"oberseite profilendindex : %d",profilendindex);
       bis = profilendindex;
       NSLog(@"Profil1OberseiteArray end");
-   }
+   } // end if (mitOberseite)
    
    
    

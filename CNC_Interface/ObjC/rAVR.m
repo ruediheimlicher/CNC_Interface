@@ -8434,19 +8434,27 @@ return returnInt;
       profilstartindex = [[[KoordinatenTabelle lastObject]objectForKey:@"index"]intValue];
       NSLog(@"oberseite profilstartindex 1: %d",profilstartindex);
       profilstartindex =[KoordinatenTabelle count];
-
-        NSArray* redOberseiteArray = [Utils abstandcheckenVonarrayA:Profil1OberseiteArray arrayB:Profil2OberseiteArray teil: 20 abstand:minimaldistanz];
-
-      
-      
       // mit unter/oberseitearrayA/B abarbeiten
       NSLog(@"profilstartindex 2: %d",profilstartindex);
+ 
+        NSArray* redOberseiteArray = [Utils abstandcheckenVonarrayA:Profil1OberseiteArray arrayB:Profil2OberseiteArray teil: 20 abstand:minimaldistanz];
+      for (index=0;index< redOberseiteArray.count;index++)
+      {
+         NSMutableDictionary* tempZeilenDic = [redOberseiteArray objectAtIndex:index];
+         [tempZeilenDic setObject:[NSNumber numberWithInt:20] forKey:@"teil"]; // Kennzeichnung Oberseite
+         // pwm
+         [tempZeilenDic setObject:[NSNumber numberWithInt:origpwm] forKey:@"pwm"];
+         [KoordinatenTabelle addObject:tempZeilenDic];
+      }
+      
+      /*
       for (index=0;index< Profil1OberseiteArray.count;index++) // Punkte der Oberseite
       {
          //NSLog(@"Profil1OberseiteArray index: %d",index);
-         NSDictionary* tempZeilenDicA = [Profil1OberseiteArray objectAtIndex:index];
+         NSDictionary* tempZeilenDicA = [[redOberseiteArray objectAtIndex:0] objectAtIndex:index];
             
          NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
+        
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"x"] forKey:@"ax"];
          
          float ay = [[tempZeilenDicA objectForKey:@"y"]floatValue];
@@ -8462,6 +8470,7 @@ return returnInt;
             //by *= flipfaktor;
             [tempZeilenDic setObject:[NSNumber numberWithFloat:by] forKey:@"by"];
          }
+         
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"index"] forKey:@"index"];
          [tempZeilenDic setObject:[NSNumber numberWithInt:20] forKey:@"teil"]; // Kennzeichnung Oberseite
          // pwm
@@ -8469,6 +8478,9 @@ return returnInt;
          [KoordinatenTabelle addObject:tempZeilenDic];
          //NSLog(@"index: %d x: %1.3f",index,[[[ProfilArrayA objectAtIndex:index]objectForKey:@"ax"]floatValue]);
       }
+      */
+      
+      
       profilendindex = [[[KoordinatenTabelle lastObject]objectForKey:@"index"]intValue];
       NSLog(@"oberseite profilendindex : %d",profilendindex);
       bis = profilendindex;

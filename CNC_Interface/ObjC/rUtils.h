@@ -23,6 +23,7 @@
 - (NSArray*)anzahlwerteanpassenVon:(NSArray*) syncarray;
 - (NSArray*)werteanpassenUnterseiteVon:(NSArray*) syncarray;
 - (NSArray*)werteanpassenOberseiteVon:(NSArray*) syncarray;
+- (NSArray*)abstandcheckenVonarrayA:(NSArray*) profilarrayA arrayB:(NSArray*) profilarrayB teil: (int)teil abstand:(float) minimaldistanz;
 - (NSDictionary*)SplinekoeffizientenVonArray:(NSArray*)dataArray;
 - (NSArray*)spiegelnProfilVertikal:(NSArray*)profilArray;
 - (NSArray*)wrenchProfil:(NSArray*)profilArray mitWrench:(float)wrench;

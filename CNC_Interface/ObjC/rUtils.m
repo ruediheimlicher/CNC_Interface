@@ -754,6 +754,212 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    return returnarray;
 }
 
+- (NSArray*)abstandcheckenVonarrayA:(NSArray*) profilarrayA arrayB:(NSArray*) profilarrayB teil: (int)teil abstand:(float) minimaldistanz
+{
+   NSLog(@"abstandcheckenVon start");
+   NSMutableArray* rawarray = [NSMutableArray new];
+   
+   
+   
+   NSDictionary* tempPrevDicA=[profilarrayA objectAtIndex:0];
+   NSDictionary* tempPrevDicB=[profilarrayB objectAtIndex:0];
+   
+   float prevax = [[tempPrevDicA objectForKey:@"x"]floatValue];
+   float prevay = [[tempPrevDicA objectForKey:@"y"]floatValue];
+   float prevbx = [[tempPrevDicB objectForKey:@"x"]floatValue];
+   float prevby = [[tempPrevDicB objectForKey:@"y"]floatValue];
+   
+   
+   NSLog(@"Werte des ersten Datensatzes: prevax: %2.2f prevay: %2.2f",prevax,prevay);
+   
+   float nowax = 0;
+   float noway = 0;
+   float nowbx = 0;
+   float nowby = 0;
+   
+   int datenindex = 0; // fortlaufender Zaehler, ohne uebersprungene elemente
+   
+   // Anfang checken
+   for (int index=1;index< profilarrayA.count;index++) 
+   {
+      //NSLog(@"profilarray index: %d",index);
+      NSDictionary* tempZeilenDicA = [profilarrayA objectAtIndex:index];
+      NSDictionary* tempZeilenDicB = [profilarrayB objectAtIndex:index];
+      NSMutableDictionary* tempZeilenDic =NSMutableDictionary.new;
+      if(index < 20)// Punkte am Anfang
+      {
+         //NSLog(@"profilarray index<20: %d",index);
+         // Distanz bestimmen
+         nowax = [[tempZeilenDicA objectForKey:@"x"]floatValue];
+         noway = [[tempZeilenDicA objectForKey:@"y"]floatValue];
+         
+         nowbx = [[tempZeilenDicB objectForKey:@"x"]floatValue];
+         nowby = [[tempZeilenDicB objectForKey:@"y"]floatValue];
+         
+         // Soll der Datensatz geladen werden?
+         int datensatzok = 0;
+         
+         // Distanzen zum vorherigen Punkt
+         float distA = hypot(nowax-prevax,noway-prevay);
+         float distB = hypot(nowbx-prevbx,nowby-prevby);
+         NSLog(@"profilarray index: %d distA: %2.2f distB: %2.2f",index ,distA,distB);
+         if (((distA > minimaldistanz || distB > minimaldistanz)) ) // Eine der Distanzen ist genügend gross
+         {
+            datensatzok = 1;
+            //NSMutableDictionary* tempZeilenDic =NSMutableDictionary.new;
+            [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"x"] forKey:@"ax"];
+            [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"y"] forKey:@"ay"];
+            [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
+            [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"y"] forKey:@"by"];
+            [tempZeilenDic setObject:[NSNumber numberWithInt:teil] forKey:@"teil"]; // Kennzeichnung Profilseite
+            [tempZeilenDic setObject:[NSNumber numberWithInt:1] forKey:@"datensatzok"];
+            //NSLog(@"index: %d  distanz OK  distA: %2.2f distB: %2.2f",index,cncindex,distA,distB);
+            [rawarray addObject:tempZeilenDic];
+         }
+         else
+         {
+            NSLog(@"libProfilEingabeAktion index: %d  *** distanz zu kurz. distA: %2.2f distB: %2.2f",index,distA,distB);
+            continue;
+            
+         }
+      }
+      else
+      {
+         [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"x"] forKey:@"ax"];
+         [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"y"] forKey:@"ay"];
+         [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
+         [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"y"] forKey:@"by"];
+         [tempZeilenDic setObject:[NSNumber numberWithInt:teil] forKey:@"teil"]; // Kennzeichnung Profilseite
+         [tempZeilenDic setObject:[NSNumber numberWithInt:1] forKey:@"datensatzok"];
+         //NSLog(@"index: %d  distanz OK  distA: %2.2f distB: %2.2f",index,cncindex,distA,distB);
+         [rawarray addObject:tempZeilenDic];
+         
+      }
+      prevax = nowax;
+      prevay = noway;
+      prevbx = nowbx;
+      prevby = nowby;
+      
+      
+   } // for 
+   
+   // Ende checken: letzter Datensatz
+   /*
+   tempPrevDicA=[profilarrayA objectAtIndex:rawarray.count-1];
+   tempPrevDicB=[profilarrayB objectAtIndex:rawarray.count-1];
+   
+   prevax = [[tempPrevDicA objectForKey:@"x"]floatValue];
+   prevay = [[tempPrevDicA objectForKey:@"y"]floatValue];
+   prevbx = [[tempPrevDicB objectForKey:@"x"]floatValue];
+   prevby = [[tempPrevDicB objectForKey:@"y"]floatValue];
+   */
+   prevax = [[[rawarray objectAtIndex:rawarray.count-1] objectForKey:@"ax"]floatValue];
+   prevay = [[[rawarray objectAtIndex:rawarray.count-1] objectForKey:@"ay"]floatValue];
+   prevbx = [[[rawarray objectAtIndex:rawarray.count-1] objectForKey:@"bx"]floatValue];
+   prevby = [[[rawarray objectAtIndex:rawarray.count-1] objectForKey:@"by"]floatValue];
+
+   
+   NSLog(@"Werte des letzten Datensatzes: prevax: %2.2f prevay: %2.2f",prevax,prevay);
+   
+   nowax = 0;
+   noway = 0;
+   nowbx = 0;
+   nowby = 0;
+   
+   // Datensaetze markieren
+   //for (int index = rawarray.count-2;index > rawarray.count-20;index--)
+   
+   int index = rawarray.count-2;
+   while(index > rawarray.count-20)
+   {
+      // Distanz bestimmen
+      //NSLog(@"Datensaetze markieren index: %d",index);
+      /*
+      NSDictionary* tempZeilenDicA = [profilarrayA objectAtIndex:index];
+      NSDictionary* tempZeilenDicB = [profilarrayB objectAtIndex:index];
+      
+      nowax = [[tempZeilenDicA objectForKey:@"x"]floatValue];
+      noway = [[tempZeilenDicA objectForKey:@"y"]floatValue];
+      
+      nowbx = [[tempZeilenDicB objectForKey:@"x"]floatValue];
+      nowby = [[tempZeilenDicB objectForKey:@"y"]floatValue];
+      */
+      
+      nowax = [[[rawarray objectAtIndex:index] objectForKey:@"ax"]floatValue];
+      noway = [[[rawarray objectAtIndex:index] objectForKey:@"ay"]floatValue];
+      nowbx = [[[rawarray objectAtIndex:index] objectForKey:@"bx"]floatValue];
+      nowby = [[[rawarray objectAtIndex:index] objectForKey:@"by"]floatValue];
+
+      
+      // Soll der Datensatz geladen werden?
+      int datensatzok = 0;
+      
+      // Distanzen zum vorherigen Punkt
+      float distA = hypot(nowax-prevax,noway-prevay);
+      float distB = hypot(nowbx-prevbx,nowby-prevby);
+      NSLog(@"profilarray index: %d distA: %2.2f distB: %2.2f",index ,distA,distB);
+      if (((distA > minimaldistanz || distB > minimaldistanz)) ) // Eine der Distanzen ist genügend gross
+      {
+        
+         NSLog(@"Datensatz ok index: %d distA: %2.2f distB: %2.2f",index,distA,distB);
+         [[rawarray objectAtIndex:index]setObject:[NSNumber numberWithInt:1] forKey:@"datensatzok"];
+         [[rawarray objectAtIndex:index]setObject:[NSNumber numberWithFloat:distA] forKey:@"dista"] ;
+         prevax = nowax;
+         prevay = noway;
+         prevbx = nowbx;
+         prevby = nowby;
+         
+
+      }
+      else
+      {
+         NSLog(@"Datensatz distanz zu kurz index: %d distA: %2.2f distB: %2.2f",index,distA,distB);
+         [[rawarray objectAtIndex:index]setObject:[NSNumber numberWithInt:0] forKey:@"datensatzok"] ;
+         [[rawarray objectAtIndex:index]setObject:[NSNumber numberWithFloat:distA] forKey:@"dista"] ;
+         // next datensatz ueberspringen
+         
+         
+      }
+      index -= 1;
+      
+   }
+   for(int index = 0;index < rawarray.count;index++)
+   {
+      
+      NSLog(@"index: %d datensatzok: %d dista: %2.2f",index,[[[rawarray objectAtIndex:index]objectForKey:@"datensatzok"]intValue],[[[rawarray objectAtIndex:index]objectForKey:@"dista"]floatValue]);
+      
+   }
+   
+   // Aufraeumen
+   NSMutableArray* returnarray = [NSMutableArray new];
+   for(int index = 0;index < rawarray.count;index++)
+   {
+   
+      //NSLog(@"index: %d %@",index,[[rawarray objectAtIndex:index]description]);
+      
+      if([[[rawarray objectAtIndex:index]objectForKey:@"datensatzok"]intValue])
+      {
+         //NSLog(@"Aufraeumen Datensatz ok index: %d",index);
+         //[[rawarray objectAtIndex:index]setObject:[NSNumber numberWithInt:index]forKey:@"index"];
+         fprintf(stderr,"%d\t %2.2f \t %2.2f \t %2.2f \t %2.2f \n",
+                 index,
+                 [[[rawarray objectAtIndex:index]objectForKey:@"ax"]floatValue],
+                 [[[rawarray objectAtIndex:index]objectForKey:@"ay"]floatValue],
+                 [[[rawarray objectAtIndex:index]objectForKey:@"bx"]floatValue],
+                 [[[rawarray objectAtIndex:index]objectForKey:@"by"]floatValue]);
+                 
+         [returnarray addObject:[rawarray objectAtIndex:index]];
+      }
+      else
+      {
+         NSLog(@"Aufraeumen Datensatz not ok index: %d",index);
+      }
+      
+   }
+   
+   return returnarray;
+}
+
 
 - (NSArray*)werteanpassenUnterseiteVon:(NSArray*) syncarray
 {
@@ -1306,6 +1512,8 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
   
    return nil;
 }
+
+
 
 - (NSDictionary*)SplinekoeffizientenVonArray:(NSArray*)dataArray
 {

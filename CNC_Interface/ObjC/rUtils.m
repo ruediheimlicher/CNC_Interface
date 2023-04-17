@@ -1334,13 +1334,14 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    int datenindex = 0; // fortlaufender Zaehler, ohne uebersprungene elemente
    
    // Anfang checken
+   
    for (int index=1;index< profilarrayA.count;index++) 
    {
       //NSLog(@"profilarray index: %d",index);
       NSDictionary* tempZeilenDicA = [profilarrayA objectAtIndex:index];
       NSDictionary* tempZeilenDicB = [profilarrayB objectAtIndex:index];
       NSMutableDictionary* tempZeilenDic =NSMutableDictionary.new;
-      if(index < 20)// Punkte am Anfang
+      if(index < profilarrayA.count-20+1)// Punkte am Anfang
       {
          //NSLog(@"profilarray index<20: %d",index);
          // Distanz bestimmen
@@ -1424,7 +1425,8 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    //for (int index = rawarray.count-2;index > rawarray.count-20;index--)
    
    int index = rawarray.count-2;
-   while(index > rawarray.count-20)
+   while(index > rawarray.count-20+1)
+      
    {
       // Distanz bestimmen
       //NSLog(@"Datensaetze markieren index: %d",index);

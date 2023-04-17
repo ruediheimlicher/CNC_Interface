@@ -2783,7 +2783,7 @@ return returnInt;
       NSPoint tempEndPunktB= NSMakePoint(0,0);
       
       // Soll der Datensatz geladen werden?
-      int datensatzok = 0;
+      int datensatzok = 1;
       
       if (((distA > minimaldistanz || distB > minimaldistanz)) ) // Eine der Distanzen ist genügend gross
       {
@@ -8431,12 +8431,13 @@ return returnInt;
          flipfaktor = -1;
       }
       // Startindex fixieren, wird fuer Abbrand gebraucht fuer 'von'
-      profilstartindex = [[[KoordinatenTabelle lastObject]objectForKey:@"index"]intValue];
+      //profilstartindex = [[[KoordinatenTabelle lastObject]objectForKey:@"index"]intValue];
+      
       NSLog(@"oberseite profilstartindex 1: %d",profilstartindex);
       profilstartindex =[KoordinatenTabelle count];
       // mit unter/oberseitearrayA/B abarbeiten
       NSLog(@"profilstartindex 2: %d",profilstartindex);
- 
+      von = profilstartindex;
         NSArray* redOberseiteArray = [Utils abstandcheckenVonarrayA:Profil1OberseiteArray arrayB:Profil2OberseiteArray teil: 20 abstand:minimaldistanz];
       for (index=0;index< redOberseiteArray.count;index++)
       {
@@ -8444,6 +8445,8 @@ return returnInt;
          [tempZeilenDic setObject:[NSNumber numberWithInt:20] forKey:@"teil"]; // Kennzeichnung Oberseite
          // pwm
          [tempZeilenDic setObject:[NSNumber numberWithInt:origpwm] forKey:@"pwm"];
+         [tempZeilenDic setObject:[NSNumber numberWithInt:index+profilstartindex] forKey:@"index"];
+         
          [KoordinatenTabelle addObject:tempZeilenDic];
       }
       
@@ -8553,7 +8556,21 @@ return returnInt;
       
    } // mit Unterseite
    
-   
+   NSLog(@"vor Abbrand von: %d bis: %d",von,bis);
+   if ([AbbrandCheckbox state])
+   {     
+      if (mitEinlauf)
+      {
+      von -= 1;
+      }
+      if (mitAuslauf)
+      {
+         bis += 1;
+      }
+
+      KoordinatenTabelle = [CNC addAbbrandVonKoordinaten:KoordinatenTabelle mitAbbrandA:abbranda  mitAbbrandB:abbrandb aufSeite:0 von:von bis:bis];
+   }
+
    
    
    //
@@ -8664,15 +8681,7 @@ return returnInt;
       
       // Beginn und Ende des Abbrandes einstellen
       
-      if (mitEinlauf)
-      {
-         von=startindexoffset + 2;
-      }
-      if (mitAuslauf)
-      {
-        // bis=[KoordinatenTabelle count]-2;
-      }
-   }
+    }
    
    if (mitOberseite && mitUnterseite) // ganzes Profil, Einlauf manuell: von, bis an Anfang und Ende des Profils
    {
@@ -8681,13 +8690,7 @@ return returnInt;
       bis = profilendindex;
    }
    
-   
-   if ([AbbrandCheckbox state])
-   {
-      KoordinatenTabelle = [CNC addAbbrandVonKoordinaten:KoordinatenTabelle mitAbbrandA:abbranda  mitAbbrandB:abbrandb aufSeite:0 von:von bis:bis];
-   }
-   //NSLog(@"AbbrandCheckbox end");
-   
+    
    NSDictionary* RahmenDic = [self RahmenDic];
    float maxX = [[RahmenDic objectForKey:@"maxx"]floatValue];
    float minX = [[RahmenDic objectForKey:@"minx"]floatValue];

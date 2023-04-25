@@ -8514,6 +8514,7 @@ return returnInt;
       von = profilstartindex;
       
         NSArray* redOberseiteArray = [Utils abstandcheckenVonarrayA:Profil1OberseiteArray arrayB:Profil2OberseiteArray teil: 20 abstand:[MinimaldistanzFeld floatValue]];
+      
       for (index=0;index< redOberseiteArray.count;index++)
       {
          NSMutableDictionary* tempZeilenDic = [redOberseiteArray objectAtIndex:index];

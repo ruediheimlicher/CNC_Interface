@@ -2659,16 +2659,19 @@
          {
             unterseitearrayA = [Profil1Dic objectForKey:@"unterseitearray"];
          }
-         NSArray* lagrangearray = [Utils lagrangeinterpolation:oberseitearrayA minimalabstand: 0.01];
+         oberseitearrayA =  [Utils lagrangeinterpolation:oberseitearrayA minimalabstand: 0.01];
+         
+         NSArray* lagrangearrayA = [Utils lagrangeinterpolation:oberseitearrayA minimalabstand: 0.01];
          
          NSLog(@"lagrangearray: ");
-         for(int pos = 0;pos < lagrangearray.count;pos++)
+         for(int pos = 0;pos < lagrangearrayA.count;pos++)
          {
-            NSDictionary* posdic = [lagrangearray objectAtIndex:pos];
+            NSDictionary* posdic = [lagrangearrayA objectAtIndex:pos];
             
             printf("%d\t %lf\t %lf \t%d\n",pos,[[posdic objectForKey:@"x"]doubleValue],[[posdic objectForKey:@"y"]doubleValue],[[posdic objectForKey:@"data"]intValue]);
          }
-         NSLog(@"lagrangearray end");
+         NSLog(@"lagrangearrayA end");
+         
          
          if ([Profil1Dic objectForKey:@"profilarray"]) 
          {
@@ -2720,6 +2723,9 @@
             {
                oberseitearrayB = [Profil2Dic objectForKey:@"oberseitearray"];
             }
+            oberseitearrayB =  [Utils lagrangeinterpolation:oberseitearrayB minimalabstand: 0.01];
+
+            
             if ([Profil2Dic objectForKey:@"unterseitearray"]) 
             {
                unterseitearrayB = [Profil2Dic objectForKey:@"unterseitearray"];

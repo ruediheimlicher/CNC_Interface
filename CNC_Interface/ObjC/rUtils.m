@@ -1341,6 +1341,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
       NSDictionary* tempZeilenDicA = [profilarrayA objectAtIndex:index];
       NSDictionary* tempZeilenDicB = [profilarrayB objectAtIndex:index];
       NSMutableDictionary* tempZeilenDic =NSMutableDictionary.new;
+      /*
       if(index < profilarrayA.count-20+1)// Punkte am Anfang
       {
          //NSLog(@"profilarray index<20: %d",index);
@@ -1357,7 +1358,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
          // Distanzen zum vorherigen Punkt
          float distA = hypot(nowax-prevax,noway-prevay);
          float distB = hypot(nowbx-prevbx,nowby-prevby);
-         NSLog(@"profilarray index: %d distA: %2.2f distB: %2.2f",index ,distA,distB);
+         //NSLog(@"profilarray index: %d distA: %2.2f distB: %2.2f",index ,distA,distB);
          if (((distA > minimaldistanz || distB > minimaldistanz)) ) // Eine der Distanzen ist genügend gross
          {
             datensatzok = 1;
@@ -1378,23 +1379,25 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
             
          }
       }
-      else
+      */
+//      else
       {
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"x"] forKey:@"ax"];
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"y"] forKey:@"ay"];
          [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
          [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"y"] forKey:@"by"];
          [tempZeilenDic setObject:[NSNumber numberWithInt:teil] forKey:@"teil"]; // Kennzeichnung Profilseite
-         [tempZeilenDic setObject:[NSNumber numberWithInt:1] forKey:@"datensatzok"];
+         [tempZeilenDic setObject:[NSNumber numberWithInt:0] forKey:@"datensatzok"];
          //NSLog(@"index: %d  distanz OK  distA: %2.2f distB: %2.2f",index,cncindex,distA,distB);
          [rawarray addObject:tempZeilenDic];
          
       }
+      /*
       prevax = nowax;
       prevay = noway;
       prevbx = nowbx;
       prevby = nowby;
-      
+      */
       
    } // for 
    
@@ -1425,7 +1428,8 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    //for (int index = rawarray.count-2;index > rawarray.count-20;index--)
    
    int index = rawarray.count-2;
-   while(index > rawarray.count-20+1)
+   //while(index > rawarray.count-20+1)
+   while(index > 1)
       
    {
       // Distanz bestimmen
@@ -1453,11 +1457,11 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
       // Distanzen zum vorherigen Punkt
       float distA = hypot(nowax-prevax,noway-prevay);
       float distB = hypot(nowbx-prevbx,nowby-prevby);
-      NSLog(@"profilarray index: %d distA: %2.2f distB: %2.2f",index ,distA,distB);
-      if (((distA > minimaldistanz || distB > minimaldistanz)) ) // Eine der Distanzen ist genügend gross
+      //NSLog(@"profilarray index: %d distA: %2.2f distB: %2.2f",index ,distA,distB);
+      if (((distA > minimaldistanz && distB > minimaldistanz)) ) // Eine der Distanzen ist genügend gross
       {
         
-         NSLog(@"Datensatz ok index: %d distA: %2.2f distB: %2.2f",index,distA,distB);
+         //NSLog(@"Datensatz ok index: %d distA: %2.2f distB: %2.2f",index,distA,distB);
          [[rawarray objectAtIndex:index]setObject:[NSNumber numberWithInt:1] forKey:@"datensatzok"];
          [[rawarray objectAtIndex:index]setObject:[NSNumber numberWithFloat:distA] forKey:@"dista"] ;
          prevax = nowax;

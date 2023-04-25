@@ -1074,7 +1074,7 @@
    
    
    // https://dev.iachieved.it/iachievedit/using-swift-in-an-existing-objective-c-project/
-   nn = [[rTSP_NN alloc]init];
+   //nn = [[rTSP_NN alloc]init];
 
    
 	NSFont* Tablefont;

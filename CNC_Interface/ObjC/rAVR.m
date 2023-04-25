@@ -11,6 +11,7 @@
 
 #import "hid.h"
 #import "spline.h"
+#import "poly.h"
 
 // https://dev.iachieved.it/iachievedit/using-swift-in-an-existing-objective-c-project/
 #import "CNC_Interface-Swift.h"
@@ -252,8 +253,6 @@ float det(float v0[],float v1[])
          
          [AbbrandLinieB moveToPoint:AbbrandStartPunktB];
          
-         
-         //
          
          //NSLog(@"klickpunkt: %d",klickpunkt);
          for (i=0;i<anz;i++)
@@ -638,8 +637,85 @@ void plot_line (int x0, int y0, int x1, int y1)
    }
    globalcounter++;
    
+ //  printf("plotBasicBezier\n");
+ //  plotBasicBezier(10, 180, 25, 0, 35, 131) ;
+ //  printf("plotBasicBezier2\n");
+ //  plotBasicBezier2(10, 180, 25, 0, 35, 131) ;
+ //  printf("quadraticBezierCurve\n");
+   //quadraticBezierCurve(0,0,2,6,6,0);
+  // quadraticBezierCurve(0,0,-10,-12,20.5,0.5);
    
-   splinefunc();
+ // printf("plotQuadBezierSeg\n");
+ //  plotQuadBezierSeg(0,0,20, 80, 30, 30) ;
+   double px[] = {0.25,0.22221,0.19562,0.17033,0.14645,0.12408,0.10332,0.08427,0.06699,0.05156,0.03806,0.02653,0.01704,0.00961,0.00428,0.00107};
+   double py[] = {0.08996,0.08774,0.08483,0.08113,0.0766,0.07134,0.06552,0.05939,0.05313,0.04677,0.04027,0.03352,0.02652,0.01943,0.01254,0.00616};
+   int length = 16;
+   double polykoeffarray[length];
+   int von = 5;
+   int intervall = 4;
+   double werty = 0;
+   double wertx = (px[von+1]+px[von])/2; // mitte 
+   /*
+   koeffarray(px, py, von, intervall,length, polykoeffarray, wertx);
+   printf("polykoeffarray\n");
+   
+   for (int i=0;i<intervall;i++)
+   {
+      werty += polykoeffarray[i] * py[von+i];
+      printf("i: %d koeff: %lf\t",i,polykoeffarray[i]);
+   }
+   printf("\npolykoeffarray end wertx: %lf\twerty: %lf\n",wertx,werty);
+   */
+   werty = lagrangewert(px, py, von, intervall,length, polykoeffarray, wertx);
+   printf("\nwertx: %lf\tlagrangewert: %lf\n",wertx,werty);
+   //plotCircle(100,100,80);
+   
+   //splinefunc();
+   //makespline();
+
+   int n = 9;
+   double a[n]; //array to store the ai's
+   double b[n]; //array to store the bi's
+   double c[n]; //array to store the ci's
+   double d[n]; //array to store the di's
+   
+   //double x[] = {1,0.94262,0.86892,0.79415,0.71961,0.64481,0.56965,0.49552,0.42096};
+   double x[] = {0.34564,0.27171,0.19967,0.13141,0.06887,0.025,0.00697,0.0006};
+   
+   //double y[] = {0,0.01403,0.02973,0.04378,0.05624,0.06647,0.07494,0.08065,0.08342};
+   double y[] = {0.34564,0.27171,0.19967,0.13141,0.06887,0.025,0.00697,0.0006};
+   splinearrayfunc(x, y, n-1, a, b, c, d);
+
+   int datapunkte = 8;
+   // zwischenwerte
+  // unterteilung
+   
+   int anz = 4;
+   double splinearray[datapunkte*anz][2];
+   
+   //int intervall = 0; // intervall im Spline
+   for(int intervall = 0;intervall < datapunkte;intervall++)
+   {
+      double diffx = x[intervall + 1] - x[intervall]; // abstand x
+      double vektor[anz];
+      for(int pos = 0;pos < anz;pos++)
+      {
+         
+         double xx = x[intervall] + pos*(diffx/anz);
+         splinearray[intervall*anz+pos][0] = xx;
+         vektor[pos] = a[intervall]*pow(xx,3) + b[intervall]*pow(xx,2) + c[intervall] * xx + d[intervall];
+         splinearray[intervall*anz+pos][1] = a[intervall]*pow(xx,3) + b[intervall]*pow(xx,2) + c[intervall] * xx + d[intervall];
+         printf("%d\t%d\t%lf\t%lf\n",intervall,pos,xx,vektor[pos]);
+      }
+      printf("\n");
+   }
+   printf("\nsplinearray\n");
+   for(int i=0;i<datapunkte*anz;i++)
+   {
+      printf("%d\t%lf\t%lf\n",i,splinearray[i][0],splinearray[i][1]);
+   }
+
+  // 
    
    NSColor* bgcolor = [NSColor colorWithCalibratedRed:0.3 green:0.5 blue:0.8 alpha:1.0f];
    //self = [super initWithWindowNibName:@"AVR"];
@@ -650,7 +726,7 @@ void plot_line (int x0, int y0, int x1, int y1)
    [self->CNC_Lefttaste sendActionOn: NSEventMaskLeftMouseDown | NSEventMaskLeftMouseUp];
    
    // https://dev.iachieved.it/iachievedit/using-swift-in-an-existing-objective-c-project/
-   nn = [[rTSP_NN alloc]init];
+   //nn = [[rTSP_NN alloc]init];
    
    NSNotificationCenter * nc;
    nc=[NSNotificationCenter defaultCenter]; // alles weg, wegen doppeltem awake
@@ -2784,7 +2860,7 @@ return returnInt;
       
       // Soll der Datensatz geladen werden?
       int datensatzok = 1;
-      
+/*      
       if (((distA > minimaldistanz || distB > minimaldistanz)) ) // Eine der Distanzen ist genügend gross
       {
          datensatzok = 1;
@@ -2797,7 +2873,7 @@ return returnInt;
          //NSLog(@"i: %d cncindex: %d *** distanz zu kurz. distA: %2.2f distB: %2.2f",i,cncindex,distA,distB);
          
       }
-      
+  */    
       if ([AbbrandCheckbox state])
       {
          if ([tempNowDic objectForKey:@"abrax"])
@@ -8380,10 +8456,7 @@ return returnInt;
    ProfilArrayA = [ProfilDic objectForKey:@"profil1array"];
    
    ProfilArrayB = [ProfilDic objectForKey:@"profil2array"];
-   
-   
-  
-    
+     
    //NSLog(@"wrench: %2.2f",[ProfilWrenchFeld floatValue]);
    
    //NSLog(@"wrench: %2.2f ProfilArrayB %@",[ProfilWrenchFeld floatValue],[ProfilArrayB description]);
@@ -8438,7 +8511,8 @@ return returnInt;
       // mit unter/oberseitearrayA/B abarbeiten
       NSLog(@"profilstartindex 2: %d",profilstartindex);
       von = profilstartindex;
-        NSArray* redOberseiteArray = [Utils abstandcheckenVonarrayA:Profil1OberseiteArray arrayB:Profil2OberseiteArray teil: 20 abstand:minimaldistanz];
+      
+        NSArray* redOberseiteArray = [Utils abstandcheckenVonarrayA:Profil1OberseiteArray arrayB:Profil2OberseiteArray teil: 20 abstand:[MinimaldistanzFeld floatValue]];
       for (index=0;index< redOberseiteArray.count;index++)
       {
          NSMutableDictionary* tempZeilenDic = [redOberseiteArray objectAtIndex:index];
@@ -8450,39 +8524,7 @@ return returnInt;
          [KoordinatenTabelle addObject:tempZeilenDic];
       }
       
-      /*
-      for (index=0;index< Profil1OberseiteArray.count;index++) // Punkte der Oberseite
-      {
-         //NSLog(@"Profil1OberseiteArray index: %d",index);
-         NSDictionary* tempZeilenDicA = [[redOberseiteArray objectAtIndex:0] objectAtIndex:index];
-            
-         NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
-        
-         [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"x"] forKey:@"ax"];
-         
-         float ay = [[tempZeilenDicA objectForKey:@"y"]floatValue];
-         //ay *= flipfaktor;
-         [tempZeilenDic setObject:[NSNumber numberWithFloat:ay]forKey:@"ay"];
-         
-    //     if(index < Profil2OberseiteArray.count)
-         {
-            NSDictionary* tempZeilenDicB = [Profil2OberseiteArray objectAtIndex:index];
-            [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
-
-            float by = [[tempZeilenDicB objectForKey:@"y"]floatValue];
-            //by *= flipfaktor;
-            [tempZeilenDic setObject:[NSNumber numberWithFloat:by] forKey:@"by"];
-         }
-         
-         [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"index"] forKey:@"index"];
-         [tempZeilenDic setObject:[NSNumber numberWithInt:20] forKey:@"teil"]; // Kennzeichnung Oberseite
-         // pwm
-         [tempZeilenDic setObject:[NSNumber numberWithInt:origpwm] forKey:@"pwm"];
-         [KoordinatenTabelle addObject:tempZeilenDic];
-         //NSLog(@"index: %d x: %1.3f",index,[[[ProfilArrayA objectAtIndex:index]objectForKey:@"ax"]floatValue]);
-      }
-      */
-      
+       
       
       profilendindex = [[[KoordinatenTabelle lastObject]objectForKey:@"index"]intValue];
       NSLog(@"oberseite profilendindex : %d",profilendindex);
@@ -12941,6 +12983,7 @@ return returnInt;
       case 1007:
       {
          minimaldistanz=[[note object] floatValue];
+         
       }break;
          
          

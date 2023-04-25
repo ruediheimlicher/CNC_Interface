@@ -217,7 +217,7 @@ class rViewController: NSViewController, NSWindowDelegate
    
    var hgfarbe  = NSColor()
    
-   var tsp_nn = rTSP_NN()
+   //var tsp_nn = rTSP_NN()
    
    var formatter = NumberFormatter()
    

@@ -8075,12 +8075,12 @@ return returnInt;
    NSPoint StartpunktB;
    
    // Werte fuer Abbrandlinie
-   
+   /*
    float abrax = 0;
    float abray = 0;;
    float abrbx = 0;;
    float abrby = 0;;
-   
+   */
    
    NSMutableArray* Profil1Array = [[NSMutableArray alloc]initWithCapacity:0];
    NSMutableArray* Profil1UnterseiteArray = [NSMutableArray new];
@@ -8182,6 +8182,7 @@ return returnInt;
    Profil1UnterseiteArray=[ProfilDic objectForKey:@"unterseitearrayA"];
    
    Profil1OberseiteArray=(NSMutableArray*)[CNC_Eingabe vertikalspiegelnVonProfil:[ProfilDic objectForKey:@"oberseitearrayA"]];
+   
     
    Profil2Array=[ProfilDic objectForKey:@"profil1array"];
    Profil2UnterseiteArray=[ProfilDic objectForKey:@"unterseitearrayB"];

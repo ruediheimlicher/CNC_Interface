@@ -71,7 +71,7 @@ double lagrangewert(double* x, double* y, int startindex, int bereich, int lengt
          printf("%d \t %lf \t",k,x[startindex+index]);
          if(k==index) // eigene pos
          {
-            printf("\tk==index k: %d\t",k);
+            printf("\t0.01k==index k: %d\t",k);
          }
          else
          {

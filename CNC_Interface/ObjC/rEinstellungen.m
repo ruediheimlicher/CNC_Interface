@@ -9,7 +9,7 @@
 #import "rEinstellungen.h"
 // https://dev.iachieved.it/iachievedit/using-swift-in-an-existing-objective-c-project/
 #import "CNC_Interface-Swift.h"
-
+#import "rUtils.h"
 
 @implementation rGraph
 
@@ -2659,7 +2659,16 @@
          {
             unterseitearrayA = [Profil1Dic objectForKey:@"unterseitearray"];
          }
+         NSArray* lagrangearray = [Utils lagrangeinterpolation:oberseitearrayA minimalabstand: 0.01];
          
+         NSLog(@"lagrangearray: ");
+         for(int pos = 0;pos < lagrangearray.count;pos++)
+         {
+            NSDictionary* posdic = [lagrangearray objectAtIndex:pos];
+            
+            printf("%d\t %lf\t %lf \t%d\n",pos,[[posdic objectForKey:@"x"]doubleValue],[[posdic objectForKey:@"y"]doubleValue],[[posdic objectForKey:@"data"]intValue]);
+         }
+         NSLog(@"lagrangearray end");
          
          if ([Profil1Dic objectForKey:@"profilarray"]) 
          {
@@ -2777,6 +2786,7 @@
          //NSMutableArray* newProfil1Array = [NSArray arrayWithObjec
       } // Profile ungleich
       
+      
    
       
       [ProfilDic setObject:@"LibProfil"  forKey:@"quelle"];
@@ -2815,7 +2825,7 @@
 
       
       [[self window]orderOut:NULL];
-      [NSApp stopModalWithCode:1];
+     // [NSApp stopModalWithCode:1];
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"LibProfileingabe" object:self userInfo: ProfilDic];
 
@@ -3509,7 +3519,7 @@
       {
          ProfilDic = [Utils ProfilDatenAnPfad:Profilpfad];
  
-         //NSLog(@"reportProfilPop ProfilDic: %@",[ProfilDic description]);
+         NSLog(@"reportProfilPop ProfilDic: %@",[ProfilDic description]);
          //Profil1Array = [ProfilDic objectForKey:@"profilarray"];
          //NSLog(@"SplinekoeffizientenVonArray profilarray: %@",[[ProfilDic objectForKey:@"profilarray"] description]);
 
@@ -3678,8 +3688,6 @@
          Profil2UnterseiteArray = redarray[1];
          
       }
-      
-      
       
    }
    

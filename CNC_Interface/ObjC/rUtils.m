@@ -7,7 +7,9 @@
 //
 
 #import "rUtils.h"
-
+#include <stdio.h>
+#include <stdlib.h>
+#include "poly.h"
 
 @implementation rUtils
 - (void) logRect:(NSRect)r
@@ -1667,6 +1669,69 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    free(kappa);
    
    return splineKoeffDic;
+}
+
+- (NSArray*)lagrangeinterpolation:(NSArray*)profilArray minimalabstand: (double)mindiff
+{
+   NSMutableArray* lagrangeArray=NSMutableArray.new;
+   int l = profilArray.count;
+   int lagrangeindex = 0;
+   int von = 0;
+   int bereich = 4;
+   int startindex = 0;
+   double koeff[bereich];
+   
+   for(int index=0;index < (l-bereich+2); index++)
+   {
+      NSDictionary* zeilendic = [profilArray objectAtIndex:index];
+      double nowx = [[[profilArray objectAtIndex:index]objectForKey:@"x"]doubleValue];
+      double nextx = [[[profilArray objectAtIndex:index+1]objectForKey:@"x"]doubleValue];
+      double overnextx = [[[profilArray objectAtIndex:index+2]objectForKey:@"x"]doubleValue];
+
+      double nowy = [[[profilArray objectAtIndex:index]objectForKey:@"y"]doubleValue];
+      double nexty = [[[profilArray objectAtIndex:index+1]objectForKey:@"y"]doubleValue];
+      double overnexty = [[[profilArray objectAtIndex:index+2]objectForKey:@"y"]doubleValue];
+
+      double polykoeffarray[bereich];
+      
+      NSDictionary* nextzeilendic = [profilArray objectAtIndex:index+1];
+      double diff = nextx - nowx;
+      //printf("\n%d diff: %lf\n",index,diff);
+      if(diff < mindiff)
+      {
+         printf("diff zu klein index: %d nowx: %lf\n",index, nowx);
+         [lagrangeArray addObject:[profilArray objectAtIndex:index]]; // element einsetzen
+      }
+      else
+      {
+         [lagrangeArray addObject:[profilArray objectAtIndex:index]]; // erstes Element im In tervall einsetzen
+         if(index>1) // mindestens ein Intervall vorher, 4 werte erforderlich
+         {
+            double prevx = [[[profilArray objectAtIndex:index-1]objectForKey:@"x"]doubleValue];
+            double prevy = [[[profilArray objectAtIndex:index-1]objectForKey:@"y"]doubleValue];
+            
+            
+            double px[] = {prevx,nowx, nextx, overnextx};
+            double py[] = {prevy,nowy, nexty, overnexty};
+            
+            double wertx = nowx + (nextx - nowx)/2;
+            //printf("index: %d prevx: %lf nowx: %lf nextx: %lf overnextx: %lf\t",index,prevx,nowx,nextx, overnextx);
+            double interpolwerty = lagrangewert(px, py, von, bereich,l, polykoeffarray, wertx);
+            printf("index: %d  prevx: %lf nowx: %lf nextx: %lf overnextx: %lf \tinterpolwerty: %lf\n",index,prevx,nowx,nextx, overnextx,interpolwerty);
+            
+            NSDictionary* interpoldic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:wertx],@"x",[NSNumber numberWithDouble:interpolwerty],@"y",[NSNumber numberWithInt:2],@"data",nil];
+            [lagrangeArray addObject:interpoldic];
+            
+         }
+      }
+      
+      
+   }// for index
+   
+   
+   
+   
+   return lagrangeArray;
 }
 
 

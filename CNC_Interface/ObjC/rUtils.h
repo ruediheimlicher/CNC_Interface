@@ -25,6 +25,8 @@
 - (NSArray*)werteanpassenUnterseiteVon:(NSArray*) syncarray;
 - (NSArray*)werteanpassenOberseiteVon:(NSArray*) syncarray;
 - (NSDictionary*)SplinekoeffizientenVonArray:(NSArray*)dataArray;
+- (NSArray*)lagrangeinterpolation:(NSArray*)profilArray minimalabstand: (double)mindiff;
+
 - (NSArray*)spiegelnProfilVertikal:(NSArray*)profilArray;
 - (NSArray*)wrenchProfil:(NSArray*)profilArray mitWrench:(float)wrench;
 - (NSMutableArray*)wrenchProfilschnittlinie:(NSArray*)profilArray mitWrench:(float)wrench;

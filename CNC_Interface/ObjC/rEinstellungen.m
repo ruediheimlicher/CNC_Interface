@@ -2659,6 +2659,7 @@
          {
             unterseitearrayA = [Profil1Dic objectForKey:@"unterseitearray"];
          }
+         NSLog(@"lagrangearrayA: ");
          oberseitearrayA =  [Utils lagrangeinterpolation:oberseitearrayA minimalabstand: 0.01];
          
          NSArray* lagrangearrayA = [Utils lagrangeinterpolation:oberseitearrayA minimalabstand: 0.01];
@@ -2723,6 +2724,7 @@
             {
                oberseitearrayB = [Profil2Dic objectForKey:@"oberseitearray"];
             }
+            NSLog(@"lagrangearrayB: ");
             oberseitearrayB =  [Utils lagrangeinterpolation:oberseitearrayB minimalabstand: 0.01];
 
             

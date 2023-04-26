@@ -65,23 +65,23 @@ double lagrangewert(double* x, double* y, int startindex, int bereich, int lengt
    for (int index=0;index < bereich; index++)
    {
       koeff[index] = 1;
-      printf("\nindex: %d\n",index);
+//      printf("\nindex: %d\n",index);
       for (int k=0;k<bereich;k++)
       {
-         printf("%d \t %lf \t",k,x[startindex+index]);
+//         printf("%d \t %lf \t",k,x[startindex+index]);
          if(k==index) // eigene pos
          {
-            printf("\t0.01k==index k: %d\t",k);
+//            printf("\t0.01k==index k: %d\t",k);
          }
          else
          {
             double element = (wert-x[startindex+k])/(x[startindex+index]-x[startindex+k]);
             koeff[index] *= (wert-x[startindex+k])/(x[startindex+index]-x[startindex+k]);
             //werty += element*y[startindex+k];
-            printf("\t* %lf *\t",element);
+ //           printf("\t* %lf *\t",element);
          }
          //printf("%d\t %d \t %lf \t werty: %lf \n",index,k,koeff[index],werty);
-         printf("\n");
+//         printf("\n");
       }
       werty += koeff[index]*y[startindex+index];
    }

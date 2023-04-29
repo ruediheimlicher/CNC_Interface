@@ -8430,6 +8430,12 @@ return returnInt;
    Profil1OberseiteArray= (NSMutableArray*)[Profil1OberseiteDic objectForKey:@"profilpunktarray"];
    float gfkweg1O = [[Profil1OberseiteDic objectForKey:@"gfkweg"]floatValue];
 
+   NSDictionary* interpoldic = [CNC interpolProfilDicVonPos:0 mitProfil:Profil1OberseiteArray mitProfiltiefe:ProfiltiefeA mitScale:[[ScalePop selectedItem]tag] mitmindist: [MinimaldistanzFeld floatValue]];
+   
+   
+   
+   
+   
    NSMutableDictionary* Profil2UnterseiteDic = [CNC ProfilDicVonPunkt:StartpunktB mitProfil:Profil2UnterseiteArray mitProfiltiefe:ProfiltiefeB mitScale:[[ScalePop selectedItem]tag]];
    Profil2UnterseiteArray= (NSMutableArray*)[Profil2UnterseiteDic objectForKey:@"profilpunktarray"];
    float gfkweg2U = [[Profil1UnterseiteDic objectForKey:@"gfkweg"]floatValue];

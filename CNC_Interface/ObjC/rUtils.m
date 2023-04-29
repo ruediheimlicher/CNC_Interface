@@ -1673,6 +1673,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 
 - (NSArray*)lagrangeinterpolation:(NSArray*)profilArray minimalabstand: (double)mindiff
 {
+   printf("lagrangeinterpolation start\n");
    NSMutableArray* lagrangeArray=NSMutableArray.new;
    int l = profilArray.count;
    int lagrangeindex = 0;
@@ -1680,7 +1681,10 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    int bereich = 4;
    int startindex = 0;
    double koeff[bereich];
+   
    int okindex = 0; // index des zu lesenden next elements
+   int nextindex = 0; // 
+   
    
    for(int index=0;index < (l-1); index++)
    {
@@ -1702,15 +1706,16 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
       //printf("\n%d diff: %lf\n",index,diff);
       if(diff < mindiff)
       {
-         printf("diff zu klein index: %d diff: %lf nowx: %lf\n",index,diff, nowx);
+         
          if(diff > mindiff/4*3)
          {
+            printf("diff zu klein index: %d diff: %lf nowx: %lf > einsetzen\n",index,diff, nowx);
             [lagrangeArray addObject:[profilArray objectAtIndex:index]]; // element einsetzen
             
          }
          else
          {
-            printf("diff zu klein diff: %lf > Ueberspringen\n",diff);
+            printf("diff zu klein index: %d diff: %lf > Ueberspringen\n",index,diff);
             
          }
       }
@@ -1734,7 +1739,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
                double wertx = nowx + (nextx - nowx)/2;
                //printf("index: %d prevx: %lf nowx: %lf nextx: %lf overnextx: %lf\t",index,prevx,nowx,nextx, overnextx);
                double interpolwerty = lagrangewert(px, py, von, bereich,l, polykoeffarray, wertx);
-               printf("index: %d  prevx: %lf nowx: %lf nextx: %lf overnextx: %lf \tinterpolwerty: %lf\n",index,prevx,nowx,nextx, overnextx,interpolwerty);
+   //            printf("index: %d  prevx: %lf nowx: %lf nextx: %lf overnextx: %lf \tinterpolwerty: %lf\n",index,prevx,nowx,nextx, overnextx,interpolwerty);
                
                NSDictionary* interpoldic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:wertx],@"x",[NSNumber numberWithDouble:interpolwerty],@"y",[NSNumber numberWithInt:2],@"data",nil];
                [lagrangeArray addObject:interpoldic];
@@ -1752,6 +1757,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    
    [lagrangeArray addObject:[profilArray lastObject]];
    
+   printf("lagrangeinterpolation end\n");
    
    return lagrangeArray;
 }

@@ -2668,7 +2668,10 @@
          {
             NSDictionary* posdic = [lagrangearrayA objectAtIndex:pos];
             
-            printf("%d\t %lf\t %lf \t%d\n",pos,[[posdic objectForKey:@"x"]doubleValue],[[posdic objectForKey:@"y"]doubleValue],[[posdic objectForKey:@"data"]intValue]);
+            //printf("%d\t %lf\t %lf \t%d\n",pos,[[posdic objectForKey:@"x"]doubleValue],[[posdic objectForKey:@"y"]doubleValue],[[posdic objectForKey:@"data"]intValue]);
+            
+            printf("%lf\t %lf\n",[[posdic objectForKey:@"x"]doubleValue],[[posdic objectForKey:@"y"]doubleValue]);
+
          }
          NSLog(@"lagrangearrayA end");
          

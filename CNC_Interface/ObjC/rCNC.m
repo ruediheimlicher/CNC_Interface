@@ -8,6 +8,7 @@
 
 #import "rCNC.h"
 #include <math.h>
+#include "poly.h"
 uint8_t vs[4]={9,5,6,10};	//Tabelle Vollschritt Rechtslauf 
 uint8_t hs[8]={9,1,5,4,6,2,10,8}; //Tabelle Halbschritt Rechtslauf
 
@@ -2474,6 +2475,159 @@ PortA=vs[n & 3]; warte10ms(); n++;
    gfkweg -= neg;
    return gfkweg;
 } // gfkVonProfil
+
+- (NSDictionary*)interpolProfilDicVonPos:(int)Startpunkt mitProfil:(NSArray*)ProfilArray mitProfiltiefe:(int)Profiltiefe mitScale:(int)Scale mitmindist:(float) mindist
+{
+   NSMutableArray* ProfilpunktArray=[[NSMutableArray alloc]initWithCapacity:0];
+   NSMutableArray* MittellinieArray=[[NSMutableArray alloc]initWithCapacity:0];
+
+   float gfkX = 0;   // aktueller wert
+   float lastgfkX = 0; // Wert aus vorheriger loop
+   float gfkY = 0;
+   float lastgfkY = 0;
+   
+   float gfkweg = 0;
+   
+   float lastX=0;
+   float lastY=0;
+   
+   float mindistq = mindist*mindist;
+   
+   int startindex = 0;
+   int previndex = 0;
+   int nowindex = 0;
+   int nextindex = 0;
+   int overnextindex = 0;
+   int bereich = 4;
+   
+   int schrittcounter = 0; // index der interpolationsstellen
+   
+   int neg = 0; // Oberseite, x-Werte zunehmend
+   if (ProfilArray.count > 3 && ([[[ProfilArray objectAtIndex:3]objectForKey:@"x"]intValue] < [[[ProfilArray objectAtIndex:0]objectForKey:@"x"]intValue]))
+   {
+      neg = Profiltiefe;
+   }
+   double startx=0;
+   double prevx = 0;
+   double prevy = 0;
+   float nowx = 0;
+   float nowy = 0;
+   double nextx = 0;
+   double nexty = 0;
+   double overnextx = 0;
+   double overnexty = 0;
+
+   
+   NSMutableDictionary* ProfilpunktDic=NSMutableDictionary.new;
+   
+   // erstes objekt laden
+   [ProfilpunktArray addObject:[ProfilArray objectAtIndex:0]];
+   
+   
+   startx = [[[ProfilArray objectAtIndex:0]objectForKey:@"x"]doubleValue]; // startwert x
+   
+   // ausgangswerte fuer indices
+   
+   previndex = 0;
+   nowindex = 1;
+   nextindex = 2;
+   overnextindex = 3;
+
+   // array abarbeiten
+   for (int i=1;i<[ProfilArray count];i++)
+   {
+       //NSLog(@"ProfilArray index: %d Data: %@",i,[[ProfilArray objectAtIndex:i]description]);
+      // X-Achse, 
+      nowx = [[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue];
+      
+      //NSLog(@"tempX: %2.2f ",tempX);
+      nowy = [[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue];
+      
+   
+      if(i<[ProfilArray count]-1) // zweitletztes Element
+      {
+         nextx = [[[ProfilArray objectAtIndex:i+1]objectForKey:@"x"]doubleValue];
+         nexty = [[[ProfilArray objectAtIndex:i+1]objectForKey:@"y"]doubleValue];
+      }
+
+      if(i<[ProfilArray count]-2) // drittletztes lement
+      {
+         overnextx = [[[ProfilArray objectAtIndex:i+2]objectForKey:@"x"]doubleValue];
+         overnexty = [[[ProfilArray objectAtIndex:i+2]objectForKey:@"y"]doubleValue];
+      }
+      double koeffarray[bereich];
+      
+      prevx = [[[ProfilArray objectAtIndex:i-1]objectForKey:@"x"]floatValue];
+      prevy = [[[ProfilArray objectAtIndex:i-1]objectForKey:@"y"]floatValue];
+    
+      overnextx = [[[ProfilArray objectAtIndex:i+2]objectForKey:@"x"]floatValue];
+      overnexty = [[[ProfilArray objectAtIndex:i+2]objectForKey:@"y"]floatValue];
+      
+      
+      double px[] = {prevx,nowx, nextx, overnextx};
+      double py[] = {prevy,nowy, nexty, overnexty};
+
+      
+      if(i==1) // erstes intervall: wertx im bereich zwischen prevx und nowx
+      {
+         
+         float dx = nowx - prevx;
+         float dy = nowy - prevy;
+         float prevdist = sqrt(pow(dx,2) + pow(dy,2));
+         int anzschritte = round(prevdist/mindist);
+         //printf("i: %d anzschritte: %d\n",i,anzschritte);
+         if(anzschritte)
+         {
+            for (int schritte = 0;schritte < anzschritte;schritte++)
+            {
+               float tempx = nowx + (schrittcounter + schritte)* mindist;
+               float tempy = lagrangewert(px,py,startindex,bereich,16,koeffarray,tempx);
+               printf("i: \t%d \tanzschritte: %d schritte: %d  tempx:\t %lf \ttempy: \t%lf \t schrittcounter: \t%d\n",i,anzschritte,schritte, tempx, tempy, schrittcounter);
+               schrittcounter++;
+            }
+         }
+         
+      }// if(i==1)
+      else  if(i<[ProfilArray count]-2) // rest des profils bis 2 Elemente vor Ende: wertx zwischen nowx und nextx
+      {
+         nowindex ++;
+         previndex ++;
+         nextindex ++;
+         overnextindex ++;
+          
+         
+         double px[] = {prevx,nowx, nextx, overnextx};
+         double py[] = {prevy,nowy, nexty, overnexty};
+
+         
+         float dx = nextx - nowx;
+         float dy = nexty - nowy;
+         float nextdist = sqrt(pow(dx,2) + pow(dy,2));
+         
+         printf("nowx: \t%lf\t prefx: \t%lf \t nextdist: \t%lf \n",nowx,prevx,nextdist);
+         int anzschritte = round(nextdist/mindist);
+         //printf("i: %d anzschritte: %d\n",i,anzschritte);
+         if(anzschritte)
+         {
+            for (int schritte = 0;schritte < anzschritte;schritte++)
+            {
+               float tempx = nowx + (schrittcounter + schritte)* mindist;
+               float tempy = lagrangewert(px,py,startindex,bereich,16,koeffarray,tempx);
+  //             printf("i: \t%d \tanzschritte: %d schritte: %d  tempx:\t %lf \t tempy: \t%lf \t schrittcounter: \t%d\n",i,anzschritte,schritte, tempx, tempy, schrittcounter);
+               
+               schrittcounter++;
+            }
+         }
+ 
+
+         
+      }
+      
+      
+   }// for i
+   
+   return ProfilpunktDic;
+}
 
 - (NSDictionary*)ProfilDicVonPunkt:(NSPoint)Startpunkt mitProfil:(NSArray*)ProfilArray mitProfiltiefe:(int)Profiltiefe mitScale:(int)Scale
 {

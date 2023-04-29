@@ -12,6 +12,6 @@
 #include <stdio.h>
 
 extern void koeffarray(double* x, double* y, int startindex, int bereich, int length, double* koeff, double wert);
-extern double lagrangewert(double* x, double* y, int startindex, int bereich, int length, double* koeff, double wert);
-
+extern double lagrangewert(double* x, double* y, int startindex, int bereich, int length, double* koeff,double wert);
+extern double lagrangewertstart(double* x, double* y, int bereich, double wert);
 #endif /* poly_h */

@@ -57,34 +57,45 @@ void koeffarray(double* x, double* y, int startindex, int bereich, int length, d
    }
 }
 
-double lagrangewert(double* x, double* y, int startindex, int bereich, int length, double* koeff, double wert)
+double lagrangewert(double* x, double* y, int firstindex, int bereich, int length,  double wert)
 {
+   /*
+   x,y: Bereiche von x,y in bereich, angefangen bei firstindex
+   startindex: index der ersten Stuetzstelle
+    length: unbenutzt
+    koeffarray: array fuer koeffizienden des polynoms, lokal
+    wert: x-wert fuer den y-rueckgabewert, gemessen ab stuetzstelle an startindex
+    
+    */
+   double koeffarray[bereich];
    double werty=0; // 
-   int endindex = startindex + bereich;
+   int endindex = firstindex + bereich;
    
-   for (int index=0;index < bereich; index++)
+   for (int index=0;index < bereich; index++) // Iterieren ueber Stuetzstellen
    {
-      koeff[index] = 1;
+      koeffarray[index] = 1;
  //     printf("\nindex: %d\n",index);
       for (int k=0;k<bereich;k++)
       {
   //       printf("%d \t %lf \t",k,x[startindex+index]);
-         if(k==index) // eigene pos
+         if(k==index) // aktuelle pos, auslassen
          {
   //          printf("\t  k==index k: %d\t",k);
          }
-         else
+         else // werte der anderen positionen verwenden
          {
-            double element = (wert-x[startindex+k])/(x[startindex+index]-x[startindex+k]);
+            double element = (wert-x[firstindex+k])/(x[firstindex+index]-x[firstindex+k]);
 
-            koeff[index] *= (wert-x[startindex+k])/(x[startindex+index]-x[startindex+k]);
+            koeffarray[index] *= (wert-x[firstindex+k])/(x[firstindex+index]-x[firstindex+k]);
   //          printf("\t* %lf *\t",element);
          }
          //printf("%d\t %d \t %lf \t werty: %lf \n",index,k,koeff[index],werty);
  //        printf("\n");
       }
-      werty += koeff[index]*y[startindex+index];
+      werty += koeffarray[index]*y[firstindex+index];
+      
    }
+   //printf("lagrangewert von %lf: firstx: %lf lastx: %lf ist werty: %lf\n",wert,x[firstindex],x[firstindex+bereich-1],werty);
    return werty;
 }
 

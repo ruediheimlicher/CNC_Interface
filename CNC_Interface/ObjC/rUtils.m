@@ -1738,7 +1738,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
                
                double wertx = nowx + (nextx - nowx)/2;
                //printf("index: %d prevx: %lf nowx: %lf nextx: %lf overnextx: %lf\t",index,prevx,nowx,nextx, overnextx);
-               double interpolwerty = lagrangewert(px, py, von, bereich,l, polykoeffarray, wertx);
+               double interpolwerty = lagrangewert(px, py, von, bereich,l,  wertx);
    //            printf("index: %d  prevx: %lf nowx: %lf nextx: %lf overnextx: %lf \tinterpolwerty: %lf\n",index,prevx,nowx,nextx, overnextx,interpolwerty);
                
                NSDictionary* interpoldic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:wertx],@"x",[NSNumber numberWithDouble:interpolwerty],@"y",[NSNumber numberWithInt:2],@"data",nil];

@@ -2532,44 +2532,64 @@ PortA=vs[n & 3]; warte10ms(); n++;
    nowindex = 1;
    nextindex = 2;
    overnextindex = 3;
-
+    // profil:
+   printf("profil: \n");
+   for (int i=0;i<[ProfilArray count];i++)
+   {
+      printf("%d\t%lf\t%lf\n",i,[[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue],[[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue]);
+   }
+   printf("\n");
    // array abarbeiten
-   for (int i=1;i<[ProfilArray count];i++)
+   for (int i=0;i<[ProfilArray count]-2;i++)
    {
        //NSLog(@"ProfilArray index: %d Data: %@",i,[[ProfilArray objectAtIndex:i]description]);
       // X-Achse, 
-      nowx = [[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue];
+      nowx = [[[ProfilArray objectAtIndex:nowindex]objectForKey:@"x"]floatValue];
       
       //NSLog(@"tempX: %2.2f ",tempX);
-      nowy = [[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue];
+      nowy = [[[ProfilArray objectAtIndex:nowindex]objectForKey:@"y"]floatValue];
       
    
       if(i<[ProfilArray count]-1) // zweitletztes Element
       {
-         nextx = [[[ProfilArray objectAtIndex:i+1]objectForKey:@"x"]doubleValue];
-         nexty = [[[ProfilArray objectAtIndex:i+1]objectForKey:@"y"]doubleValue];
+         nextx = [[[ProfilArray objectAtIndex:nextindex]objectForKey:@"x"]doubleValue];
+         nexty = [[[ProfilArray objectAtIndex:nextindex]objectForKey:@"y"]doubleValue];
       }
 
-      if(i<[ProfilArray count]-2) // drittletztes lement
+      if(i<[ProfilArray count]-2) // drittletztes element
       {
-         overnextx = [[[ProfilArray objectAtIndex:i+2]objectForKey:@"x"]doubleValue];
-         overnexty = [[[ProfilArray objectAtIndex:i+2]objectForKey:@"y"]doubleValue];
+         overnextx = [[[ProfilArray objectAtIndex:overnextindex]objectForKey:@"x"]doubleValue];
+         overnexty = [[[ProfilArray objectAtIndex:overnextindex]objectForKey:@"y"]doubleValue];
       }
       double koeffarray[bereich];
       
-      prevx = [[[ProfilArray objectAtIndex:i-1]objectForKey:@"x"]floatValue];
-      prevy = [[[ProfilArray objectAtIndex:i-1]objectForKey:@"y"]floatValue];
+      prevx = [[[ProfilArray objectAtIndex:previndex]objectForKey:@"x"]floatValue];
+      prevy = [[[ProfilArray objectAtIndex:previndex]objectForKey:@"y"]floatValue];
     
-      overnextx = [[[ProfilArray objectAtIndex:i+2]objectForKey:@"x"]floatValue];
-      overnexty = [[[ProfilArray objectAtIndex:i+2]objectForKey:@"y"]floatValue];
+      //overnextx = [[[ProfilArray objectAtIndex:i+2]objectForKey:@"x"]floatValue];
+      //overnexty = [[[ProfilArray objectAtIndex:i+2]objectForKey:@"y"]floatValue];
       
       
       double px[] = {prevx,nowx, nextx, overnextx};
       double py[] = {prevy,nowy, nexty, overnexty};
 
       
-      if(i==1) // erstes intervall: wertx im bereich zwischen prevx und nowx
+      if(i==0) // erstes intervall: wertx im bereich zwischen prevx und nowx
       {
+         /*
+         nowindex ++;
+         previndex ++;
+         nextindex ++;
+         overnextindex ++;
+         > verschoben an ende
+          start mit vorgegebenen Werte:
+          previndex = 0;
+          nowindex = 1;
+          nextindex = 2;
+          overnextindex = 3;
+          fuer das intervall 0-1
+          */
+         
          
          float dx = nowx - prevx;
          float dy = nowy - prevy;
@@ -2580,44 +2600,63 @@ PortA=vs[n & 3]; warte10ms(); n++;
          {
             for (int schritte = 0;schritte < anzschritte;schritte++)
             {
-               float tempx = nowx + (schrittcounter + schritte)* mindist;
-               float tempy = lagrangewert(px,py,startindex,bereich,16,koeffarray,tempx);
-               printf("i: \t%d \tanzschritte: %d schritte: %d  tempx:\t %lf \ttempy: \t%lf \t schrittcounter: \t%d\n",i,anzschritte,schritte, tempx, tempy, schrittcounter);
+               float tempx = startx + (schrittcounter)* mindist;
+               
+               float tempy = lagrangewert(px,py,0,bereich,16,tempx); // bereich zwischen stuetzstelle 0, 1
+               printf("i: \t%d \tanzschritte: %d schritte: %d  tempx,y:\t %lf  \t%lf \t schrittcounter: \t%d\n",i,anzschritte,schritte, tempx, tempy, schrittcounter);
                schrittcounter++;
             }
          }
+         printf("\n");
          
       }// if(i==1)
-      else  if(i<[ProfilArray count]-2) // rest des profils bis 2 Elemente vor Ende: wertx zwischen nowx und nextx
+      else // rest des profils bis 2 Elemente vor Ende: wertx zwischen nowx und nextx
       {
-         nowindex ++;
-         previndex ++;
-         nextindex ++;
-         overnextindex ++;
-          
+         printf("\ni: %d\n",i); 
+         printf("previndex: %d nowindex: %d nextindex: %d\n",previndex,nowindex,nextindex);
          
-         double px[] = {prevx,nowx, nextx, overnextx};
-         double py[] = {prevy,nowy, nexty, overnexty};
+         nowx = [[[ProfilArray objectAtIndex:nowindex]objectForKey:@"x"]floatValue];
+         
+         //NSLog(@"tempX: %2.2f ",tempX);
+         nowy = [[[ProfilArray objectAtIndex:nowindex]objectForKey:@"y"]floatValue];
+         
+
+         
+         
+         
+  //       double px[] = {prevx,nowx, nextx, overnextx};
+  //       double py[] = {prevy,nowy, nexty, overnexty};
 
          
          float dx = nextx - nowx;
          float dy = nexty - nowy;
          float nextdist = sqrt(pow(dx,2) + pow(dy,2));
+         nextdist = dx;
          
-         printf("nowx: \t%lf\t prefx: \t%lf \t nextdist: \t%lf \n",nowx,prevx,nextdist);
-         int anzschritte = round(nextdist/mindist);
+         //nowx: \t%lf\t prefx: \t%lf \t nextdist: \t%lf \n",nowx,prevx,nextdist);
+         int anzschritte = (nextdist/mindist);
          //printf("i: %d anzschritte: %d\n",i,anzschritte);
          if(anzschritte)
          {
-            for (int schritte = 0;schritte < anzschritte;schritte++)
+            for (int schritte = 0;schritte < anzschritte; schritte++)
             {
-               float tempx = nowx + (schrittcounter + schritte)* mindist;
-               float tempy = lagrangewert(px,py,startindex,bereich,16,koeffarray,tempx);
-  //             printf("i: \t%d \tanzschritte: %d schritte: %d  tempx:\t %lf \t tempy: \t%lf \t schrittcounter: \t%d\n",i,anzschritte,schritte, tempx, tempy, schrittcounter);
+               float tempx = startx + (schrittcounter)* mindist;
+               printf("\nschritte: %d px now: %lf px next: %lf tempx: %lf x\n",schritte,px[nowindex],px[nextindex],tempx);
+               float prevabstandx = tempx - px[nowindex] ;
+               float nextabstandx = px[nextindex] - tempx;
+               float tempy = lagrangewert(px,py,nowindex,bereich,16,tempx);
+               printf("anzschritte: %d schritte: %d  tempx,y:\t %lf \t %lf \t prevabstandx: \t%lf\t nextabstandx: \t%lf\t schrittcounter: \t%d\n",anzschritte,schritte, tempx, tempy, prevabstandx,nextabstandx,schrittcounter);
                
                schrittcounter++;
             }
+       
+            
          }
+         nowindex++;
+         previndex++;
+         nextindex++;
+         overnextindex++;
+
  
 
          

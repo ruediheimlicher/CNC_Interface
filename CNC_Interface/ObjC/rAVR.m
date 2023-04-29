@@ -666,7 +666,7 @@ void plot_line (int x0, int y0, int x1, int y1)
    }
    printf("\npolykoeffarray end wertx: %lf\twerty: %lf\n",wertx,werty);
    */
-   werty = lagrangewert(px, py, von, intervall,length, polykoeffarray, wertx);
+   werty = lagrangewert(px, py, von, intervall,length,  wertx);
    printf("\nwertx: %lf\tlagrangewert: %lf\n",wertx,werty);
    //plotCircle(100,100,80);
    

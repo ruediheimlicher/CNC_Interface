@@ -2534,9 +2534,15 @@ PortA=vs[n & 3]; warte10ms(); n++;
    overnextindex = 3;
     // profil:
    printf("profil: \n");
+   double px[[ProfilArray count]];
+   double py[[ProfilArray count]] ;
+
    for (int i=0;i<[ProfilArray count];i++)
    {
-      printf("%d\t%lf\t%lf\n",i,[[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue],[[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue]);
+      //printf("%d\t%lf\t%lf\n",i,[[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue],[[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue]);
+      px[i] = [[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue];
+      py[i] = [[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue];
+      
    }
    printf("\n");
    // array abarbeiten
@@ -2549,7 +2555,6 @@ PortA=vs[n & 3]; warte10ms(); n++;
       //NSLog(@"tempX: %2.2f ",tempX);
       nowy = [[[ProfilArray objectAtIndex:nowindex]objectForKey:@"y"]floatValue];
       
-   
       if(i<[ProfilArray count]-1) // zweitletztes Element
       {
          nextx = [[[ProfilArray objectAtIndex:nextindex]objectForKey:@"x"]doubleValue];
@@ -2570,8 +2575,8 @@ PortA=vs[n & 3]; warte10ms(); n++;
       //overnexty = [[[ProfilArray objectAtIndex:i+2]objectForKey:@"y"]floatValue];
       
       
-      double px[] = {prevx,nowx, nextx, overnextx};
-      double py[] = {prevy,nowy, nexty, overnexty};
+  //    double px[] = {prevx,nowx, nextx, overnextx};
+  //    double py[] = {prevy,nowy, nexty, overnexty};
 
       
       if(i==0) // erstes intervall: wertx im bereich zwischen prevx und nowx
@@ -2612,21 +2617,13 @@ PortA=vs[n & 3]; warte10ms(); n++;
       }// if(i==1)
       else // rest des profils bis 2 Elemente vor Ende: wertx zwischen nowx und nextx
       {
-         printf("\ni: %d\n",i); 
-         printf("previndex: %d nowindex: %d nextindex: %d\n",previndex,nowindex,nextindex);
+         printf("\n"); 
+         //printf("i: %d previndex: %d nowindex: %d nextindex: %d\n",previndex,nowindex,nextindex);
          
          nowx = [[[ProfilArray objectAtIndex:nowindex]objectForKey:@"x"]floatValue];
          
          //NSLog(@"tempX: %2.2f ",tempX);
          nowy = [[[ProfilArray objectAtIndex:nowindex]objectForKey:@"y"]floatValue];
-         
-
-         
-         
-         
-  //       double px[] = {prevx,nowx, nextx, overnextx};
-  //       double py[] = {prevy,nowy, nexty, overnexty};
-
          
          float dx = nextx - nowx;
          float dy = nexty - nowy;
@@ -2641,15 +2638,20 @@ PortA=vs[n & 3]; warte10ms(); n++;
             for (int schritte = 0;schritte < anzschritte; schritte++)
             {
                float tempx = startx + (schrittcounter)* mindist;
-               printf("\nschritte: %d px now: %lf px next: %lf tempx: %lf x\n",schritte,px[nowindex],px[nextindex],tempx);
+               printf("i: %d schritte: %d nowindex: %d px now: %lf px next: %lf tempx: %lf x\t",i, schritte,nowindex,px[nowindex],px[nextindex],tempx);
                float prevabstandx = tempx - px[nowindex] ;
-               float nextabstandx = px[nextindex] - tempx;
-               float tempy = lagrangewert(px,py,nowindex,bereich,16,tempx);
-               printf("anzschritte: %d schritte: %d  tempx,y:\t %lf \t %lf \t prevabstandx: \t%lf\t nextabstandx: \t%lf\t schrittcounter: \t%d\n",anzschritte,schritte, tempx, tempy, prevabstandx,nextabstandx,schrittcounter);
-               
+               if (prevabstandx < 0)
+               {
+                  printf("\n");
+               }
+               else
+               {
+                  float nextabstandx = px[nextindex] - tempx;
+                  float tempy = lagrangewert(px,py,nowindex,bereich,16,tempx);
+                  printf("anzschritte: %d schritte: %d  tempx,y:\t %lf \t %lf \t prevabstandx: \t%lf\t nextabstandx: \t%lf\t schrittcounter: \t%d\n",anzschritte,schritte, tempx, tempy, prevabstandx,nextabstandx,schrittcounter);
+               }
                schrittcounter++;
             }
-       
             
          }
          nowindex++;

@@ -85,7 +85,7 @@ double lagrangewert(double* x, double* y, int firstindex, int bereich, int lengt
          else // werte der anderen positionen verwenden
          {
             double element = (wert-x[firstindex+k])/(x[firstindex+index]-x[firstindex+k]);
-
+            //printf("\t*** %dn\t%lf\t%lf\t***\t",k,wert,element);
             koeffarray[index] *= (wert-x[firstindex+k])/(x[firstindex+index]-x[firstindex+k]);
   //          printf("\t* %lf *\t",element);
          }
@@ -95,7 +95,7 @@ double lagrangewert(double* x, double* y, int firstindex, int bereich, int lengt
       werty += koeffarray[index]*y[firstindex+index];
       
    }
-   //printf("lagrangewert von %lf: firstx: %lf lastx: %lf ist werty: %lf\n",wert,x[firstindex],x[firstindex+bereich-1],werty);
+   printf("lagrangewert von \t%lf\t: firstx:\t %lf\tlastx: \t%lf\t  ist werty:\t %lf\n",wert,x[firstindex],x[firstindex+bereich-1],werty);
    return werty;
 }
 

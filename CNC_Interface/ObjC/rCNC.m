@@ -2559,26 +2559,26 @@ PortA=vs[n & 3]; warte10ms(); n++;
    {
        //NSLog(@"ProfilArray index: %d Data: %@",i,[[ProfilArray objectAtIndex:i]description]);
       // X-Achse, 
-      nowx = [[[ProfilArray objectAtIndex:nowindex]objectForKey:@"x"]floatValue];
+      nowx = [[[ProfilArray objectAtIndex:i+1]objectForKey:@"x"]floatValue];
       
       //NSLog(@"tempX: %2.2f ",tempX);
-      nowy = [[[ProfilArray objectAtIndex:nowindex]objectForKey:@"y"]floatValue];
+      nowy = [[[ProfilArray objectAtIndex:i+1]objectForKey:@"y"]floatValue];
       
       if(i<[ProfilArray count]-1) // zweitletztes Element
       {
-         nextx = [[[ProfilArray objectAtIndex:nextindex]objectForKey:@"x"]doubleValue];
-         nexty = [[[ProfilArray objectAtIndex:nextindex]objectForKey:@"y"]doubleValue];
+         nextx = [[[ProfilArray objectAtIndex:i+2]objectForKey:@"x"]doubleValue];
+         nexty = [[[ProfilArray objectAtIndex:i+2]objectForKey:@"y"]doubleValue];
       }
 
       if(i<[ProfilArray count]-2) // drittletztes element
       {
-         overnextx = [[[ProfilArray objectAtIndex:overnextindex]objectForKey:@"x"]doubleValue];
-         overnexty = [[[ProfilArray objectAtIndex:overnextindex]objectForKey:@"y"]doubleValue];
+         overnextx = [[[ProfilArray objectAtIndex:i+3]objectForKey:@"x"]doubleValue];
+         overnexty = [[[ProfilArray objectAtIndex:i+3]objectForKey:@"y"]doubleValue];
       }
       double koeffarray[bereich];
       
-      prevx = [[[ProfilArray objectAtIndex:previndex]objectForKey:@"x"]floatValue];
-      prevy = [[[ProfilArray objectAtIndex:previndex]objectForKey:@"y"]floatValue];
+      prevx = [[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue];
+      prevy = [[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue];
     
        
  
@@ -2586,14 +2586,14 @@ PortA=vs[n & 3]; warte10ms(); n++;
       if(i==0) // erstes intervall: wertx im bereich zwischen prevx und nowx
       {
          /*
-         nowindex ++;
+         i+1 ++;
          previndex ++;
          nextindex ++;
          overnextindex ++;
          > verschoben an ende
           start mit vorgegebenen Werte:
           previndex = 0;
-          nowindex = 1;
+          i+1 = 1;
           nextindex = 2;
           overnextindex = 3;
           fuer das intervall 0-1
@@ -2635,12 +2635,12 @@ PortA=vs[n & 3]; warte10ms(); n++;
       else // rest des profils bis 2 Elemente vor Ende: wertx zwischen nowx und nextx
       {
          printf("\n"); 
-        // printf("i: %d previndex: %d nowindex: %d nextindex: %d lastx: %lf\n",i,previndex,nowindex,nextindex,lastx);
+        // printf("i: %d i: %d i+1: %d i+2: %d lastx: %lf\n",i,i,i+1,i+2,lastx);
          
-         nowx = [[[ProfilArray objectAtIndex:nowindex]objectForKey:@"x"]floatValue];
+         nowx = [[[ProfilArray objectAtIndex:i+1]objectForKey:@"x"]floatValue];
          
          //NSLog(@"tempX: %2.2f ",tempX);
-         nowy = [[[ProfilArray objectAtIndex:nowindex]objectForKey:@"y"]floatValue];
+         nowy = [[[ProfilArray objectAtIndex:i+1]objectForKey:@"y"]floatValue];
          
          float dx = nextx - nowx; // ev lastx
          float dy = nexty - nowy;
@@ -2652,21 +2652,21 @@ PortA=vs[n & 3]; warte10ms(); n++;
          //printf("i: %d anzschritte: %d\n",i,anzschritte);
          
          float aktx = lastx + mindist;
-         printf("i: %d previndex: %d nowindex: %d nextindex: %d lastx: %lf anzschritte: %d\n",i,previndex,nowindex,nextindex,lastx, anzschritte);
+         printf("i: %d i: %d i+1: %d i+2: %d lastx: %lf anzschritte: %d\n",i,i,i+1,i+2,lastx, anzschritte);
 
          // erste pos sichern
-         float tempx = aktx ;
-         float tempy = lagrangewert(px,py,nowindex,bereich,16,tempx);
-         //printf("\t\t schritte: %d nowindex: %d px now: %lf px next: %lf\t\t tempx,y: \t%lf  \t%lf\t lastx: %lf \tschrittcounter: %d\t", schritte,nowindex,px[nowindex],px[nextindex],tempx,tempy,lastx,schrittcounter);
+        //float tempx = aktx ;
+        // float tempy = lagrangewert(px,py,i+1,bereich,16,tempx);
+         //printf("\t\t schritte: %d i+1: %d px now: %lf px next: %lf\t\t tempx,y: \t%lf  \t%lf\t lastx: %lf \tschrittcounter: %d\t", schritte,i+1,px[i+1],px[i+2],tempx,tempy,lastx,schrittcounter);
  
          
-         //printf("\t\t \tnowindex: %d nowx: %lf nowy: %lf nextx: %lf nexty: %lf\t\t tempx,y: \t%lf  \t%lf\t lastx: %lf \tschrittcounter: %d\t",nowindex,nowx,nowy,nextx,nexty,tempx,tempy,lastx,schrittcounter);
+         //printf("\t\t \ti+1: %d nowx: %lf nowy: %lf nextx: %lf nexty: %lf\t\t tempx,y: \t%lf  \t%lf\t lastx: %lf \tschrittcounter: %d\t",i+1,nowx,nowy,nextx,nexty,tempx,tempy,lastx,schrittcounter);
 
 //         printf("\n");
          //printf("anzschritte: %d schritte: %d  tempx,y:\t %lf \t %lf \t prevabstandx: \t%lf\t nextabstandx: \t%lf\t schrittcounter: \t%d\n",anzschritte,schritte, tempx, tempy, prevabstandx,nextabstandx,schrittcounter);
          //[ProfilpunktArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:tempx],@"x",[NSNumber numberWithFloat:tempy],@"y",[NSNumber numberWithInt:i],@"index",[NSNumber numberWithInt:schrittcounter],@"schrittcounter", nil]];
-         lastx =tempx;
-         tempx += mindist;
+         lastx =aktx;
+         //tempx += mindist;
          schrittcounter++;
          
          if(anzschritte)
@@ -2676,6 +2676,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
             for (int schritte = 0;schritte < anzschritte; schritte++)
             {
                //float tempx = startx + (schrittcounter)* mindist;
+               
                float tempx = aktx + schritte * mindist;
                
                tempxabstand = tempx - nowx;
@@ -2685,9 +2686,9 @@ PortA=vs[n & 3]; warte10ms(); n++;
                   printf("end  erreicht bei : %d",i);
                   continue;
                }
-               //printf("\t\tschritte: %d nowindex: %d nowx: %lf nowy: %lf nextx: %lf nexty: %lf\t\t tempx,y: \t%lf  \t%lf\t lastx: %lf \tschrittcounter: %d\t", schritte,nowindex,nowx,nowy,nextx,nexty,tempx,tempy,lastx,schrittcounter);
+               //printf("\t\tschritte: %d i+1: %d nowx: %lf nowy: %lf nextx: %lf nexty: %lf\t\t tempx,y: \t%lf  \t%lf\t lastx: %lf \tschrittcounter: %d\t", schritte,i+1,nowx,nowy,nextx,nexty,tempx,tempy,lastx,schrittcounter);
                
-               //float prevabstandx = tempx - px[nowindex] ;
+               //float prevabstandx = tempx - px[i+1] ;
                
                if(tempx > nextx)
                {
@@ -2697,12 +2698,13 @@ PortA=vs[n & 3]; warte10ms(); n++;
                }
               else
                {                  
-                  //float nextabstandx = px[nextindex] - tempx;
+                  //float nextabstandx = px[i+2] - tempx;
                   
-                  float tempy = lagrangewert(px,py,nowindex,bereich,16,tempx);
-                  //printf("\t\t schritte: %d nowindex: %d px now: %lf px next: %lf\t\t tempx,y: \t%lf  \t%lf\t lastx: %lf \tschrittcounter: %d\t", schritte,nowindex,px[nowindex],px[nextindex],tempx,tempy,lastx,schrittcounter);
+                  
+                  float tempy = lagrangewert(px,py,i+1,bereich,16,tempx);
+                  //printf("\t\t schritte: %d i+1: %d px now: %lf px next: %lf\t\t tempx,y: \t%lf  \t%lf\t lastx: %lf \tschrittcounter: %d\t", schritte,i+1,px[i+1],px[i+2],tempx,tempy,lastx,schrittcounter);
                  
-                  printf("\t\t schritte: %d nowindex: %d nowx: %lf nowy: %lf nextx: %lf nexty: %lf\t\t tempx,y: \t%lf  \t%lf\t lastx: %lf \tschrittcounter: %d\t tempxabstand: %lf\t", schritte,nowindex,nowx,nowy,nextx,nexty,tempx,tempy,lastx,schrittcounter,tempxabstand);
+                  printf("\t\t schritte: %d i+1: %d nowx: %lf nowy: %lf nextx: %lf nexty: %lf\t\t tempx,y: \t%lf  \t%lf\t lastx: %lf \tschrittcounter: %d\t tempxabstand: %lf\t", schritte,i+1,nowx,nowy,nextx,nexty,tempx,tempy,lastx,schrittcounter,tempxabstand);
 
                   printf("\n");
                   //printf("anzschritte: %d schritte: %d  tempx,y:\t %lf \t %lf \t prevabstandx: \t%lf\t nextabstandx: \t%lf\t schrittcounter: \t%d\n",anzschritte,schritte, tempx, tempy, prevabstandx,nextabstandx,schrittcounter);
@@ -2720,11 +2722,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
             printf("keine schritte bei i: %d",i);
          }
          
-         nowindex++;
-         previndex++;
-         nextindex++;
-         overnextindex++;
-         
+          
        }
       if(i==ProfilArray.count-1)
       {

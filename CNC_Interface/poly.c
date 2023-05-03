@@ -95,7 +95,7 @@ double lagrangewert(double* x, double* y, int firstindex, int bereich, int lengt
       werty += koeffarray[index]*y[firstindex+index];
       
    }
-   printf("lagrangewert von \t%lf\t: firstx:\t %lf\tlastx: \t%lf\t  ist werty:\t %lf\n",wert,x[firstindex],x[firstindex+bereich-1],werty);
+   //printf("lagrangewert von \t%lf\t: firstx:\t %lf\tlastx: \t%lf\t  ist werty:\t %lf\n",wert,x[firstindex],x[firstindex+bereich-1],werty);
    return werty;
 }
 

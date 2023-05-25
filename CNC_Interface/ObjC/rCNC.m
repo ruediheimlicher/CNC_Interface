@@ -2538,16 +2538,16 @@ PortA=vs[n & 3]; warte10ms(); n++;
    overnextindex = 13;
     // profil:
    printf("\ninterpolProfilDicVonPos \n");
-   double px[[ProfilArray count]];
-   double py[[ProfilArray count]] ;
+ //  double px[[ProfilArray count]];
+ //  double py[[ProfilArray count]] ;
    float tempxabstand = 0;
    
    for (int i=0;i<[ProfilArray count];i++)
    
    {
      // printf("%d\t%lf\t%lf\n",i,[[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue],[[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue]);
-      px[i] = [[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue];
-      py[i] = [[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue];
+ //     px[i] = [[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue];
+ //     py[i] = [[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue];
       
    }
    printf("\n");
@@ -2598,7 +2598,10 @@ PortA=vs[n & 3]; warte10ms(); n++;
           overnextindex = 3;
           fuer das intervall 0-1
           */
-         
+         double px[] = {prevx,nowx,nextx,overnextx};
+         double py[]  = {prevy,nowy,nexty,overnexty};
+
+
          
          float dx = nowx - prevx;
          float dy = nowy - prevy;
@@ -2642,6 +2645,9 @@ PortA=vs[n & 3]; warte10ms(); n++;
          //NSLog(@"tempX: %2.2f ",tempX);
          nowy = [[[ProfilArray objectAtIndex:i+1]objectForKey:@"y"]floatValue];
          
+         double px[] = {prevx,nowx,nextx,overnextx};
+         double py[]  = {prevy,nowy,nexty,overnexty};
+
          float dx = nextx - nowx; // ev lastx
          float dy = nexty - nowy;
          float nextdist = sqrt(pow(dx,2) + pow(dy,2));
@@ -2681,6 +2687,8 @@ PortA=vs[n & 3]; warte10ms(); n++;
                
                tempxabstand = tempx - nowx;
                
+  
+               
                if(tempx > endx)
                {
                   printf("end  erreicht bei : %d",i);
@@ -2701,7 +2709,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
                   //float nextabstandx = px[i+2] - tempx;
                   
                   
-                  float tempy = lagrangewert(px,py,i+1,bereich,16,tempx);
+                  float tempy = lagrangewert(px,py,1,bereich,16,tempx);
                   //printf("\t\t schritte: %d i+1: %d px now: %lf px next: %lf\t\t tempx,y: \t%lf  \t%lf\t lastx: %lf \tschrittcounter: %d\t", schritte,i+1,px[i+1],px[i+2],tempx,tempy,lastx,schrittcounter);
                  
                   printf("\t\t schritte: %d i+1: %d nowx: %lf nowy: %lf nextx: %lf nexty: %lf\t\t tempx,y: \t%lf  \t%lf\t lastx: %lf \tschrittcounter: %d\t tempxabstand: %lf\t", schritte,i+1,nowx,nowy,nextx,nexty,tempx,tempy,lastx,schrittcounter,tempxabstand);

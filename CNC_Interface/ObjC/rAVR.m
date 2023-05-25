@@ -493,13 +493,14 @@ float det(float v0[],float v1[])
    [NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"push"];
 	
    int aktpwm=0;
+   NSPoint location = [theEvent locationInWindow];
    
 //   NSPoint location = [theEvent locationInWindow];
 //   NSLog(@"Pfeiltaste mouseUp location: %2.2f %2.2f",location.x, location.y);
    
 
-//   [NotificationDic setObject:[NSNumber numberWithFloat:location.x] forKey:@"locationx"];
-//   [NotificationDic setObject:[NSNumber numberWithFloat:location.y] forKey:@"locationy"];
+   [NotificationDic setObject:[NSNumber numberWithFloat:location.x] forKey:@"locationx"];
+   [NotificationDic setObject:[NSNumber numberWithFloat:location.y] forKey:@"locationy"];
       
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"Pfeil" object:self userInfo:NotificationDic];
@@ -1403,6 +1404,7 @@ return returnInt;
             {
                NSLog(@"profilnamea: %@",[tempPListDic objectForKey:@"profilnamea"]);
                [ProfilNameFeldA setStringValue:[tempPListDic objectForKey:@"profilnamea"]];
+               
                
             }
             else
@@ -5065,7 +5067,7 @@ return returnInt;
 {
    //[self reportManDown:NULL];
    NSLog(@"AVR PfeilAktion start note: %@",[[note userInfo]description]);
-   if ([[note userInfo]objectForKey:@"richtung"])
+    if ([[note userInfo]objectForKey:@"richtung"])
    {
       quelle=[[[note userInfo]objectForKey:@"richtung"]intValue];
       if ([[note userInfo]objectForKey:@"push"])
@@ -8565,26 +8567,35 @@ return returnInt;
    {
       NSLog(@"Unterseite einfuegen Profil1UnterseiteArray count: %d Profil2UnterseiteArray count: %d",Profil1UnterseiteArray.count,Profil2UnterseiteArray.count);
   
+      NSArray* redUnterseiteArray = [Utils abstandcheckenVonarrayA:Profil1UnterseiteArray arrayB:Profil2UnterseiteArray teil: 20 abstand:[MinimaldistanzFeld floatValue]];
+
       
-      for (index = Profil1UnterseiteArray.count-1;index >= 0; index--)
+      //for (index = Profil1UnterseiteArray.count-1;index >= 0; index--)
+      
+      for (index = redUnterseiteArray.count-1;index >= 0; index--)
+   
       {
          //NSLog(@"Unterseite einfuegen A index: %d ", index);
-         NSDictionary* tempZeilenDicA = [Profil1UnterseiteArray objectAtIndex:index];
+         //NSDictionary* tempZeilenDicA = [Profil1UnterseiteArray objectAtIndex:index];
+         NSDictionary* tempZeilenDicA = [redUnterseiteArray objectAtIndex:index];
          
           
          NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
          
-         [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"x"] forKey:@"ax"];
-         [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"y"] forKey:@"ay"];
-         
-         if (index < Profil2UnterseiteArray.count)
+    //     [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"x"] forKey:@"ax"];
+    //     [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"y"] forKey:@"ay"];
+     
+         /*
+//         if (index < Profil2UnterseiteArray.count)
          {
+            //NSDictionary* tempZeilenDicB = [Profil2UnterseiteArray objectAtIndex:index];
             NSDictionary* tempZeilenDicB = [Profil2UnterseiteArray objectAtIndex:index];
            // NSLog(@"Unterseite einfuegen for B");
             
             [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
             [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"y"] forKey:@"by"];
          }
+          */
          //[tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"index"] forKey:@"index"];
          [tempZeilenDic setObject:[NSNumber numberWithInt:30] forKey:@"teil"];
          // pwm
@@ -11370,7 +11381,7 @@ return returnInt;
 {
    NSDate *anfang = [NSDate date];
  
-   //NSLog(@"reportProfilOberseiteTask start KT");
+   NSLog(@"reportProfilOberseiteTask start KT");
    //[self KT];
    NSLog(@"ProfilNameFeldA: %@ ProfilNameFeldB: %@ ",[ProfilNameFeldA stringValue],[ProfilNameFeldB stringValue]);
    [CNC_Stoptaste setState:0];
@@ -11453,7 +11464,7 @@ return returnInt;
       float bx = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
       float by = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
       
-     // fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
+     fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
    }
 
    
@@ -11468,7 +11479,7 @@ return returnInt;
       float by = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
       
       
-   //   fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
+      fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
    }
 
    

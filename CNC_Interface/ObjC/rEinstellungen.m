@@ -2610,7 +2610,7 @@
 
 - (void)doProfilPopTaskMitProfil1:(int)profil1 mitProfil2: (int)profil2
 {
-   NSLog(@"doProfilPopTaskMitProfil1 start");
+   NSLog(@"doProfilPopTaskMitProfil1  mitProfil2 start");
    
    [FlipHTaste setState:0];
    [FlipVTaste setState:0];
@@ -2659,8 +2659,12 @@
          {
             unterseitearrayA = [Profil1Dic objectForKey:@"unterseitearray"];
          }
-        // oberseitearrayA =  [Utils lagrangeinterpolation:oberseitearrayA minimalabstand: 0.01];
+        
+         
          /*
+         oberseitearrayA =  [Utils lagrangeinterpolation:oberseitearrayA minimalabstand: 0.01];
+         
+         
          NSArray* lagrangearrayA = [Utils lagrangeinterpolation:oberseitearrayA minimalabstand: 0.01];
          
          NSLog(@"lagrangearray: ");
@@ -2683,12 +2687,12 @@
              
             if ([Profil1Array count])
             {
-               
+               /*
                [ProfilStartpunktX setFloatValue:[[[Profil1Array objectAtIndex:0]objectForKey:@"x"]floatValue]];
                [ProfilStartpunktY setFloatValue:[[[Profil1Array objectAtIndex:0]objectForKey:@"y"]floatValue]];
                [ProfilEndpunktX setFloatValue:[[[Profil1Array lastObject]objectForKey:@"x"]floatValue]];
                [ProfilEndpunktY setFloatValue:[[[Profil1Array lastObject]objectForKey:@"y"]floatValue]];
-               
+               */
             }
             //NSLog(@"doProfil1PopTaskMitProfil Profil1Array LAST: %@",[[Profil1Array lastObject]description]);
          }
@@ -2726,7 +2730,6 @@
             {
                oberseitearrayB = [Profil2Dic objectForKey:@"oberseitearray"];
             }
-      //      oberseitearrayB =  [Utils lagrangeinterpolation:oberseitearrayB minimalabstand: 0.01];
 
             
             if ([Profil2Dic objectForKey:@"unterseitearray"]) 

@@ -947,13 +947,14 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 
       if (A.count == B.count)
       {
-         //NSLog(@"count gleich");
+         NSLog(@"count gleich");
          return [NSArray arrayWithObjects: soll, quelle, nil];
          
       }
          
        //  else
       {
+         NSLog(@"count ungleich");
          float maxdiff = 0;
          int maxindex = 0;
          int insertindex = 0;

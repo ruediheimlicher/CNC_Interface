@@ -446,6 +446,12 @@ class rCNCViewController:rViewController
    {
      //print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
       let count = usb_schnittdatenarray.count
+      print("writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
+      
+      if(Stepperposition < count)
+      {
+         print("schnittdatenarray:\n",usb_schnittdatenarray[Stepperposition])
+      }
       //print("writeCNCAbschnitt code: \(usb_schnittdatenarray[0][16]) Stepperposition: \(Stepperposition) count: \(count) ")
       
       if Stepperposition < count

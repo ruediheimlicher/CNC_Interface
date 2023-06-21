@@ -6866,6 +6866,7 @@ return returnInt;
    
    float einstichy = [EinstichtiefeFeld intValue];//15;
    
+   // 0
    [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
 
    // Start
@@ -6880,6 +6881,7 @@ return returnInt;
    effektivehoehe  = MAX(effektivehoehe, MAX(tempPunktA.y,tempPunktB.y));
    effektivebreite  = MAX(effektivebreite, MAX(tempPunktA.x,tempPunktB.x));
 
+   // 1
    [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
    
    ////NSLog(@"count: %d KoordinatenTabelle 1: %@",[KoordinatenTabelle count],[KoordinatenTabelle description]);
@@ -6902,7 +6904,7 @@ return returnInt;
    tempPunktA.x += horizontaleinstich;
    tempPunktB.x += horizontaleinstich;
    effektivebreite  = MAX(effektivebreite, MAX(tempPunktA.x,tempPunktB.x));
-   
+    // 2
    [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
    
    
@@ -6920,6 +6922,7 @@ return returnInt;
    tempPunktA.y += blockhoehe - horizontaleinstichkote + vertikaloffset;
    tempPunktB.y += blockhoehe - horizontaleinstichkote + vertikaloffset;
    effektivehoehe  = MAX(effektivehoehe, MAX(tempPunktA.y,tempPunktB.y));
+   // 3
    [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:30];
    
    /*
@@ -6994,7 +6997,7 @@ return returnInt;
    NSArray* SegmentKoordinatenArray = [CNC SegmentKoordinatenMitRadiusA:(float)radiusA mitRadiusB:(float)radiusB mitWinkel:(float)Winkel mitLage:(int)Lage mitAnzahlPunkten:(int)anzahlPunkte vonStartpunktA:tempPunktA vonStartpunktB:tempPunktB];
    
    int i;
-   for(i=0;i<SegmentKoordinatenArray.count;i++)
+   for(i=1;i<SegmentKoordinatenArray.count;i++)
    {
       NSMutableDictionary* tempdic = [NSMutableDictionary dictionaryWithDictionary: SegmentKoordinatenArray[i]];
       //fprintf(stderr,"%d\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\n",i,[tempdic[@"ax"]floatValue],[tempdic[@"ay"]floatValue],[tempdic[@"bx"]floatValue],[tempdic[@"by"]floatValue]);
@@ -7032,7 +7035,7 @@ return returnInt;
    SegmentKoordinatenArray = [CNC SegmentKoordinatenMitRadiusA:(float)radiusA mitRadiusB:(float)radiusB mitWinkel:(float)Winkel mitLage:(int)Lage mitAnzahlPunkten:(int)anzahlPunkte vonStartpunktA:tempPunktA vonStartpunktB:tempPunktB];
    
    
-   for(i=0;i<SegmentKoordinatenArray.count;i++)
+   for(i=1;i<SegmentKoordinatenArray.count;i++)
    {
       NSMutableDictionary* tempdic = [NSMutableDictionary dictionaryWithDictionary: SegmentKoordinatenArray[i]];
       //fprintf(stderr,"%d\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\n",i,[tempdic[@"ax"]floatValue],[tempdic[@"ay"]floatValue],[tempdic[@"bx"]floatValue],[tempdic[@"by"]floatValue]);
@@ -7048,7 +7051,7 @@ return returnInt;
    tempPunktB.x = [[[SegmentKoordinatenArray lastObject]objectForKey:@"bx"]floatValue];
    tempPunktB.y = [[[SegmentKoordinatenArray lastObject]objectForKey:@"by"]floatValue];
    
-   [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
+  // [self addNextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20];
    
    rahmenindex++;
    
@@ -12044,7 +12047,8 @@ return returnInt;
 
 - (void)writeCNCAbschnitt
 {
-   if(TEST)  NSLog(@"writeCNCAbschnitt Start Stepperposition: %d count: %d",Stepperposition,[SchnittdatenArray count]);
+   //if(TEST)  
+      NSLog(@"writeCNCAbschnitt Start Stepperposition: %d count: %d",Stepperposition,[SchnittdatenArray count]);
    //NSLog(@"writeCNCAbschnitt SchnittDatenArray anz: %d\n SchnittDatenArray: %@",[SchnittDatenArray count],[SchnittDatenArray description]);
    
    /*

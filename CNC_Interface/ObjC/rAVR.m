@@ -12796,15 +12796,15 @@ return returnInt;
             //sendbuffer[i]=(char)[[tempSchnittdatenArray objectAtIndex:i]UTF8String];
          }
          
-          /*
-         fprintf(stderr,"%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
+          
+         fprintf(stderr,"writeCNCAbschnitt sendbuffer\n%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
                  sendbuffer[0],(sendbuffer[1]& 0x80),sendbuffer[2],(sendbuffer[3]&0x80),
                  sendbuffer[4],sendbuffer[5],sendbuffer[6],sendbuffer[7],
                  sendbuffer[8],sendbuffer[9],sendbuffer[10],sendbuffer[11],
                  sendbuffer[12],sendbuffer[13],sendbuffer[14],sendbuffer[15],
                  sendbuffer[16],sendbuffer[17],sendbuffer[18],sendbuffer[19],
                  sendbuffer[20],sendbuffer[21],sendbuffer[22],sendbuffer[23]);
-          */
+          
           
          
          int senderfolg= rawhid_send(0, sendbuffer, 32, 50);
@@ -13142,7 +13142,7 @@ return returnInt;
       uint16_t stepperposition = [[[note userInfo]objectForKey:@"stepperposition"]intValue];
       uint16_t anzsteps = [SchnittdatenArray count];
       
-      //NSLog(@"AVR  USBReadAktion abschnittfertig: %02.X stepperposition: %d anzsteps: %d)",abschnittfertig,stepperposition,anzsteps);
+      NSLog(@"AVR  USBReadAktion abschnittfertig: %02.X stepperposition: %d anzsteps: %d)",abschnittfertig,stepperposition,anzsteps);
       if (stepperposition > 18)
       {
          //NSLog(@"AVR  USBReadAktion 18");
@@ -13182,7 +13182,7 @@ return returnInt;
    
          case 0xD0: // letzter Abschnitt
          {
-            NSLog(@"AVR  USBReadAktion abschnittcode D0 anzsteps: %d stepperposition: %d",anzsteps, stepperposition);
+            NSLog(@"AVR  USBReadAktion abschnittcode D0 letzter Abschnitt anzsteps: %d stepperposition: %d",anzsteps, stepperposition);
          }break;
             
          case 0xBD: // Abschnitt fertig // von Stepper_20
@@ -13200,28 +13200,28 @@ return returnInt;
 
          case 0xAF:
          {
-             //NSLog(@"AVR USBReadAktion AF next %@",[[note userInfo] description]);
+             NSLog(@"AVR USBReadAktion AF next %@",[[note userInfo] description]);
             
          }break;
          case 0xAA:
          {
-          //  NSLog(@"AVR End Abschnitt von A");
+            NSLog(@"AVR End Abschnitt von A");
             
          }break;
          
          case 0xAB:
          {
-          //  NSLog(@"AVR End Abschnitt von B");
+            NSLog(@"AVR End Abschnitt von B");
          }break;
             
          case 0xAC:
          {
-          //  NSLog(@"AVR End Abschnitt von C");
+            NSLog(@"AVR End Abschnitt von C");
          }break;
             
          case 0xAD:
          {
-          //  NSLog(@"AVR End Abschnitt von D");
+            NSLog(@"AVR End Abschnitt von D");
          }break;
             
          case 0xB5:
@@ -13288,7 +13288,7 @@ return returnInt;
    
    if([[note userInfo]objectForKey:@"home"])
    {
-      //NSLog(@"AVR  USBReadAktion home: %d",[[[note userInfo]objectForKey:@"home"]intValue]);
+      NSLog(@"AVR  USBReadAktion home: %d",[[[note userInfo]objectForKey:@"home"]intValue]);
       int home=0;
       if ([[note userInfo]objectForKey:@"home"])
       {

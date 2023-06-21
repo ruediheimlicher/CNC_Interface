@@ -2014,7 +2014,48 @@ PortA=vs[n & 3]; warte10ms(); n++;
 	
 	return tempDatenArray;
    
+}
+
+
+// LinienabschnittKoordinatenVonPunktA:tempPunktA distanzA:(breiteA - 2*radiusA)  zuPunktB:tempPunktB distanzB:(breiteB - 2*radiusB) mitAnzahl:4];
+- (NSArray*)LinienabschnittKoordinatenVonstartPunktA:(NSPoint)startpunktA startPunktB:(NSPoint)startpunktB endPunktA:(NSPoint)endpunktA endPunktB:(NSPoint)endpunktB mitAnzahl:(int)anzahlabschnitte
+{
+   NSMutableArray* abschnittpunktArray = NSMutableArray.new;
+   double intervallax = endpunktA.x - startpunktA.x;
+   double intervallay = endpunktA.y - startpunktA.y;
+
+   double intervallbx = endpunktB.x - startpunktB.x;
+   double intervallby = endpunktB.y - startpunktB.y;
    
+   
+   int index=0;
+   NSPoint indexpunkta = startpunktA;
+   NSPoint indexpunktb = startpunktB;
+   for(index=0;index<anzahlabschnitte;index++)
+   {
+      indexpunkta.x = startpunktA.x + index * intervallax / anzahlabschnitte;
+      indexpunkta.y = startpunktA.y + index * intervallay / anzahlabschnitte;
+ 
+      indexpunktb.x = startpunktB.x + index * intervallbx / anzahlabschnitte;
+      indexpunktb.y = startpunktB.y + index * intervallby / anzahlabschnitte;
+ 
+      
+      NSNumber* KoordinateAX=[NSNumber numberWithFloat:indexpunkta.x];
+      NSNumber* KoordinateAY=[NSNumber numberWithFloat:indexpunkta.y];
+
+      NSNumber* KoordinateBX=[NSNumber numberWithFloat:indexpunktb.x];
+      NSNumber* KoordinateBY=[NSNumber numberWithFloat:indexpunktb.y];
+
+      
+      NSDictionary* tempDic=[NSDictionary dictionaryWithObjectsAndKeys:KoordinateAX, @"ax",KoordinateAY,@"ay" ,KoordinateBX, @"bx",KoordinateBY,@"by" ,[NSNumber numberWithInt:index],@"index", nil];
+      
+      [abschnittpunktArray addObject:tempDic];
+      
+   }
+
+   
+   
+   return abschnittpunktArray;
 }
 
 - (NSArray*)ProfilVonPunkt:(NSPoint)Startpunkt mitProfil:(NSDictionary*)ProfilDic mitProfiltiefe:(int)Profiltiefe mitScale:(int)Scale

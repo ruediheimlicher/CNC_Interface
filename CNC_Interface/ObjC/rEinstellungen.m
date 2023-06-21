@@ -2646,7 +2646,7 @@
       {
          NSDictionary* Profil1Dic = [Utils ProfilDatenAnPfad:Profil1pfad];
          
-         //NSLog(@"reportProfilPop Profil1Dic: %@",[ProfilDic description]);
+         NSLog(@"reportProfilPop Profil1Dic: %@",[Profil1Dic description]);
          //NSLog(@"SplinekoeffizientenVonArray profilarray: %@",[[ProfilDic objectForKey:@"profilarray"] description]);
          
          NSLog(@"doProfil1PopTaskMitProfil ProfilName1: %@",Profil1Name);
@@ -2725,7 +2725,7 @@
          {
             // Daten von Profil2 holen
             NSDictionary* Profil2Dic = [Utils ProfilDatenAnPfad:Profil2pfad];
-            
+            NSLog(@"reportProfilPop Profil2Dic: %@",[Profil2Dic description]);
             if ([Profil2Dic objectForKey:@"oberseitearray"]) 
             {
                oberseitearrayB = [Profil2Dic objectForKey:@"oberseitearray"];

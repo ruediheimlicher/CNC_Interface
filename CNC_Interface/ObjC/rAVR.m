@@ -8649,33 +8649,15 @@ return returnInt;
       {
          //NSLog(@"Unterseite einfuegen A index: %d ", index);
          //NSDictionary* tempZeilenDicA = [Profil1UnterseiteArray objectAtIndex:index];
-         NSDictionary* tempZeilenDicA = [redUnterseiteArray objectAtIndex:index];
-         
-          
-         NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
-         
-    //     [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"x"] forKey:@"ax"];
-    //     [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"y"] forKey:@"ay"];
-     
-         /*
-//         if (index < Profil2UnterseiteArray.count)
-         {
-            //NSDictionary* tempZeilenDicB = [Profil2UnterseiteArray objectAtIndex:index];
-            NSDictionary* tempZeilenDicB = [Profil2UnterseiteArray objectAtIndex:index];
-           // NSLog(@"Unterseite einfuegen for B");
-            
-            [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
-            [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"y"] forKey:@"by"];
-         }
-          */
-         //[tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"index"] forKey:@"index"];
-         [tempZeilenDic setObject:[NSNumber numberWithInt:30] forKey:@"teil"];
+         NSMutableDictionary* tempZeilenDicA = [redUnterseiteArray objectAtIndex:index];
+         [tempZeilenDicA setObject:[NSNumber numberWithInt:30] forKey:@"teil"]; // Kennzeichnung Unterseite
          // pwm
-         [tempZeilenDic setObject:[NSNumber numberWithInt:origpwm] forKey:@"pwm"];
-         //NSLog(@"Unterseite einfuegen for C");
-         [KoordinatenTabelle addObject:tempZeilenDic];
+         [tempZeilenDicA setObject:[NSNumber numberWithInt:origpwm] forKey:@"pwm"];
+         [tempZeilenDicA setObject:[NSNumber numberWithInt:index+profilstartindex] forKey:@"index"];
+
+         [KoordinatenTabelle addObject:tempZeilenDicA];
          //NSLog(@"index: %d x: %1.1f",index,[[[ProfilArrayA objectAtIndex:index]objectForKey:@"ax"]floatValue]);
-         //NSLog(@"Unterseite einfuegen for end index: %d",index);
+         NSLog(@"Unterseite einfuegen for end index: %d",index);
       }
       
       

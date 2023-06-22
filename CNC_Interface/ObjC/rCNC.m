@@ -3562,6 +3562,11 @@ PortA=vs[n & 3]; warte10ms(); n++;
       NSArray* tempEinlaufArray3 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:red_pwm], nil];
       [EinlaufpunkteArray addObject:tempEinlaufArray3];
    }
+   else 
+   {
+      //[EinlaufpunkteArray addObject:tempEinlaufArray0];
+   }
+   
    // Einlauf
    if(laenge)
    {
@@ -3574,6 +3579,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    {
       [EinlaufpunkteArray addObject:tempEinlaufArray0];
    }
+   NSLog(@"endleiste end");
    return EinlaufpunkteArray;
 }
 
@@ -3604,6 +3610,10 @@ PortA=vs[n & 3]; warte10ms(); n++;
       Endpunkt.x +=laenge;
       NSArray* tempEinlaufArray4 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y], [NSNumber numberWithFloat:full_pwm],nil];
       [AuslaufpunkteArray addObject:tempEinlaufArray4];
+   }
+   else  
+   {
+      [AuslaufpunkteArray addObject:tempEinlaufArray0];
    }
    
    // Einstich

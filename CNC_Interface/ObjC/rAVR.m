@@ -8301,27 +8301,27 @@ return returnInt;
       
       // Endleistenwinkel bestimmen
       NSLog(@"Endleistenwinkel A:");
-//      float winkelA = [CNC EndleistenwinkelvonProfil:[ProfilDic objectForKey:@"profil1array"]];
+      //      float winkelA = [CNC EndleistenwinkelvonProfil:[ProfilDic objectForKey:@"profil1array"]];
       
       float oberseitenwinkelA = [CNC EndleistenwinkelvonOberseite:Profil1OberseiteArray];
       NSLog(@"oberseitenwinkelA: %2.4f Grad:  %2.2f",oberseitenwinkelA,oberseitenwinkelA*180/M_PI);
- 
+      
       float unterseitenwinkelA = [CNC EndleistenwinkelvonUnterseite:Profil1UnterseiteArray];
       NSLog(@"unterseitenwinkelA: %2.4f Grad:  %2.2f",unterseitenwinkelA,unterseitenwinkelA*180/M_PI);
- 
+      
       float winkelA = (oberseitenwinkelA + unterseitenwinkelA)/2;
       //winkelA *= -1;
       NSLog(@"Endleistenwinkel A: %2.6f grad: %2.2f",winkelA, winkelA*180/M_PI);
-
       
-   //   float winkelB = [CNC EndleistenwinkelvonProfil:[ProfilDic objectForKey:@"profil2array"]];
-   
+      
+      //   float winkelB = [CNC EndleistenwinkelvonProfil:[ProfilDic objectForKey:@"profil2array"]];
+      
       float oberseitenwinkelB = [CNC EndleistenwinkelvonOberseite:Profil2OberseiteArray]; // ist invertiert
       NSLog(@"oberseitenwinkelB: %2.4f Grad:  %2.2f",oberseitenwinkelB,oberseitenwinkelB*180/M_PI);
-
+      
       float unterseitenwinkelB = [CNC EndleistenwinkelvonUnterseite:Profil2UnterseiteArray];
       NSLog(@"unterseitenwinkelB: %2.4f Grad:  %2.2f",unterseitenwinkelB,unterseitenwinkelB*180/M_PI);
-  
+      
       float winkelB = (oberseitenwinkelB + unterseitenwinkelB )/2;
       //float winkelB = [CNC EndleistenwinkelvonProfil:Profil2Array];
       NSLog(@"Endleistenwinkel B: %2.6f  grad:  %2.2f",winkelB,  winkelB*180/M_PI);
@@ -8350,11 +8350,11 @@ return returnInt;
          
          fprintf(stderr,"%d \t%2.4f \t  %2.4f  \n",i,ax,ay);
       }
-
+      
       //NSLog(@"AVR EndleistenEinlaufArrayB: %@",[EndleistenEinlaufArrayB description]);
       
-     // NSLog(@"LibProfileingabeAktion EndleistenEinlaufArrayA: KoordinatenTabelle");   
- 
+      // NSLog(@"LibProfileingabeAktion EndleistenEinlaufArrayA: KoordinatenTabelle");   
+      
       
       
       NSLog(@"LibProfileingabeAktion vor endleistenarray: KoordinatenTabelle");  
@@ -8367,57 +8367,68 @@ return returnInt;
          
          fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
       }
-
+      
       NSLog(@"EndleistenEinlaufArrayA: ");
       
-      int k=0;
-      for(k=1;k<[EndleistenEinlaufArrayA count];k++)
+      // Kontrolle, ob zwei mal 0,0 im EndleistenEinlaufArrayA liegt
+      int einlaufok = 1;
+      if(EndleistenEinlaufArrayA.count == 2)
       {
-         NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
-         
-         // Einstich, full PWM
-         float tempax = [[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:0]floatValue];
-         float tempay = [[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:1]floatValue];
-         NSLog(@"tempx: %2.2f tempy: %2.2f",tempax, tempay);
-         [tempZeilenDic setObject:[NSNumber numberWithFloat:ax+tempax]forKey:@"ax"];
-         [tempZeilenDic setObject:[NSNumber numberWithFloat:ay+tempay]forKey:@"ay"];
-         
-         // reduziertes pwm: Schneiden aus dem Einstich heraus 
-         if ([[EndleistenEinlaufArrayA objectAtIndex:k]count]>2) // Angaben fuer pwm an index 2
-         {
-            //NSLog(@"EndleistenEinlaufArrayA pwm: %2.2f",[[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:2]floatValue]);
-            int temppwm = [[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:2]floatValue]*origpwm;
-            
-            [tempZeilenDic setObject:[NSNumber numberWithInt:temppwm] forKey:@"pwm"];
-            //NSLog(@"EndleistenEinlaufArrayA pwm: %2.2f",temppwm);
-            
-         }
-         else 
-         {
-            [tempZeilenDic setObject:[NSNumber numberWithInt:origpwm] forKey:@"pwm"];
-         }
-         
-         float tempbx = [[[EndleistenEinlaufArrayB objectAtIndex:k]objectAtIndex:0]floatValue];
-         float tempby = [[[EndleistenEinlaufArrayB objectAtIndex:k]objectAtIndex:1]floatValue];
-         
-         [tempZeilenDic setObject:[NSNumber numberWithFloat:bx+tempbx]forKey:@"bx"];
-         [tempZeilenDic setObject:[NSNumber numberWithFloat:by+tempby]forKey:@"by"];
-         
-         
-         [tempZeilenDic setObject:[NSNumber numberWithInt:k] forKey:@"index"];
-         [tempZeilenDic setObject:[NSNumber numberWithInt:10] forKey:@"teil"];
-         // pwm
-         
-         [KoordinatenTabelle addObject:tempZeilenDic];
-      }// for k
-      
-      
-      NSLog(@"LibProfileingabeAktion NACH endleistenarray: KoordinatenTabelle");   
-      for (int i=0;i<EndleistenEinlaufArrayA.count;i++)
-      {
-         fprintf(stderr,"%f \t%2.4f \t  %2.4f \n",[[[EndleistenEinlaufArrayA objectAtIndex:i]objectAtIndex:0]floatValue]);
+         NSLog(@"EndleistenEinlaufArrayA: nur zwei Elemente: %@",EndleistenEinlaufArrayA);
+         if(([[[EndleistenEinlaufArrayA objectAtIndex:1]objectAtIndex:0]floatValue]==0) && ([[[EndleistenEinlaufArrayA objectAtIndex:1]objectAtIndex:1]floatValue]==0))
+            NSLog(@"EndleistenEinlaufArrayA: Elemente sind 0");
+         einlaufok = 0;
       }
-      
+      if(einlaufok)
+      {
+         int k=0;
+         for(k=1;k<[EndleistenEinlaufArrayA count];k++)
+         {
+            NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
+            
+            // Einstich, full PWM
+            float tempax = [[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:0]floatValue];
+            float tempay = [[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:1]floatValue];
+            NSLog(@"tempx: %2.2f tempy: %2.2f",tempax, tempay);
+            [tempZeilenDic setObject:[NSNumber numberWithFloat:ax+tempax]forKey:@"ax"];
+            [tempZeilenDic setObject:[NSNumber numberWithFloat:ay+tempay]forKey:@"ay"];
+            
+            // reduziertes pwm: Schneiden aus dem Einstich heraus 
+            if ([[EndleistenEinlaufArrayA objectAtIndex:k]count]>2) // Angaben fuer pwm an index 2
+            {
+               //NSLog(@"EndleistenEinlaufArrayA pwm: %2.2f",[[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:2]floatValue]);
+               int temppwm = [[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:2]floatValue]*origpwm;
+               
+               [tempZeilenDic setObject:[NSNumber numberWithInt:temppwm] forKey:@"pwm"];
+               //NSLog(@"EndleistenEinlaufArrayA pwm: %2.2f",temppwm);
+               
+            }
+            else 
+            {
+               [tempZeilenDic setObject:[NSNumber numberWithInt:origpwm] forKey:@"pwm"];
+            }
+            
+            float tempbx = [[[EndleistenEinlaufArrayB objectAtIndex:k]objectAtIndex:0]floatValue];
+            float tempby = [[[EndleistenEinlaufArrayB objectAtIndex:k]objectAtIndex:1]floatValue];
+            
+            [tempZeilenDic setObject:[NSNumber numberWithFloat:bx+tempbx]forKey:@"bx"];
+            [tempZeilenDic setObject:[NSNumber numberWithFloat:by+tempby]forKey:@"by"];
+            
+            
+            [tempZeilenDic setObject:[NSNumber numberWithInt:k] forKey:@"index"];
+            [tempZeilenDic setObject:[NSNumber numberWithInt:10] forKey:@"teil"];
+            // pwm
+            
+            [KoordinatenTabelle addObject:tempZeilenDic];
+         }// for k
+         
+         
+         NSLog(@"LibProfileingabeAktion NACH endleistenarray: KoordinatenTabelle");   
+         for (int i=0;i<EndleistenEinlaufArrayA.count;i++)
+         {
+            fprintf(stderr,"%f \t%2.4f \t  %2.4f \n",[[[EndleistenEinlaufArrayA objectAtIndex:i]objectAtIndex:0]floatValue]);
+         }
+      } // if einlaufok
       for (int i=0;i<KoordinatenTabelle.count;i++)
       {
          float ax = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];

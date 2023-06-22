@@ -3230,12 +3230,53 @@ return returnInt;
    [CNCStepYFeld setIntValue:[[[CNCDatenArray objectAtIndex:0]objectForKey:@"schrittey"]intValue]];
    
    fprintf(stderr,"tempKoordinatenTabelle: \n");
+   
+   float lastax = [[[tempKoordinatenTabelle objectAtIndex:0]objectForKey:@"ax"]floatValue];;
+   float lastay = [[[tempKoordinatenTabelle objectAtIndex:0]objectForKey:@"ay"]floatValue];
+   float lastbx = [[[tempKoordinatenTabelle objectAtIndex:0]objectForKey:@"bx"]floatValue];
+   float lastby = [[[tempKoordinatenTabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
+   
+   NSMutableArray* revKoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
+   
+   
    for(int i=0;i<tempKoordinatenTabelle.count;i++)
    {
       float ax = [[[tempKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
       float ay = [[[tempKoordinatenTabelle objectAtIndex:i]objectForKey:@"ay"]floatValue];
+
+      float bx = [[[tempKoordinatenTabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
+      float by = [[[tempKoordinatenTabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
+      
+      fprintf(stderr,"%d\t %.2f\t %.2f\n",i,ax,ay);
+      if(i)
+      {
+         if(((ax == lastax) && (ay == lastay)) && ((bx == lastbx) && (by == lastby)))
+         {
+            NSLog(@"daten gleich an i: %d",i);
+            //[tempKoordinatenTabelle removeObjectAtIndex:i];
+         }
+         else
+         {
+            [revKoordinatenTabelle addObject:[tempKoordinatenTabelle objectAtIndex:i]];
+         }
+      }
+      lastax = ax;
+      lastay = ay;
+      lastbx = bx;
+      lastby = by;
+      
+   }
+   fprintf(stderr,"rev\n");
+   
+   for(int i=0;i<revKoordinatenTabelle.count;i++)
+   {
+      float ax = [[[revKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
+      float ay = [[[revKoordinatenTabelle objectAtIndex:i]objectForKey:@"ay"]floatValue];
+
       fprintf(stderr,"%d\t %.2f\t %.2f\n",i,ax,ay);
    }
+   
+   
    
    [KoordinatenTabelle setArray:tempKoordinatenTabelle];//index, pwm, ax,bx,ay,by
    [self updateIndex];
@@ -8301,7 +8342,15 @@ return returnInt;
       
       NSArray* EndleistenEinlaufArrayA=[CNC EndleisteneinlaufMitWinkel:winkelA mitLaenge:einlauflaenge mitTiefe:einlauftiefe];
       NSArray* EndleistenEinlaufArrayB=[CNC EndleisteneinlaufMitWinkel:winkelB mitLaenge:einlauflaenge mitTiefe:einlauftiefe];
-      //NSLog(@"AVR EndleistenEinlaufArrayA: %@",[EndleistenEinlaufArrayA description]);
+      NSLog(@"AVR EndleistenEinlaufArrayA: ");
+      for (int i=0;i<EndleistenEinlaufArrayA.count;i++)
+      {
+         float ax = [[[EndleistenEinlaufArrayA objectAtIndex:i]objectAtIndex:0]floatValue];
+         float ay = [[[EndleistenEinlaufArrayA objectAtIndex:i]objectAtIndex:1]floatValue];
+         
+         fprintf(stderr,"%d \t%2.4f \t  %2.4f  \n",i,ax,ay);
+      }
+
       //NSLog(@"AVR EndleistenEinlaufArrayB: %@",[EndleistenEinlaufArrayB description]);
       
      // NSLog(@"LibProfileingabeAktion EndleistenEinlaufArrayA: KoordinatenTabelle");   
@@ -8319,6 +8368,8 @@ return returnInt;
          fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
       }
 
+      NSLog(@"EndleistenEinlaufArrayA: ");
+      
       int k=0;
       for(k=1;k<[EndleistenEinlaufArrayA count];k++)
       {
@@ -8360,8 +8411,13 @@ return returnInt;
          [KoordinatenTabelle addObject:tempZeilenDic];
       }// for k
       
-      /*
-      NSLog(@"LibProfileingabeAktion NACH endleistenarray: KoordinatenTabelle");   for (int i=0;i<KoordinatenTabelle.count;i++)
+      
+      NSLog(@"LibProfileingabeAktion NACH endleistenarray: KoordinatenTabelle");   
+      for (int i=0;i<EndleistenEinlaufArrayA.count;i++)
+      {
+         fprintf(stderr,"%f \t%2.4f \t  %2.4f \n",[[[EndleistenEinlaufArrayA objectAtIndex:i]objectAtIndex:0]floatValue]);
+      }
+      
       for (int i=0;i<KoordinatenTabelle.count;i++)
       {
          float ax = [[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
@@ -8371,7 +8427,7 @@ return returnInt;
          
          fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
       }
-*/
+
  
       
       
@@ -8525,8 +8581,10 @@ return returnInt;
       von = profilstartindex;
       
         NSArray* redOberseiteArray = [Utils abstandcheckenVonarrayA:Profil1OberseiteArray arrayB:Profil2OberseiteArray teil: 20 abstand:[MinimaldistanzFeld floatValue]];
+      //[KoordinatenTabelle removeLastObject];
       
       for (index=0;index< redOberseiteArray.count;index++)
+      //for (index=0;index< Profil1OberseiteArray.count;index++)
       {
          NSMutableDictionary* tempZeilenDic = [redOberseiteArray objectAtIndex:index];
          [tempZeilenDic setObject:[NSNumber numberWithInt:20] forKey:@"teil"]; // Kennzeichnung Oberseite
@@ -8648,7 +8706,7 @@ return returnInt;
       
       
       NSArray* NasenleistenAuslaufArray=[CNC NasenleistenauslaufMitLaenge:auslauflaenge mitTiefe:auslauftiefe];
-      //NSLog(@"AVR NasenleistenAuslaufArray: %@",[NasenleistenAuslaufArray description]);
+      NSLog(@"AVR NasenleistenAuslaufArray: %@",[NasenleistenAuslaufArray description]);
       int l;
       for(l=1;l<[NasenleistenAuslaufArray count];l++)
       {
@@ -12133,7 +12191,7 @@ return returnInt;
                [alert setInformativeText:@"Please only use hex values between 00 and FF."];
                [alert addButtonWithTitle:@"OK"];
               // [alert addButtonWithTitle:@"Cancel"];
-               [alert setAlertStyle:NSWarningAlertStyle];
+               [alert setAlertStyle:NSAlertStyleWarning];
                
                
                
@@ -12550,8 +12608,24 @@ return returnInt;
                [self setBusy:NO];
                
                
-               NSBeep();
+     
+               //NSBeep();
+               NSAlert *alert = [[NSAlert alloc] init];
+               [alert setMessageText:@"Task fertig"];
+               //[alert setInformativeText:@"Alles ok."];
+               [alert addButtonWithTitle:@"OK"];
                
+               
+               [alert setAlertStyle:NSAlertStyleWarning];
+               
+               int antwort=[alert runModal];
+               /*
+               if (antwort ==  NSAlertFirstButtonReturn)
+               {
+                  
+                  NSLog(@"nach alert");
+               }
+                */
             }break;
 
          case 0xAF:

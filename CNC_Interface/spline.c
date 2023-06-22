@@ -456,7 +456,7 @@ void plotCircle(int xm, int ym, int r)
       setPixelInt(xm-y, ym-x); //  II. Quadrant 
       setPixelInt(xm+x, ym-y); // III. Quadrant 
       setPixelInt(xm+y, ym+x); // IV. Quadrant 
-      printf("\n");
+      //printf("\n");
       r = err;
       if (r > x) err += ++x*2+1; // * e_xy+e_x >0
       if (r <= y) err += ++y*2+1; // * e_xy+e_y < 0

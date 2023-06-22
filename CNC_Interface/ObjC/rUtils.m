@@ -1489,7 +1489,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    for(int index = 0;index < rawarray.count;index++)
    {
       
-      NSLog(@"index: %d datensatzok: %d dista: %2.2f",index,[[[rawarray objectAtIndex:index]objectForKey:@"datensatzok"]intValue],[[[rawarray objectAtIndex:index]objectForKey:@"dista"]floatValue]);
+      //NSLog(@"index: %d datensatzok: %d dista: %2.2f",index,[[[rawarray objectAtIndex:index]objectForKey:@"datensatzok"]intValue],[[[rawarray objectAtIndex:index]objectForKey:@"dista"]floatValue]);
       
    }
    

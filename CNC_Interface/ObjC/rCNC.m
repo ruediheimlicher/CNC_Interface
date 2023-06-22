@@ -812,7 +812,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
    {
       uint16_t steigunguint = abs(steigungint);
       
-      NSLog(@"steigungin inv: %d steigunguint: %d",steigungint,steigunguint);
+      //NSLog(@"steigungin inv: %d steigunguint: %d",steigungint,steigunguint);
       steigungl = (steigunguint & 0x00FF);
       steigungh = (steigunguint>>8) & 0xFF;
       steigungh |= 0x80;
@@ -2550,7 +2550,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
  //     py[i] = [[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue];
       
    }
-   printf("\n");
+   //printf("\n");
    // array abarbeiten
    
    endx = [[[ProfilArray lastObject]objectForKey:@"x"]floatValue];
@@ -2637,7 +2637,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
       }// if(i==1)
       else // rest des profils bis 2 Elemente vor Ende: wertx zwischen nowx und nextx
       {
-         printf("\n"); 
+         //printf("\n"); 
         // printf("i: %d i: %d i+1: %d i+2: %d lastx: %lf\n",i,i,i+1,i+2,lastx);
          
          nowx = [[[ProfilArray objectAtIndex:i+1]objectForKey:@"x"]floatValue];
@@ -2712,9 +2712,9 @@ PortA=vs[n & 3]; warte10ms(); n++;
                   float tempy = lagrangewert(px,py,1,bereich,16,tempx);
                   //printf("\t\t schritte: %d i+1: %d px now: %lf px next: %lf\t\t tempx,y: \t%lf  \t%lf\t lastx: %lf \tschrittcounter: %d\t", schritte,i+1,px[i+1],px[i+2],tempx,tempy,lastx,schrittcounter);
                  
-                  printf("\t\t schritte: %d i+1: %d nowx: %lf nowy: %lf nextx: %lf nexty: %lf\t\t tempx,y: \t%lf  \t%lf\t lastx: %lf \tschrittcounter: %d\t tempxabstand: %lf\t", schritte,i+1,nowx,nowy,nextx,nexty,tempx,tempy,lastx,schrittcounter,tempxabstand);
+                 // printf("\t\t schritte: %d i+1: %d nowx: %lf nowy: %lf nextx: %lf nexty: %lf\t\t tempx,y: \t%lf  \t%lf\t lastx: %lf \tschrittcounter: %d\t tempxabstand: %lf\t", schritte,i+1,nowx,nowy,nextx,nexty,tempx,tempy,lastx,schrittcounter,tempxabstand);
 
-                  printf("\n");
+                  //printf("\n");
                   //printf("anzschritte: %d schritte: %d  tempx,y:\t %lf \t %lf \t prevabstandx: \t%lf\t nextabstandx: \t%lf\t schrittcounter: \t%d\n",anzschritte,schritte, tempx, tempy, prevabstandx,nextabstandx,schrittcounter);
                   [ProfilpunktArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:tempx],@"x",[NSNumber numberWithFloat:tempy],@"y",[NSNumber numberWithInt:i],@"index",[NSNumber numberWithInt:schrittcounter],@"schrittcounter", nil]];
                   lastx =tempx;
@@ -2742,7 +2742,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    
    for (int i=0;i<ProfilpunktArray.count;i++)
    {
-      printf("%d\t%lf\t%lf \t index: %d schrittcounter: %d\n",i,[[[ProfilpunktArray objectAtIndex:i]valueForKey:@"x"]floatValue] , [[[ProfilpunktArray objectAtIndex:i]valueForKey:@"y"]floatValue],[[[ProfilpunktArray objectAtIndex:i]valueForKey:@"index"]intValue],[[[ProfilpunktArray objectAtIndex:i]valueForKey:@"schrittcounter"]intValue]);
+      //printf("%d\t%lf\t%lf \t index: %d schrittcounter: %d\n",i,[[[ProfilpunktArray objectAtIndex:i]valueForKey:@"x"]floatValue] , [[[ProfilpunktArray objectAtIndex:i]valueForKey:@"y"]floatValue],[[[ProfilpunktArray objectAtIndex:i]valueForKey:@"index"]intValue],[[[ProfilpunktArray objectAtIndex:i]valueForKey:@"schrittcounter"]intValue]);
    }
    
    return ProfilpunktDic;
@@ -3108,7 +3108,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
       float ax = [[[profil objectAtIndex:i]objectForKey:@"x"]floatValue];
       float ay = [[[profil objectAtIndex:i]objectForKey:@"y"]floatValue];
        
-   fprintf(stderr,"%d \t%2.4f \t  %2.4f \n",i,ax,ay);
+   //fprintf(stderr,"%d \t%2.4f \t  %2.4f \n",i,ax,ay);
 
    }
    float steigung=0;
@@ -3137,7 +3137,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
       deltay = yB - yA;
       arc = deltay/deltax;
       steigung = atanf(deltay/deltax);
-      NSLog(@"O   %2.6f  \t %2.6f\t %2.6f \t %2.6f * \tdeltax:\t%2.6f \t deltay: %2.6f\t steigung: \t%2.6f \t arc: %2.6f",xA,yA,xB,yB,deltax,deltay,steigung, arc);
+      //NSLog(@"O   %2.6f  \t %2.6f\t %2.6f \t %2.6f * \tdeltax:\t%2.6f \t deltay: %2.6f\t steigung: \t%2.6f \t arc: %2.6f",xA,yA,xB,yB,deltax,deltay,steigung, arc);
 
      //steigung *= -1; // Oberseitearray ist invertiert
      return steigung;
@@ -3158,7 +3158,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
       float ax = [[[profil objectAtIndex:ii]objectForKey:@"x"]floatValue];
       float ay = [[[profil objectAtIndex:ii]objectForKey:@"y"]floatValue];
        
-   fprintf(stderr,"%d \t %d \t %2.4f \t  %2.4f \n",ii,i,ax,ay);
+   //fprintf(stderr,"%d \t %d \t %2.4f \t  %2.4f \n",ii,i,ax,ay);
 
    }
    float steigung=0;
@@ -3187,7 +3187,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
       deltay = yB - yA;
       arc = deltay/deltax;
       steigung = atanf(deltay/deltax);
-      NSLog(@"O   %2.6f  \t %2.6f\t %2.6f \t %2.6f\tdeltax:\t%2.6f \t deltay:\t %2.6f\t steigung: \t%2.6f \t arc: %2.6f", xA,yA,xB,yB,deltax,deltay,steigung, arc);
+      //NSLog(@"O   %2.6f  \t %2.6f\t %2.6f \t %2.6f\tdeltax:\t%2.6f \t deltay:\t %2.6f\t steigung: \t%2.6f \t arc: %2.6f", xA,yA,xB,yB,deltax,deltay,steigung, arc);
 
      steigung *= -1; 
      return steigung;
@@ -3207,7 +3207,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
       float ax = [[[profil objectAtIndex:i]objectForKey:@"x"]floatValue];
       float ay = [[[profil objectAtIndex:i]objectForKey:@"y"]floatValue];
        
-   fprintf(stderr,"%d \t%2.4f \t  %2.4f \n",i,ax,ay);
+   //fprintf(stderr,"%d \t%2.4f \t  %2.4f \n",i,ax,ay);
 
    }
    //fprintf(stderr,"EndleistenwinkelvonProfil End\n");
@@ -3542,30 +3542,38 @@ PortA=vs[n & 3]; warte10ms(); n++;
    [EinlaufpunkteArray addObject:tempEinlaufArray0];
   
    // Einstich
-   Endpunkt.x +=tiefe * sinf(winkel);
-   Endpunkt.y -=tiefe * cosf(winkel);
-   NSArray* tempEinlaufArray1 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:full_pwm], nil];
-   [EinlaufpunkteArray addObject:tempEinlaufArray1];
- 
-   /*
-   // Boden
-   Endpunkt.x +=dicke * cosf(winkel);
-   Endpunkt.y +=dicke * sinf(winkel);
-   NSArray* tempEinlaufArray2 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y], nil];
-   [EinlaufpunkteArray addObject:tempEinlaufArray2];
-   */
-   // Ausstich
-   Endpunkt.x -=tiefe * sinf(winkel);
-   Endpunkt.y +=tiefe * cosf(winkel);
-   NSArray* tempEinlaufArray3 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:red_pwm], nil];
-   [EinlaufpunkteArray addObject:tempEinlaufArray3];
-
+   if(tiefe)
+   {
+      Endpunkt.x +=tiefe * sinf(winkel);
+      Endpunkt.y -=tiefe * cosf(winkel);
+      NSArray* tempEinlaufArray1 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:full_pwm], nil];
+      [EinlaufpunkteArray addObject:tempEinlaufArray1];
+      
+      /*
+       // Boden
+       Endpunkt.x +=dicke * cosf(winkel);
+       Endpunkt.y +=dicke * sinf(winkel);
+       NSArray* tempEinlaufArray2 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y], nil];
+       [EinlaufpunkteArray addObject:tempEinlaufArray2];
+       */
+      // Ausstich
+      Endpunkt.x -=tiefe * sinf(winkel);
+      Endpunkt.y +=tiefe * cosf(winkel);
+      NSArray* tempEinlaufArray3 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:red_pwm], nil];
+      [EinlaufpunkteArray addObject:tempEinlaufArray3];
+   }
    // Einlauf
-   Endpunkt.x +=laenge * cosf(winkel);
-   Endpunkt.y +=laenge * sinf(winkel);
-   NSArray* tempEinlaufArray4 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:full_pwm], nil];
-   [EinlaufpunkteArray addObject:tempEinlaufArray4];
-
+   if(laenge)
+   {
+      Endpunkt.x +=laenge * cosf(winkel);
+      Endpunkt.y +=laenge * sinf(winkel);
+      NSArray* tempEinlaufArray4 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:full_pwm], nil];
+      [EinlaufpunkteArray addObject:tempEinlaufArray4];
+   }
+   else 
+   {
+      [EinlaufpunkteArray addObject:tempEinlaufArray0];
+   }
    return EinlaufpunkteArray;
 }
 
@@ -3591,26 +3599,31 @@ PortA=vs[n & 3]; warte10ms(); n++;
   
    
    // Auslauf
-   Endpunkt.x +=laenge;
-   NSArray* tempEinlaufArray4 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y], [NSNumber numberWithFloat:full_pwm],nil];
-   [AuslaufpunkteArray addObject:tempEinlaufArray4];
-
+   if(laenge)
+   {
+      Endpunkt.x +=laenge;
+      NSArray* tempEinlaufArray4 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y], [NSNumber numberWithFloat:full_pwm],nil];
+      [AuslaufpunkteArray addObject:tempEinlaufArray4];
+   }
    
    // Einstich
-   Endpunkt.y -=tiefe;
-   NSArray* tempEinlaufArray1 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:full_pwm], nil];
-   [AuslaufpunkteArray addObject:tempEinlaufArray1];
- 
-   /*
-   // Boden
-   Endpunkt.x +=dicke;
-   NSArray* tempEinlaufArray2 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y], nil];
-   [AuslaufpunkteArray addObject:tempEinlaufArray2];
-   */
-   // Ausstich
-   Endpunkt.y +=tiefe;
-   NSArray* tempEinlaufArray3 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:red_pwm], nil];
-   [AuslaufpunkteArray addObject:tempEinlaufArray3];
+   if(tiefe)
+   {
+      Endpunkt.y -=tiefe;
+      NSArray* tempEinlaufArray1 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:full_pwm], nil];
+      [AuslaufpunkteArray addObject:tempEinlaufArray1];
+      
+      /*
+       // Boden
+       Endpunkt.x +=dicke;
+       NSArray* tempEinlaufArray2 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y], nil];
+       [AuslaufpunkteArray addObject:tempEinlaufArray2];
+       */
+      // Ausstich
+      Endpunkt.y +=tiefe;
+      NSArray* tempEinlaufArray3 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:red_pwm], nil];
+      [AuslaufpunkteArray addObject:tempEinlaufArray3];
+   }
    
    return AuslaufpunkteArray;
 }

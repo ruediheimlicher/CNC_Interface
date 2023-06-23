@@ -450,6 +450,7 @@ int globalcounter = 0;
    - (int)motorsteps;
    - (int)CNC_micro;
 
+   -(void) killWindow:(NSAlert *)alert with:(NSTimer *) theTimer;
 
    - (int)saveProfileinstellungen;
    - (void)setUSBDaten:(NSDictionary*)datendic;

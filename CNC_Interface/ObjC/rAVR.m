@@ -474,7 +474,7 @@ float det(float v0[],float v1[])
 - (void)mouseUp:(NSEvent *)theEvent
 {
    [super mouseUp:theEvent];
- //  NSLog(@"Pfeiltaste mouseup");
+   NSLog(@"Pfeiltaste mouseup");
    richtung=[self tag];
    int status = [self state];
    NSLog(@"rPfeiltaste mouseUp: Pfeiltaste richtung: %d status: %d",richtung,status);
@@ -10991,7 +10991,7 @@ return returnInt;
    //Horizontal bis Anschlag
    PositionA.x -= 500; // sicher ist sicher
    PositionB.x -= 500;
-   //NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+   NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
    index++;
    [AnfahrtArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:3],@"lage",nil]];
    int i=0;
@@ -11003,6 +11003,7 @@ return returnInt;
    {
       // Seite A
       NSPoint tempStartPunktA= NSMakePoint([[[AnfahrtArray objectAtIndex:i]objectForKey:@"ax"]floatValue]*zoomfaktor,[[[AnfahrtArray objectAtIndex:i]objectForKey:@"ay"]floatValue]*zoomfaktor);
+      
       NSString* tempStartPunktAString= NSStringFromPoint(tempStartPunktA);
       
       //NSPoint tempEndPunkt= [[KoordinatenTabelle objectAtIndex:i+1]objectForKey:@"punktstring"];
@@ -11034,7 +11035,7 @@ return returnInt;
       [tempDic setObject:[NSNumber numberWithInt:i] forKey:@"index"];
       
       [tempDic setObject:[NSNumber numberWithFloat:zoomfaktor] forKey:@"zoomfaktor"];
-
+      
       // home      
       int code=0xF0; // zeigt home an
       
@@ -11047,20 +11048,20 @@ return returnInt;
       
       [tempDic setObject:[NSNumber numberWithInt:micro]forKey:@"micro"];
       [tempDic setObject:[NSNumber numberWithInt:motorsteps]forKey:@"steps"];
-
-    
+      
+      
       NSDictionary* tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
       NSLog(@"AVR  reportHome tempSteuerdatenDic: %@",[tempSteuerdatenDic description]);
-     
-            
+      
+      
       [HomeSchnittdatenArray addObject:[CNC SchnittdatenVonDic:tempSteuerdatenDic]];
       
-      NSLog(@"AVR  reportHome HomeSchnittdatenArray: %@",HomeSchnittdatenArray);
+      NSLog(@"AVR  reportHome homecode: %2.0X \nHomeSchnittdatenArray: %@ ",homecode, HomeSchnittdatenArray);
       
       HomeSchnittdatenArray[i][24] = [NSNumber numberWithInt:homecode];
-      HomeSchnittdatenArray[i][26] = [NSNumber numberWithInt:1];
-
-     
+      HomeSchnittdatenArray[i][26] = [NSNumber numberWithInt:1]; // home
+      
+      
    } 
    [CNC setSpeed:lastSpeed];
    NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
@@ -11076,8 +11077,6 @@ return returnInt;
 
 - (IBAction)reportHome_a:(id)sender
 {
-   
-   
    
   // [self reportNeuTaste:NULL];
    NSLog(@"AVR  reportHome");
@@ -12500,10 +12499,28 @@ return returnInt;
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
    [nc postNotificationName:@"usbschnittdaten" object:self userInfo:schnittdatendic];
 }
+/*
+-(void) killWindow:(NSAlert *)alert with:(NSTimer *) theTimer
+    {
+
+        NSLog(@"killWindow");
+        [[alert window] orderOut:0];
+
+    }
+*/
+-(void) killWindow:(NSTimer *) theTimer
+    {
+
+        NSLog(@"killWindow");
+       
+       // [[alert window] orderOut:0];
+
+    }
+
 
 - (void)USBReadAktion:(NSNotification*)note
 {
-   //NSLog(@"AVR  USBReadAktion note: %@",[[note userInfo]description]);
+   NSLog(@"AVR  USBReadAktion note: %@",[[note userInfo]description]);
    
    if ([[note userInfo]objectForKey:@"inposition"])
    {
@@ -12589,7 +12606,7 @@ return returnInt;
    
          case 0xD0: // letzter Abschnitt
          {
-            NSLog(@"AVR  USBReadAktion abschnittcode D0 anzsteps: %d stepperposition: %d",anzsteps, stepperposition);
+            NSLog(@"AVR  USBReadAktion abschnittcode D0 letzter Abschnitt anzsteps: %d stepperposition: %d",anzsteps, stepperposition);
          }break;
             
          case 0xBD: // Abschnitt fertig // von Stepper_20
@@ -12608,10 +12625,19 @@ return returnInt;
                //[alert setInformativeText:@"Alles ok."];
                [alert addButtonWithTitle:@"OK"];
                
-               
+               NSTimer *myTimer = [NSTimer timerWithTimeInterval:3
+                                                           target:self
+                                                         selector: @selector(killWindow:)
+                                                         userInfo:nil
+                                                          repeats:NO];
+
+                [[NSRunLoop currentRunLoop] addTimer:myTimer forMode:NSModalPanelRunLoopMode];
+ 
                [alert setAlertStyle:NSAlertStyleWarning];
                
                int antwort=[alert runModal];
+               
+               
                /*
                if (antwort ==  NSAlertFirstButtonReturn)
                {
@@ -12649,8 +12675,8 @@ return returnInt;
             
          case 0xB5:
          {
-            NSLog(@"AVR Anschlag A0 home first");
-            [self homeSenkrechtSchicken];
+            NSLog(@"AVR Anschlag A0 home first > homeSenkrechtSchicken");
+            //[self homeSenkrechtSchicken];
             
          }break;
             
@@ -12720,7 +12746,10 @@ return returnInt;
       if ((home==2)&& (homeanschlagCount <4)) // senkrekten Abschnitt von home schicken.
 //      if ((homeanschlagCount <4)) // senkrekten Abschnitt von home schicken.
       {
+         NSLog(@"AVR USBReadAktion 'home' da: %0.2X",home);
          [self homeSenkrechtSchicken];
+         
+         
          [HomeTaste setState:0];
       }
       if (homeanschlagCount == 4)

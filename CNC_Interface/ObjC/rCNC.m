@@ -504,15 +504,41 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 
    
 	
-	float delayX= ((relZeit/(SchritteX & 0x7FFF))*100000)/10;							// Zeit fuer einen Schritt in 100us-Einheit
-	float delayAX= ((relZeit/(SchritteAX & 0x7FFF))*100000)/10;							// Zeit fuer einen Schritt AX in 100us-Einheit
-	float delayBX= ((relZeit/(SchritteBX & 0x7FFF))*100000)/10;							// Zeit fuer einen Schritt BX in 100us-Einheit
+   float delayX = 0;							// Zeit fuer einen Schritt in 100us-Einheit
+	float delayAX= 0;							// Zeit fuer einen Schritt AX in 100us-Einheit
+	float delayBX= 0;							// Zeit fuer einen Schritt BX in 100us-Einheit
 	
       
-   float delayY= ((relZeit/(SchritteY & 0x7FFF))*100000)/10;
-   float delayAY= ((relZeit/(SchritteAY & 0x7FFF))*100000)/10;
-   float delayBY= ((relZeit/(SchritteBY & 0x7FFF))*100000)/10;
-	
+   float delayY = 0;
+   float delayAY =0 ;
+   float delayBY= 0;
+
+   if(SchritteX)
+   {
+      delayX = ((relZeit/(SchritteX & 0x7FFF))*100000)/10; // Zeit fuer einen Schritt in 100us-Einheit
+   }
+   if(SchritteAX)
+   {
+      delayAX= ((relZeit/(SchritteAX & 0x7FFF))*100000)/10;                     // Zeit fuer einen Schritt AX in 100us-Einheit
+   }
+   if(SchritteBX)
+   {
+      delayBX= ((relZeit/(SchritteBX & 0x7FFF))*100000)/10;                     // Zeit fuer einen Schritt BX in 100us-Einheit
+   }
+      
+   if(SchritteY)
+   {
+      delayY = ((relZeit/(SchritteY & 0x7FFF))*100000)/10;
+   }
+   if(SchritteAY)
+   {
+      delayAY= ((relZeit/(SchritteAY & 0x7FFF))*100000)/10;
+   }
+   if(SchritteBY)
+   {
+      delayBY= ((relZeit/(SchritteBY & 0x7FFF))*100000)/10;
+   }
+
 	//NSLog(@"DistanzX: \t%.2f \tDistanzY: \t%.2f \tDistanz: \t%.2f \tZeit: \t%.3f  \tdelayX: \t%.1f\t  delayY: \t%.1f \tSchritteX: \t%d \tSchritteY: \t%d",DistanzX,DistanzY,Distanz, Zeit, delayX, delayY, SchritteX,SchritteY);
 	
 	

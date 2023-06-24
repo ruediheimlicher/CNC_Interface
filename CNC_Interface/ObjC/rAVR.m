@@ -710,10 +710,10 @@ void plot_line (int x0, int y0, int x1, int y1)
       }
       printf("\n");
    }
-   printf("\nsplinearray\n");
+//   printf("\nsplinearray\n");
    for(int i=0;i<datapunkte*anz;i++)
    {
-      printf("%d\t%lf\t%lf\n",i,splinearray[i][0],splinearray[i][1]);
+//      printf("%d\t%lf\t%lf\n",i,splinearray[i][0],splinearray[i][1]);
    }
 
   // 
@@ -9854,6 +9854,48 @@ return returnInt;
    return KoordinatenTabelle;
 }
 
+- (void)sendHomeReset
+{
+   NSLog(@"sendHomeReset");
+   NSMutableArray* HomeSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
+
+   NSMutableArray* ManArray = [[NSMutableArray alloc]initWithCapacity:0];
+   
+   // Startpunkt ist aktuelle Position. Lage: 2: Home horizontal
+   NSPoint PositionA = NSMakePoint(0, 0);
+   NSPoint PositionB = NSMakePoint(0, 0);
+   int index=0;
+   [ManArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",nil]];
+   
+   // Dic zusammenstellen
+   NSMutableDictionary* tempDic= [[NSMutableDictionary alloc]initWithCapacity:0];
+   uint8_t neucode = 0xF1;
+   [tempDic setObject:[NSNumber numberWithInt:neucode] forKey:@"code"];
+   [tempDic setObject:[NSNumber numberWithInt:3] forKey:@"position"];
+   
+   NSDictionary* tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
+   //NSLog(@"D i: %d",i);
+  
+   [HomeSchnittdatenArray addObject:[CNC SchnittdatenVonDic:tempSteuerdatenDic]];
+   //NSLog(@"E i: %d",i);
+   HomeSchnittdatenArray[0][24] = [NSNumber numberWithInt:neucode];
+   
+   [tempDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
+   [tempDic setObject:[NSNumber numberWithInt:0] forKey:@"home"]; // 
+
+   [tempDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+   
+   // ***
+   [nc postNotificationName:@"usbschnittdaten" object:self userInfo:tempDic];
+
+   //  [nc postNotificationName:@"slavereset" object:self userInfo:tempDic];
+   NSLog(@"sendHomeReset END");
+   
+   
+   
+}
+
 // TODO: *** *** *** *** *** *** NeuTaste
 - (IBAction)reportNeuTaste:(id)sender
 {
@@ -11051,12 +11093,12 @@ return returnInt;
       
       
       NSDictionary* tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
-      NSLog(@"AVR  reportHome tempSteuerdatenDic: %@",[tempSteuerdatenDic description]);
+      //NSLog(@"AVR  reportHome tempSteuerdatenDic: %@",[tempSteuerdatenDic description]);
       
       
       [HomeSchnittdatenArray addObject:[CNC SchnittdatenVonDic:tempSteuerdatenDic]];
       
-      NSLog(@"AVR  reportHome homecode: %2.0X \nHomeSchnittdatenArray: %@ ",homecode, HomeSchnittdatenArray);
+      //NSLog(@"AVR  reportHome homecode: %2.0X \nHomeSchnittdatenArray: %@ ",homecode, HomeSchnittdatenArray);
       
       HomeSchnittdatenArray[i][24] = [NSNumber numberWithInt:homecode];
       HomeSchnittdatenArray[i][26] = [NSNumber numberWithInt:1]; // home
@@ -11069,7 +11111,7 @@ return returnInt;
    [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
 
-   NSLog(@"reportHome HomeSchnittdatenDic: %@",HomeSchnittdatenDic);
+   //NSLog(@"reportHome HomeSchnittdatenDic: %@",HomeSchnittdatenDic);
    [nc postNotificationName:@"usbschnittdaten" object:self userInfo:HomeSchnittdatenDic];
 
 
@@ -11099,7 +11141,7 @@ return returnInt;
 
    //[nc postNotificationName:@"slavereset" object:self userInfo:NULL];
 #pragma mark HOME horizontal
-   NSLog(@"Home Start: Horizontal bis Anschlag");
+   //NSLog(@"Home Start: Horizontal bis Anschlag");
    
    NSMutableArray* AnfahrtArray = [[NSMutableArray alloc]initWithCapacity:0];
    
@@ -11244,13 +11286,13 @@ return returnInt;
 
 - (void)homeSenkrechtSchicken
 {
-   NSLog(@"AVR  homeSenkrechtSchicken");
+   NSLog(@"\n\n*****************  AVR  homeSenkrechtSchicken");
    
    if ((cncstatus)|| !([CNC_Seite1Check state] || [CNC_Seite2Check state]))
    {
       return;
    }
-   NSLog(@"Vertikal bis Anschlag");
+   NSLog(@"Vertikal ab bis Anschlag");
    //return;
    NSMutableArray* AnfahrtArray = [[NSMutableArray alloc]initWithCapacity:0];
     
@@ -11274,8 +11316,9 @@ return returnInt;
    NSMutableArray* HomeSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
    int lastSpeed = [CNC speed];
    [CNC setredpwm:[red_pwmFeld floatValue]];
+   int homecode=0xF0;
    
-   for (i=0;i<[AnfahrtArray count]-1;i++)
+   //for (i=0;i<[AnfahrtArray count]-1;i++)
    {
       // Seite A
       NSPoint tempStartPunktA= NSMakePoint([[[AnfahrtArray objectAtIndex:i]objectForKey:@"ax"]floatValue]*zoomfaktor,[[[AnfahrtArray objectAtIndex:i]objectForKey:@"ay"]floatValue]*zoomfaktor);
@@ -11310,12 +11353,12 @@ return returnInt;
       [tempDic setObject:[NSNumber numberWithInt:i] forKey:@"index"];
       
       [tempDic setObject:[NSNumber numberWithFloat:zoomfaktor] forKey:@"zoomfaktor"];
-      int code=0xF0;
       
-      [tempDic setObject:[NSNumber numberWithInt:code] forKey:@"code"];
       
-      [tempDic setObject:[NSNumber numberWithInt:code] forKey:@"codea"];
-      [tempDic setObject:[NSNumber numberWithInt:code] forKey:@"codeb"];
+      [tempDic setObject:[NSNumber numberWithInt:homecode] forKey:@"code"];
+      
+     // [tempDic setObject:[NSNumber numberWithInt:code] forKey:@"codea"];
+    //  [tempDic setObject:[NSNumber numberWithInt:code] forKey:@"codeb"];
       
       
       int position=0;
@@ -11334,40 +11377,25 @@ return returnInt;
       
       [HomeSchnittdatenArray addObject:[CNC SchnittdatenVonDic:tempSteuerdatenDic]];
       
-   } // for i
+   } 
+   
+   HomeSchnittdatenArray[i][24] = [NSNumber numberWithInt:homecode];
+   HomeSchnittdatenArray[i][26] = [NSNumber numberWithInt:1]; // home
+
    
    [CNC setSpeed:lastSpeed];
    
    NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+   [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:1] forKey:@"home"];
    [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
    //NSLog(@"AVR  reportHome HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
    
-   /*
-   if ([HomeTaste state])
-   {
-      [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:1] forKey:@"home"]; // Home anfahren
-      [HomeTaste setState:0];
-   }
-   else
-   {
-      [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"home"]; // 
-      
-   }
-   */
    // vertikalabschnitt signalisieren1
    int code=0; // zeigt home an
    
-   if ([HomeTaste state])
-   {
-      [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:1] forKey:@"home"]; // 
-      [HomeTaste setState:0];
-   }
-   else
-   {
-      [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"home"]; // 
-   }
-   
+ 
+   [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:1] forKey:@"home"];
    
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"art"]; // 
    //NSLog(@"homeSenkrechtSchicken SchnittdatenDic: %@",[HomeSchnittdatenDic description]);
@@ -12566,7 +12594,7 @@ return returnInt;
       uint16_t stepperposition = [[[note userInfo]objectForKey:@"stepperposition"]intValue];
       uint16_t anzsteps = [SchnittdatenArray count];
       
-      //NSLog(@"AVR  USBReadAktion abschnittfertig: %02.X stepperposition: %d anzsteps: %d)",abschnittfertig,stepperposition,anzsteps);
+      NSLog(@"******************\nAVR  USBReadAktion abschnittfertig: %02.X stepperposition: %d anzsteps: %d)",abschnittfertig,stepperposition,anzsteps);
       if (stepperposition > 18)
       {
          //NSLog(@"AVR  USBReadAktion 18");
@@ -12575,7 +12603,8 @@ return returnInt;
       {
          [CNC_busySpinner stopAnimation:NULL];
       }
-
+      uint8_t teensy_cncstatus = [[[note userInfo]objectForKey:@"cncstatus"]intValue];
+      NSLog(@"AVR  USBReadAktion teensy_cncstatus hex: %.02X",teensy_cncstatus);
       switch (abschnittfertig)
       {
          case 0xE1: // Antwort auf Mouseup 0xE0 HALT
@@ -12675,24 +12704,61 @@ return returnInt;
             
          case 0xB5:
          {
-            NSLog(@"AVR Anschlag A0 home first > homeSenkrechtSchicken");
-            //[self homeSenkrechtSchicken];
+            
+            NSLog(@"B5 AVR Anschlag A0 home first");
+            if((teensy_cncstatus & (1<<MOTOR_A)) && (teensy_cncstatus & (1<<MOTOR_C)))
+            {
+               NSLog(@"AVR Anschlag A0 C0");
+               teensy_cncstatus &= ~(1<<MOTOR_A);
+               teensy_cncstatus &= ~(1<<MOTOR_C);
+               //[self sendHomeReset];
+               [self homeSenkrechtSchicken];
+            }
+            
+           
             
          }break;
             
          case 0xB6:
          {
-            NSLog(@"AVR Anschlag B0 home first");
+            NSLog(@"B6 AVR Anschlag B0 home first");
+            if((teensy_cncstatus & (1<<MOTOR_B)) && (teensy_cncstatus & (1<<MOTOR_D)))
+            {
+               NSLog(@"AVR Anschlag B0 D0");
+               teensy_cncstatus &= ~(1<<MOTOR_B);
+               teensy_cncstatus &= ~(1<<MOTOR_D);
+            
+            }
+            
+            
          }break;
             
          case 0xB7:
          {
-            NSLog(@"AVR Anschlag C0 home first");
+            NSLog(@"B7 AVR Anschlag C0 home first");
+            if((teensy_cncstatus & (1<<MOTOR_A)) && (teensy_cncstatus & (1<<MOTOR_C)))
+            {
+               NSLog(@"AVR Anschlag C0 A0");
+               teensy_cncstatus &= ~(1<<MOTOR_A);
+               teensy_cncstatus &= ~(1<<MOTOR_C);
+               //[self sendHomeReset];
+               [self homeSenkrechtSchicken];
+
+            }
+
+            
          }break;
             
          case 0xB8:
          {
-            NSLog(@"AVR Anschlag D0 home first");
+            NSLog(@"B8 AVR Anschlag D0 home first");
+            if((teensy_cncstatus & (1<<MOTOR_B)) && (teensy_cncstatus & (1<<MOTOR_D)))
+            {
+               NSLog(@"AVR Anschlag D0 B0");
+               teensy_cncstatus &= ~(1<<MOTOR_B);
+               teensy_cncstatus &= ~(1<<MOTOR_D);
+            }
+            
          }break;
          
          case 0xA5:   

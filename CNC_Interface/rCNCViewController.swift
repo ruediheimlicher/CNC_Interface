@@ -354,8 +354,9 @@ class rCNCViewController:rViewController
       
       if usb_home == 1
       {
-         print("cncviewcontroller usbschnittdatenAktion usb_home: \(usb_home)")
+         //print("cncviewcontroller usbschnittdatenAktion usb_home: \(usb_home)")
          Stepperposition = 0
+         
       }
       //    let usb_art =  info?["art"] as! UInt8
       //    let usb_cncposition =  info?["cncposition"]
@@ -363,6 +364,9 @@ class rCNCViewController:rViewController
       //print("usb_pwm: \(usb_pwm) usb_delayok: \(usb_delayok) usb_home: \(usb_home) usb_art: \(usb_art) usb_cncposition: \(usb_cncposition) ")
       //        let zeilenzahlarray = info?["schnittdatenarray"] as! [UInt8]
       guard   let zeilenzahlarray = info?["schnittdatenarray"] as?[[UInt8]] else {return}
+      
+      //HomeAnschlagSet.removeAll()
+      
       var zeilenindex = 0
       for zeile in   zeilenzahlarray
       {
@@ -446,11 +450,11 @@ class rCNCViewController:rViewController
    {
      //print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
       let count = usb_schnittdatenarray.count
-      print("writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
+      //print("writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
       
       if(Stepperposition < count)
       {
-         print("schnittdatenarray:\n",usb_schnittdatenarray[Stepperposition])
+         //print("schnittdatenarray:\n",usb_schnittdatenarray[Stepperposition])
       }
       //print("writeCNCAbschnitt code: \(usb_schnittdatenarray[0][16]) Stepperposition: \(Stepperposition) count: \(count) ")
       
@@ -581,13 +585,14 @@ class rCNCViewController:rViewController
             //print("usbdata: \(usbdata)\n") // d: [0, 9, 56, 0, 0,... 
             var NotificationDic = [String:Int]()
             
-            let abschnittfertig:UInt8 =   usbdata[0]
+            let abschnittfertig:UInt8 =   usbdata[0] // code vom teensy
             //print("abschnittfertig wert: \(abschnittfertig)")
             // https://useyourloaf.com/blog/swift-string-cheat-sheet/
-            //print("abschnittfertig: \(String(abschnittfertig, radix:16, uppercase:true))\n")
-           //print("newDataAktion abschnittfertig: \(hex(abschnittfertig)) cncstatus: \(usbdata[22])\n")
-            
             let home = Int(usbdata[13])
+            //print("abschnittfertig: \(String(abschnittfertig, radix:16, uppercase:true))\n")
+           print("newDataAktion abschnittfertig: \(hex(abschnittfertig)) cncstatus: \(usbdata[22]) home: \(home)\n")
+            
+            
             
             /*
             if usbdata != nil
@@ -613,6 +618,8 @@ class rCNCViewController:rViewController
                NotificationDic["mausistdown"] = mausistdown
                
                NotificationDic["home"] = Int(usbdata[13])
+               NotificationDic["cncstatus"] = Int(usbdata[22])
+               NotificationDic["anschlagstatus"] = Int(usbdata[19])
                
                //print("newDataAktion cncstatus: \(usbdata[22])")
                var AnschlagSet = IndexSet()
@@ -633,7 +640,7 @@ class rCNCViewController:rViewController
                   
                // Anschlag first
                case 0xA5:
-                  print("Anschlag A0")
+                  print("VC Anschlag A0")
                   AnschlagSet.insert(0) // schritteax lb
                   AnschlagSet.insert(1) // schritteax hb
                   AnschlagSet.insert(4) // delayax lb
@@ -641,7 +648,7 @@ class rCNCViewController:rViewController
                   break;
                   
                case 0xA6:
-                  print("Anschlag B0")
+                  print("VC Anschlag B0")
                   AnschlagSet.insert(2) // schritteax lb
                   AnschlagSet.insert(3) // schritteax hb
                   AnschlagSet.insert(6) // delayax lb
@@ -649,7 +656,7 @@ class rCNCViewController:rViewController
                   break;
                   
                case 0xA7:
-                  print("Anschlag C0")
+                  print("VC Anschlag C0")
                   AnschlagSet.insert(8) // schrittebx lb
                   AnschlagSet.insert(9) // schrittebx hb
                   AnschlagSet.insert(12) // delayabx lb
@@ -657,7 +664,7 @@ class rCNCViewController:rViewController
                   break;
                   
                case 0xA8:
-                  print("Anschlag D0")
+                  print("VC Anschlag D0")
                   AnschlagSet.insert(10) // schritteby lb
                   AnschlagSet.insert(11) // schritteby hb
                   AnschlagSet.insert(14) // delayby lb
@@ -666,20 +673,24 @@ class rCNCViewController:rViewController
                   
                // Anschlag home first
                case 0xB5:
-                  print("Anschlag A home first")
+                  print("+++++++++ VC Anschlag A home first")
                   HomeAnschlagSet.insert(0xB5)
+                  print("HomeAnschlagSet count: \(HomeAnschlagSet.count)")
                   break
                case 0xB6:
-                  print("Anschlag B home first")
+                  print("+++++++++ VC Anschlag B home first")
                   HomeAnschlagSet.insert(0xB6)
+                  print("HomeAnschlagSet count: \(HomeAnschlagSet.count)")
                   break
                case 0xB7:
-                  print("Anschlag C home first")
+                  print("+++++++++ VC Anschlag C home first")
                   HomeAnschlagSet.insert(0xB7)
+                  print("HomeAnschlagSet count: \(HomeAnschlagSet.count)")
                   break
                case 0xB8:
-                  print("Anschlag D home first")
+                  print("+++++++++ VC Anschlag D home first")
                   HomeAnschlagSet.insert(0xB8)
+                  print("HomeAnschlagSet count: \(HomeAnschlagSet.count)")
                   break
                   
                // Anschlag Second  
@@ -799,7 +810,8 @@ class rCNCViewController:rViewController
                      {
                      //if (Int(usbdata[10]) == 0)
                         //print("HomeAnschlagSet: \(HomeAnschlagSet)")
-                           writeCNCAbschnitt()
+                     
+                        writeCNCAbschnitt()
                         
                      }
                   }

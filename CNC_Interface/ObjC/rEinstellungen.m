@@ -2271,7 +2271,7 @@
    
    if ([profilflipArray count]==0)
    {
-      NSLog(@"vertokalspiegelnVonProfil kein profil1array");
+      NSLog(@"vertikalspiegelnVonProfil kein profil1array");
       return flipArray;
    }   
    for (int i=0;i< [profilflipArray count];i++)
@@ -3531,7 +3531,7 @@
       {
          ProfilDic = [Utils ProfilDatenAnPfad:Profilpfad];
  
-         NSLog(@"reportProfilPop ProfilDic: %@",[ProfilDic description]);
+         //NSLog(@"reportProfilPop ProfilDic: %@",[ProfilDic description]);
          //Profil1Array = [ProfilDic objectForKey:@"profilarray"];
          //NSLog(@"SplinekoeffizientenVonArray profilarray: %@",[[ProfilDic objectForKey:@"profilarray"] description]);
 
@@ -4045,7 +4045,7 @@
 - (IBAction)reportFormEinfuegen:(id)sender
 {
    FormName = [Form1Pop titleOfSelectedItem];
-   //NSLog(@"reportFormEinfuegen name: %@",FormName);
+   NSLog(@"reportFormEinfuegen name: %@",FormName);
    
    float radiusA1 = [SeiteA1 floatValue]/2;
    float radiusB1 = [SeiteB1 floatValue]/2;

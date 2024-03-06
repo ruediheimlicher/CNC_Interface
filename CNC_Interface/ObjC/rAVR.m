@@ -685,7 +685,7 @@ void plot_line (int x0, int y0, int x1, int y1)
    
    //double y[] = {0,0.01403,0.02973,0.04378,0.05624,0.06647,0.07494,0.08065,0.08342};
    double y[] = {0.34564,0.27171,0.19967,0.13141,0.06887,0.025,0.00697,0.0006};
-   splinearrayfunc(x, y, n-1, a, b, c, d);
+   //splinearrayfunc(x, y, n-1, a, b, c, d);
 
    int datapunkte = 8;
    // zwischenwerte
@@ -3237,7 +3237,7 @@ return returnInt;
    float lastby = [[[tempKoordinatenTabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
    
    NSMutableArray* revKoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
-   
+   [revKoordinatenTabelle addObject:[tempKoordinatenTabelle objectAtIndex:0]];
    
    for(int i=0;i<tempKoordinatenTabelle.count;i++)
    {
@@ -3272,13 +3272,15 @@ return returnInt;
    {
       float ax = [[[revKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
       float ay = [[[revKoordinatenTabelle objectAtIndex:i]objectForKey:@"ay"]floatValue];
-
+      //NSMutableDictionary* tempdic = [revKoordinatenTabelle objectAtIndex:i];
+      //[tempdic setObject:[NSNumber numberWithInt:i] forKey:@"index"];
+      //[[revKoordinatenTabelle objectAtIndex:i]setObject:[NSNumber numberWithInt:i]forKey:@"index“];
       fprintf(stderr,"%d\t %.2f\t %.2f\n",i,ax,ay);
    }
    
    
    
-   [KoordinatenTabelle setArray:tempKoordinatenTabelle];//index, pwm, ax,bx,ay,by
+   [KoordinatenTabelle setArray:revKoordinatenTabelle];//index, pwm, ax,bx,ay,by
    [self updateIndex];
    [ProfilGraph setStepperposition:0];
    [ProfilGraph setNeedsDisplay:YES];
@@ -12230,7 +12232,7 @@ return returnInt;
             //sendbuffer[i]=(char)[[tempSchnittdatenArray objectAtIndex:i]UTF8String];
          }
          
-          /*
+          
          fprintf(stderr,"%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
                  sendbuffer[0],(sendbuffer[1]& 0x80),sendbuffer[2],(sendbuffer[3]&0x80),
                  sendbuffer[4],sendbuffer[5],sendbuffer[6],sendbuffer[7],
@@ -12238,7 +12240,7 @@ return returnInt;
                  sendbuffer[12],sendbuffer[13],sendbuffer[14],sendbuffer[15],
                  sendbuffer[16],sendbuffer[17],sendbuffer[18],sendbuffer[19],
                  sendbuffer[20],sendbuffer[21],sendbuffer[22],sendbuffer[23]);
-          */
+          
           
          
          int senderfolg= rawhid_send(0, sendbuffer, 32, 50);
@@ -12548,7 +12550,7 @@ return returnInt;
 
 - (void)USBReadAktion:(NSNotification*)note
 {
-   NSLog(@"AVR  USBReadAktion note: %@",[[note userInfo]description]);
+   //NSLog(@"AVR  USBReadAktion note: %@",[[note userInfo]description]);
    
    if ([[note userInfo]objectForKey:@"inposition"])
    {
@@ -12604,7 +12606,7 @@ return returnInt;
          [CNC_busySpinner stopAnimation:NULL];
       }
       uint8_t teensy_cncstatus = [[[note userInfo]objectForKey:@"cncstatus"]intValue];
-      NSLog(@"AVR  USBReadAktion teensy_cncstatus hex: %.02X",teensy_cncstatus);
+      //NSLog(@"AVR  USBReadAktion teensy_cncstatus hex: %.02X",teensy_cncstatus);
       switch (abschnittfertig)
       {
          case 0xE1: // Antwort auf Mouseup 0xE0 HALT

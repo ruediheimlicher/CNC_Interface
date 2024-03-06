@@ -305,7 +305,7 @@ class rViewController: NSViewController, NSWindowDelegate
       
       
       var preferences = Preferences(webserviceURL: "https://api.twitter.com", itemsPerPage: 12, backupEnabled: false,robot1_offset: 300)
-      
+      print("preferences: \(preferences)")
       preferences.robot1_offset = 400
  
       
@@ -313,7 +313,7 @@ class rViewController: NSViewController, NSWindowDelegate
       encoder.outputFormat = .xml
       
       let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("Robot/Preferences.plist")
-      
+      print("path: \(path)")
       do {
          let data = try encoder.encode(preferences)
          try data.write(to: path)

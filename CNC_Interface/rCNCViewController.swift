@@ -532,7 +532,7 @@ class rCNCViewController:rViewController
          
       }
       
-      //print("writeCNCAbschnitt teensy.write_byteArray: \(teensy.write_byteArray)")
+      //print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
    }
    
   
@@ -590,7 +590,7 @@ class rCNCViewController:rViewController
             // https://useyourloaf.com/blog/swift-string-cheat-sheet/
             let home = Int(usbdata[13])
             //print("abschnittfertig: \(String(abschnittfertig, radix:16, uppercase:true))\n")
-           print("newDataAktion abschnittfertig: \(hex(abschnittfertig)) cncstatus: \(usbdata[22]) home: \(home)\n")
+           //print("newDataAktion abschnittfertig: \(hex(abschnittfertig)) cncstatus: \(usbdata[22]) home: \(home)\n")
             
             
             

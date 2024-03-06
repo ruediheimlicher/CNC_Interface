@@ -417,7 +417,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 		SchritteAX &= 0x7FFF;
 		//NSLog(@"SchritteAX nach *-1 und 0x7FFFF %d",SchritteAX);
 		SchritteAX |= 0x8000;
-      NSLog(@"SchritteAX negativ");
+      //NSLog(@"SchritteAX negativ");
 	}
    else
    {

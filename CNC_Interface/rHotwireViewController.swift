@@ -35,7 +35,7 @@ class rHotwireViewController: rViewController
    
    var   CNC_busy: Int!
    var   ProfilTiefe: Int!
-   var ProfilZoom: Double!
+   var   ProfilZoom: Double!
    var   mitOberseite: Int!
    var   mitUnterseite: Int!
    var   mitEinlauf: Int!
@@ -108,7 +108,7 @@ class rHotwireViewController: rViewController
    @IBOutlet weak var  HorizontalSchieber: NSTextField!
    @IBOutlet weak var  VertikalSchieber: NSTextField!
     
-   @IBOutlet weak var  SpeedStepper: NSTextField!
+   @IBOutlet weak var  SpeedStepper: NSStepper!
    @IBOutlet weak var  SpeedFeld: NSTextField!
 
    @IBOutlet weak var  ProfilNameFeldA: NSTextField!
@@ -243,6 +243,38 @@ class rHotwireViewController: rViewController
    @IBOutlet weak var SlaveVersionFeld: NSTextField! 
 
 
+   @IBOutlet weak var ManufactorerFeld:  NSTextField!
+    @IBOutlet weak var ProductFeld:  NSTextField!
+    @IBOutlet weak var MinimaldistanzFeld:  NSTextField!
+    
+    @IBOutlet weak var BlockbreiteFeld:  NSTextField!
+    @IBOutlet weak var BlockbreiteStepper:  NSTextField!
+    
+    
+    
+    // Rumpf
+    @IBOutlet weak var RandFeld:  NSTextField!
+    @IBOutlet weak var EinlaufFeld:  NSTextField!
+    @IBOutlet weak var BreiteAFeld:  NSTextField!
+    @IBOutlet weak var HoeheAFeld:  NSTextField!
+    @IBOutlet weak var RadiusAFeld:  NSTextField!
+    @IBOutlet weak var AuslaufFeld:  NSTextField!
+    @IBOutlet weak var BreiteBFeld:  NSTextField!
+    @IBOutlet weak var HoeheBFeld:  NSTextField!
+    @IBOutlet weak var RadiusBFeld:  NSTextField!
+    @IBOutlet weak var EinstichtiefeFeld:  NSTextField!
+    //@IBOutlet weak var RumpfblockhoeheFeld:  NSTextField!
+    @IBOutlet weak var RumpfabstandFeld:  NSTextField! // Abstand CNC zu Block
+    @IBOutlet weak var ElementlaengeFeld:  NSTextField! // Laenge des Rumpfabschnittes
+    @IBOutlet weak var RumpfOffsetXFeld:  NSTextField!
+    @IBOutlet weak var RumpfOffsetYFeld:  NSTextField!
+    @IBOutlet weak var RumpfportalabstandFeld:  NSTextField!
+    
+    @IBOutlet weak var Schalendickefeld:  NSTextField!
+    @IBOutlet weak var NutCheckbox:  NSButton!
+    
+
+    @IBOutlet weak var  RumpfteilTaste:  NSSegmentedControl!
 
 
 
@@ -270,18 +302,258 @@ class rHotwireViewController: rViewController
       
       Auslauftiefe.integerValue = 10
       
-      //readHotwire_PList()
+      var hotwireplist:[String:AnyObject] =  readHotwire_PList() 
+      
+      if (hotwireplist["koordinatentabelle"] != nil)
+      {
+         print("koordinatentabelle: \(hotwireplist["koordinatentabelle"] )")
+      }
+      if (hotwireplist["pwm"] != nil)
+      {
+         let plistpwm = hotwireplist["pwm"] as! Int 
+         print("plistpwm: \(plistpwm)")
+         DC_PWM.integerValue = hotwireplist["pwm"] as! Int
+         DC_Slider.integerValue = hotwireplist["pwm"] as! Int
+         DC_Stepper.integerValue = hotwireplist["pwm"] as! Int
+         
+      }
+      else
+      {
+         DC_PWM.integerValue = 10
+         DC_Slider.integerValue = 10
+         DC_Stepper.integerValue = 10
+
+      }
+      if (hotwireplist["speed"] != nil)
+      {
+         let plistspeed = hotwireplist["speed"]  as! Int
+         print("speed: \(plistspeed )")
+         SpeedFeld.integerValue = plistspeed
+         SpeedStepper.integerValue = plistspeed
+      }
+      else 
+      {
+         SpeedFeld.integerValue = 7
+         SpeedStepper.integerValue = 7
+      }
+ 
+      if (hotwireplist["abbranda"] != nil)
+      {
+         let plistabbranda = hotwireplist["abbranda"]  as! Double
+         print("speed: \(plistabbranda )")
+         AbbrandFeld.doubleValue = plistabbranda
+      }
+      else
+      {
+         AbbrandFeld.doubleValue = 1.7
+      }
+
+      if (hotwireplist["profilnamea"] != nil)
+      {
+         let plistprofilnamea = hotwireplist["profilnamea"]  as! String
+         print("plistprofilnamea: \(plistprofilnamea )")
+         ProfilNameFeldA.stringValue = plistprofilnamea
+      }
+      else
+      {
+        
+         ProfilNameFeldA.stringValue = "Clark_Y"
+      }
+
+      if (hotwireplist["profilnameb"] != nil)
+      {
+         let plistprofilnameb = hotwireplist["profilnameb"]  as! String
+         print("plistprofilnamea: \(plistprofilnameb )")
+         ProfilNameFeldB.stringValue = plistprofilnameb
+      }
+      else
+      {
+         ProfilNameFeldB.stringValue = "Clark_Y"
+      }
+
+      if (hotwireplist["profiltiefea"] != nil)
+      {
+         let plistwert = hotwireplist["profiltiefea"]  as! Int
+         ProfilTiefeFeldA.integerValue = plistwert
+      }
+      else 
+      {
+         ProfilTiefeFeldA.integerValue = 101
+      }
+
+      if (hotwireplist["profiltiefeb"] != nil)
+      {
+         let plistwert = hotwireplist["profiltiefeb"]  as! Int
+         ProfilTiefeFeldB.integerValue = plistwert
+      }
+      else 
+      {
+         ProfilTiefeFeldB.integerValue = 141
+      }
+
+      if (hotwireplist["profilboffsetx"] != nil)
+      {
+         let plistwert = hotwireplist["profilboffsetx"]  as! Int
+         ProfilBOffsetXFeld.integerValue = plistwert
+      }
+      else 
+      {
+         ProfilBOffsetXFeld.integerValue = 1
+      }
+
+      if (hotwireplist["profilboffsety"] != nil)
+      {
+         let plistwert = hotwireplist["profilboffsety"]  as! Int
+         ProfilBOffsetYFeld.integerValue = plistwert
+      }
+      else 
+      {
+         ProfilBOffsetYFeld.integerValue = 1
+      }
+
+      // Wrench Profil B
+      if (hotwireplist["profilwrench"] != nil)
+      {
+         let plistwert = hotwireplist["profilwrench"]  as! Int
+         ProfilWrenchFeld.integerValue = plistwert
+      }
+      else 
+      {
+         ProfilWrenchFeld.integerValue = 1
+      }
+      
+      if (hotwireplist["einlauflaenge"] != nil)
+      {
+         let plistwert = hotwireplist["einlauflaenge"]  as! Int
+         Einlauflaenge.integerValue = plistwert
+      }
+      else 
+      {
+         Einlauflaenge.integerValue = 1
+      }
+
+      if (hotwireplist["einlauftiefe"] != nil)
+      {
+         let plistwert = hotwireplist["einlauftiefe"]  as! Int
+         Einlauftiefe.integerValue = plistwert
+      }
+      else 
+      {
+         Einlauftiefe.integerValue = 1
+      }
+
+      if (hotwireplist["auslauflaenge"] != nil)
+      {
+         let plistwert = hotwireplist["auslauflaenge"]  as! Int
+         Auslauflaenge.integerValue = plistwert
+      }
+      else 
+      {
+         Auslauflaenge.integerValue = 1
+      }
+
+      if (hotwireplist["auslauftiefe"] != nil)
+      {
+         let plistwert = hotwireplist["auslauflaenge"]  as! Int
+         Auslauftiefe.integerValue = plistwert
+      }
+      else 
+      {
+         Auslauftiefe.integerValue = 1
+      }
+
+      if (hotwireplist["basisabstand"] != nil)
+      {
+         let plistwert = hotwireplist["basisabstand"]  as! Int
+         Basisabstand.integerValue = plistwert
+      }
+      else 
+      {
+         Basisabstand.integerValue = 1
+      }
+
+      if (hotwireplist["portalabstand"] != nil)
+      {
+         let plistwert = hotwireplist["portalabstand"]  as! Int
+         Portalabstand.integerValue = plistwert
+      }
+      else 
+      {
+         PositionFeld.integerValue = 1
+      }
+     
+      if (hotwireplist["spannweite"] != nil)
+      {
+         let plistwert = hotwireplist["spannweite"]  as! Int
+         Spannweite.integerValue = plistwert
+      }
+      else 
+      {
+         Spannweite.integerValue = 1
+      }
+
+      if (hotwireplist["auslauf"] != nil)
+      {
+         let plistwert = hotwireplist["auslauf"]  as! Int
+         AuslaufFeld.integerValue = plistwert
+      }
+      else 
+      {
+         AuslaufFeld.integerValue = 1
+      }
+
+
+      
+      
+      
    }//viewDidLoad
   
    
-   @objc func readHotwire_PList()
+   @objc func readHotwire_PList() -> [String:AnyObject]
    {
       var dateiname = ""
       var dateisuffix = ""
       var urlstring:String = ""
+      var hotwireplist:[String] = []
+      var USBPfad = NSHomeDirectory() + "/Documents" + "/CNCDaten"
+      var PListName:String = "/CNC.plist"
+      USBPfad += PListName
+      print("readHotwire_PList: \(USBPfad)")
+      var USB_URL = NSURL.fileURL(withPath:USBPfad)
+      
+      var propertyListFormat =  PropertyListSerialization.PropertyListFormat.xml //Format of the Property List.
+      var plistData: [String: AnyObject] = [:] //Our data
 
-      var USBPfad = NSHomeDirectory()
-      print("readCNC_PList: \(USBPfad)")
+      if FileManager.default.fileExists(atPath: USBPfad)
+      {
+         print("PList da")
+      }
+      // https://stackoverflow.com/questions/24045570/how-do-i-get-a-plist-as-a-dictionary-in-swift
+      if let plistXML = FileManager.default.contents(atPath: USBPfad)
+      {
+         do 
+         {//convert the data to a dictionary and handle errors.
+              plistData = try PropertyListSerialization.propertyList(from: plistXML, options: .mutableContainersAndLeaves, format: &propertyListFormat) as! [String:AnyObject]
+
+          } catch {
+              print("Error reading plist: \(error), format: \(propertyListFormat)")
+          }
+         
+         //print("xml: \(plistXML) anz: \(plistXML.count)")
+         for zeile in plistData
+         {
+            print("zeile: \(zeile)")
+         }
+         print("0: \(plistData["0"])")
+      }
+      
+      
+      // von CNC_Mill
+      
+    
+      
+      
+      /*
       do
       {
          guard let fileURL = openFile() else { return  }
@@ -302,7 +574,8 @@ class rHotwireViewController: rViewController
          /* error handling here */
          return
       }
-
+*/
+      return plistData
    }
    
     

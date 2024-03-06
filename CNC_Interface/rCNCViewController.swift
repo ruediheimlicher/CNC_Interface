@@ -35,6 +35,9 @@ class rCNCViewController:rViewController
    //var readtimer : Timer? = nil
    
    var AVR = rAVRview()
+   
+   var Hotwire = rHotwireViewController()
+   
    var steps = 0
    var micro = 0
    

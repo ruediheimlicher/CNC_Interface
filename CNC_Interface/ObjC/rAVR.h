@@ -384,7 +384,7 @@ int globalcounter = 0;
    IBOutlet id                RumpfOffsetYFeld;
    IBOutlet id                RumpfportalabstandFeld;
    
-   
+   IBOutlet id                Schalendickefeld;
    IBOutlet id                NutCheckbox;
    
     
@@ -400,7 +400,7 @@ int globalcounter = 0;
    //int                     _kote;
    int                     KoteWert;
    
-   IBOutlet id             Schalendickefeld;
+   
    
    rProfildruckView*       Profilfeld;
    

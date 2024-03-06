@@ -419,6 +419,13 @@ class rViewController: NSViewController, NSWindowDelegate
     }
    */
    
+   func openFile() -> URL? 
+   { 
+      let myFileDialog = NSOpenPanel() 
+      myFileDialog.runModal() 
+      return myFileDialog.url 
+   }  
+
 
    
    @objc func beendenAktion(_ notification:Notification) 

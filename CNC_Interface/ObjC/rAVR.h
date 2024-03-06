@@ -94,7 +94,7 @@ int globalcounter = 0;
    
    NSMutableDictionary*      CNC_PList;
    
-//   IBOutlet id             BoardPop;
+   IBOutlet id             BoardPop;
    
    IBOutlet id                StepperTab;
    
@@ -339,27 +339,27 @@ int globalcounter = 0;
    IBOutlet   id               AbmessungY;
    
    IBOutlet   id               red_pwmFeld;
-   int pwm;
+  
    IBOutlet id               LinkeRechteSeite;
-
-   NSMutableDictionary*      AnschlagDic;
-
    
    IBOutlet id               VersionFeld;
    IBOutlet id               DatumFeld;
    IBOutlet id            SlaveVersionFeld;
+   
+   NSMutableDictionary*      AnschlagDic;
+   int pwm;
    int                     startwert;
    NSWindow*               window;
    int                     mausistdown;
    int                     quelle;
    
    rEinstellungen*         CNC_Eingabe;
-  
+   float                   minimaldistanz; // minimaler abstand zwischen 2  Punkten, um in den Array aufgenommen zu werden
+
    int                     AVR_USBStatus;
    IBOutlet id               ManufactorerFeld;
    IBOutlet id               ProductFeld;
    IBOutlet id               MinimaldistanzFeld;
-   float                   minimaldistanz; // minimaler abstand zwischen 2  Punkten, um in den Array aufgenommen zu werden
    
    IBOutlet id             BlockbreiteFeld;
    IBOutlet id             BlockbreiteStepper;

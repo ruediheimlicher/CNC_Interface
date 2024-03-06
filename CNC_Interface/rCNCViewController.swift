@@ -9,7 +9,7 @@
 import Foundation
 import Cocoa
 
-let TEST = 1
+
 class rCNCViewController:rViewController
 {
    // von IOWarriorWindowController

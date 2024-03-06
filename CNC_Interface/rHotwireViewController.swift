@@ -250,7 +250,7 @@ class rHotwireViewController: rViewController
    
    override func viewDidAppear() 
    {
-      print ("Hotwire viewDidAppear ")
+      print ("Hotwire viewDidAppear new")
   
      }
    override func viewDidLoad() 

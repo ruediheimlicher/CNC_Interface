@@ -187,7 +187,7 @@ class rDeviceTabViewController: NSTabViewController
 //MARK: ViewController
 class rViewController: NSViewController, NSWindowDelegate
 {
-    let notokimage :NSImage = NSImage(named:NSImage.Name(rawValue: "notok_image"))!
+   let notokimage :NSImage = NSImage(named:NSImage.Name(rawValue: "notok_image"))!
    let okimage :NSImage = NSImage(named:NSImage.Name(rawValue: "ok_image"))!
    
    @IBOutlet weak var USB_OK_Feld: NSImageView!

@@ -285,7 +285,7 @@ class rHotwireViewController: rViewController
 
    @objc func ManRichtung(richtung: Int,mousestatus: Int,pfeilstep: Int)
    {
-      print("ManRichtung richtung:m\(richtung) mousestatus: \(mousestatus) pfeilstep: \(pfeilstep)")
+      print("HW ManRichtung richtung:m\(richtung) mousestatus: \(mousestatus) pfeilstep: \(pfeilstep)")
    }
 
    

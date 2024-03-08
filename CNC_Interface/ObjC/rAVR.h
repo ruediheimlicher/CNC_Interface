@@ -531,6 +531,7 @@ int globalcounter = 0;
 - (IBAction)reportUSB_sendArray:(id)sender;
 - (IBAction)reportPrepareTaste:(id)sender;
 - (IBAction)reportNeuTaste:(id)sender;
+- (void)resetCNC;
 - (IBAction)terminateTransfer:(id)sender;
 
 - (IBAction)reportPrint:(id)sender;

@@ -4146,7 +4146,20 @@ return returnInt;
       NSPoint PositionB = NSMakePoint(0, 0);
       int index=0;
       [ManArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",nil]];
-      
+      /*
+       richtung:
+       right: 1
+       up: 2
+       left: 3
+       down: 4
+       */
+ 
+      if(status == 0)
+      {
+         NSLog(@"AVR  ManRichtung mousestatus == 0");
+         self.resetCNC;
+         
+      }
       //Horizontal bis Anschlag
      switch (richtung)
       {
@@ -9929,6 +9942,119 @@ return returnInt;
    [CNC_Terminatetaste setEnabled:NO];
    [HomeTaste setState:0];
    [DC_Taste setState:0];
+    
+   [KoordinatenTabelle removeAllObjects];
+   if (BlockrahmenArray&&[BlockrahmenArray count])
+   {
+      [BlockrahmenArray removeAllObjects];
+      [ProfilGraph setRahmenArray:BlockrahmenArray];
+   }
+   [BlockKoordinatenTabelle removeAllObjects];
+   [CNCDatenArray removeAllObjects];
+   [SchnittdatenArray removeAllObjects];
+
+   [CNCTable reloadData];
+   cncposition =0;
+   [CNCPositionFeld setIntValue:0];
+   [CNCStepXFeld setIntValue:0];
+   [CNCStepYFeld setIntValue:0];
+   [ProfilGraph setStepperposition:-1];
+   [ProfilGraph setDatenArray:KoordinatenTabelle];
+   
+   [ProfilGraph setNeedsDisplay:YES];
+   
+   // 35.0000      50.0000      55.0000     50.0000 
+   
+   [WertAXFeld setFloatValue:35.0];
+   [WertAYFeld setFloatValue:55.0];
+
+   [WertAXStepper setFloatValue:[WertAXFeld floatValue]];
+   [WertAYStepper setFloatValue:[WertAYFeld floatValue]];
+
+ //  [WertBXFeld setFloatValue:35];
+ //  [WertBYFeld setFloatValue:55];
+   
+   [WertBXStepper setFloatValue:[WertBXFeld floatValue]];
+   [WertBYStepper setFloatValue:[WertBYFeld floatValue]];
+
+   [IndexStepper setIntValue:0];
+  
+   [LinkeRechteSeite setSelectedSegment:1];
+   [self setStepperstrom:0];
+   
+   // von 32
+   [AnschlagLinksIndikator setTransparent:YES];
+   [AnschlagUntenIndikator setTransparent:YES];
+   [CNC_Righttaste setEnabled:YES];
+   [CNC_Lefttaste setEnabled:YES];
+   [CNC_Uptaste setEnabled:YES];
+   [CNC_Downtaste setEnabled:YES];
+   [self setBusy:0];
+   // anscheinend OK
+   //end von 32
+   
+   NSMutableArray* HomeSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
+
+   NSMutableArray* ManArray = [[NSMutableArray alloc]initWithCapacity:0];
+   
+   // Startpunkt ist aktuelle Position. Lage: 2: Home horizontal
+   NSPoint PositionA = NSMakePoint(0, 0);
+   NSPoint PositionB = NSMakePoint(0, 0);
+   int index=0;
+   [ManArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",nil]];
+   
+   // Dic zusammenstellen
+   NSMutableDictionary* tempDic= [[NSMutableDictionary alloc]initWithCapacity:0];
+   uint8_t neucode = 0xF1;
+   [tempDic setObject:[NSNumber numberWithInt:neucode] forKey:@"code"];
+   [tempDic setObject:[NSNumber numberWithInt:3] forKey:@"position"];
+   
+   NSDictionary* tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
+   //NSLog(@"D i: %d",i);
+  
+   [HomeSchnittdatenArray addObject:[CNC SchnittdatenVonDic:tempSteuerdatenDic]];
+   //NSLog(@"E i: %d",i);
+   HomeSchnittdatenArray[0][24] = [NSNumber numberWithInt:neucode];
+   
+   [tempDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
+   [tempDic setObject:[NSNumber numberWithInt:0] forKey:@"home"]; // 
+
+   [tempDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+   
+   // ***
+   [nc postNotificationName:@"usbschnittdaten" object:self userInfo:tempDic];
+
+   //  [nc postNotificationName:@"slavereset" object:self userInfo:tempDic];
+   NSLog(@"reportNeuTaste END");
+   //[self KT];
+}
+
+- (void)resetCNC
+{
+   
+   NSLog(@"resetCNC");
+   //[self KT];
+  // NSLog(@"reportNeuTaste KoordinatenTabelle count: %lu",[KoordinatenTabelle count]);
+  // NSLog(@"reportNeuTaste KoordinatenTabelle vor: %@",[KoordinatenTabelle description]);
+   [CNC_Preparetaste setEnabled:YES];
+   [CNC_Halttaste setState:0];
+   [CNC_Halttaste setEnabled:NO];
+   [CNC_Sendtaste setEnabled:NO];
+   [CNC_Starttaste setEnabled:YES];
+   [CNC_Starttaste setState:0];
+   [CNC_Stoptaste setEnabled:NO];
+//   [NeuesElementTaste setEnabled:NO];
+
+  // [PositionFeld setIntValue:0];
+    
+   [[ProfilGraph viewWithTag:1001]setStringValue:@""];
+   
+   [[StartKoordinate cellAtIndex:0]setStringValue:@""];
+   [[StartKoordinate cellAtIndex:1]setStringValue:@""];
+
+   
+//   [DC_Taste setState:0]; // Strom nicht ausschalten
     
    [KoordinatenTabelle removeAllObjects];
    if (BlockrahmenArray&&[BlockrahmenArray count])

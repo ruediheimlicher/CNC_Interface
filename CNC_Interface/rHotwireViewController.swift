@@ -276,8 +276,17 @@ class rHotwireViewController: rViewController
 
     @IBOutlet weak var  RumpfteilTaste:  NSSegmentedControl!
 
+   @IBAction func reportManRight(_ sender: rPfeiltaste)
+   {
+      
+      print("reportManRight: \(sender.tag)")
+      ManRichtung(richtung:1, mousestatus:0, pfeilstep:100)
+   }
 
-
+   @objc func ManRichtung(richtung: Int,mousestatus: Int,pfeilstep: Int)
+   {
+      print("ManRichtung richtung:m\(richtung) mousestatus: \(mousestatus) pfeilstep: \(pfeilstep)")
+   }
 
    
    override func viewDidAppear() 

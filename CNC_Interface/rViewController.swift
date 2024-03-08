@@ -250,10 +250,6 @@ class rViewController: NSViewController, NSWindowDelegate
    
    override func viewDidLoad()
    {
-      
-      
-      
-      
       super.viewDidLoad()
       self.view.wantsLayer = true
       self.view.superview?.wantsLayer = true
@@ -393,32 +389,7 @@ class rViewController: NSViewController, NSWindowDelegate
 
     }
     
-  /* 
-   @objc func usbsendAktion(_ notification:Notification) 
-   {
-      print("usbsendAktion: \(notification)")
-   }
-   
     
-   
-    @objc func usbschnittdatenAktion(_ notification:Notification)  > CNCViewController
-    {
-       
-       print("viewcontroller usbschnittdatenAktion")
-      let info = notification.userInfo
-      let usb_pwm =  info?["pwm"] 
-      let usb_delayok =  info?["delayok"]
-      let usb_home =  info?["home"]
-      let usb_art =  info?["art"]
-      let usb_cncposition =  info?["cncposition"]
-      
-      print("usb_pwm: \(usb_pwm) usb_delayok: \(usb_delayok) usb_home: \(usb_home) usb_art: \(usb_art) usb_cncposition: \(usb_cncposition) ")
-      let usb_schnittdatenarray = info?["schnittdatenarray"] 
-      print("usb_schnittdatenarray: \(usb_schnittdatenarray ?? [])")
-      
-    }
-   */
-   
    func openFile() -> URL? 
    { 
       let myFileDialog = NSOpenPanel() 

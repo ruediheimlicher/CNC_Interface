@@ -510,7 +510,14 @@ float det(float v0[],float v1[])
 
   - (void)mouseDown:(NSEvent *)theEvent
 {
-   
+   /*
+    richtung:
+    right: 1
+    up: 2
+    left: 3
+    down: 4
+    */
+
    richtung=[self tag];
    int status = [self state];
    NSLog(@"rPfeiltaste mouseDown: Pfeiltaste richtung: %d status: %d",richtung,status);
@@ -4123,8 +4130,8 @@ return returnInt;
 - (void)ManRichtung:(int)richtung mousestatus:(int)status pfeilstep:(int)step
 {
    {
-      NSLog(@"AVR  ManRichtung richtung: %d mousestatus: %d",richtung, status);
-      
+      NSLog(@"AVR  ManRichtung richtung: %d mousestatus: %d seite1check: %d seite2check: %d",richtung, status,[CNC_Seite1Check state],[CNC_Seite2Check state]);
+            
       if ((cncstatus)|| !([CNC_Seite1Check state] || [CNC_Seite2Check state]))
       {
          NSLog(@"AVR  ManRichtung  return");
@@ -5153,50 +5160,50 @@ return returnInt;
    // Richtung >0: Pfeiltaste
 //   if ([[note userInfo]objectForKey:@"richtung"]&&[[[note userInfo]objectForKey:@"richtung"]intValue])
    {
-     // quelle=[[[note userInfo]objectForKey:@"richtung"]intValue];
+      // quelle=[[[note userInfo]objectForKey:@"richtung"]intValue];
       //if (mausistdown) // Button pressed
+      
+      if (mausistdown)
       {
-         if (mausistdown)
+         switch (quelle)
          {
-            switch (quelle)
+            case MANDOWN:
             {
-               case MANDOWN:
-               {
-                  NSLog(@"AVR PfeilAktion mandown mosedown");
-                  //[self reportManDown:NULL];
-               }break;
-               case MANUP:
-               {
-                  NSLog(@"AVR PfeilAktion manup mosedown");
-                  //[self ManRichtung:quelle mousestatus:mausistdown pfeilstep: 500];
-                  [CNC_Downtaste setEnabled:YES];
-                  [AnschlagUntenIndikator setTransparent:YES];
-
-                 // [self reportManUp:NULL];
-               }break;
-               case MANLEFT:
-               {
-                  NSLog(@"AVR PfeilAktion manleft mosedown");
-                  //[self reportManLeft:NULL];
-               }break;
-               case MANRIGHT:
-               {
-                  NSLog(@"AVR PfeilAktion manright mosedown");
-                  [CNC_Lefttaste setEnabled:YES];
-                  [AnschlagLinksIndikator setTransparent:YES];
-                 // [self reportManRight:NULL];
-               }break;
-                  
-            }//switch
-            // senden an teensy: go
-            [self ManRichtung:quelle mousestatus:mausistdown pfeilstep: 50];
-         }
-         else // Button released
-         {
-            NSLog(@"AVR PfeilAktion mouseUP quelle: %d",quelle);
-            [self ManRichtung:quelle mousestatus:mausistdown pfeilstep: 50];
-         }
+               NSLog(@"AVR PfeilAktion man down mose down");
+               //[self reportManDown:NULL];
+            }break;
+            case MANUP:
+            {
+               NSLog(@"AVR PfeilAktion man up mose up");
+               //[self ManRichtung:quelle mousestatus:mausistdown pfeilstep: 500];
+               [CNC_Downtaste setEnabled:YES];
+               [AnschlagUntenIndikator setTransparent:YES];
+               
+               // [self reportManUp:NULL];
+            }break;
+            case MANLEFT:
+            {
+               NSLog(@"AVR PfeilAktion man left mose left");
+               //[self reportManLeft:NULL];
+            }break;
+            case MANRIGHT:
+            {
+               NSLog(@"AVR PfeilAktion man right mose right");
+               [CNC_Lefttaste setEnabled:YES];
+               [AnschlagLinksIndikator setTransparent:YES];
+               // [self reportManRight:NULL];
+            }break;
+               
+         }//switch
+         // senden an teensy: go
+         [self ManRichtung:quelle mousestatus:mausistdown pfeilstep: 50];
       }
+      else // Button released
+      {
+         NSLog(@"AVR PfeilAktion Button released quelle: %d",quelle);
+         [self ManRichtung:quelle mousestatus:mausistdown pfeilstep: 50];
+      }
+      
    }
    NSLog(@"AVR PfeilAktion end");
 
@@ -12255,7 +12262,7 @@ return returnInt;
 - (void)writeCNCAbschnitt
 {
    //if(TEST)  
-      NSLog(@"writeCNCAbschnitt Start Stepperposition: %d count: %d",Stepperposition,[SchnittdatenArray count]);
+      NSLog(@"AVR writeCNCAbschnitt Start Stepperposition: %d count: %d",Stepperposition,[SchnittdatenArray count]);
    //NSLog(@"writeCNCAbschnitt SchnittDatenArray anz: %d\n SchnittDatenArray: %@",[SchnittDatenArray count],[SchnittDatenArray description]);
    
    /*

@@ -451,7 +451,7 @@ class rCNCViewController:rViewController
 
     @objc func writeCNCAbschnitt()
    {
-     //print("writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
+     print("swift writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
       let count = usb_schnittdatenarray.count
       //print("writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
       
@@ -515,7 +515,7 @@ class rCNCViewController:rViewController
             if (globalusbstatus > 0)
             {
                let senderfolg = teensy.send_USB()
-               //print("writeCNCAbschnitt senderfolg: \(senderfolg)")
+               print("writeCNCAbschnitt senderfolg: \(senderfolg)")
             }
             // print("Stepperposition: \(Stepperposition) \n\(schnittdatenstring)");
             var ausschlussindex:[UInt8] = [0xE2]

@@ -540,15 +540,17 @@ class rHotwireViewController: rViewController
           }
          
          //print("xml: \(plistXML) anz: \(plistXML.count)")
+         var linecounter = 0
          for zeile in plistData
          {
-            print("zeile: \(zeile)")
+            print("\(linecounter) zeile: \(zeile)")
+            linecounter += 1
          }
          print("0: \(plistData["0"])")
       }
       
       
-      // von CNC_Mill
+      // von CNC_Mill:
       
     
       

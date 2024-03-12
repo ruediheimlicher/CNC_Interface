@@ -251,9 +251,7 @@ class rViewController: NSViewController, NSWindowDelegate
    override func viewDidLoad()
    {
       
-      
-      
-      
+       
       super.viewDidLoad()
       self.view.wantsLayer = true
       self.view.superview?.wantsLayer = true

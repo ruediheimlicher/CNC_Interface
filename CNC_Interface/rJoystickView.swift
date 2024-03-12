@@ -93,9 +93,9 @@ class rJoystickView: NSView
    
    override func mouseDown(with theEvent: NSEvent) 
    {
-      
+ 
       super.mouseDown(with: theEvent)
-      //let ident  = self.identifier as! String
+   //let ident  = self.identifier as! String
        let ident  = self.identifier
       
       Swift.print("rJoystickView mouseDown ident: \(ident)")

@@ -652,7 +652,7 @@ void plot_line (int x0, int y0, int x1, int y1)
  //  printf("quadraticBezierCurve\n");
    //quadraticBezierCurve(0,0,2,6,6,0);
   // quadraticBezierCurve(0,0,-10,-12,20.5,0.5);
-   
+   /*
  // printf("plotQuadBezierSeg\n");
  //  plotQuadBezierSeg(0,0,20, 80, 30, 30) ;
    double px[] = {0.25,0.22221,0.19562,0.17033,0.14645,0.12408,0.10332,0.08427,0.06699,0.05156,0.03806,0.02653,0.01704,0.00961,0.00428,0.00107};
@@ -663,7 +663,7 @@ void plot_line (int x0, int y0, int x1, int y1)
    int intervall = 4;
    double werty = 0;
    double wertx = (px[von+1]+px[von])/2; // mitte 
-   /*
+   
    koeffarray(px, py, von, intervall,length, polykoeffarray, wertx);
    printf("polykoeffarray\n");
    
@@ -673,7 +673,7 @@ void plot_line (int x0, int y0, int x1, int y1)
       printf("i: %d koeff: %lf\t",i,polykoeffarray[i]);
    }
    printf("\npolykoeffarray end wertx: %lf\twerty: %lf\n",wertx,werty);
-   */
+  
    werty = lagrangewert(px, py, von, intervall,length,  wertx);
    //printf("\nwertx: %lf\tlagrangewert: %lf\n",wertx,werty);
    //plotCircle(100,100,80);
@@ -722,7 +722,8 @@ void plot_line (int x0, int y0, int x1, int y1)
    {
 //      printf("%d\t%lf\t%lf\n",i,splinearray[i][0],splinearray[i][1]);
    }
-
+    */
+// ***
   // 
    
    NSColor* bgcolor = [NSColor colorWithCalibratedRed:0.3 green:0.5 blue:0.8 alpha:1.0f];
@@ -4207,11 +4208,12 @@ return returnInt;
       [ManArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",nil]];
       //NSLog(@"A");
       // von reportOberkanteAnfahren
+      NSLog(@"AVR  ManRichtung richtung ManArray: %@",ManArray);
       int i=0;
       int zoomfaktor=1.0;
       int code=0;
       NSMutableArray* HomeSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
-      
+      printf("H/n");
   //    for (i=0;i<[ManArray count]-1;i++)
       {
          //NSLog(@"B i: %d",i);
@@ -4251,7 +4253,7 @@ return returnInt;
          
          [tempDic setObject:[NSNumber numberWithFloat:zoomfaktor] forKey:@"zoomfaktor"];
          
-         NSLog(@"boardindex: %d",boardindex);
+         NSLog(@"ManRichtung boardindex: %d",boardindex);
          if (boardindex == 1)
          {
             if (status) // mousedown
@@ -4309,12 +4311,12 @@ return returnInt;
       NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
       [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
        [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
- //     NSLog(@"AVR  ManRichtung HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
+      NSLog(@"AVR  ManRichtung HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
       
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"home"]; // 
       
   //    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"usbschnittdaten"]; // 
-      //NSLog(@"ManRichtung SchnittdatenDic: %@",[HomeSchnittdatenDic description]);
+      NSLog(@"ManRichtung SchnittdatenDic: %@",[HomeSchnittdatenDic description]);
       
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"usbschnittdaten" object:self userInfo:HomeSchnittdatenDic];
@@ -5133,9 +5135,11 @@ return returnInt;
    NSLog(@"AVR PfeilAktion start note: %@",[[note userInfo]description]);
     if ([[note userInfo]objectForKey:@"richtung"])
    {
+      printf("A/n");
       quelle=[[[note userInfo]objectForKey:@"richtung"]intValue];
       if ([[note userInfo]objectForKey:@"push"])
       {
+         printf("B/n");
          mausistdown = [[[note userInfo]objectForKey:@"push"]intValue];
       }
    }
@@ -5148,12 +5152,13 @@ return returnInt;
        int senderfolg= rawhid_send(0, sendbuffer, 32, 50);
 
        */
+      printf("C/n");
       NSBeep();
       quelle = 0;
       mausistdown = 0;
       if (boardindex == 0)
       {
-         
+         printf("D/n");
       }
       return;
    }
@@ -5162,9 +5167,10 @@ return returnInt;
    {
       // quelle=[[[note userInfo]objectForKey:@"richtung"]intValue];
       //if (mausistdown) // Button pressed
-      
+      printf("E/n");
       if (mausistdown)
       {
+         printf("F/n");
          switch (quelle)
          {
             case MANDOWN:
@@ -5188,6 +5194,7 @@ return returnInt;
             }break;
             case MANRIGHT:
             {
+               printf("G/n");
                NSLog(@"AVR PfeilAktion man right mose right");
                [CNC_Lefttaste setEnabled:YES];
                [AnschlagLinksIndikator setTransparent:YES];
@@ -5196,10 +5203,12 @@ return returnInt;
                
          }//switch
          // senden an teensy: go
+         
          [self ManRichtung:quelle mousestatus:mausistdown pfeilstep: 50];
       }
       else // Button released
       {
+         printf("H/n");
          NSLog(@"AVR PfeilAktion Button released quelle: %d",quelle);
          [self ManRichtung:quelle mousestatus:mausistdown pfeilstep: 50];
       }
@@ -11229,9 +11238,11 @@ return returnInt;
       
       
       NSDictionary* tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
-      //NSLog(@"AVR  reportHome tempSteuerdatenDic: %@",[tempSteuerdatenDic description]);
+      NSLog(@"AVR  reportHome tempSteuerdatenDic: %@",[tempSteuerdatenDic description]);
       
-      
+      NSDictionary* tempSchnittdatenVonDic = [CNC SchnittdatenVonDic:tempSteuerdatenDic];
+      NSLog(@"tempSchnittdatenVonDic: %@",tempSchnittdatenVonDic);
+
       [HomeSchnittdatenArray addObject:[CNC SchnittdatenVonDic:tempSteuerdatenDic]];
       
       //NSLog(@"AVR  reportHome homecode: %2.0X \nHomeSchnittdatenArray: %@ ",homecode, HomeSchnittdatenArray);
@@ -12367,7 +12378,7 @@ return returnInt;
          }
          
           
-         fprintf(stderr,"%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
+         fprintf(stderr,"AVR writeCNCAbschnitt vor send: %d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
                  sendbuffer[0],(sendbuffer[1]& 0x80),sendbuffer[2],(sendbuffer[3]&0x80),
                  sendbuffer[4],sendbuffer[5],sendbuffer[6],sendbuffer[7],
                  sendbuffer[8],sendbuffer[9],sendbuffer[10],sendbuffer[11],

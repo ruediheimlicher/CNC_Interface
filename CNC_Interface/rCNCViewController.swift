@@ -34,7 +34,7 @@ class rCNCViewController:rViewController
    //var readTimer:Timer
    //var readtimer : Timer? = nil
    
-   var AVR = rAVRview()
+   var AVR:rAVRview!
    
    var Hotwire = rHotwireViewController()
    
@@ -242,8 +242,6 @@ class rCNCViewController:rViewController
    @objc func usbsendAktion(_ notification:Notification) 
     {
        print("usbsendAktion: \(notification)")
-       
-    
     }
     
     override func windowWillClose(_ aNotification: Notification) {
@@ -445,8 +443,9 @@ class rCNCViewController:rViewController
       {
          print("teensy.read_OK ist true")
       }
-      
+      NSLog("usbschnittdatenaktion vor writeCNCAbschnitt: teensy.read_OK.boolValue: %d",teensy.read_OK.boolValue);
       writeCNCAbschnitt()
+      NSLog("usbschnittdatenaktion nach writeCNCAbschnitt");
      }
 
     @objc func writeCNCAbschnitt()

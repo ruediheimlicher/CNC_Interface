@@ -21,4 +21,8 @@ class rHotwireView:NSView
       let h:CGFloat = bounds.size.height
 
    }
+   func keyDown (derEvent : NSEvent ) 
+   {
+      
+   }
 }// rHotwireView

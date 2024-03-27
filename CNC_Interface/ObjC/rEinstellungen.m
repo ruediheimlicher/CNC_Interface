@@ -2377,7 +2377,7 @@
 
 - (NSDictionary*)ProfilPopTaskMitProfil1:(int)profil1 mitProfil2: (int)profil2
 {
-   NSLog(@"doProfilPopTaskMitProfil1 start");
+   NSLog(@"ProfilPopTaskMitProfil1 start");
    
    [FlipHTaste setState:0];
    [FlipVTaste setState:0];
@@ -2653,11 +2653,12 @@
          
          if ([Profil1Dic objectForKey:@"oberseitearray"]) 
          {
-            oberseitearrayA = [Profil1Dic objectForKey:@"oberseitearray"];
+             oberseitearrayA = (NSMutableArray*)[Profil1Dic objectForKey:@"oberseitearray"];
          }
          if ([Profil1Dic objectForKey:@"unterseitearray"]) 
          {
-            unterseitearrayA = [Profil1Dic objectForKey:@"unterseitearray"];
+            unterseitearrayA = (NSMutableArray*)[Profil1Dic objectForKey:@"unterseitearray"];
+            
          }
         
          
@@ -2728,13 +2729,13 @@
             
             if ([Profil2Dic objectForKey:@"oberseitearray"]) 
             {
-               oberseitearrayB = [Profil2Dic objectForKey:@"oberseitearray"];
+                oberseitearrayB = (NSMutableArray*)[Profil2Dic objectForKey:@"oberseitearray"];
             }
 
             
             if ([Profil2Dic objectForKey:@"unterseitearray"]) 
             {
-               unterseitearrayB = [Profil2Dic objectForKey:@"unterseitearray"];
+               unterseitearrayB = (NSMutableArray*)[Profil2Dic objectForKey:@"unterseitearray"];
             }
             
             
@@ -2760,7 +2761,15 @@
          
          
          
+         fprintf(stderr,"doProfilPopTask oberseitearrayA\n");
+         for(int i=0;i<oberseitearrayA.count;i++)
+         {
+            float ax = [[[oberseitearrayA objectAtIndex:i]objectForKey:@"x"]floatValue];
+            float ay = [[[oberseitearrayA objectAtIndex:i]objectForKey:@"y"]floatValue];
+            fprintf(stderr,"%d\t %.4f\t %.4f\n",i,ax,ay);
+         }
          
+
          
          // Oberseitenprofile angleichen
          if (oberseitearrayA.count && oberseitearrayB.count) // beide vorhanden
@@ -2768,23 +2777,27 @@
             NSLog(@"Oberseite abgleichen");
             
             NSArray* redarray  = [Utils werteanpassenOberseiteVon:[NSArray arrayWithObjects:oberseitearrayA, oberseitearrayB,nil]];
+            
+            
             oberseitearrayA = redarray[0];
             
             oberseitearrayB = redarray[1];
  
+  
             
+           [ProfilDic setObject:redarray[0] forKey:@"oberseitearrayA"];
             
-            [ProfilDic setObject:redarray[0] forKey:@"oberseitearrayA"];
-            
-            [ProfilDic setObject:redarray[1] forKey:@"oberseitearrayB"];
-            
+         [ProfilDic setObject:redarray[1] forKey:@"oberseitearrayB"];
+
 
          }
-         
+      
+      
+        
          // Unterseitenprofile angleichen
          if (unterseitearrayA.count && unterseitearrayB.count) // beide vorhanden
          {
-           // NSLog(@"unterseite abgleichen");
+            NSLog(@"unterseite abgleichen");
             
             NSArray* redarray  = [Utils werteanpassenUnterseiteVon:[NSArray arrayWithObjects:unterseitearrayA, unterseitearrayB,nil]];
             unterseitearrayA = redarray[0];

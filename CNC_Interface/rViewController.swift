@@ -190,6 +190,7 @@ class rViewController: NSViewController, NSWindowDelegate
    let notokimage :NSImage = NSImage(named:NSImage.Name(rawValue: "notok_image"))!
    let okimage :NSImage = NSImage(named:NSImage.Name(rawValue: "ok_image"))!
    
+   var cncwritecounter = 0;
    @IBOutlet weak var USB_OK_Feld: NSImageView!
    
    // Robot
@@ -1441,9 +1442,12 @@ class rViewController: NSViewController, NSWindowDelegate
    
    @IBOutlet weak var Joystickfeld: rJoystickView!
    
+   
+   
    @IBOutlet weak var clear_Ring: NSButton!
    
    @IBOutlet weak var ObjekteMenu: NSMenu!
+   
    
 }
 protocol UIntToBytesConvertable {

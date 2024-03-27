@@ -267,8 +267,8 @@ int (^add)(int,int) = ^(int number1, int number2){
    NSMutableDictionary* MausDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [MausDic setObject:[NSNumber numberWithInt:1] forKey:@"mausistdown"];
    [MausDic setObject:[NSNumber numberWithInt:GraphOffset] forKey:@"graphoffset"];
-   //NSLog(@"mouseDown: notific mausdaten");
-   [nc postNotificationName:@"mausdaten" object:self userInfo:MausDic];
+   NSLog(@"mouseDown: notific mausdaten MausDic: %@",MausDic);
+ //  [nc postNotificationName:@"mausdaten" object:self userInfo:MausDic];
 
 	float x=local_point.x;
 	local_point.x /= scale;
@@ -286,7 +286,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 	}
 	
 	//NSLog(@"mousdown x: %2.2f y: %2.2f",x,y);
-	//NSLog(@"mousdown scale x: %2.2f y: %2.2f",local_point.x,local_point.y);
+	NSLog(@"mousdown scale x: %2.2f y: %2.2f",local_point.x,local_point.y);
 	
    int linehit=0;
    if ([DatenArray count]>3)
@@ -328,8 +328,8 @@ int (^add)(int,int) = ^(int number1, int number2){
    // Angeklickte Seite angeben
    [NotificationDic setObject:[NSNumber  numberWithInt:Klickseite]forKey:@"klickseite"];
 
-//   NSLog(@"mousedown startklickpunkt: %d clickedPunkt: %d",startklickpunkt,Klickpunkt);
-	if (Klickpunkt> -1) // Punkt angeklickt
+   NSLog(@"mousedown startklickpunkt: %d clickedPunkt: %d",startklickpunkt,Klickpunkt);
+	if (Klickpunkt > -1) // Punkt angeklickt
 	{
       
       if (shift) //&& (startklickpunkt >=0)&& (!(startklickpunkt == klickpunkt))) // schon vorher ein startklickpunkt markiert
@@ -391,7 +391,6 @@ int (^add)(int,int) = ^(int number1, int number2){
 
          klickrange=NSMakeRange(0,0);
          
-         
       }
       
       // Koord Mauspunkt
@@ -407,7 +406,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 		//NSLog(@"mousedown clickedPunkt: %d",klickpunkt);
       //NSLog(@"mousedown NotificationDic: %@",[NotificationDic description]);
 		//[self setNeedsDisplay:YES];
-//		NSLog(@"mouseDown: notific mausklick Punkt angeklickt");
+		NSLog(@"mouseDown: notific mausklick Punkt angeklickt");
       [nc postNotificationName:@"mausklick" object:self userInfo:NotificationDic];
 	}
 	else // Range reseten
@@ -498,11 +497,15 @@ int (^add)(int,int) = ^(int number1, int number2){
    float Gittermass = scale*10;
    
    float breite = [self frame].size.width;
+   float hoehe = [self frame].size.height;
+   
+   NSLog(@"GitterZeichnen breite: %2.2f hoehe: %2.2f",breite, hoehe);
    if ([[NSGraphicsContext currentContext]isDrawingToScreen])
    {
       //NSLog(@"ProfilGraph drawRect screen");
       screen=1;
       anzahlmaschen = [self frame].size.width/Gittermass;
+      NSLog(@"GitterZeichnen anzahlmaschen: %d",anzahlmaschen);
    }
    else
    {
@@ -519,6 +522,8 @@ int (^add)(int,int) = ^(int number1, int number2){
    
    
    // waagrechte Linien
+   int anzvertikal = [self frame].size.height/Gittermass;
+   NSLog(@"ProfilGraph anzvertikal: %d", anzvertikal);
 	for (i=0;i<[self frame].size.height/Gittermass;i++)
 
 	{
@@ -603,7 +608,7 @@ int (^add)(int,int) = ^(int number1, int number2){
       local_point.y -=GraphOffset;
    }
    
-   //NSLog(@"mouseDragged Klickseite: %d",Klickseite);
+   NSLog(@" mouseDragged Klickseite: %d  Klickpunkt: %d",Klickseite, Klickpunkt);
 	if (Klickpunkt >=0 && [DatenArray count]> Klickpunkt)
 	{
 		NSPoint aktivPunkt=NSMakePoint([[[DatenArray objectAtIndex:Klickpunkt]objectForKey:@"ax"]floatValue]*scale, [[[DatenArray objectAtIndex:Klickpunkt]objectForKey:@"ay"]floatValue]*scale);
@@ -611,6 +616,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 		
 		if ([self mouse:aktivPunkt inRect:aktivFeld])
 		{
+         NSLog(@"mouseDragged drag x: %2.2f y: %2.2f",x,y);
 			NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[NotificationDic setObject:NSStringFromPoint(local_point) forKey:@"mauspunkt"];
 			[NotificationDic setObject:[NSNumber numberWithInt:Klickpunkt] forKey:@"klickpunkt"];
@@ -622,12 +628,12 @@ int (^add)(int,int) = ^(int number1, int number2){
 			
 		}
 		
-	}
+	} // Klickpunkt >=0
 	
 	else if (distance(oldMauspunkt, local_point)>4)
 	{
 		oldMauspunkt = local_point;
-		//NSLog(@"mouseDragged x: %2.2f y: %2.2f",x,y);
+		NSLog(@"mouseDragged neuer Punkt x: %2.2f y: %2.2f",x,y);
 		NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		[NotificationDic setObject:NSStringFromPoint(local_point) forKey:@"mauspunkt"];
       [NotificationDic setObject:[NSNumber numberWithInt:GraphOffset] forKey:@"graphoffset"];
@@ -640,6 +646,7 @@ int (^add)(int,int) = ^(int number1, int number2){
 
 - (void)drawRect:(NSRect)dirtyRect 
 {
+   NSLog(@"ProfilGraph drawRect dirtyRect: %@ ",dirtyRect);
    NSColor* bgcolor = [NSColor colorWithCalibratedRed:1.0 green:1.0 blue:1.0 alpha:1.0f];
 
     [bgcolor setFill];
@@ -685,16 +692,13 @@ int (^add)(int,int) = ^(int number1, int number2){
 		int anz=[DatenArray count];
 		StartPunktA=NSMakePoint([[[DatenArray objectAtIndex:0]objectForKey:@"ax"]floatValue]*scale,[[[DatenArray objectAtIndex:0]objectForKey:@"ay"]floatValue]*scale);
 		//NSLog(@"drawRect startpunkt x: %.2f  y: %.2f",[[[DatenArray objectAtIndex:0]objectForKey:@"ax"]floatValue],[[[DatenArray objectAtIndex:0]objectForKey:@"ay"]floatValue]);
-      int endpunktax = [[[DatenArray objectAtIndex:anz-1]objectForKey:@"ax"]floatValue];
       
       EndPunktA=NSMakePoint([[[DatenArray objectAtIndex:anz-1]objectForKey:@"ax"]floatValue],[[[DatenArray objectAtIndex:anz-1]objectForKey:@"ay"]floatValue]);
 		
       
 		StartPunktB=NSMakePoint([[[DatenArray objectAtIndex:0]objectForKey:@"bx"]floatValue]*scale,([[[DatenArray objectAtIndex:0]objectForKey:@"by"]floatValue]+GraphOffset)*scale);
 		//NSLog(@"drawRect startpunkt x: %.2f  y: %.2f",[[[DatenArray objectAtIndex:0]objectForKey:@"ax"]floatValue],[[[DatenArray objectAtIndex:0]objectForKey:@"ay"]floatValue]);
-      int startpunktbx = [[[DatenArray objectAtIndex:0]objectForKey:@"bx"]floatValue];
 		EndPunktB=NSMakePoint([[[DatenArray objectAtIndex:anz-1]objectForKey:@"bx"]floatValue]*scale,([[[DatenArray objectAtIndex:anz-1]objectForKey:@"by"]floatValue]+GraphOffset)*scale);
-      int endpunktbx = [[[DatenArray objectAtIndex:anz-1]objectForKey:@"bx"]floatValue];
 
       //NSLog(@"drawRect endpunktax: %d endpunktbx: %d",endpunktax,endpunktbx);
       if (screen)
@@ -774,7 +778,7 @@ int (^add)(int,int) = ^(int number1, int number2){
       //NSLog(@"startabbrandindex: %d AbbrandStartPunktA.x %d AbbrandEndPunktA.y %d ",startabbrandindexa ,AbbrandStartPunktA.x,AbbrandEndPunktA.y);
       [AbbrandLinieA moveToPoint:AbbrandStartPunktA];
       //
-      // Seite 2
+      // Seite 2//
       NSBezierPath* AbbrandLinieB=[NSBezierPath bezierPath];
       int startabbrandindexb=0;
       for (i=0;i<anz;i++)
@@ -790,7 +794,7 @@ int (^add)(int,int) = ^(int number1, int number2){
       
 		NSPoint AbbrandStartPunktB=NSMakePoint(([[[DatenArray objectAtIndex:startabbrandindexb]objectForKey:@"abrbx"]floatValue])*scale,([[[DatenArray objectAtIndex:startabbrandindexb]objectForKey:@"abrby"]floatValue]+GraphOffset)*scale);
       AbbrandStartPunktB.y +=abbbranddelay;
-		NSPoint AbbrandEndPunktB=NSMakePoint([[[DatenArray objectAtIndex:anz-1]objectForKey:@"abrbx"]floatValue],[[[DatenArray objectAtIndex:anz-1]objectForKey:@"abrby"]floatValue]);
+		//NSPoint AbbrandEndPunktB=NSMakePoint([[[DatenArray objectAtIndex:anz-1]objectForKey:@"abrbx"]floatValue],[[[DatenArray objectAtIndex:anz-1]objectForKey:@"abrby"]floatValue]);
 	
       //NSLog(@"startabbrandindexb: %d AbbrandStartPunktB.x %d AbbrandEndPunktB.y %d ",startabbrandindexb ,AbbrandStartPunktA.x,AbbrandEndPunktA.y);
 

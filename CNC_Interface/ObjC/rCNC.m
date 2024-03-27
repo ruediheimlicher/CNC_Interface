@@ -3556,6 +3556,8 @@ PortA=vs[n & 3]; warte10ms(); n++;
 
 - (NSArray*)EndleisteneinlaufMitWinkel:(float)winkel mitLaenge:(float)laenge mitTiefe:(float)tiefe 
 {
+   
+   NSLog(@"EndleisteneinlaufMitWinkel winkel: %2.2f l: %2.2f t: %2.2f",winkel, laenge, tiefe);
    //float tiefe=10;// Schlitztiefe
    float dicke=0.5; // Schlitzbreite
    float full_pwm = 1;
@@ -3566,7 +3568,8 @@ PortA=vs[n & 3]; warte10ms(); n++;
    NSPoint Endpunkt = NSMakePoint(0,0);
    NSArray* tempEinlaufArray0 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:full_pwm], nil];
    [EinlaufpunkteArray addObject:tempEinlaufArray0];
-  
+   
+ 
    // Einstich
    if(tiefe)
    {
@@ -3587,12 +3590,13 @@ PortA=vs[n & 3]; warte10ms(); n++;
       Endpunkt.y +=tiefe * cosf(winkel);
       NSArray* tempEinlaufArray3 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:red_pwm], nil];
       [EinlaufpunkteArray addObject:tempEinlaufArray3];
+      
+      
    }
    else 
    {
       //[EinlaufpunkteArray addObject:tempEinlaufArray0];
    }
-   
    // Einlauf
    if(laenge)
    {
@@ -3605,7 +3609,9 @@ PortA=vs[n & 3]; warte10ms(); n++;
    {
       [EinlaufpunkteArray addObject:tempEinlaufArray0];
    }
-   NSLog(@"endleiste end");
+
+   
+    NSLog(@"endleiste end");
    return EinlaufpunkteArray;
 }
 

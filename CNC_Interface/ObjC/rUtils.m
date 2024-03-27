@@ -528,7 +528,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    NSLog(@"Profilarray name: %@:",ProfilName);
    for (int i=0;i<ProfilArray.count;i++)
    {
- //     fprintf(stderr,"%d \t %2.6f \t %2.6f \n",i,[[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue], [[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue]);
+      fprintf(stderr,"%d \t %2.6f \t %2.6f \n",i,[[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue], [[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue]);
    }
 
    // Profil umdrehen
@@ -540,11 +540,12 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    //NSLog(@"count: %d Nasenindex: %d",[ProfilArray count],Nasenindex);
    
    NSLog(@"OberseiteArray");
-   NSArray* OberseiteArray=[NSArray arrayWithArray:[ProfilArray subarrayWithRange:NSMakeRange(0, Nasenindex+1)]];
+   
+   NSArray* OberseiteArray=[NSArray arrayWithArray:[ProfilArray subarrayWithRange:NSMakeRange(1, Nasenindex+1)]];
    NSLog(@"OberseiteArray count: %d",OberseiteArray.count);
    for (int i=0;i<OberseiteArray.count;i++)
    {
- //     fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[OberseiteArray objectAtIndex:i]objectForKey:@"x"] floatValue],[[[OberseiteArray objectAtIndex:i]objectForKey:@"y"] floatValue]);
+      fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[OberseiteArray objectAtIndex:i]objectForKey:@"x"] floatValue],[[[OberseiteArray objectAtIndex:i]objectForKey:@"y"] floatValue]);
    }
    
    NSLog(@"UnterseiteArray");

@@ -437,7 +437,8 @@ class rCNCViewController:rViewController
       if (teensy.read_OK.boolValue == false)
       {
          print("teensy.read_OK ist false")
-         teensy.start_read_USB(true, dic:timerdic)
+         let result = teensy.start_read_USB(true, dic:timerdic)
+         print("teensy.read_OK ist \(result)")
       }
       else
       {
@@ -450,7 +451,8 @@ class rCNCViewController:rViewController
 
     @objc func writeCNCAbschnitt()
    {
-     print("swift writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray)")
+      cncwritecounter += 1
+     //print("swift writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray) cncwritecounter: \(cncwritecounter)")
       let count = usb_schnittdatenarray.count
       //print("writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
       

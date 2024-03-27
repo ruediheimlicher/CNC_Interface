@@ -7432,7 +7432,7 @@ return returnInt;
    
    if (LibOK)
    {
-      ProfilnamenArray = (NSMutableArray*)[Filemanager contentsOfDirectoryAtPath:ProfilLibPfad error:NULL];
+      ProfilnamenArray = [NSMutableArray arrayWithArray:[Filemanager contentsOfDirectoryAtPath:ProfilLibPfad error:NULL]];
       [ProfilnamenArray removeObject:@".DS_Store"];
       [ProfilnamenArray removeObject:@" Profile ReadMe.txt"];
       //NSLog(@"readProfilLib ProfilnamenArray: %@ selected: %@",[ProfilnamenArray description], [[ProfilnamenArray objectAtIndex:[Profil1Pop indexOfSelectedItem]+1] description]); // item 0 ist Titel
@@ -8296,7 +8296,7 @@ return returnInt;
     
    Profil2Array=[ProfilDic objectForKey:@"profil1array"];
    Profil2UnterseiteArray=[ProfilDic objectForKey:@"unterseitearrayB"];
-   Profil2OberseiteArray=(NSMutableArray*)[CNC_Eingabe vertikalspiegelnVonProfil:[ProfilDic objectForKey:@"oberseitearrayB"]];
+   Profil2OberseiteArray=[NSMutableArray arrayWithArray:[CNC_Eingabe vertikalspiegelnVonProfil:[ProfilDic objectForKey:@"oberseitearrayB"]]];
   
    float pfeilung = (ProfiltiefeA - ProfiltiefeB)/[Spannweite intValue];
    float arc=atan(pfeilung);
@@ -8559,7 +8559,7 @@ return returnInt;
    */
    
    NSMutableDictionary* Profil1UnterseiteDic = (NSMutableDictionary*)[CNC ProfilDicVonPunkt:StartpunktA mitProfil:Profil1UnterseiteArray mitProfiltiefe:ProfiltiefeA mitScale:[[ScalePop selectedItem]tag]];
-   Profil1UnterseiteArray= (NSMutableArray*)[Profil1UnterseiteDic objectForKey:@"profilpunktarray"];
+   Profil1UnterseiteArray= [NSMutableArray arrayWithArray:[Profil1UnterseiteDic objectForKey:@"profilpunktarray"]];
    float gfkweg1U = [[Profil1UnterseiteDic objectForKey:@"gfkweg"]floatValue];
 
    NSMutableDictionary* Profil1OberseiteDic =  (NSMutableDictionary*)[CNC ProfilDicVonPunkt:StartpunktA mitProfil:Profil1OberseiteArray mitProfiltiefe:ProfiltiefeA mitScale:[[ScalePop selectedItem]tag]];

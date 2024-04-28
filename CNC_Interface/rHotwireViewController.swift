@@ -1615,28 +1615,6 @@ var outletdaten:[String:AnyObject] = [:]
             }
  
           }
-
-        
-        /*
-        if ABBindCheck.state == NSControl.StateValue.on && Klickseite == 1
-        {
-            deltaAX = WertAXFeld.doubleValue - oldax
-            deltaAY = WertAYFeld.doubleValue - olday
-        }
-
-        if ABBindCheck.state == NSControl.StateValue.on && Klickseite == 2
-        {
-            deltaBX = WertBXFeld.doubleValue - oldbx
-            deltaBY = WertBYFeld.doubleValue - oldby
-        }
-        */
-        
-        
-       
-   //     tempDic["ax"] = oldax+deltaAX
-   //     tempDic["ay"] = olday+deltaAY
-  //      tempDic["bx"] = oldbx+deltaBX
-   //     tempDic["by"] = oldby+deltaBY
         
         // Abbrand
         var oldabrax = 0.0

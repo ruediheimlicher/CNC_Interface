@@ -1529,14 +1529,19 @@ var outletdaten:[String:AnyObject] = [:]
         print("Hotwire MausDragAktion klickseite: \(Klickseite)")
         
         let oldDic = KoordinatenTabelle[Klickindex]
+       
         
-        let offsetx = ProfilBOffsetXFeld.doubleValue
-        let offsety = ProfilBOffsetYFeld.doubleValue
+        var offsetx = ProfilBOffsetXFeld.doubleValue
+        var offsety = ProfilBOffsetYFeld.doubleValue
         
         let oldax = oldDic["ax"]!
         let olday = oldDic["ay"]!
         let oldbx = oldDic["bx"]!
         let oldby = oldDic["by"]!
+       
+       offsetx = oldbx - oldax
+       offsety = oldby - olday
+
         
         var deltaAX = 0.0
         var deltaAY = 0.0
@@ -1547,6 +1552,8 @@ var outletdaten:[String:AnyObject] = [:]
         
         if Klickseite == 1
         {
+    //       offsetx = oldbx - oldax
+    //       offsety = oldby - olday
             deltaAX = WertAXFeld.doubleValue - oldax
             deltaAY = WertAYFeld.doubleValue - olday
             tempDic["ax"] = oldax+deltaAX
@@ -1578,6 +1585,8 @@ var outletdaten:[String:AnyObject] = [:]
           }
         if Klickseite == 2
         {
+ 
+
             deltaBX = WertBXFeld.doubleValue - oldbx
             deltaBY = WertBYFeld.doubleValue - oldby
             tempDic["bx"] = oldbx+deltaBX

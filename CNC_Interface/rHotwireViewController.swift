@@ -1552,8 +1552,6 @@ var outletdaten:[String:AnyObject] = [:]
         
         if Klickseite == 1
         {
-    //       offsetx = oldbx - oldax
-    //       offsety = oldby - olday
             deltaAX = WertAXFeld.doubleValue - oldax
             deltaAY = WertAYFeld.doubleValue - olday
             tempDic["ax"] = oldax+deltaAX

@@ -1201,7 +1201,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    
                 // Anschlag first
                 case 0xA5:
-                   print("VC newDataAktion  Anschlag A0")
+                   print("VC newDataAktion A5:  Anschlag A0")
                    AnschlagSet.insert(0) // schritteax lb
                    AnschlagSet.insert(1) // schritteax hb
                    AnschlagSet.insert(4) // delayax lb
@@ -1209,7 +1209,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    break;
                    
                 case 0xA6:
-                   print("VC newDataAktion  Anschlag B0")
+                   print("VC newDataAktion A6:   Anschlag B0")
                    AnschlagSet.insert(2) // schritteax lb
                    AnschlagSet.insert(3) // schritteax hb
                    AnschlagSet.insert(6) // delayax lb
@@ -1345,18 +1345,18 @@ class rViewController: NSViewController, NSWindowDelegate
                 
                 // Indexset mit relevanten Werten fuer Endanschlag
                 var EndIndexSet = IndexSet(integersIn:0xAA...0xAD)  // End Abschnitt von A - D
-                EndIndexSet.insert(integersIn:0xA5...0xA8)          // // Anschlag A0 - D0
+                EndIndexSet.insert(integersIn:0xA5...0xA8)          // // Anschlag A0 - D0, gesetzt wenn abschnittfertig ist in AA - AD 
                 
                 var HomeIndexSet = IndexSet(integersIn:0xAA...0xAD) // End Abschnitt von A - D
                 EndIndexSet.insert(integersIn:0xB5...0xB8)          // Anschlag A0 home first
                 
-                //print("EndIndexSet: \(EndIndexSet)")
+                print("newDataAktion EndIndexSet: \(EndIndexSet)")
                //  print("HomeIndexSet: \(HomeIndexSet)")
 
                 
                 if EndIndexSet.contains(Int(abschnittfertig))
                 {
-                   print("EndIndexSet contains abschnittfertig")
+                   print("VC EndIndexSet contains abschnittfertig: \(EndIndexSet) ")
                    //teensy.DC_pwm(0)
    //                AVR?.setBusy(0)
     //               teensy.read_OK = false
@@ -1394,9 +1394,10 @@ class rViewController: NSViewController, NSWindowDelegate
                 }
                    //print("HomeAnschlagSet: \(HomeAnschlagSet)")
                    NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
+                NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
                    NotificationDic["home"] = Int(home)
                    NotificationDic["abschnittfertig"] = Int(abschnittfertig)
-                   print("HotwireVC newDataAktion Notific: \(NotificationDic)")
+                   print("VC newDataAktion Notific: \(NotificationDic)")
                    
                     let nc = NotificationCenter.default
                     nc.post(name:Notification.Name(rawValue:"usbread"),

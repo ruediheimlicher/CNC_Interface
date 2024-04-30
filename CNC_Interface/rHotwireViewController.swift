@@ -2414,7 +2414,7 @@ var outletdaten:[String:AnyObject] = [:]
                    
                 case 0xD0:
                    print("***   ***   Letzter Abschnitt")
-                   print("HotWireVC newDataAktion 0xD0 Stepperposition: \(Stepperposition) \n\(schnittdatenstring)");
+                   print("HW HotWirenewDataAktion 0xD0 Stepperposition: \(Stepperposition) \n\(schnittdatenstring)");
                    //print("HomeAnschlagSet: \(HomeAnschlagSet)")
                    NotificationDic["abschnittfertig"] = Int(abschnittfertig)
                    let nc = NotificationCenter.default
@@ -2486,7 +2486,7 @@ var outletdaten:[String:AnyObject] = [:]
                 
                 if EndIndexSet.contains(Int(abschnittfertig))
                 {
-                   print("EndIndexSet contains abschnittfertig")
+                   print("HW newHotwireDataAktion EndIndexSet contains abschnittfertig")
                    //teensy.DC_pwm(0)
    //                AVR?.setBusy(0)
     //               teensy.read_OK = false
@@ -2526,7 +2526,7 @@ var outletdaten:[String:AnyObject] = [:]
                    NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
                    NotificationDic["home"] = Int(home)
                    NotificationDic["abschnittfertig"] = Int(abschnittfertig)
-                   print("HotwireVC newDataAktion Notific: \(NotificationDic)")
+                   print("HW HotwirenewDataAktion Notific: \(NotificationDic)")
                    
                     let nc = NotificationCenter.default
                     nc.post(name:Notification.Name(rawValue:"usbread"),
@@ -2805,7 +2805,7 @@ var outletdaten:[String:AnyObject] = [:]
                  
                  if EndIndexSet.contains(Int(abschnittfertig))
                  {
-                    print("EndIndexSet contains abschnittfertig")
+                    print("HW newDataAktion EndIndexSet contains abschnittfertig")
                     //teensy.DC_pwm(0)
     //                AVR?.setBusy(0)
      //               teensy.read_OK = false
@@ -2897,6 +2897,7 @@ var outletdaten:[String:AnyObject] = [:]
             PositionFeld.integerValue = Stepperposition
             ProfilFeld.stepperposition = Stepperposition
             ProfilFeld.needsDisplay = true
+           CNC_busySpinner.stopAnimation(nil)
             if taskfertig > 0
             {
                 let warnung = NSAlert.init()
@@ -3467,18 +3468,19 @@ var outletdaten:[String:AnyObject] = [:]
     }
 
     @IBAction func reportManDown(_ sender: rPfeil_Taste)
-    {
-       print("swift reportManDown: \(sender.tag)")
-        cnc_seite1check = CNC_Seite1Check.state.rawValue as Int
-        cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
-        outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
-        outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
-        outletdaten["speed"] = SpeedFeld.integerValue as AnyObject
-        outletdaten["micro"] = micro as AnyObject
-
-
-        AVR?.manRichtung(4, mousestatus:1, pfeilstep:100)
-    }
+   {
+      print("swift reportManDown: \(sender.tag)")
+      cnc_seite1check = CNC_Seite1Check.state.rawValue as Int
+      cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
+      outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
+      outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
+      outletdaten["speed"] = SpeedFeld.integerValue as AnyObject
+      outletdaten["micro"] = micro as AnyObject
+      
+      
+      AVR?.manRichtung(4, mousestatus:1, pfeilstep:100)
+      
+   }
     @IBAction  func reportIndexStepper(_ sender: NSStepper) //
     {
        print("reportIndexStepper IntVal: \(sender.integerValue)")

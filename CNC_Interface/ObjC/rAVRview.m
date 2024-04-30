@@ -668,6 +668,7 @@ NSMutableDictionary* cncdatendic;
  //  plotQuadBezierSeg(0,0,20, 80, 30, 30) ;
    double px[] = {0.25,0.22221,0.19562,0.17033,0.14645,0.12408,0.10332,0.08427,0.06699,0.05156,0.03806,0.02653,0.01704,0.00961,0.00428,0.00107};
    double py[] = {0.08996,0.08774,0.08483,0.08113,0.0766,0.07134,0.06552,0.05939,0.05313,0.04677,0.04027,0.03352,0.02652,0.01943,0.01254,0.00616};
+   
    int length = 16;
    double polykoeffarray[length];
    int von = 5;
@@ -5050,7 +5051,7 @@ return returnInt;
      
       
       
- //     NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+      NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
       index++;
       [ManArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",nil]];
       //NSLog(@"A");

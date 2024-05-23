@@ -250,7 +250,7 @@ var outletdaten:[String:AnyObject] = [:]
        var speed = 7
    }
     
-    var hotwireplist:[String:AnyObject] = [:]
+   var hotwireplist:[String:AnyObject] = [:]
    var RahmenDic:[String:Double] = [:]
    
    var KoordinatenTabelle = [[String:Double]]()
@@ -265,6 +265,8 @@ var outletdaten:[String:AnyObject] = [:]
     
     var CNC_Eingabe = rEinstellungen()
     
+   var joystick_write_byteArray: Array<UInt8> = Array(repeating: 0x00, count: BUFFER_SIZE)
+   
     @IBOutlet weak var  PfeilfeldLinks: rPfeil_Feld!
    @IBOutlet weak var intpos0Feld: NSStepper!
    //@IBOutlet weak var StepperTab: rTabview!
@@ -358,6 +360,7 @@ var outletdaten:[String:AnyObject] = [:]
    @IBOutlet weak var CNC_BlockKonfigurierenTaste: NSButton!
    @IBOutlet weak var CNC_BlockAnfuegenTaste: NSButton!
 
+   @IBOutlet var CNC_Joystick: rJoystickView!
     
    @IBOutlet weak var  Pfeiltaste: rPfeil_Taste!
     
@@ -464,14 +467,35 @@ var outletdaten:[String:AnyObject] = [:]
     
     @IBOutlet weak var Schalendickefeld:  NSTextField!
     @IBOutlet weak var NutCheckbox:  NSButton!
-    
-
+ 
     @IBOutlet weak var  RumpfteilTaste:  NSSegmentedControl!
+   
+   @IBOutlet weak var TastenwertFeld:  NSTextField!
+   @IBOutlet weak var TasteFeld:  NSTextField!
     
     let MANRIGHT    = 1
     let MANUP       = 2
     let MANLEFT     = 3
     let MANDOWN     = 4
+   
+   // MARK:  Joystick
+   
+   @IBOutlet weak var JoystickSaveKnopf:  NSButton!
+   @IBOutlet weak var JoystickClearKnopf:  NSButton!
+   @IBOutlet weak var minAfeld:  NSTextField!
+   @IBOutlet weak var maxAfeld:  NSTextField!
+   @IBOutlet weak var mitteAfeld:  NSTextField!
+   @IBOutlet weak var potAfeld:  NSTextField!
+
+   @IBOutlet weak var minBfeld:  NSTextField!
+   @IBOutlet weak var maxBfeld:  NSTextField!
+   @IBOutlet weak var mitteBfeld:  NSTextField!
+   @IBOutlet weak var potBfeld:  NSTextField!
+   
+   @IBOutlet weak var Analogstatusfeld:  NSTextField!
+   @IBOutlet weak var JoystickAktiv:  NSImageView!
+   @IBOutlet weak var JoystickCalib:  NSImageView!
+   
 
 /*
     @objc func stepsAktion(_ notification:Notification)
@@ -507,7 +531,96 @@ var outletdaten:[String:AnyObject] = [:]
         }
         return fliparray
     }
-    
+   
+   @objc func FigElementeingabeAktion(_ notification:Notification)
+   {
+      let info = notification.userInfo
+      print("swift FigElementeingabeAktion: \(info)")
+      var infoDic = notification.userInfo as? [String:Any]
+      
+      
+      print("LibElementeingabeAktion KoordinatenTabelle Start: \(KoordinatenTabelle)")
+      var ax:Double = 0
+      var ay:Double = 0
+      var bx:Double = 0
+      var by:Double = 0
+
+      var StartpunktA:NSPoint
+      var StartpunktB:NSPoint
+
+      // letztes Element der Koordinatentabelle
+      if KoordinatenTabelle.count > 0
+      {
+          ax = (KoordinatenTabelle.last?["ax"])!
+          ay = (KoordinatenTabelle.last?["ay"])!
+          bx = (KoordinatenTabelle.last?["bx"])!
+          by = (KoordinatenTabelle.last?["by"])!
+          
+          StartpunktA = NSMakePoint(ax,ay)
+          StartpunktB = NSMakePoint(bx,by)
+      }
+      else
+      {
+          ax = 25
+          ay = 55
+          bx = 25
+          by = 55
+          StartpunktA = NSMakePoint(ax,ay)
+          StartpunktB = NSMakePoint(bx,by)
+      }
+      let offsetx:Double = ProfilBOffsetXFeld.doubleValue
+      let offsety:Double = ProfilBOffsetYFeld.doubleValue
+      var startx:Double = 0
+      var starty:Double = 0
+      
+      if let tempstartx = infoDic?["startx"]
+      {
+          startx = tempstartx as! Double
+      }
+      else
+      {
+      }
+
+      if let tempstarty = infoDic?["starty"]
+      {
+          starty = tempstarty as! Double
+      }
+      else
+      {
+      }
+      
+      
+      var pwm:Double = 0
+      if let tempwert = infoDic?["pwm"]
+      {
+          pwm = tempwert as! Double
+      }
+      else
+      {
+      }
+
+      
+      
+      var oldax:Double? = 0
+      var olday:Double? = 0
+      var oldbx:Double? = offsetx
+      var oldby:Double? = offsety
+      
+      
+      if KoordinatenTabelle.count > 0
+      {
+          oldax = (KoordinatenTabelle.last?["ax"] ?? 0) - startx
+          olday = (KoordinatenTabelle.last?["ay"] ?? 0) - starty
+          oldbx = (KoordinatenTabelle.last?["bx"] ?? 0) - startx
+          oldby = (KoordinatenTabelle.last?["by"] ?? 0) - starty
+      }
+
+      
+      
+      
+      
+   } // FigElementeingabeAktion
+   
     @objc func LibElementeingabeAktion(_ notification:Notification)
     {
         let info = notification.userInfo
@@ -2604,7 +2717,7 @@ var outletdaten:[String:AnyObject] = [:]
               // https://useyourloaf.com/blog/swift-string-cheat-sheet/
               let home = Int(usbdata[13])
                
-               print("newDataAktion abschnittfertig abschnittfertig: \(hex(abschnittfertig))")
+               print("HW newDataAktion abschnittfertig abschnittfertig: \(hex(abschnittfertig))")
                 NotificationDic["abschnittfertig"] = Int(abschnittfertig)
 
                let abschnittnummer:Int = Int((usbdata[5] << 8) | usbdata[6])
@@ -2869,6 +2982,65 @@ var outletdaten:[String:AnyObject] = [:]
         //print("dic: \(dic ?? ["a":[123]])\n")
         
      }
+   
+   @IBAction func report_JoystickSave(_ sender: NSButton) 
+   {
+      print("report_JoystickSave")
+      var potmaxA = UInt16(maxAfeld.integerValue)
+      var potminA = UInt16(minAfeld.integerValue)
+      let potmitteA = UInt16(mitteAfeld.integerValue)
+      
+      if(potmitteA < potminA)
+      {
+         potminA = potmitteA
+      }
+      if(potmaxA < potmitteA)
+      {
+         potmaxA = potmitteA
+      }
+      let diffAH = UInt16(potmaxA - potmitteA)
+      let diffAL = UInt16(potmitteA - potminA)
+      
+      print("diffAH: \(diffAH) diffAL: \(diffAL)")
+      
+      joystick_write_byteArray[16] = 0xAE;
+      joystick_write_byteArray[0] = UInt8((potmaxA & 0xFF00)>>8)
+      joystick_write_byteArray[1] = UInt8((potmaxA & 0x00FF))
+      joystick_write_byteArray[2] = UInt8((potminA & 0xFF00)>>8)
+      joystick_write_byteArray[3] = UInt8((potminA & 0x00FF))
+      
+      
+      
+      var potmaxB = maxBfeld.integerValue
+      var potminB = minBfeld.integerValue
+      let potmitteB = mitteBfeld.integerValue
+      
+      
+      
+      
+      joystick_write_byteArray[10] = UInt8((potmaxB & 0xFF00)>>8)
+      joystick_write_byteArray[11] = UInt8((potmaxB & 0x00FF))
+      joystick_write_byteArray[12] = UInt8((potminB & 0xFF00)>>8)
+      joystick_write_byteArray[13] = UInt8((potminB & 0x00FF))
+      
+      usb_schnittdatenarray.removeAll()
+      usb_schnittdatenarray.append(joystick_write_byteArray)
+      teensy.setboardindex(board: 1)
+      writeCNCAbschnitt()
+      teensy.clear_data()
+   }
+
+   
+   @IBAction func report_JoystickClear(_ sender: NSButton) 
+   {
+      print("report_Joystickclear")
+      CNC_Joystick.clearWeg()
+      maxAfeld.integerValue = 0
+      minAfeld.integerValue = 0
+      maxBfeld.integerValue = 0
+      minBfeld.integerValue = 0
+      
+   }
 
     @objc func USBReadAktion(_ notification:Notification)
     {
@@ -2876,7 +3048,28 @@ var outletdaten:[String:AnyObject] = [:]
         let abschnittfertig = note["abschnittfertig"]  as! Int
         let outposition = note["outposition"] as! Int
         Stepperposition = note["stepperposition"] as! Int
-        
+       if let Tastaturwert = note["tastaturwert"]
+      {
+          TastenwertFeld.integerValue = Tastaturwert as! Int
+
+       }
+
+       if let Tastewert = note["taste"]
+      {
+          TasteFeld.integerValue = Tastewert as! Int
+
+       }
+       var potwertA = 0;
+       if let wert = note["potwerta"]
+       {
+          potwertA = wert as! Int
+       }
+       var potwertB = 0;
+       if let wert = note["potwertb"]
+       {
+          potwertB = wert as! Int
+       }
+       print("potwertA: \(potwertA) potwertB: \(potwertB)")
         var homeanschlagCount = 0
            if let wert = note["homeanschlagset"]
            {
@@ -2893,6 +3086,8 @@ var outletdaten:[String:AnyObject] = [:]
 
         switch abschnittfertig
         {
+        case 0xB8: // Tastaturwert
+           print("Tastatur Tastaturwert: \(TastenwertFeld.integerValue)")
         case 0xBD:
             PositionFeld.integerValue = Stepperposition
             ProfilFeld.stepperposition = Stepperposition
@@ -2927,11 +3122,13 @@ var outletdaten:[String:AnyObject] = [:]
                 
             }
         }
-        else
-        {
-            return
-        }
-        /*
+       
+       if let Tastaturwert = dataDic["tastaturwert"]
+      {
+          TastenwertFeld.integerValue = Tastaturwert
+
+       }
+         /*
         if let stepperposition = dataDic["stepperposition"]
         {
             if stepperposition > CNCPositionFeld.integerValue
@@ -4199,6 +4396,8 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        
        NotificationCenter.default.addObserver(self, selector:#selector(LibElementeingabeAktion(_:)),name:NSNotification.Name(rawValue: "libelementeingabe"),object:nil)
 
+      NotificationCenter.default.addObserver(self, selector:#selector(FigElementeingabeAktion(_:)),name:NSNotification.Name(rawValue: "figelementeingabe"),object:nil)
+
        NotificationCenter.default.addObserver(self, selector:#selector(FormeingabeAktion(_:)),name:NSNotification.Name(rawValue: "formeingabe"),object:nil)
 
        
@@ -4212,6 +4411,11 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
 
       // neuesElementSichernAktion
        NotificationCenter.default.addObserver(self, selector: #selector(neuesElementSichernAktion), name:NSNotification.Name(rawValue: "elementsichern"), object: nil)
+
+      
+      NotificationCenter.default.addObserver(self, selector: #selector(CNC_JoystickAktion), name:NSNotification.Name(rawValue: "setjoystick"), object: nil)
+
+      NotificationCenter.default.addObserver(self, selector:#selector(joystickAktion(_:)),name:NSNotification.Name(rawValue: "joystick"),object:nil)
 
         
   //     NotificationCenter.default.addObserver(self, selector:#selector(neuesElementSichernAktion(_:)),name:NSNotification.Name(rawValue: "newdata"),object:nil)
@@ -4273,7 +4477,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        
       if (hotwireplist["koordinatentabelle"] != nil)
       {
-         print("PList koordinatentabelle: \(hotwireplist["koordinatentabelle"] )")
+         //print("PList koordinatentabelle: \(hotwireplist["koordinatentabelle"] )")
       }
        
       if (hotwireplist["pwm"] != nil)
@@ -4771,7 +4975,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         var USBPfad = NSHomeDirectory() + "/Documents" + "/CNCDaten"
         var PListName:String = "/CNC.plist"
         USBPfad += PListName
-        print("readHotwire_PList: \(USBPfad)")
+        //print("readHotwire_PList: \(USBPfad)")
         var USB_URL = NSURL.fileURL(withPath:USBPfad)
         
         var propertyListFormat =  PropertyListSerialization.PropertyListFormat.xml //Format of the Property List.
@@ -4862,9 +5066,198 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
     @objc func setRumpfteilDic(rumpfteildic:([String:Double]) , rumpfteil:(Int))
     {
      }
-
    
+   // MARK: JoystickAktion
+   @objc override func joystickAktion(_ notification:Notification) 
+   {
+      print("Hotwire joystickAktion usbstatus:\t \(usbstatus) selectedDevice: \(selectedDevice) ")
+      //let sel = NSUserInterfaceItemIdentifier.init(selectedDevice)
+      let sel = "1"
+     // if (selectedDevice == self.view.identifier)
+      //if (sel == self.view.identifier)
+      if (sel == "1")
+      {
+         print("Hotwire joystickAktion passt")
+         
+         let info = notification.userInfo
+         let punkt:CGPoint = info?["punkt"] as! CGPoint
+         let wegindex:Int = info?["index"] as! Int // 
+         let first:Int = info?["first"] as! Int
+  //       print("Basis joystickAktion:\t \(punkt)")
+         print("wegindex: \(wegindex) x: \(punkt.x) y: \(punkt.y)  first: \(first)")
+         
+         teensy.write_byteArray[INDEX_BYTE_H] = UInt8(((wegindex-1) & 0xFF00) >> 8) // hb // hb // Start, Index 0
+         teensy.write_byteArray[INDEX_BYTE_L] = UInt8(((wegindex-1) & 0x00FF) & 0xFF) // lb
 
+         teensy.write_byteArray[24] = SET_DRAW // Code  fuer Zeichnen
+         
+         
+         
+         // Horizontal Pot0
+         let w = Double(CNC_Joystick.bounds.size.width) // Breite Joystickfeld
+         
+        
+         
+         //let faktorw:Double = (Pot0_Slider.maxValue - Pot0_Slider.minValue) 
+         //      print("w: \(w) faktorw: \(faktorw)")
+         var x = Double(punkt.x)
+         if (x > w)
+         {
+            x = w
+         }
+         potAfeld.integerValue = Int(x)
+         /*
+         goto_x.integerValue = Int(Float(x*faktorw))
+         joystick_x.integerValue = Int(Float(x*faktorw))
+         goto_x_Stepper.integerValue = Int(Float(x*faktorw))
+         let achse0 = UInt16(Float(x*faktorw) * FAKTOR0)
+         //print("x: \(x) achse0: \(achse0)")
+         teensy.write_byteArray[ACHSE0_BYTE_H] = UInt8((achse0 & 0xFF00) >> 8) // hb
+         teensy.write_byteArray[ACHSE0_BYTE_L] = UInt8((achse0 & 0x00FF) & 0xFF) // lb
+         */
+         
+         let h = Double(CNC_Joystick.bounds.size.height)
+         let faktorh:Double = 1 //(Pot1_Slider.maxValue - Pot1_Slider.minValue) / h
+         
+         let faktorz = 1
+         //     print("h: \(h) faktorh: \(faktorh)")
+         var y = Double(punkt.y)
+         if (y > h)
+         {
+            y = h
+         }
+         
+         potBfeld.integerValue = Int(y)
+         
+         return
+         let z = 0
+         goto_y.integerValue = Int(Float(y*faktorh))
+         joystick_y.integerValue = Int(Float(y*faktorh))
+         goto_y_Stepper.integerValue = Int(Float(y*faktorh))
+         let achse1 = UInt16(Float(y*faktorh) * FAKTOR1)
+         //print("y: \(y) achse1: \(achse1)")
+         teensy.write_byteArray[ACHSE1_BYTE_H] = UInt8((achse1 & 0xFF00) >> 8) // hb
+         teensy.write_byteArray[ACHSE1_BYTE_L] = UInt8((achse1 & 0x00FF) & 0xFF) // lb
+         let achse2 =  UInt16(Float(z*faktorz) * FAKTOR2)
+         teensy.write_byteArray[ACHSE2_BYTE_H] = UInt8((achse2 & 0xFF00) >> 8) // hb
+         teensy.write_byteArray[ACHSE2_BYTE_L] = UInt8((achse2 & 0x00FF) & 0xFF) // lb
+         
+         let achse0 = 1
+         let message:String = info?["message"] as! String
+         if ((message == "mousedown") && (first >= 0))// Polynom ohne mousedragged
+         {
+            teensy.write_byteArray[24] = SET_RING
+            let anz = servoPfad?.anzahlPunkte()
+            if (wegindex > 1)
+            {
+               print("")
+ //              print("basis joystickAktion cont achse0: \(achse0) achse1: \(achse1)  achse2: \(achse2) anz: \(String(describing: anz)) wegindex: \(wegindex)")
+               
+               let lastposition = servoPfad?.pfadarray.last
+               
+               let lastx:Int = Int(lastposition!.x)
+               let nextx:Int = Int(achse0)
+               let hypx:Int = (nextx - lastx) * (nextx - lastx)
+               
+               let lasty:Int = Int(lastposition!.y)
+               let nexty:Int = Int(achse1)
+               let hypy:Int = (nexty - lasty) * (nexty - lasty)
+               
+               let lastz:Int = Int(lastposition!.z)
+               let nextz:Int = Int(achse2)
+               let hypz:Int = (nextz - lastz) * (nextz - lastz)
+               
+               print("joystickAktion lastx: \(lastx) nextx: \(nextx) lasty: \(lasty) nexty: \(nexty)")
+               
+               let hyp:Float = (sqrt((Float(hypx + hypy + hypz))))
+               
+               let anzahlsteps = hyp/schrittweiteFeld.floatValue
+               print("Basis joystickAktion hyp: \(hyp) anzahlsteps: \(anzahlsteps) ")
+               
+               teensy.write_byteArray[HYP_BYTE_H] = UInt8((Int(hyp) & 0xFF00) >> 8) // hb
+               teensy.write_byteArray[HYP_BYTE_L] = UInt8((Int(hyp) & 0x00FF) & 0xFF) // lb
+               
+               teensy.write_byteArray[STEPS_BYTE_H] = UInt8((Int(anzahlsteps) & 0xFF00) >> 8) // hb
+               teensy.write_byteArray[STEPS_BYTE_L] = UInt8((Int(anzahlsteps) & 0x00FF) & 0xFF) // lb
+               
+               teensy.write_byteArray[INDEX_BYTE_H] = UInt8(((wegindex-1) & 0xFF00) >> 8) // hb // hb // Start, Index 0
+               teensy.write_byteArray[INDEX_BYTE_L] = UInt8(((wegindex-1) & 0x00FF) & 0xFF) // lb
+               
+               print("Basis joystickAktion hypx: \(hypx) hypy: \(hypy) hypz: \(hypz) hyp: \(hyp)")
+               
+            }
+            else
+            {
+               print("basis joystickAktion start achse0: \(achse0) achse1: \(achse1)  achse2: \(achse2) anz: \(anz) wegindex: \(wegindex)")
+          /*
+               teensy.write_byteArray[HYP_BYTE_H] = 0 // hb // Start, keine Hypo
+               teensy.write_byteArray[HYP_BYTE_L] = 0 // lb
+               teensy.write_byteArray[INDEX_BYTE_H] = 0 // hb // Start, Index 0
+               teensy.write_byteArray[INDEX_BYTE_L] = 0 // lb
+            */   
+            }
+            
+ //           servoPfad?.addPosition(newx: achse0, newy: achse1, newz: 0)
+         }
+         
+         if (usbstatus > 0)
+         {
+            let senderfolg = teensy.send_USB()
+            print("joystickAktion senderfolg: \(senderfolg)")
+         }
+      }
+      else
+      {
+ //        print("Basis joystickAktion passt nicht")
+      }
+      
+   }
+
+   @objc func CNC_JoystickAktion(_ notification:Notification)
+   {
+      let info = notification.userInfo
+      //print("CNC_JoystickAktion : info: \(notification.userInfo) \(info)")
+      if let pota = info?["potwerta"] as? Int
+      {
+         potAfeld.integerValue = pota
+         if (pota) > maxAfeld.integerValue
+         {
+            maxAfeld.integerValue = pota
+         }
+         if (minAfeld.integerValue == 0) || (pota < minAfeld.integerValue)
+         {
+            minAfeld.integerValue = pota
+         }
+         
+      }
+       
+       if let mittea = info?["potmittea"]
+      {
+         mitteAfeld.integerValue = mittea as! Int
+      }
+      
+      if let mitteb = info?["potmitteb"]
+     {
+        mitteBfeld.integerValue = mitteb as! Int
+     }
+
+
+      if let potb = info?["potwertb"] as? Int
+      {
+         potBfeld.integerValue = potb
+         if potb > maxBfeld.integerValue
+         {
+            maxBfeld.integerValue = potb
+         }
+         if (minBfeld.integerValue == 0) || (potb < minBfeld.integerValue)
+         {
+            minBfeld.integerValue = potb
+         }
+         
+      }
+ 
+      
+   }
    
    @objc func MauspunktAktion(_ notification:Notification)
    {
@@ -4977,7 +5370,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         var USBPfad = NSHomeDirectory() + "/Documents" + "/CNCDaten"
         var PListName:String = "/CNC.plist"
         USBPfad += PListName
-        print("readHotwire_PList: \(USBPfad)")
+        //print("readHotwire_PList: \(USBPfad)")
         var USB_URL = NSURL.fileURL(withPath:USBPfad)
         
         hotwireplist["einlaufrand"] = Einlaufrand.integerValue as AnyObject
@@ -5123,8 +5516,6 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
             print("swift PfeilFeldAktion Button released quelle: \(quelle)")
             AVR?.manFeldRichtung(Int32(quelle), mousestatus:Int32(mausistdown), pfeilstep:80)
         }
-        
-        
     }
     
     @objc func PfeilAktion(_ notification:Notification)

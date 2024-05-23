@@ -11388,7 +11388,7 @@ return returnInt;
 
 - (void)FigElementeingabeAktion:(NSNotification*)note
 {
-  // NSLog(@"FigElementeingabeAktion note: %@",[[note userInfo] description]);
+   NSLog(@"FigElementeingabeAktion note: %@",[[note userInfo] description]);
    // ElementKoordinatenArray von CNC_Eingabe lesen
    NSArray* tempElementKoordinatenArray = [[note userInfo]objectForKey:@"koordinatentabelle"];
    //NSLog(@"tempElementKoordinatenArray FIRST: %@",[[tempElementKoordinatenArray objectAtIndex:0]description]);
@@ -14669,7 +14669,7 @@ return returnInt;
    {
       return;
    }
-   NSLog(@"Vertikal ab bis Anschlag");
+   NSLog(@"homeSenkrechtSchicken Vertikal ab bis Anschlag");
    //return;
    NSMutableArray* AnfahrtArray = [[NSMutableArray alloc]initWithCapacity:0];
     
@@ -14694,7 +14694,7 @@ return returnInt;
    int lastSpeed = [CNC speed];
    [CNC setredpwm:[red_pwmFeld floatValue]];
    int homecode=0xF0;
-   
+   NSLog(@"homeSenkrechtSchicken A");
    //for (i=0;i<[AnfahrtArray count]-1;i++)
    {
       // Seite A
@@ -14712,7 +14712,7 @@ return returnInt;
       
       NSPoint tempEndPunktB= NSMakePoint([[[AnfahrtArray objectAtIndex:i+1]objectForKey:@"bx"]floatValue]*zoomfaktor,[[[AnfahrtArray objectAtIndex:i+1]objectForKey:@"by"]floatValue]*zoomfaktor);
       NSString* tempEndPunktBString= NSStringFromPoint(tempEndPunktB);
-      
+      NSLog(@"homeSenkrechtSchicken B");
       // Dic zusammenstellen
       NSMutableDictionary* tempDic= [[NSMutableDictionary alloc]initWithCapacity:0];
       
@@ -14737,7 +14737,7 @@ return returnInt;
      // [tempDic setObject:[NSNumber numberWithInt:code] forKey:@"codea"];
     //  [tempDic setObject:[NSNumber numberWithInt:code] forKey:@"codeb"];
       
-      
+      NSLog(@"homeSenkrechtSchicken C");
       int position=0;
       if (i==0)
       {
@@ -14748,14 +14748,17 @@ return returnInt;
          position |= (1<<LAST_BIT);
       }
       [tempDic setObject:[NSNumber numberWithInt:position] forKey:@"position"];
-      
+      NSLog(@"homeSenkrechtSchicken D");
       NSDictionary* tempSteuerdatenDic=[self Tool_SteuerdatenVonDic:tempDic];
+      NSLog(@"homeSenkrechtSchicken E");
       
+    //  NSArray* temphomearray = [self Tool_CNC_SchnittdatenArrayVonSteuerdaten:tempSteuerdatenDic];
+    //  NSLog(@"homeSenkrechtSchicken F temphomearray: %@",temphomearray);
       
-      [HomeSchnittdatenArray addObject:[self SchnittdatenVonDic:tempSteuerdatenDic]];
+      [HomeSchnittdatenArray addObject:[self Tool_CNC_SchnittdatenArrayVonSteuerdaten:tempSteuerdatenDic]];
       
    } 
-   
+   NSLog(@"homeSenkrechtSchicken F");
    HomeSchnittdatenArray[i][24] = [NSNumber numberWithInt:homecode];
    HomeSchnittdatenArray[i][26] = [NSNumber numberWithInt:1]; // home
 
@@ -14776,7 +14779,7 @@ return returnInt;
    
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"art"]; // 
    //NSLog(@"homeSenkrechtSchicken SchnittdatenDic: %@",[HomeSchnittdatenDic description]);
-   
+   NSLog(@"homeSenkrechtSchicken G");
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
    [nc postNotificationName:@"usbschnittdaten" object:self userInfo:HomeSchnittdatenDic];
    

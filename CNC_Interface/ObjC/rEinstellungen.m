@@ -4597,7 +4597,7 @@
 	[ElementDic setObject:Koordinatentabelle forKey:@"koordinatentabelle"];
    //NSLog(@"reportFigElementEinfuegen ElementDic: %@",[ElementDic description]);
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-   [nc postNotificationName:@"FigElementeingabe" object:self userInfo:ElementDic];
+   [nc postNotificationName:@"figelementeingabe" object:self userInfo:ElementDic];
    [FigGraph clearGraph];
 
 }

@@ -263,7 +263,7 @@ class rTimerInfo {
          }
          if read_byteArray[0] > 0xA0
          {
-            //print("*cont_read_USB result: \(result) code: \(read_byteArray[0])")
+           // print("*cont_read_USB result: \(result) code: \(read_byteArray[0]) tastaturwert: \(read_byteArray[57]) Taste: \(read_byteArray[58])")
          }
          //print("tempbyteArray in Timer: *\(read_byteArray)*")
         // var timerdic: [String: Int]
@@ -283,7 +283,7 @@ class rTimerInfo {
            
          if !(last_read_byteArray == read_byteArray)
          {
-           print("last_read_byteArray not eq read byteArray ");
+           //print("last_read_byteArray not eq read byteArray ");
             /*
                  guard let timerInfo = timer.userInfo as? rTimerInfo else { return }
 

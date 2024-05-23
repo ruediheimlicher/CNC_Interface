@@ -317,7 +317,9 @@ class rViewController: NSViewController, NSWindowDelegate
        let TEENSY2_PID = 0x0480
 
        */
- 
+      var ringbufferarray = [UInt16]()
+      var ringbufferindex = 0
+      
  
       //USB_OK.backgroundColor = NSColor.greenColor()
       // Do any additional setup after loading the view.
@@ -342,7 +344,8 @@ class rViewController: NSViewController, NSWindowDelegate
        
            NotificationCenter.default.addObserver(self, selector:#selector(contDataAktion(_:)),name:NSNotification.Name(rawValue: "contdata"),object:nil)
            NotificationCenter.default.addObserver(self, selector:#selector(usbattachAktion(_:)),name:NSNotification.Name(rawValue: "usb_attach"),object:nil)
-           NotificationCenter.default.addObserver(self, selector: #selector(slaveresetAktion), name:NSNotification.Name(rawValue: "slavereset"), object: nil)
+           
+      NotificationCenter.default.addObserver(self, selector: #selector(slaveresetAktion), name:NSNotification.Name(rawValue: "slavereset"), object: nil)
        
            NotificationCenter.default.removeObserver(self, name: Notification.Name("steps"), object: nil)
 
@@ -477,7 +480,7 @@ class rViewController: NSViewController, NSWindowDelegate
         
         var userinformation:[String : Int]
         userinformation = [ "usbstatus": usbstatus, "boardindex":boardindex] as [String : Int]
-        print("userinformation: \(userinformation)")
+        print("viewDidAppear userinformation: \(userinformation)")
         let nc = NotificationCenter.default
         nc.post(name:Notification.Name(rawValue:"usb_status"),
                 object: nil,
@@ -516,7 +519,7 @@ class rViewController: NSViewController, NSWindowDelegate
         cncwritecounter += 1
         //print("swift rViewController writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray) cncwritecounter: \(cncwritecounter)")
        let count = usb_schnittdatenarray.count
-       //print("writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
+       print("writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
        
        if(Stepperposition < count)
        {
@@ -541,7 +544,7 @@ class rViewController: NSViewController, NSWindowDelegate
        
        if Stepperposition < usb_schnittdatenarray.count
        {
-          //print("Stepperposition < usb_schnittdatenarray.count")
+          ///print("Stepperposition < usb_schnittdatenarray.count")
           if halt > 0
           {
              /*
@@ -556,7 +559,7 @@ class rViewController: NSViewController, NSWindowDelegate
           {
              
              let aktuellezeile:[UInt8] = usb_schnittdatenarray[Stepperposition]
-             print("VC Stepperposition: \(Stepperposition) aktuellezeile: \(aktuellezeile) ")
+             print("VC Stepperposition: \(Stepperposition) aktuellezeile: \(aktuellezeile) count: \(aktuellezeile.count)")
              let writecode = aktuellezeile[16]
              var string:String = ""
              var index=0
@@ -577,7 +580,7 @@ class rViewController: NSViewController, NSWindowDelegate
              
               print("writeCNCAbschnitt")
 
-             //print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
+             print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
              if (globalusbstatus > 0)
              {
                 let senderfolg = teensy.send_USB()
@@ -923,13 +926,13 @@ class rViewController: NSViewController, NSWindowDelegate
         
         if (status == USBREMOVED)
         {
-     //      USB_OK_Feld.image = notokimage
+           USB_OK_Feld.image = notokimage
            //USBKontrolle.stringValue="USB OFF"
            print("ViewController usbattachAktion USBREMOVED ")
         }
        else if (status == USBATTACHED)
         {
-      //     USB_OK_Feld.image = okimage
+           USB_OK_Feld.image = okimage
           // [USBKontrolle setStringValue:@"USB ON"];
            
            print("ViewController usbattachAktion USBATTACHED")
@@ -977,8 +980,8 @@ class rViewController: NSViewController, NSWindowDelegate
       let punkt:CGPoint = info?["punkt"] as! CGPoint
       let wegindex:Int = info?["index"] as! Int // 
       let first:Int = info?["first"] as! Int
-      //print("xxx joystickAktion:\t \(punkt)")
-      //print("x: \(punkt.x) y: \(punkt.y) index: \(wegindex) first: \(first)")
+      print("xxx joystickAktion:\t \(punkt)")
+      print("x: \(punkt.x) y: \(punkt.y) index: \(wegindex) first: \(first)")
       
       /*
       teensy.write_byteArray[0] = SET_ROB // Code 
@@ -1094,7 +1097,7 @@ class rViewController: NSViewController, NSWindowDelegate
        // Reaktion auf eingehende USB-Daten
        var lastData = teensy.getlastDataRead()
        let lastDataArray = [UInt8](lastData)
-       print("VC newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")
+       //print("VC newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")
        
   //     print("newDataAktion start")
  /*
@@ -1129,44 +1132,41 @@ class rViewController: NSViewController, NSWindowDelegate
  //         print("newDataAktion if let d ok")
           var usbdata = info!["data"] as! [UInt8]
           
-          //      let stringFromByteArray = String(data: Data(bytes: usbdata), encoding: .utf8)
+                let stringFromByteArray = String(data: Data(bytes: usbdata), encoding: .utf8)
           
-          //      print("usbdata: \(usbdata)\n")
+                //print("usbdata: \(usbdata)\n")
           
           //if  usbdata = info!["data"] as! [String] // Data vornanden
           if  usbdata.count > 0 // Data vorhanden
           {
+             // print("usbdata:")
+             for i in 24...63
+             {
+                
+                //print("i: \(i) \(usbdata[i])")
+             }
              //print("usbdata: \(usbdata)\n") // d: [0, 9, 56, 0, 0,...
              var NotificationDic = [String:Int]()
              
              let abschnittfertig:UInt8 =   usbdata[0] // code vom teensy
              // https://useyourloaf.com/blog/swift-string-cheat-sheet/
              let home = Int(usbdata[13])
-              
-              print("newDataAktion abschnittfertig abschnittfertig: \(hex(abschnittfertig))")
-               NotificationDic["abschnittfertig"] = Int(abschnittfertig)
-
-              let abschnittnummer:Int = Int((usbdata[5] << 8) | usbdata[6])
-              let ladeposition = usbdata[8]
-              
+             
+             // print("VC newDataAktion abschnittfertig abschnittfertig: \(hex(abschnittfertig))")
+             NotificationDic["abschnittfertig"] = Int(abschnittfertig)
+             
+             let abschnittnummer:Int = Int((usbdata[5] << 8) | usbdata[6])
+             let ladeposition = usbdata[8]
+             
              //print("abschnittfertig: \(String(abschnittfertig, radix:16, uppercase:true))\n")
-            //print("newDataAktion abschnittfertig: \(hex(abschnittfertig)) cncstatus: \(usbdata[22]) home: \(home)\n")
+             //print("newDataAktion abschnittfertig: \(hex(abschnittfertig)) cncstatus: \(usbdata[22]) home: \(home)\n")
              
+             let Tastaturwert = usbdata[57]
+             let Taste = usbdata[58]
+             //print("VC newDataAktion Tastaturwert: \(Tastaturwert) Taste: \(Taste)")
+             NotificationDic["tastaturwert"] = Int(Tastaturwert)
+             NotificationDic["taste"] = Int(Taste)
              
-             
-             /*
-             if usbdata != nil
-             {
-                //print("usbdata not nil\n")
-                var i = 0
-                while i < 10
-                {
-                   //print("i: \(i)  wert: \(usbdata[i])\t")
-                   i = i+1
-                }
-                
-             }
-             */
              if abschnittfertig >= 0xA0 // Code fuer Fertig: AD
              {
                 print("VC newDataAktion abschnittfertig > A0")
@@ -1180,13 +1180,20 @@ class rViewController: NSViewController, NSWindowDelegate
                 NotificationDic["home"] = Int(usbdata[13])
                 NotificationDic["cncstatus"] = Int(usbdata[22])
                 NotificationDic["anschlagstatus"] = Int(usbdata[19])
-                 NotificationDic["abschnittfertig"] = Int(abschnittfertig)
+               NotificationDic["abschnittfertig"] = Int(abschnittfertig)
 
+                NotificationDic["tastaturwert"] = Int(usbdata[57])
+                NotificationDic["taste"] = Int(usbdata[58])
                 //print("newDataAktion cncstatus: \(usbdata[22])")
                 var AnschlagSet = IndexSet()
                 
+                print("newDataAktion potwert A: \(Int(usbdata[59])) potwert B: \(Int(usbdata[60]))")
+                
+                
+                
                 switch abschnittfertig
                 {
+                   
                 case 0xE1:// Antwort auf mouseup 0xE0 HALT
                    print("VC newDataAktion newDataAktion E1 mouseup")
                    usb_schnittdatenarray.removeAll()
@@ -1307,6 +1314,182 @@ class rViewController: NSViewController, NSWindowDelegate
                       }
                    
                    break;
+                   
+                case 0xAE: // save joystickdata
+                
+                   print("newDataAtion 0xAE 60: \(usbdata[60]) 61: \(usbdata[61])")
+                   var joystickDic = [String:Int]()
+                   for i in 42...47
+                   {
+                      
+                      print("i: \t\(i): \(usbdata[i])  \t\t\(i+10): \t\(usbdata[i+10])")
+                   }
+
+                   // status
+                   let Joysitckstatus:UInt8 = usbdata[2]
+                   let maxminstatus:UInt8 = usbdata[3]
+                   joystickDic["joystickstatus"] = Int(usbdata[2])
+                   joystickDic["maxminstatus"] = Int(usbdata[3])
+                   // potmitteA
+                   let potmitteAH:UInt16 = UInt16(usbdata[10])
+                   let potmitteAL:UInt16 = UInt16(usbdata[11])
+                   let potmitteA = potmitteAH << 8 | potmitteAL
+                   joystickDic["potmittea"] = Int(potmitteA)
+                   
+                   // potwertA
+                   let potwertAH:UInt16 = UInt16(usbdata[12])
+                   let potwertAL:UInt16 = UInt16(usbdata[13])
+                   let potwertA = potwertAH << 8 | potwertAL
+                   joystickDic["potwerta"] = Int(potwertA)
+                   
+                   
+                   
+                   // potminA
+                   let potminAH:UInt16 = UInt16(usbdata[14])
+                   let potminAL:UInt16 = UInt16(usbdata[15])
+                   var potminA = potminAH << 8 | potminAL
+                   joystickDic["potmina"] = Int(potminA)
+                   
+                   // potmaxA
+                   let potmaxAH:UInt16 = UInt16(usbdata[16])
+                   let potmaxAL:UInt16 = UInt16(usbdata[17])
+                   var potmaxA = potmaxAH << 8 | potmaxAL
+                   joystickDic["potmaxa"] = Int(potmaxA)
+                   
+                   
+                   // potmitteB
+                   let potmitteBH:UInt16 = UInt16(usbdata[20])
+                   let potmitteBL:UInt16 = UInt16(usbdata[21])                                
+                   let potmitteB = potmitteBH << 8 | potmitteBL
+                   joystickDic["potmitteb"] = Int(potmitteB)
+                   
+                   // potwertB
+                   let potwertBH:UInt16 = UInt16(usbdata[22])
+                   joystickDic["potwertbh"] = Int(potwertBH)
+                   let potwertBL:UInt16 = UInt16(usbdata[23])
+                   joystickDic["potwertbl"] = Int(potwertBL)
+                   let potwertB = potwertBH << 8 | potwertBL
+                   
+                   joystickDic["potwertb"] = Int(potwertB)
+                   
+                   //     print("potwertBH:\t \(potwertBH) \t potwertBL:\t \(potwertBL)  *** \t potwertB:\(potwertB)")
+                   
+                   // potminB
+                   let potminBH:UInt16 = UInt16(usbdata[24])
+                   let potminBL:UInt16 = UInt16(usbdata[25])
+                   let potminB = potminBH << 8 | potminBL
+                   joystickDic["potminb"] = Int(potmaxA)
+                   
+                   // potmaxB
+                   let potmaxBH:UInt16 = UInt16(usbdata[26])
+                   let potmaxBL:UInt16 = UInt16(usbdata[27])
+                   let potmaxB = potmaxBH << 8 | potmaxBL
+                   joystickDic["potmaxb"] = Int(potmaxB)
+                   
+                   
+                   
+                   // diff A
+                   let diffH:UInt16 = UInt16(usbdata[32])
+                   NotificationDic["diffh"] = Int(diffH)
+                   let diffL:UInt16 = UInt16(usbdata[33])
+                   NotificationDic["diffl"] = Int(diffL)
+                   let diffa = diffH << 8 | diffL
+                   joystickDic["diffa"] = Int(diffa)
+                   
+                   // mapdiff A
+                   let mapdiffH:UInt16 = UInt16(usbdata[34])
+                   NotificationDic["mapdiffh"] = Int(mapdiffH)
+                   let mapdiffL:UInt16 = UInt16(usbdata[35])
+                   NotificationDic["mapdiffl"] = Int(mapdiffL)
+                   let mapdiffa = mapdiffH << 8 | mapdiffL
+                   joystickDic["mapdiffa"] = Int(mapdiffa)
+                   
+                   // diff B
+                   let diffBH:UInt16 = UInt16(usbdata[36])
+                   NotificationDic["diffh"] = Int(diffH)
+                   let diffBL:UInt16 = UInt16(usbdata[37])
+                   NotificationDic["diffl"] = Int(diffL)
+                   let diffb = diffBH << 8 | diffBL
+                   joystickDic["diffb"] = Int(diffb)
+                   
+                   // mapdiff B
+                   let mapdiffBH:UInt16 = UInt16(usbdata[38])
+                   NotificationDic["mapdiffh"] = Int(mapdiffH)
+                   let mapdiffBL:UInt16 = UInt16(usbdata[39])
+                   NotificationDic["mapdiffl"] = Int(mapdiffL)
+                   let mapdiffb = mapdiffBH << 8 | mapdiffBL
+                   joystickDic["mapdiffb"] = Int(mapdiffb)
+                   
+                   
+                   // maxsumA
+                   let maxsumAH:UInt16 = UInt16(usbdata[50])
+                   let maxsumAL:UInt16 = UInt16(usbdata[51])
+                   let maxsumA = maxsumAH << 8 | maxsumAL
+
+                   // calibmaxA
+                   let calibmaxAH:UInt16 = UInt16(usbdata[52])
+                   let calibmaxAL:UInt16 = UInt16(usbdata[53])
+                   let calibmaxA = calibmaxAH << 8 | calibmaxAL
+
+                   // minsumA
+                   let minsumAH:UInt16 = UInt16(usbdata[54])
+                   let minsumAL:UInt16 = UInt16(usbdata[55])
+                   let minsumA = minsumAH << 8 | minsumAL
+
+                   // calibminA
+                   let calibminAH:UInt16 = UInt16(usbdata[56])
+                   let calibminAL:UInt16 = UInt16(usbdata[57])
+                   let calibminA = calibminAH << 8 | calibminAL
+
+                   // aaa
+                   let aaaH:UInt16 = UInt16(usbdata[60])
+                   let aaaL:UInt16 = UInt16(usbdata[61])
+                   let aaa = aaaH << 8 | aaaL
+
+                   // maxsumB
+                   let maxsumBH:UInt16 = UInt16(usbdata[40])
+                   let maxsumBL:UInt16 = UInt16(usbdata[41])
+                   let maxsumB = maxsumBH << 8 | maxsumBL
+                   
+                   // calibmaxB
+                   let calibmaxBH:UInt16 = UInt16(usbdata[42])
+                   let calibmaxBL:UInt16 = UInt16(usbdata[43])
+                   let calibmaxB = calibmaxBH << 8 | calibmaxBL
+
+                   // minsumB
+                   let minsumBH:UInt16 = UInt16(usbdata[44])
+                   let minsumBL:UInt16 = UInt16(usbdata[45])
+                   let minsumB = minsumBH << 8 | minsumBL
+
+                   // calibminB
+                   let calibminBH:UInt16 = UInt16(usbdata[46])
+                   let calibminBL:UInt16 = UInt16(usbdata[47])
+                   let calibminB = calibminBH << 8 | calibminBL
+                   
+                   
+                   print("Joysitckstatus: \(Joysitckstatus) maxminstatus: \(maxminstatus)")
+                   print("potwertA: \(potwertA) potmitte A: \(potmitteA) mapdiff A: \(mapdiffa) \t\t calibmaxA: \(calibmaxA)  calibminA: \(calibminA)\t mapdiffA: \(mapdiffa)")
+                   print("potwertB: \(potwertB) potmitte B: \(potmitteB) mapdiff B: \(mapdiffb) \t\t calibmaxB: \(calibmaxB)  calibminB: \(calibminB)\t mapdiffB: \(mapdiffb)")
+                   
+                   
+                   if(potwertA > potmaxA)
+                   {
+                      potmaxA = potwertA
+                   }
+                   joystickDic["potmaxa"] = Int(potmaxA)
+                   
+                   if(potwertA < potminA)
+                   {
+                      potminA = potwertA
+                   }
+                    
+                   joystickDic["potmina"] = Int(potminA)
+                   let nc = NotificationCenter.default
+                   nc.post(name: NSNotification.Name(rawValue: "setjoystick"),
+                           object: nil,
+                           userInfo: joystickDic)
+                   break
+                
                 default:
                    break
                 }// switch abschnittfertig
@@ -1394,10 +1577,10 @@ class rViewController: NSViewController, NSWindowDelegate
                 }
                    //print("HomeAnschlagSet: \(HomeAnschlagSet)")
                    NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
-                NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
+                  NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
                    NotificationDic["home"] = Int(home)
                    NotificationDic["abschnittfertig"] = Int(abschnittfertig)
-                   print("VC newDataAktion Notific: \(NotificationDic)")
+                   //print("VC newDataAktion Notific: \(NotificationDic)")
                    
                     let nc = NotificationCenter.default
                     nc.post(name:Notification.Name(rawValue:"usbread"),
@@ -1884,6 +2067,16 @@ class rViewController: NSViewController, NSWindowDelegate
          warnung.runModal()
          USB_OK_Feld.image = okimage
          
+         print("teensyboardarray: \(teensyboardarray)")
+         if teensyboardarray.count > 0
+         {
+            let device = teensyboardarray[boardindex]
+            let erfolg = teensy.USBOpen(code:device,  board: boardindex)
+            usbstatus = Int(erfolg)
+            globalusbstatus = Int(erfolg)
+            //   print("USBOpen erfolg: \(erfolg) usbstatus: \(usbstatus)")
+
+         }
          //   return
          
       }
@@ -1938,7 +2131,7 @@ class rViewController: NSViewController, NSWindowDelegate
          Start_Knopf.isEnabled = true
          Send_Knopf.isEnabled = true
          
-         userinformation = ["message":"usb", "usbstatus": 1] as [String : Any]
+         userinformation = ["message":"usb", "usbstatus": 1, "boardindex" :boardindex] as [String : Any]
          
       }
       else
@@ -1953,7 +2146,7 @@ class rViewController: NSViewController, NSWindowDelegate
          warnung.messageText = "check_USB: Kein USB-Device"
          warnung.addButton(withTitle: "OK")
          warnung.runModal()
-         userinformation = ["message":"usb", "usbstatus": 0] as [String : Any]
+         userinformation = ["message":"usb", "usbstatus": 0, "boardindex" :boardindex] as [String : Any]
          nc.post(name:Notification.Name(rawValue:"usb_status"),
                  object: nil,
                  userInfo: userinformation)

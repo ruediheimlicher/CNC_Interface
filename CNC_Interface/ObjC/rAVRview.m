@@ -2733,7 +2733,7 @@ return returnInt;
 
 
     
-    NSLog(@"stopFunktion: %@",koordinatentabelle);
+    //NSLog(@"stopFunktion: %@",koordinatentabelle);
     // von Action
     int i = 0;
     int  anzaxplus=0;
@@ -3168,9 +3168,9 @@ return returnInt;
        {
            //NSLog(@"reportStop i: %d \ntempDic: %@",i,[tempDic description]);
        }
-        NSLog(@"reportStop i: %d vor Tool_SteuerdatenVonDic tempDic: %@",i,tempDic);
+        //NSLog(@"reportStop i: %d vor Tool_SteuerdatenVonDic tempDic: %@",i,tempDic);
     NSDictionary* tempSteuerdatenDic = [self Tool_SteuerdatenVonDic:tempDic];
-        NSLog(@"reportStop i: %d nach Tool_SteuerdatenVonDic tempSteuerdatenDic: %@",i,tempSteuerdatenDic);
+        //NSLog(@"reportStop i: %d nach Tool_SteuerdatenVonDic tempSteuerdatenDic: %@",i,tempSteuerdatenDic);
         //NSArray* a = [self SteuerdatenArrayVonDic: tempDic];
         
        
@@ -3196,13 +3196,13 @@ return returnInt;
        
        if (i==0 || i==[koordinatentabelle count]-1)
        {
-          NSLog(@"reportStop i: %d \ntempSteuerdatenDic: %@",i,[tempSteuerdatenDic description]);
+          NSLog(@"reportStop anfang/Ende i: %d \ntempSteuerdatenDic: %@",i,[tempSteuerdatenDic description]);
        }
        
        
        
       [tempcncdatenarray addObject:tempSteuerdatenDic];
-       NSLog(@"stopFunktion cncindex: %d tempSteuerdatenDic: %@",cncindex,tempSteuerdatenDic);
+      // NSLog(@"stopFunktion cncindex: %d tempSteuerdatenDic: %@",cncindex,tempSteuerdatenDic);
        
        
        
@@ -3212,7 +3212,7 @@ return returnInt;
        cncindex++;
     } // for i
     
-     NSLog(@"tempschnittdatenarray: %@",tempschnittdatenarray);
+     //NSLog(@"tempschnittdatenarray: %@",tempschnittdatenarray);
      
     //NSLog(@"wegaoben: %2.2f wegaunten: %2.2f wegboben: %2.2f wegbunten: %2.2f",wegaoben,wegaunten, wegboben, wegbunten);
     
@@ -3338,7 +3338,7 @@ return returnInt;
     float lastbx = [[[tempkoordinatentabelle objectAtIndex:0]objectForKey:@"bx"]floatValue];
     float lastby = [[[tempkoordinatentabelle objectAtIndex:0]objectForKey:@"by"]floatValue];
    
-    fprintf(stderr,"%2.2f\t %2.2f\t%2.2f\t%2.2f\n",lastax,lastay ,lastbx,lastby);
+    //fprintf(stderr,"%2.2f\t %2.2f\t%2.2f\t%2.2f\n",lastax,lastay ,lastbx,lastby);
     
     
     // gleiche Punkte entfernen
@@ -3353,7 +3353,7 @@ return returnInt;
        float bx = [[[tempkoordinatentabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
        float by = [[[tempkoordinatentabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
        
-       fprintf(stderr,"%d\t %.2f\t %.2f\n",i,ax,ay);
+       //fprintf(stderr,"%d\t %.2f\t %.2f\n",i,ax,ay);
        if(i)
        {
           if(((ax == lastax) && (ay == lastay)) && ((bx == lastbx) && (by == lastby)))
@@ -3381,7 +3381,7 @@ return returnInt;
        //NSMutableDictionary* tempdic = [revKoordinatenTabelle objectAtIndex:i];
        //[tempdic setObject:[NSNumber numberWithInt:i] forKey:@"index"];
        //[[revKoordinatenTabelle objectAtIndex:i]setObject:[NSNumber numberWithInt:i]forKey:@"index“];
-       fprintf(stderr,"%d\t %.2f\t %.2f\n",i,ax,ay);
+       //fprintf(stderr,"%d\t %.2f\t %.2f\n",i,ax,ay);
     }
     
     
@@ -3390,7 +3390,7 @@ return returnInt;
     
      
     // end Action
-    NSLog(@"stopFunktion koordinatentabelle neu: %@",[koordinatentabelle description]);
+    //NSLog(@"stopFunktion koordinatentabelle neu: %@",[koordinatentabelle description]);
 
     return tempschnittdatenarray;
 }
@@ -9894,16 +9894,20 @@ return returnInt;
    
    // Einlauf-Schnittlinie
    
-   NSLog(@"profil1array: ");
+   //NSLog(@"profil1array: ");
    for (int i=0;i<[[ProfilDic objectForKey:@"profil1array"] count ];i++)
    {
+      /*
       fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[[ProfilDic objectForKey:@"profil1array"] objectAtIndex:i]objectForKey:@"x"] floatValue],[[[[ProfilDic objectForKey:@"profil1array"] objectAtIndex:i]objectForKey:@"y"] floatValue]);
+       */
    }
 
-   NSLog(@"profil2array: ");
+   //NSLog(@"profil2array: ");
    for (int i=0;i<[[ProfilDic objectForKey:@"profil2array"] count ];i++)
    {
+      /*
       fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[[ProfilDic objectForKey:@"profil2array"] objectAtIndex:i]objectForKey:@"x"] floatValue],[[[[ProfilDic objectForKey:@"profil2array"] objectAtIndex:i]objectForKey:@"y"] floatValue]);
+       */
    }
 
 
@@ -10294,7 +10298,7 @@ return returnInt;
       
       
       NSArray* NasenleistenAuslaufArray=[CNC NasenleistenauslaufMitLaenge:auslauflaenge mitTiefe:auslauftiefe];
-      NSLog(@"AVR NasenleistenAuslaufArray: %@",[NasenleistenAuslaufArray description]);
+     // NSLog(@"AVR NasenleistenAuslaufArray: %@",[NasenleistenAuslaufArray description]);
       int l;
       for(l=1;l<[NasenleistenAuslaufArray count];l++)
       {
@@ -10411,7 +10415,7 @@ return returnInt;
       bis = profilendindex;
    }
    
-    NSLog(@"LibProfilEingabeFunktion LibKoordinatenTabelle");// LibKoordinatenTabelle: %@",LibKoordinatenTabelle);
+    //NSLog(@"LibProfilEingabeFunktion LibKoordinatenTabelle");// LibKoordinatenTabelle: %@",LibKoordinatenTabelle);
     
     for (int i=0;i<LibKoordinatenTabelle.count;i++)
     {
@@ -10421,7 +10425,7 @@ return returnInt;
         float ay = [[tempPrevDic objectForKey:@"ay"]floatValue];
         float bx = [[tempPrevDic objectForKey:@"bx"]floatValue];
         float by = [[tempPrevDic objectForKey:@"by"]floatValue];
-        fprintf(stderr,"%d \t%2.2f \t%2.2f \t%2.2f \t%2.2f\n",i,ax,ay,bx,by);
+        //fprintf(stderr,"%d \t%2.2f \t%2.2f \t%2.2f \t%2.2f\n",i,ax,ay,bx,by);
     }
     NSMutableDictionary* rahmeneingabeDic = [NSMutableDictionary dictionaryWithObject:LibKoordinatenTabelle forKey:@"libkoordinatentabelle"];
     NSDictionary* RahmenDic = [self RahmenDicFunktion:(rahmeneingabeDic)];
@@ -10457,9 +10461,10 @@ return returnInt;
     }
 
     
-    fprintf(stderr,"send to drawrect LibKoordinatenTabelle\n");
+    //fprintf(stderr,"send to drawrect LibKoordinatenTabelle\n");
      for (int i=0;i<LibKoordinatenTabelle.count;i++)
      {
+       /*
         fprintf(stderr,"%d\t%2.2f\t%2.2f\t%2.2f\t%2.2f \t \t%2.2f\t%2.2f\t%2.2f\t%2.2f \t%d\n",i,
                 [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue],
                 [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ay"]floatValue],
@@ -10471,7 +10476,7 @@ return returnInt;
                 [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"abrby"]floatValue],
                 [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"teil"]intValue]
                 );
-         
+         */
      }
 
 //    [CNCTable scrollRowToVisible:[LibKoordinatenTabelle count] - 1];
@@ -11137,7 +11142,7 @@ return returnInt;
       
       
       NSArray* NasenleistenAuslaufArray=[CNC NasenleistenauslaufMitLaenge:auslauflaenge mitTiefe:auslauftiefe];
-      NSLog(@"AVR NasenleistenAuslaufArray: %@",[NasenleistenAuslaufArray description]);
+      //NSLog(@"AVR NasenleistenAuslaufArray: %@",[NasenleistenAuslaufArray description]);
       int l;
       for(l=1;l<[NasenleistenAuslaufArray count];l++)
       {
@@ -11561,7 +11566,7 @@ return returnInt;
        auslaufBX = [[[rahmenkoordinatenarray lastObject]objectForKey:@"bx"]floatValue];
        auslaufBY = [[[rahmenkoordinatenarray lastObject]objectForKey:@"by"]floatValue];
        int i;
-        fprintf(stderr,"RahmenDicFunktion\n");
+        //fprintf(stderr,"RahmenDicFunktion\n");
        for (i=0;i<[rahmenkoordinatenarray count]; i++)
        {
            float AX = [[[rahmenkoordinatenarray objectAtIndex:i]objectForKey:@"ax"]floatValue];
@@ -11569,7 +11574,7 @@ return returnInt;
            float BX = [[[rahmenkoordinatenarray objectAtIndex:1]objectForKey:@"bx"]floatValue];
            float BY = [[[rahmenkoordinatenarray objectAtIndex:i]objectForKey:@"by"]floatValue];
            //NSLog(@"i: %d \t %2.2F  \t %2.2F\t %2.2F \t %2.2F",i,AX, AY, BX, BY);
-           fprintf(stderr," %d \t %2.2F  \t %2.2F\t %2.2F \t %2.2F \n",i,AX, AY, BX, BY);
+           //fprintf(stderr," %d \t %2.2F  \t %2.2F\t %2.2F \t %2.2F \n",i,AX, AY, BX, BY);
            
            //NSLog(@"%d\t%2.2f\t%2.2f\t%2.2f\t%2.2f",i,AX,AY.BX,BY);
            
@@ -11628,7 +11633,7 @@ return returnInt;
         {
             
             float wert = [[RahmenDic objectForKey: keys[i]]floatValue];
-            NSLog(@"i: %d key: %@ wert: %2.2f",i,keys[i],wert);
+            //NSLog(@"i: %d key: %@ wert: %2.2f",i,keys[i],wert);
         }
     }
     
@@ -11781,7 +11786,7 @@ return returnInt;
     NSMutableArray* blockkoordinatentabelle = NSMutableArray.new;
        
     [eingabekoordinatentabelle addObjectsFromArray:[eingabeDic objectForKey:@"koordinatentabelle"]];
-    NSLog(@"reportBlockkonfigurieren eingabekoordinatentabelle");
+    //NSLog(@"reportBlockkonfigurieren eingabekoordinatentabelle");
     for (int i=0;i<eingabekoordinatentabelle.count;i++)
     {
        float ax = [[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
@@ -11791,7 +11796,7 @@ return returnInt;
        float by = [[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
        
        
-       fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
+       //fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
     }
 
     //NSLog(@"reportBlockkonfigurieren Seite: %d",[LinkeRechteSeite selectedSegment]);
@@ -12508,7 +12513,7 @@ return returnInt;
        float by = [[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
        
        
-       fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
+      // fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
     }
 
    //[self KT];
@@ -12527,11 +12532,11 @@ return returnInt;
       float bx = [[[blockkoordinatentabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
       float by = [[[blockkoordinatentabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
       //NSLog(@"i: %d zeile: %@",i,eingabekoordinatentabelle );
-      fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
+      //fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
 
    }
    
-   NSLog(@"reportBlockanfuegen NACH Blockkonfig : eingabekoordinatentabelle");
+  // NSLog(@"reportBlockanfuegen NACH Blockkonfig : eingabekoordinatentabelle");
    
    for (int i=0;i<eingabekoordinatentabelle.count;i++)
    {
@@ -12541,8 +12546,8 @@ return returnInt;
       float bx = [[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
       float by = [[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
       
-      NSLog(@"i: %d zeile: %@",i,eingabekoordinatentabelle );
-      fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
+      //NSLog(@"i: %d zeile: %@",i,eingabekoordinatentabelle );
+      //fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
    }
 
    

@@ -56,7 +56,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 		tempArray = [tempArray subarrayWithRange:titelRange];
 	
 	}
-	NSLog(@"Utils openProfil tempArray: \n%@",[tempArray description]);
+	//NSLog(@"Utils openProfil tempArray: \n%@",[tempArray description]);
 	//NSLog(@"Utils openProfil tempArray count: %d",[tempArray count]);
 	int i=0;
 	
@@ -527,10 +527,12 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 
       
    
-   NSLog(@"Profilarray name: %@:",ProfilName);
+   //NSLog(@"Profilarray name: %@:",ProfilName);
    for (int i=0;i<ProfilArray.count;i++)
    {
+      /*
       fprintf(stderr,"%d \t %2.6f \t %2.6f \n",i,[[[ProfilArray objectAtIndex:i]objectForKey:@"x"]floatValue], [[[ProfilArray objectAtIndex:i]objectForKey:@"y"]floatValue]);
+       */
    }
 
    // Profil umdrehen
@@ -543,11 +545,12 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    
    NSLog(@"OberseiteArray");
    NSArray* OberseiteArray=[NSArray arrayWithArray:[ProfilArray subarrayWithRange:NSMakeRange(0, Nasenindex+1)]];
-   NSLog(@"OberseiteArray count: %d",OberseiteArray.count);
+   //NSLog(@"OberseiteArray count: %d",OberseiteArray.count);
    for (int i=0;i<OberseiteArray.count;i++)
    {
+      /*
        fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[OberseiteArray objectAtIndex:i]objectForKey:@"x"] floatValue],[[[OberseiteArray objectAtIndex:i]objectForKey:@"y"] floatValue]);
-       
+       */
    }
    // minimaldistanz
     for (int i=0;i<OberseiteArray.count;i++)
@@ -562,11 +565,12 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    NSArray* UnterseiteArray=[NSArray arrayWithArray:[ProfilArray subarrayWithRange:NSMakeRange(Nasenindex, [ProfilArray count]-Nasenindex)]];
    NSMutableArray * revUnterseiteArray = [NSMutableArray new];
    //int i=0;
-    NSLog(@"UnterseiteArray count %d",UnterseiteArray.count);
+  //  NSLog(@"UnterseiteArray count %d",UnterseiteArray.count);
    for( i = 0; i < [UnterseiteArray count]; i++)
    {
+      /*
       fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[UnterseiteArray objectAtIndex:i]objectForKey:@"x"] floatValue],[[[UnterseiteArray objectAtIndex:i]objectForKey:@"y"] floatValue]);
-
+       */
       [revUnterseiteArray addObject:[UnterseiteArray objectAtIndex:[UnterseiteArray count] - i - 1]];
    }
    NSLog(@"revUnterseiteArray");
@@ -1446,7 +1450,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    prevby = [[[rawarray objectAtIndex:rawarray.count-1] objectForKey:@"by"]floatValue];
 
    
-   NSLog(@"Werte des letzten Datensatzes: prevax: %2.2f prevay: %2.2f",prevax,prevay);
+   //NSLog(@"Werte des letzten Datensatzes: prevax: %2.2f prevay: %2.2f",prevax,prevay);
    
    nowax = 0;
    noway = 0;
@@ -1539,13 +1543,14 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
          
          //NSLog(@"Aufraeumen Datensatz ok index: %d",index);
          //[[rawarray objectAtIndex:index]setObject:[NSNumber numberWithInt:index]forKey:@"index"];
+         /*
          fprintf(stderr,"%d\t %2.2f \t %2.2f \t %2.2f \t %2.2f \n",
                  index,
                  [[[rawarray objectAtIndex:index]objectForKey:@"ax"]floatValue],
                  [[[rawarray objectAtIndex:index]objectForKey:@"ay"]floatValue],
                  [[[rawarray objectAtIndex:index]objectForKey:@"bx"]floatValue],
                  [[[rawarray objectAtIndex:index]objectForKey:@"by"]floatValue]);
-          
+          */
          NSMutableDictionary* seiteaDic = [NSMutableDictionary dictionaryWithObjectsAndKeys:[[rawarray objectAtIndex:index]objectForKey:@"ax"],@"ax",[[rawarray objectAtIndex:index]objectForKey:@"ay"],@"ay", [NSNumber numberWithInt:okcounter],@"index",nil ];
          [returnarray1 addObject:seiteaDic];
          

@@ -842,12 +842,12 @@ class rViewController: NSViewController, NSWindowDelegate
      var zeilenindex = 0
      for zeile in   zeilenzahlarray
      {
-        print("index: \(zeilenindex) zeile: \(zeile)")
+        //print("index: \(zeilenindex) zeile: \(zeile)")
         var wertarray = [UInt8]()
         var elementindex = 0
         for el in zeile
         {
-           //guard UInt8(el) != nil else { return  }
+           guard UInt8(el) != nil else { return  }
             wertarray.append(UInt8(el))
            elementindex += 1
         }

@@ -739,7 +739,7 @@ var outletdaten:[String:AnyObject] = [:]
     @objc func LibProfileingabeAktion(_ notification:Notification)
     {
         let info = notification.userInfo
-        print("LibProfileingabeAktion: \(info)")
+       // print("LibProfileingabeAktion: \(info)")
         var infodic = notification.userInfo as? [String:Any]
         
         
@@ -2108,10 +2108,10 @@ var outletdaten:[String:AnyObject] = [:]
         for i in 0..<tempSchnittdatenArray!.count
         {
             let temparray = tempSchnittdatenArray![i] as! [Int]
-            print("i: \(i) temparray: \(temparray)")
+            //print("i: \(i) temparray: \(temparray)")
           SchnittdatenArray.append(temparray)
         }
-       print("reportStopTaste SchnittdatenArray: \(SchnittdatenArray)")
+       //print("reportStopTaste SchnittdatenArray: \(SchnittdatenArray)")
         // code am Anfang und Schluss einfuegen
         var lastposition:Int = 0
         lastposition |= (1<<LAST_BIT)
@@ -2178,10 +2178,10 @@ var outletdaten:[String:AnyObject] = [:]
         for i in 0..<tempSchnittdatenArray!.count
         {
             let temparray = tempSchnittdatenArray![i] as! [Int]
-            print("i: \(i) temparray: \(temparray)")
+            //print("i: \(i) temparray: \(temparray)")
           SchnittdatenArray.append(temparray)
         }
-     print("reportStopTaste SchnittdatenArray: \(SchnittdatenArray)")
+     //print("reportStopTaste SchnittdatenArray: \(SchnittdatenArray)")
         // code am Anfang und Schluss einfuegen
         var lastposition:Int = 0
         lastposition |= (1<<LAST_BIT)
@@ -3283,7 +3283,7 @@ var outletdaten:[String:AnyObject] = [:]
         print("reportProfilOberseiteTask datenDic: \(datenDic)")
         CNC_Eingabe.profilPopTask(datenDic);
         
-        print("HotWire reportProfilOberseiteTask NACH profilPopTask: KoordinatenTabelle")
+        //print("HotWire reportProfilOberseiteTask NACH profilPopTask: KoordinatenTabelle")
         for i in 0..<KoordinatenTabelle.count
         {
             let zeile = KoordinatenTabelle[i]
@@ -3292,7 +3292,7 @@ var outletdaten:[String:AnyObject] = [:]
             let bx = zeile["bx"] ?? 30
             let by = zeile["by"] ?? 30
             //print(String(format: "a float number: %.2f", 1.0321))
-            print(String(format:"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f ",i,ax,ay,bx,by))
+            //print(String(format:"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f ",i,ax,ay,bx,by))
         }
         datenDic["koordinatentabelle"] = KoordinatenTabelle;
         
@@ -3300,7 +3300,7 @@ var outletdaten:[String:AnyObject] = [:]
        
         KoordinatenTabelle.removeAll()
         KoordinatenTabelle = AVR?.blockanfuegenFunktion(datenDic) as! [[String : Double]];
-        print("reportProfilOberseiteTask KoordinatenTabelle: ")
+        //print("reportProfilOberseiteTask KoordinatenTabelle: ")
         // Abmessungen block
         var minX:Double = 1000
         var minY:Double = 1000
@@ -3325,9 +3325,9 @@ var outletdaten:[String:AnyObject] = [:]
         maxY = max(maxY,maxabrY) + offsety
         
         
-        print("minX: \(minX) minY: \(minY) maxX: \(maxX) maxY: \(maxY)")
+        //print("minX: \(minX) minY: \(minY) maxX: \(maxX) maxY: \(maxY)")
         
-        print("reportProfilOberseiteTask Koordinatentabelle:")
+        //print("reportProfilOberseiteTask Koordinatentabelle:")
         for i in 0..<KoordinatenTabelle.count
         {
             let zeile = KoordinatenTabelle[i]
@@ -3342,7 +3342,7 @@ var outletdaten:[String:AnyObject] = [:]
             let abrby = (zeile["abrby"] ?? by)!
              
             //print(String(format: "a float number: %.2f", 1.0321))
-            print(String(format:"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \t\t%2.4f \t  %2.4f \t  %2.4f \t %2.4f ",i,ax!,ay!,abrax,abray,bx!,by!,abrbx,abrby))
+            //print(String(format:"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \t\t%2.4f \t  %2.4f \t  %2.4f \t %2.4f ",i,ax!,ay!,abrax,abray,bx!,by!,abrbx,abrby))
         }
         
         let rahmenrect = NSMakeRect(minX, minY, maxX - minX, maxY - minY)
@@ -3373,11 +3373,11 @@ var outletdaten:[String:AnyObject] = [:]
             var zeilenDic = ["index": 0, "ax":  25, "ay": 35, "bx": 25, "by": 35, "pwm": 0.8]
             KoordinatenTabelle.append(zeilenDic)
         }
-        print("KoordinatenTabelle: \(KoordinatenTabelle)")
+        //print("KoordinatenTabelle: \(KoordinatenTabelle)")
         CNC_Stoptaste.state = NSControl.StateValue.off
         //self.NeuTastefunktion()
         CNC_Starttaste.state = NSControl.StateValue.on
-        print("KoordinatenTabelle: \(KoordinatenTabelle)")
+        //print("KoordinatenTabelle: \(KoordinatenTabelle)")
         //self.StopTastefunktion()
         
         var profil1popindex = 0
@@ -3464,7 +3464,7 @@ var outletdaten:[String:AnyObject] = [:]
         print("reportProfilUnterseiteTask datenDic: \(datenDic)")
         CNC_Eingabe.profilPopTask(datenDic);
         
-        print("HotWire reportProfilUnterseiteTask NACH profilPopTask: KoordinatenTabelle")
+        //print("HotWire reportProfilUnterseiteTask NACH profilPopTask: KoordinatenTabelle")
         for i in 0..<KoordinatenTabelle.count
         {
             let zeile = KoordinatenTabelle[i]
@@ -3473,7 +3473,7 @@ var outletdaten:[String:AnyObject] = [:]
             let bx = zeile["bx"] ?? 30
             let by = zeile["by"] ?? 30
             //print(String(format: "a float number: %.2f", 1.0321))
-            print(String(format:"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f ",i,ax,ay,bx,by))
+            //print(String(format:"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f ",i,ax,ay,bx,by))
         }
         datenDic["koordinatentabelle"] = KoordinatenTabelle;
         
@@ -3481,7 +3481,7 @@ var outletdaten:[String:AnyObject] = [:]
         
         KoordinatenTabelle.removeAll()
         KoordinatenTabelle = AVR?.blockanfuegenFunktion(datenDic) as! [[String : Double]];
-        print("reportProfilOberseiteTask KoordinatenTabelle: ")
+        //print("reportProfilOberseiteTask KoordinatenTabelle: ")
         // Abmessungen block
         var minX:Double = 1000
         var minY:Double = 1000
@@ -3523,7 +3523,7 @@ var outletdaten:[String:AnyObject] = [:]
             let abrby = (zeile["abrby"] ?? by)!
              
             //print(String(format: "a float number: %.2f", 1.0321))
-            print(String(format:"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \t\t%2.4f \t  %2.4f \t  %2.4f \t %2.4f ",i,ax!,ay!,abrax,abray,bx!,by!,abrbx,abrby))
+            //print(String(format:"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \t\t%2.4f \t  %2.4f \t  %2.4f \t %2.4f ",i,ax!,ay!,abrax,abray,bx!,by!,abrbx,abrby))
         }
         
         let rahmenrect = NSMakeRect(minX, minY, maxX - minX, maxY - minY)

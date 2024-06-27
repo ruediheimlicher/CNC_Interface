@@ -18,7 +18,7 @@
 }
 - (NSArray*)Tool_SchnittdatenVonDic:(NSDictionary*)derDatenDic
 {
-    NSLog(@"****  Tool_SchnittdatenVonDic start  derDatenDic: %@",derDatenDic);
+    //NSLog(@"****  Tool_SchnittdatenVonDic start  derDatenDic: %@",derDatenDic);
 
    /*
     Bereitet die Angaben im Steuerdatenarray für die Uebergabe an den USB vor.
@@ -229,7 +229,7 @@
 {
 // Aufbereitung der Werte für die Uebergabe an Teensy, als uint8_t-Werte
    uint16_t dicindex = [[derDatenDic objectForKey:@"index"]intValue];
-   NSLog(@"Tool_SteuerdatenVonDic start index: %d SteuerdatenVonDic: %@",dicindex, [derDatenDic description]);
+   //NSLog(@"Tool_SteuerdatenVonDic start index: %d SteuerdatenVonDic: %@",dicindex, [derDatenDic description]);
     int  anzSchritte;
    int  anzaxplus=0;
    int  anzaxminus=0;

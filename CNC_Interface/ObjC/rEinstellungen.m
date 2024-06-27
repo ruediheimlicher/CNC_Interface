@@ -3221,30 +3221,44 @@
 
 - (void)ProfilPopAktion:(NSNotification*)note
 {
-
-   //NSLog(@"ProfilPopAktion note: %@",[[note userInfo] description]);
-   NSDictionary* not = [note userInfo];
    
-   [Einlauflaenge setIntValue:[[not objectForKey:@"einlauflaenge"]intValue]] ;
- if ([not objectForKey:@"profil1"])
- {
-    Profil1 = [not objectForKey:@"profil1"];
-    //NSLog(@"Profile1 items: %@",[Profile1 items]);
- }
-   else
+   NSLog(@"ProfilPopAktion note: %@",[[note userInfo] description]);
+   NSDictionary* noteDic = [note userInfo];
+   
+   //[Einlauflaenge setIntValue:[[noteDic objectForKey:@"einlauflaenge"]intValue]] ;
+   int profilindex = 0;
+   int popnummer = 0;
+   if ([noteDic objectForKey:@"nummer"])
    {
-      Profil1 = @"";
+      popnummer = [[noteDic objectForKey:@"nummer"]intValue];
    }
-   if ([not objectForKey:@"profil2"])
+   if ([noteDic objectForKey:@"profilname"])
    {
-      Profil2 = [not objectForKey:@"profil2"];
-     // NSLog(@"Profile1 items: %@",[Profile1 items]);
+      switch (popnummer)
+      {
+         case 1: // profil1
+         {
+            
+            Profil1 = [noteDic objectForKey:@"profilname"];
+            
+         }break;
+         case 2:
+         {
+            Profil1 = [noteDic objectForKey:@"profilname"];
+         }break;
+      }// switch
+    
+      
+      
+      
+      
    }
+   
    else
    {
       Profil2 = @"";
    }
-
+   NSLog(@"ProfilPopAktion profil1: %@ profil2: %@",Profil1,Profil2);
 }
 
 - (void)doProfilEinfuegenTask

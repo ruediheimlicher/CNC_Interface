@@ -794,7 +794,8 @@ var outletdaten:[String:AnyObject] = [:]
         infodic!["wertay"] = 25
         
         infodic!["pwm"] = DC_PWM.floatValue
-        infodic!["abbrand"] = AbbrandFeld.floatValue
+        
+       infodic!["abbrand"] = AbbrandFeld.floatValue
         
         if AbbrandCheckbox.state == NSControl.StateValue.on
         {
@@ -1326,6 +1327,10 @@ var outletdaten:[String:AnyObject] = [:]
         //print("DCAktion: \(notification)")
          print("DCAktion  pwm: \(pwm)")
         Stepperposition = 0;
+        if(pwm == 0)
+        {
+           DC_Taste.state = NSControl.StateValue.off
+        }
         var wertarray = [UInt8](repeating: 0, count: Int(BufferSize()))
         
         wertarray[16] = 0xE2
@@ -2106,7 +2111,7 @@ var outletdaten:[String:AnyObject] = [:]
             print("i: \(i) temparray: \(temparray)")
           SchnittdatenArray.append(temparray)
         }
-     print("reportStopTaste SchnittdatenArray: \(SchnittdatenArray)")
+       print("reportStopTaste SchnittdatenArray: \(SchnittdatenArray)")
         // code am Anfang und Schluss einfuegen
         var lastposition:Int = 0
         lastposition |= (1<<LAST_BIT)
@@ -2230,7 +2235,7 @@ var outletdaten:[String:AnyObject] = [:]
             }
 
             var a:NSApplication.ModalResponse
-            var delayok = 0
+            //var delayok = 0
             if DC_Taste.state == NSControl.StateValue.off
             {
                 
@@ -2250,7 +2255,8 @@ var outletdaten:[String:AnyObject] = [:]
                 case .alertFirstButtonReturn: // first button
                         DC_Taste.state = NSControl.StateValue.on
                     let dc_pwm = UInt8(DC_Taste.intValue)
-                    self.DC_Funktion(pwm: dc_pwm)
+                    //self.DC_Funktion(pwm: dc_pwm)
+                   DC_Taste.isEnabled = true
                     delayok = 1
                 case .alertSecondButtonReturn:
                     print("second Button")
@@ -2294,7 +2300,8 @@ var outletdaten:[String:AnyObject] = [:]
         var SchnittdatenDic = [String:Any]()
         
         SchnittdatenDic["pwm"] = pwm
-        SchnittdatenDic["schnittdatenarray"] = SchnittdatenArray
+        
+       SchnittdatenDic["schnittdatenarray"] = SchnittdatenArray
         
         
         SchnittdatenDic["cncposition"] = 0
@@ -2754,13 +2761,18 @@ var outletdaten:[String:AnyObject] = [:]
                  NotificationDic["home"] = Int(usbdata[13])
                  NotificationDic["cncstatus"] = Int(usbdata[22])
                  NotificationDic["anschlagstatus"] = Int(usbdata[19])
-                  NotificationDic["abschnittfertig"] = Int(abschnittfertig)
+               NotificationDic["abschnittfertig"] = Int(abschnittfertig)
 
                  //print("newDataAktion cncstatus: \(usbdata[22])")
                  var AnschlagSet = IndexSet()
                  
                  switch abschnittfertig
                  {
+                 case 0xAE: // joysticdaten
+                    print("HW  newDataAktion newDataAktion AE joysticdaten")
+                    
+                    
+                    break
                  case 0xE1:// Antwort auf mouseup 0xE0 HALT
                     print("HW  newDataAktion newDataAktion E1 mouseup")
                     usb_schnittdatenarray.removeAll()
@@ -3069,6 +3081,7 @@ var outletdaten:[String:AnyObject] = [:]
        {
           potwertB = wert as! Int
        }
+       
        print("potwertA: \(potwertA) potwertB: \(potwertB)")
         var homeanschlagCount = 0
            if let wert = note["homeanschlagset"]
@@ -3095,11 +3108,14 @@ var outletdaten:[String:AnyObject] = [:]
            CNC_busySpinner.stopAnimation(nil)
             if taskfertig > 0
             {
+               self.DC_Funktion(pwm: 0)
                 let warnung = NSAlert.init()
                 warnung.messageText = "Task fertig"
                 warnung.addButton(withTitle: "OK")
                 warnung.runModal()
                 taskfertig = 0
+               
+               
             }
 
 
@@ -3171,12 +3187,16 @@ var outletdaten:[String:AnyObject] = [:]
         {
             var zeilenDic = ["index": 0, "ax":  25, "ay": 35, "bx": 25, "by": 35, "pwm": 0.8]
             KoordinatenTabelle.append(zeilenDic)
+           
+           
         }
-        print("KoordinatenTabelle: \(KoordinatenTabelle)")
+        //print("reportProfilOberseiteTask KoordinatenTabelle: \(KoordinatenTabelle)")
+       
+
         CNC_Stoptaste.state = NSControl.StateValue.off
         //self.NeuTastefunktion()
         CNC_Starttaste.state = NSControl.StateValue.on
-        print("KoordinatenTabelle: \(KoordinatenTabelle)")
+        print("reportProfilOberseiteTask start  KoordinatenTabelle: \(KoordinatenTabelle)")
         //self.StopTastefunktion()
         
         var profil1popindex = 0
@@ -3518,7 +3538,7 @@ var outletdaten:[String:AnyObject] = [:]
         CNC_Stoptaste.isEnabled = true
         
 
-        print("reportProfilOberseiteTask end")
+        print("reportProfilUnterseiteTask end")
     }
 
     @IBAction func reportNeuesElement(_ sender:NSButton)
@@ -3825,6 +3845,36 @@ var outletdaten:[String:AnyObject] = [:]
        print("reportWertBYStepper IntVal: \(sender.integerValue)")
     }
     
+   @IBAction  func reportProfilPop(_ sender:NSPopUpButton)
+   {
+      print("reportProfilPop tag: \(sender.tag) profil: \(sender.titleOfSelectedItem) index: \(sender.indexOfSelectedItem)")
+      let nc = NotificationCenter.default
+      var profildatenDic = [String:Any]() 
+      
+      if sender.indexOfSelectedItem > 0
+      {
+         profildatenDic["nummer"] = sender.tag
+         profildatenDic["profilname"] = sender.titleOfSelectedItem
+         profildatenDic["index"] = sender.indexOfSelectedItem
+         nc.post(name:Notification.Name(rawValue:"profilpop"),
+         object: nil,
+         userInfo: profildatenDic)
+         switch sender.tag
+         {
+         case 1:
+            ProfilNameFeldA.stringValue = sender.titleOfSelectedItem ?? ""
+            
+         case 2:
+            ProfilNameFeldB.stringValue = sender.titleOfSelectedItem ?? ""
+            
+         default:
+            return
+         }
+      
+      }// index > 0
+      
+      
+   }
     
     @IBAction  func reportRump(_ sender: NSButton) //
     {
@@ -4941,24 +4991,25 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         //
     }
 
-    @objc func DCAktion(datadic:[String:Any])
+    @objc func DCAktion(datadic:[String:Int])
     {
         usb_schnittdatenarray.removeAll()
         //print("DCAktion: \(notification)")
         //let info = notification.userInfo
-        guard let pwm = datadic["pwm"] else
+       guard let pwmraw = datadic["pwm"]  else
         {
             print("DCAktion: kein pwm")
             return
         }
-        print("DCAktion  pwm: \(pwm)")
+        print("DCAktion  pwmraw: \(pwmraw)")
+       let pwm = abs(pwmraw as! Int)
         Stepperposition = 0;
         var wertarray = [UInt8](repeating: 0, count: Int(BufferSize()))
         
         wertarray[16] = 0xE2
         wertarray[24] = 0xE2
         wertarray[18]=0; // indexh, indexl ergibt abschnittnummer
-        wertarray[20]=pwm as! UInt8; // pwm
+       wertarray[20]=UInt8(pwm) //as! UInt8; // pwm
         
         usb_schnittdatenarray.append(wertarray)
         print("DCAktion writeCNCAbschnitt")
@@ -5255,7 +5306,39 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
          }
          
       }
+      
+      if let joystickstatus = info?["joystickstatus"] 
+      {
+         //print("HW joystickstatus: \(joystickstatus)")
+         if (joystickstatus as! Int) & 0x04 != 0
+         {
+            //print("joystickstatus bit 1 set")
+            JoystickAktiv.image = NSImage(named:NSImage.Name(rawValue: "ok_image"))!
+         }
+         else
+         {
+            //print("joystickstatus bit 1 clear")
+            JoystickAktiv.image = NSImage(named:NSImage.Name(rawValue: "notok_image"))!
+           
+         }
+      }
  
+      if let maxminstatus = info?["maxminstatus"] 
+      {
+         //print("HW maxminstatus: \(maxminstatus)")
+         if (maxminstatus as! Int) & 0x01 != 0
+         {
+            //print("maxminstatus bit 0 set")
+            JoystickCalib.image = NSImage(named:NSImage.Name(rawValue: "ok_image"))!
+         }
+         else
+         {
+            //print("maxminstatus bit 0 clear")
+            JoystickCalib.image = NSImage(named:NSImage.Name(rawValue: "notok_image"))!
+           
+         }
+      }
+
       
    }
    

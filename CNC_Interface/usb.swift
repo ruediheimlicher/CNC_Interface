@@ -241,7 +241,7 @@ class rTimerInfo {
    @objc open func cont_read_USB(_ timer: Timer)
    {
      // print("\n*** cont_read_USB start")
-    //  print("*read_OK: \(read_OK)")
+      //print("*read_OK: \(read_OK)")
       if (read_OK).boolValue
       {
          //var tempbyteArray = [UInt8](count: 32, repeatedValue: 0x00)
@@ -263,7 +263,7 @@ class rTimerInfo {
          }
          if read_byteArray[0] > 0xA0
          {
-           // print("*cont_read_USB result: \(result) code: \(read_byteArray[0]) tastaturwert: \(read_byteArray[57]) Taste: \(read_byteArray[58])")
+            //print("*cont_read_USB result: \(result) code: \(read_byteArray[0]) tastaturwert: \(read_byteArray[57]) Taste: \(read_byteArray[58]) potwertA: \(read_byteArray[13])")
          }
          //print("tempbyteArray in Timer: *\(read_byteArray)*")
         // var timerdic: [String: Int]
@@ -291,7 +291,7 @@ class rTimerInfo {
                        // print("cont_read_USB timerInfo: \(timerInfo.count)")
             */
             
-           // print("cont_read_USB timerInfo: \(timerInfo) read_byteArray 0: \(read_byteArray[0])")
+            //print("cont_read_USB timerInfo: \(timerInfo) read_byteArray 0: \(read_byteArray[0])")
 
             
             last_read_byteArray = read_byteArray

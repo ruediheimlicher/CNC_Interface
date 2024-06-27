@@ -328,7 +328,10 @@ class rViewController: NSViewController, NSWindowDelegate
   //     NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "newdata"), object: nil)
 
        loadcounter += 1
+      
+      
            NotificationCenter.default.addObserver(self, selector:#selector(joystickAktion(_:)),name:NSNotification.Name(rawValue: "joystick"),object:nil)
+      
            NotificationCenter.default.addObserver(self, selector:#selector(tabviewAktion(_:)),name:NSNotification.Name(rawValue: "tabview"),object:nil)
            
            //      NotificationCenter.default.addObserver(self, selector: #selector(usbsendAktion), name:NSNotification.Name(rawValue: "usbsend"), object: nil)
@@ -839,11 +842,12 @@ class rViewController: NSViewController, NSWindowDelegate
      var zeilenindex = 0
      for zeile in   zeilenzahlarray
      {
+        print("index: \(zeilenindex) zeile: \(zeile)")
         var wertarray = [UInt8]()
         var elementindex = 0
         for el in zeile
         {
-           guard UInt8(el) != nil else { return  }
+           //guard UInt8(el) != nil else { return  }
             wertarray.append(UInt8(el))
            elementindex += 1
         }
@@ -1187,7 +1191,7 @@ class rViewController: NSViewController, NSWindowDelegate
                 //print("newDataAktion cncstatus: \(usbdata[22])")
                 var AnschlagSet = IndexSet()
                 
-                print("newDataAktion potwert A: \(Int(usbdata[59])) potwert B: \(Int(usbdata[60]))")
+                //print("newDataAktion potwert A: \(Int(usbdata[59])) potwert B: \(Int(usbdata[60]))")
                 
                 
                 
@@ -1317,17 +1321,18 @@ class rViewController: NSViewController, NSWindowDelegate
                    
                 case 0xAE: // save joystickdata
                 
-                   print("newDataAtion 0xAE 60: \(usbdata[60]) 61: \(usbdata[61])")
+                   print("newDataAtion 0xAE 2:  \(usbdata[2]) 3:  \(usbdata[3]) 4:  \(usbdata[4])\t60: \(usbdata[60]) 61: \(usbdata[61])")
                    var joystickDic = [String:Int]()
                    for i in 42...47
                    {
                       
-                      print("i: \t\(i): \(usbdata[i])  \t\t\(i+10): \t\(usbdata[i+10])")
+                      //print("i: \t\(i): \(usbdata[i])  \t\t\(i+10): \t\(usbdata[i+10])")
                    }
 
                    // status
-                   let Joysitckstatus:UInt8 = usbdata[2]
+                   let joystickstatus:UInt8 = usbdata[2]
                    let maxminstatus:UInt8 = usbdata[3]
+                   print("newdataaktion joystickstatus: \(joystickstatus) maxminstatus: \(maxminstatus)")
                    joystickDic["joystickstatus"] = Int(usbdata[2])
                    joystickDic["maxminstatus"] = Int(usbdata[3])
                    // potmitteA
@@ -1430,7 +1435,8 @@ class rViewController: NSViewController, NSWindowDelegate
                    let calibmaxAH:UInt16 = UInt16(usbdata[52])
                    let calibmaxAL:UInt16 = UInt16(usbdata[53])
                    let calibmaxA = calibmaxAH << 8 | calibmaxAL
-
+                   joystickDic["calibmaxa"] = Int(calibmaxA)
+                   
                    // minsumA
                    let minsumAH:UInt16 = UInt16(usbdata[54])
                    let minsumAL:UInt16 = UInt16(usbdata[55])
@@ -1440,7 +1446,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    let calibminAH:UInt16 = UInt16(usbdata[56])
                    let calibminAL:UInt16 = UInt16(usbdata[57])
                    let calibminA = calibminAH << 8 | calibminAL
-
+                   joystickDic["calibmina"] = Int(calibminA)
                    // aaa
                    let aaaH:UInt16 = UInt16(usbdata[60])
                    let aaaL:UInt16 = UInt16(usbdata[61])
@@ -1455,7 +1461,8 @@ class rViewController: NSViewController, NSWindowDelegate
                    let calibmaxBH:UInt16 = UInt16(usbdata[42])
                    let calibmaxBL:UInt16 = UInt16(usbdata[43])
                    let calibmaxB = calibmaxBH << 8 | calibmaxBL
-
+                   joystickDic["calibmaxb"] = Int(calibmaxB)
+                   
                    // minsumB
                    let minsumBH:UInt16 = UInt16(usbdata[44])
                    let minsumBL:UInt16 = UInt16(usbdata[45])
@@ -1465,9 +1472,10 @@ class rViewController: NSViewController, NSWindowDelegate
                    let calibminBH:UInt16 = UInt16(usbdata[46])
                    let calibminBL:UInt16 = UInt16(usbdata[47])
                    let calibminB = calibminBH << 8 | calibminBL
+                   joystickDic["calibminb"] = Int(calibminB)
                    
-                   
-                   print("Joysitckstatus: \(Joysitckstatus) maxminstatus: \(maxminstatus)")
+                     
+                   print("joystickstatus: \(joystickstatus) maxminstatus: \(maxminstatus)")
                    print("potwertA: \(potwertA) potmitte A: \(potmitteA) mapdiff A: \(mapdiffa) \t\t calibmaxA: \(calibmaxA)  calibminA: \(calibminA)\t mapdiffA: \(mapdiffa)")
                    print("potwertB: \(potwertB) potmitte B: \(potmitteB) mapdiff B: \(mapdiffb) \t\t calibmaxB: \(calibmaxB)  calibminB: \(calibminB)\t mapdiffB: \(mapdiffb)")
                    

@@ -2325,8 +2325,8 @@
             filePath = "CNC_Interface/usb.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "243"
-            endingLineNumber = "243"
+            startingLineNumber = "267"
+            endingLineNumber = "267"
             landmarkName = "cont_read_USB(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2357,8 +2357,8 @@
             filePath = "CNC_Interface/usb.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "497"
-            endingLineNumber = "497"
+            startingLineNumber = "521"
+            endingLineNumber = "521"
             landmarkName = "rep_read_USB(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2861,8 +2861,8 @@
             filePath = "CNC_Interface/rViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1131"
-            endingLineNumber = "1131"
+            startingLineNumber = "1132"
+            endingLineNumber = "1132"
             landmarkName = "newDataAktion(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -5029,8 +5029,8 @@
             filePath = "CNC_Interface/usb.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "395"
-            endingLineNumber = "395"
+            startingLineNumber = "419"
+            endingLineNumber = "419"
             landmarkName = "clear_data()"
             landmarkType = "7">
          </BreakpointContent>
@@ -6223,8 +6223,8 @@
             filePath = "CNC_Interface/usb.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "311"
-            endingLineNumber = "311"
+            startingLineNumber = "335"
+            endingLineNumber = "335"
             landmarkName = "cont_read_USB(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -6239,8 +6239,8 @@
             filePath = "CNC_Interface/usb.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "317"
-            endingLineNumber = "317"
+            startingLineNumber = "341"
+            endingLineNumber = "341"
             landmarkName = "cont_read_USB(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -14377,8 +14377,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3131"
-            endingLineNumber = "3131"
+            startingLineNumber = "3166"
+            endingLineNumber = "3166"
             landmarkName = "USBReadFunktion(dataDic:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -14393,8 +14393,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14761"
-            endingLineNumber = "14761"
+            startingLineNumber = "14763"
+            endingLineNumber = "14763"
             landmarkName = "-homeSenkrechtSchicken"
             landmarkType = "7">
          </BreakpointContent>
@@ -14537,8 +14537,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14760"
-            endingLineNumber = "14760"
+            startingLineNumber = "14762"
+            endingLineNumber = "14762"
             landmarkName = "-homeSenkrechtSchicken"
             landmarkType = "7">
          </BreakpointContent>
@@ -14553,8 +14553,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14763"
-            endingLineNumber = "14763"
+            startingLineNumber = "14765"
+            endingLineNumber = "14765"
             landmarkName = "-homeSenkrechtSchicken"
             landmarkType = "7">
          </BreakpointContent>
@@ -14569,8 +14569,8 @@
             filePath = "CNC_Interface/rViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2180"
-            endingLineNumber = "2180"
+            startingLineNumber = "2184"
+            endingLineNumber = "2184"
             landmarkName = "check_USB(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -14585,8 +14585,8 @@
             filePath = "CNC_Interface/rViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2079"
-            endingLineNumber = "2079"
+            startingLineNumber = "2083"
+            endingLineNumber = "2083"
             landmarkName = "check_USB(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -14601,8 +14601,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "5361"
-            endingLineNumber = "5361"
+            startingLineNumber = "5412"
+            endingLineNumber = "5412"
             landmarkName = "usbstatusAktion(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -14617,8 +14617,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "5368"
-            endingLineNumber = "5368"
+            startingLineNumber = "5419"
+            endingLineNumber = "5419"
             landmarkName = "usbstatusAktion(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -14633,8 +14633,8 @@
             filePath = "CNC_Interface/rViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2157"
-            endingLineNumber = "2157"
+            startingLineNumber = "2161"
+            endingLineNumber = "2161"
             landmarkName = "check_USB(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -14649,8 +14649,8 @@
             filePath = "CNC_Interface/rViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2094"
-            endingLineNumber = "2094"
+            startingLineNumber = "2098"
+            endingLineNumber = "2098"
             landmarkName = "check_USB(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -14681,8 +14681,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "5133"
-            endingLineNumber = "5133"
+            startingLineNumber = "5184"
+            endingLineNumber = "5184"
             landmarkName = "joystickAktion(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -14697,8 +14697,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3041"
-            endingLineNumber = "3041"
+            startingLineNumber = "3076"
+            endingLineNumber = "3076"
             landmarkName = "report_JoystickSave(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -14729,8 +14729,8 @@
             filePath = "CNC_Interface/usb.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "469"
-            endingLineNumber = "469"
+            startingLineNumber = "493"
+            endingLineNumber = "493"
             landmarkName = "send_USB()"
             landmarkType = "7">
          </BreakpointContent>
@@ -14761,8 +14761,8 @@
             filePath = "CNC_Interface/rViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1433"
-            endingLineNumber = "1433"
+            startingLineNumber = "1436"
+            endingLineNumber = "1436"
             landmarkName = "newDataAktion(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -14819,7 +14819,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "CAEB5FA3-5B00-4DCD-9395-99682A19B2A0"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CNC_Interface/rHotwireViewController.swift"
@@ -14841,8 +14841,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "5314"
-            endingLineNumber = "5314"
+            startingLineNumber = "5365"
+            endingLineNumber = "5365"
             landmarkName = "CNC_JoystickAktion(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -14857,8 +14857,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "5316"
-            endingLineNumber = "5316"
+            startingLineNumber = "5367"
+            endingLineNumber = "5367"
             landmarkName = "CNC_JoystickAktion(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -14873,8 +14873,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "5319"
-            endingLineNumber = "5319"
+            startingLineNumber = "5370"
+            endingLineNumber = "5370"
             landmarkName = "CNC_JoystickAktion(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -14905,8 +14905,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "5015"
-            endingLineNumber = "5015"
+            startingLineNumber = "5066"
+            endingLineNumber = "5066"
             landmarkName = "DCAktion(datadic:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -14921,8 +14921,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "5000"
-            endingLineNumber = "5000"
+            startingLineNumber = "5051"
+            endingLineNumber = "5051"
             landmarkName = "DCAktion(datadic:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -14937,8 +14937,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "5009"
-            endingLineNumber = "5009"
+            startingLineNumber = "5060"
+            endingLineNumber = "5060"
             landmarkName = "DCAktion(datadic:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -15065,8 +15065,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3228"
-            endingLineNumber = "3228"
+            startingLineNumber = "3263"
+            endingLineNumber = "3263"
             landmarkName = "reportProfilOberseiteTask(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -15129,8 +15129,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3185"
-            endingLineNumber = "3185"
+            startingLineNumber = "3220"
+            endingLineNumber = "3220"
             landmarkName = "reportProfilOberseiteTask(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -15145,8 +15145,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3199"
-            endingLineNumber = "3199"
+            startingLineNumber = "3234"
+            endingLineNumber = "3234"
             landmarkName = "reportProfilOberseiteTask(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -15161,8 +15161,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3231"
-            endingLineNumber = "3231"
+            startingLineNumber = "3266"
+            endingLineNumber = "3266"
             landmarkName = "reportProfilOberseiteTask(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -15177,8 +15177,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3366"
-            endingLineNumber = "3366"
+            startingLineNumber = "3401"
+            endingLineNumber = "3401"
             landmarkName = "rHotwireViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -15193,8 +15193,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3305"
-            endingLineNumber = "3305"
+            startingLineNumber = "3340"
+            endingLineNumber = "3340"
             landmarkName = "reportProfilOberseiteTask(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -15321,8 +15321,8 @@
             filePath = "CNC_Interface/rHotwireViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "5004"
-            endingLineNumber = "5004"
+            startingLineNumber = "5055"
+            endingLineNumber = "5055"
             landmarkName = "DCAktion(datadic:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -15340,6 +15340,134 @@
             startingLineNumber = "850"
             endingLineNumber = "850"
             landmarkName = "usbschnittdatenAktion(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7C601401-26C1-4A91-A2D7-2D2C62B83C83"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/rHotwireViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2692"
+            endingLineNumber = "2692"
+            landmarkName = "newHotwireDataAktion(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "768366D9-E311-40FF-B462-A1ACB2D17ADF"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/ObjC/rAVRview.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "16070"
+            endingLineNumber = "16070"
+            landmarkName = "-USBReadAktion:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F66A7ACC-6CBD-457D-9EF6-84178DFDF925"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/rViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1138"
+            endingLineNumber = "1138"
+            landmarkName = "newDataAktion(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "04EED7C9-402B-41E2-8C13-CE54E7C89390"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/rViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1598"
+            endingLineNumber = "1598"
+            landmarkName = "newDataAktion(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "049FBAFA-AC7E-4086-9557-B0FB89F898F3"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/rHotwireViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2573"
+            endingLineNumber = "2573"
+            landmarkName = "newHotwireDataAktion(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "82A5F14A-3B64-4D3A-88D6-06A3EAAE68DA"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/rHotwireViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2695"
+            endingLineNumber = "2695"
+            landmarkName = "newHotwireDataAktion(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D7B662D2-5317-4561-A7CE-B3087B215B2B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/rHotwireViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "3011"
+            endingLineNumber = "3011"
+            landmarkName = "newDataAktion(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DEF908CC-3E32-4A14-8C3A-87C55997C30A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/rHotwireViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2391"
+            endingLineNumber = "2391"
+            landmarkName = "newHotwireDataAktion(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

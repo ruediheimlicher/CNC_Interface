@@ -236,6 +236,30 @@ class rTimerInfo {
       //return Int(result) //
    }
    
+    @objc func updateUserInfoHome(newhome:Int ) 
+    {
+       // Invalidate the existing timer
+       var oldUserInfo = readtimer?.userInfo as! [String : Any]
+       var oldhome = 0
+      
+       if oldUserInfo.keys.contains("home")
+       {
+          oldUserInfo["home"] = newhome
+       }
+            
+       if readtimer?.isValid == true
+       {
+          readtimer?.invalidate()
+       }
+       /*
+       if  newUserInfo
+       // Update the userInfo property
+       userInfo = newUserInfo
+
+       // Create a new timer with the updated userInfo
+       createTimer()
+        */
+   }
    
    
    @objc open func cont_read_USB(_ timer: Timer)

@@ -1391,7 +1391,7 @@ var outletdaten:[String:AnyObject] = [:]
         
         let c = KoordinatenTabelle.isEmpty
         
-        print("Mausgraphaktion start KoordinatenTabelle: \(KoordinatenTabelle) ")
+        //print("Mausgraphaktion start KoordinatenTabelle: \(KoordinatenTabelle) ")
         
         if (KoordinatenTabelle.isEmpty == false)
         {
@@ -1441,7 +1441,7 @@ var outletdaten:[String:AnyObject] = [:]
         
         neueZeileDic["index"] = Double(KoordinatenTabelle.count)
         neueZeileDic["pwm"] = oldpwm
-        print("neueZeileDic: \(neueZeileDic)")
+        //print("neueZeileDic: \(neueZeileDic)")
         
         if (CNC_Starttaste.state.rawValue > 0)
         {
@@ -2358,10 +2358,41 @@ var outletdaten:[String:AnyObject] = [:]
     
     @objc  func newHotwireDataAktion(_ notification:Notification)  // entspricht readUSB
     {
+       /*
+       Array:
+       
+       0    schritteax lb
+       1    schritteax hb
+       2    schritteay lb
+       3    schritteay hb
+       
+       4    delayax lb
+       5    delayax hb
+       6    delayay lb
+       7    delayay hb
+       
+       8    schrittebx lb
+       9    schrittebx hb
+       10   schritteby lb
+       11   schritteby hb
+       
+       12   delaybx lb
+       13   delaybx hb
+       14   delayby lb
+       15   delayby hb
+       
+       16   code
+       17   position // first, last, ...
+       18   indexh
+       19   indexl
+       
+       */
        // Reaktion auf eingehende USB-Daten
        var lastData = teensy.getlastDataRead()
        let lastDataArray = [UInt8](lastData)
-       print("rHotwireController newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")
+       
+       
+       print("rHotwireController  newHotwireDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")
        
   //     print("newDataAktion start")
  /*
@@ -2409,7 +2440,7 @@ var outletdaten:[String:AnyObject] = [:]
              let abschnittfertig:UInt8 =   usbdata[0] // code vom teensy
              print("newDataAktion abschnittfertig wert: \(abschnittfertig)")
              // https://useyourloaf.com/blog/swift-string-cheat-sheet/
-             let home = Int(usbdata[13])
+             var home = Int(usbdata[13])
               
               let abschnittnummer:Int = Int((usbdata[5] << 8) | usbdata[6])
               let ladeposition = usbdata[8]
@@ -2434,7 +2465,7 @@ var outletdaten:[String:AnyObject] = [:]
              */
              if abschnittfertig >= 0xA0 // Code fuer Fertig: AD
              {
-                print("abschnittfertig > A0")
+                print("newHWDataAktion abschnittfertig > A0 start")
                 let Abschnittnummer = Int(usbdata[5])
                 NotificationDic["inposition"] = Int(Abschnittnummer)
                 let ladePosition = Int(usbdata[6])
@@ -2457,6 +2488,7 @@ var outletdaten:[String:AnyObject] = [:]
                     CNC_busySpinner.stopAnimation(nil)
                    AVR?.setBusy(0)
                    teensy.read_OK = false
+                   
                    break
                    
                 case 0xEA: // home
@@ -2533,7 +2565,7 @@ var outletdaten:[String:AnyObject] = [:]
                    break
                    
                 case 0xD0:
-                   print("***   ***   Letzter Abschnitt")
+                   print("***   *** HW   Letzter Abschnitt")
                    print("HW HotWirenewDataAktion 0xD0 Stepperposition: \(Stepperposition) \n\(schnittdatenstring)");
                    //print("HomeAnschlagSet: \(HomeAnschlagSet)")
                    NotificationDic["abschnittfertig"] = Int(abschnittfertig)
@@ -2552,7 +2584,7 @@ var outletdaten:[String:AnyObject] = [:]
                    break;
                 case 0xF2:
                    
-                      print("F2 ")
+                      print("F2 reset")
                    
                    break;
                    
@@ -2570,7 +2602,7 @@ var outletdaten:[String:AnyObject] = [:]
                    break
                 }// switch abschnittfertig
                 
-                if AnschlagSet.count > 0
+                if AnschlagSet.count > 0 // restliche Daten entfernen
                 {
                    print("AnschlagSet count 0")
                    //var i=0
@@ -2607,8 +2639,12 @@ var outletdaten:[String:AnyObject] = [:]
                 if EndIndexSet.contains(Int(abschnittfertig))
                 {
                    print("HW newHotwireDataAktion EndIndexSet contains abschnittfertig")
-                   //teensy.DC_pwm(0)
-   //                AVR?.setBusy(0)
+                   // PWM auf 0 setzen
+                   
+                   self.DC_Funktion(pwm: 0)
+                   
+                  AVR?.setBusy(0)
+                   teensy.readtimer?.invalidate();
     //               teensy.read_OK = false
                 }
                 else
@@ -2619,14 +2655,21 @@ var outletdaten:[String:AnyObject] = [:]
                       if HomeAnschlagSet.count == 1
                       {
                          print("HomeAnschlagSet.count == 1")
+                         home = 2
                       }
                       else if HomeAnschlagSet.count == 4
                       {
                          print("HomeAnschlagSet.count == 4")
+                         // PWM auf 0 setzen
+                         self.DC_Funktion(pwm: 0)
+                         
+                        AVR?.setBusy(0)
+                         teensy.readtimer?.invalidate();
                       }
                       else if home == 2
                       {
                          print("home == 2")
+                         
                       }
                    }
                    else
@@ -2668,7 +2711,6 @@ var outletdaten:[String:AnyObject] = [:]
        }
        //let dic = notification.userInfo as? [String:[UInt8]]
        //print("dic: \(dic ?? ["a":[123]])\n")
-       
     }
     @objc override func newDataAktion(_ notification:Notification)
      {
@@ -2761,8 +2803,8 @@ var outletdaten:[String:AnyObject] = [:]
                  NotificationDic["home"] = Int(usbdata[13])
                  NotificationDic["cncstatus"] = Int(usbdata[22])
                  NotificationDic["anschlagstatus"] = Int(usbdata[19])
-               NotificationDic["abschnittfertig"] = Int(abschnittfertig)
-
+                 NotificationDic["abschnittfertig"] = Int(abschnittfertig)
+                 
                  //print("newDataAktion cncstatus: \(usbdata[22])")
                  var AnschlagSet = IndexSet()
                  
@@ -2785,7 +2827,7 @@ var outletdaten:[String:AnyObject] = [:]
                     print("HW  newDataAktion  EA home gemeldet")
                     break
                     
-                 // Anschlag first
+                    // Anschlag first
                  case 0xA5:
                     print("HW  newDataAktion  Anschlag A0")
                     AnschlagSet.insert(0) // schritteax lb
@@ -2818,7 +2860,7 @@ var outletdaten:[String:AnyObject] = [:]
                     AnschlagSet.insert(15) // delayby lb
                     break;
                     
-                 // Anschlag home first
+                    // Anschlag home first
                  case 0xB5:
                     print("HW  newDataAktion +++++++++  Anschlag A home first")
                     HomeAnschlagSet.insert(0xB5)
@@ -2840,7 +2882,7 @@ var outletdaten:[String:AnyObject] = [:]
                     print("HomeAnschlagSet count: \(HomeAnschlagSet.count)")
                     break
                     
-                 // Anschlag Second
+                    // Anschlag Second
                  case 0xC5:
                     print("HW  newDataAktion Anschlag A home  second")
                     break
@@ -2859,24 +2901,17 @@ var outletdaten:[String:AnyObject] = [:]
                     print("HW  newDataAktion  0xD0 Stepperposition: \(Stepperposition) \n\(schnittdatenstring)");
                     //print("HomeAnschlagSet: \(HomeAnschlagSet)")
                     NotificationDic["abschnittfertig"] = Int(abschnittfertig)
-                     /*
-                    let nc = NotificationCenter.default
-                    nc.post(name:Notification.Name(rawValue:"usbread"),
-                            object: nil,
-                            userInfo: NotificationDic)
-                    return
-                      */
-                    break
-                 
+                      break
+                    
                     
                  case 0xF1:
                     
-                       print("F1 home ")
+                    print("F1 home ")
                     
                     break;
                  case 0xF2:
                     
-                       print("F2 ")
+                    print("F2 ")
                     
                     break;
                     
@@ -2884,10 +2919,10 @@ var outletdaten:[String:AnyObject] = [:]
                     print("BD cncstatus: \(usbdata[22]) ")
                     
                     if Int(usbdata[63]) == 1
-                       {
-                          print("BD 63  ")
-                           // return;
-                       }
+                    {
+                       print("BD 63  ")
+                       // return;
+                    }
                     
                     break;
                  default:
@@ -2925,15 +2960,15 @@ var outletdaten:[String:AnyObject] = [:]
                  EndIndexSet.insert(integersIn:0xB5...0xB8)          // Anschlag A0 home first
                  
                  //print("EndIndexSet: \(EndIndexSet)")
-                //  print("HomeIndexSet: \(HomeIndexSet)")
-
+                 //  print("HomeIndexSet: \(HomeIndexSet)")
+                 
                  
                  if EndIndexSet.contains(Int(abschnittfertig))
                  {
                     print("HW newDataAktion EndIndexSet contains abschnittfertig")
                     //teensy.DC_pwm(0)
-    //                AVR?.setBusy(0)
-     //               teensy.read_OK = false
+                    //                AVR?.setBusy(0)
+                    //               teensy.read_OK = false
                  }
                  else
                  {
@@ -2958,25 +2993,25 @@ var outletdaten:[String:AnyObject] = [:]
                        //print("newDataAktion vor writeCNCAbschnitt count: \(usb_schnittdatenarray.count)")
                        if (usb_schnittdatenarray.count > 0) // nicht HALT
                        {
-                       //if (Int(usbdata[10]) == 0)
+                          //if (Int(usbdata[10]) == 0)
                           print("HomeAnschlagSet: \(HomeAnschlagSet)")
-                       
+                          
                           writeCNCAbschnitt()
                           
                        }
                     }
                  }
-                    //print("HomeAnschlagSet: \(HomeAnschlagSet)")
-                    NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
-                    NotificationDic["home"] = Int(home)
-                    NotificationDic["abschnittfertig"] = Int(abschnittfertig)
-                    print("HotwireHW  newDataAktion Notific: \(NotificationDic)")
-                    
-                     let nc = NotificationCenter.default
-                     nc.post(name:Notification.Name(rawValue:"usbread"),
-                     object: nil,
-                     userInfo: NotificationDic)
-                     
+                 //print("HomeAnschlagSet: \(HomeAnschlagSet)")
+                 NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
+                 NotificationDic["home"] = Int(home)
+                 NotificationDic["abschnittfertig"] = Int(abschnittfertig)
+                 print("HW  newDataAktion nach switch Notific: \(NotificationDic)")
+                 
+                 let nc = NotificationCenter.default
+                 nc.post(name:Notification.Name(rawValue:"usbread"),
+                         object: nil,
+                         userInfo: NotificationDic)
+                 
                  
               } // if abschnittfertig > A0
               
@@ -4270,6 +4305,10 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
     @IBAction func report_Home(_ sender: NSButton)
     {
         print("swift report_Home: \(sender.tag)")
+       CNC_Halttaste.state = NSControl.StateValue.on
+       CNC_Halttaste.isEnabled = true
+       
+       
         let nc = NotificationCenter.default
         var NotificationDic = [String:Int]()
 
@@ -4282,16 +4321,28 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         let zeilendicA:[String:Double] = ["ax": PositionA.x, "ay":PositionA.y, "bx": PositionB.x, "by":PositionB.y, "index":Double(index), "lage":3]
         AnfahrtArray.append(zeilendicA)
         
+       //Horizontal bis Anschlag
         PositionA.x -= 500
         PositionB.x -= 500
         index += 1
         let zeilendicB:[String:Double] = ["ax": PositionA.x, "ay":PositionA.y, "bx": PositionB.x, "by":PositionB.y, "index":Double(index), "lage":3]
         AnfahrtArray.append(zeilendicB)
         
-        let zoomfaktor = 1
+       // Vertikal ab bis Anschlag
+       PositionA.y -= 200;
+       PositionB.y -= 200;
+       
+       let zeilendicC:[String:Double] = ["ax": PositionA.x, "ay":PositionA.y, "bx": PositionB.x, "by":PositionB.y, "index":Double(index), "lage":3]
+       AnfahrtArray.append(zeilendicC)
+
+       
+       
+       
+       let zoomfaktor = 1
         
         var HomeSchnittdatenArray = [[String:Double]]()
         
+       
         AVR?.homeSenkrechtSchicken()
         
     }

@@ -1114,6 +1114,7 @@ class rViewController: NSViewController, NSWindowDelegate
   */
        //let u = ((Int32(lastData[1])<<8) + Int32(lastData[2]))
        //print("hb: \(lastData[1]) lb: \(lastData[2]) u: \(u)")
+       
        let info = notification.userInfo
        
        //let data = "foo".data(using: .utf8)!
@@ -1135,11 +1136,7 @@ class rViewController: NSViewController, NSWindowDelegate
        {
  //         print("newDataAktion if let d ok")
           var usbdata = info!["data"] as! [UInt8]
-          
-                let stringFromByteArray = String(data: Data(bytes: usbdata), encoding: .utf8)
-          
-                //print("usbdata: \(usbdata)\n")
-          
+           
           //if  usbdata = info!["data"] as! [String] // Data vornanden
           if  usbdata.count > 0 // Data vorhanden
           {
@@ -1204,6 +1201,12 @@ class rViewController: NSViewController, NSWindowDelegate
                    
                    AVR?.setBusy(0)
                    teensy.read_OK = false
+                   if teensy.readtimer?.isValid ?? false
+                   {
+                      print("writeCNCAbschnitt HALT readTimer inval")
+                      teensy.readtimer?.invalidate()
+                   }
+                   Stepperposition = 0;
                    break
                    
                 case 0xEA: // home
@@ -1286,7 +1289,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    NotificationDic["abschnittfertig"] = Int(abschnittfertig)
                     /*
                    let nc = NotificationCenter.default
-                   nc.post(name:Notification.Name(rawValue:"usbread"),
+                   nc.post(name:Notification.Name(rawValue:"usbreadXXX"),
                            object: nil,
                            userInfo: NotificationDic)
                     */
@@ -1588,8 +1591,9 @@ class rViewController: NSViewController, NSWindowDelegate
                   NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
                    NotificationDic["home"] = Int(home)
                    NotificationDic["abschnittfertig"] = Int(abschnittfertig)
-                   //print("VC newDataAktion Notific: \(NotificationDic)")
-                   
+                   print("VC newDataAktion Notific: \(NotificationDic)")
+                  
+                // xxx
                     let nc = NotificationCenter.default
                     nc.post(name:Notification.Name(rawValue:"usbread"),
                     object: nil,
@@ -1602,10 +1606,10 @@ class rViewController: NSViewController, NSWindowDelegate
              //print("dic end\n")
               /*
               let nc = NotificationCenter.default
-              nc.post(name:Notification.Name(rawValue:"usbread"),
+              nc.post(name:Notification.Name(rawValue:"usbreadXXX"),
                       object: nil,
                       userInfo: NotificationDic)
-*/
+               */
           } // if count > 0
           
        } // if d

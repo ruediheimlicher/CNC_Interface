@@ -310,6 +310,8 @@ var outletdaten:[String:AnyObject] = [:]
    @IBOutlet weak var  Adresse: NSTextField!
    @IBOutlet weak var  Cmd: NSTextField!
    @IBOutlet weak var  CNCKnopf: NSTextField!
+   
+   @IBOutlet weak var  CNCPositionFeld: NSTextField!
    @IBOutlet weak var  OberseiteCheckbox: NSButton!
    @IBOutlet weak var  UnterseiteCheckbox: NSButton!
    @IBOutlet weak var  OberseiteTaste: NSButton!
@@ -1324,8 +1326,8 @@ var outletdaten:[String:AnyObject] = [:]
     @objc func DC_Funktion(pwm:UInt8 )
      {
         usb_schnittdatenarray.removeAll()
-        //print("DCAktion: \(notification)")
-         print("DCAktion  pwm: \(pwm)")
+        //print("DC_Funktion: \(notification)")
+         print("HW DC_Funktion  pwm: \(pwm)")
         Stepperposition = 0;
         if(pwm == 0)
         {
@@ -1339,7 +1341,7 @@ var outletdaten:[String:AnyObject] = [:]
         wertarray[20]=pwm; // pwm
         
         usb_schnittdatenarray.append(wertarray)
-         print("DC_Funktion writeCNCAbschnitt")
+         print("HW DC_Funktion writeCNCAbschnitt")
         writeCNCAbschnitt()
         teensy.clear_data()
 
@@ -2357,7 +2359,7 @@ var outletdaten:[String:AnyObject] = [:]
     }
     
  
-    @objc override func newDataAktion(_ notification:Notification)
+    @objc override func newDataAktion(_ notification:Notification) // entspricht readUSB
      {
         // Reaktion auf eingehende USB-Daten
         var lastData = teensy.getlastDataRead()
@@ -2735,120 +2737,86 @@ var outletdaten:[String:AnyObject] = [:]
    }
 
     @objc func USBReadAktion(_ notification:Notification)
-    {
-        let note = notification.userInfo as![String:Any]
-        let abschnittfertig = note["abschnittfertig"]  as! Int
-        let outposition = note["outposition"] as! Int
-        Stepperposition = note["stepperposition"] as! Int
-       if let Tastaturwert = note["tastaturwert"]
+   {
+      let note = notification.userInfo as![String:Any]
+      let abschnittfertig = note["abschnittfertig"]  as! Int
+      let outposition = note["outposition"] as! Int
+      Stepperposition = note["stepperposition"] as! Int
+      CNCPositionFeld.integerValue = Stepperposition
+      
+      let anzsteps = SchnittdatenArray.count
+      
+      if let Tastaturwert = note["tastaturwert"]
       {
-          TastenwertFeld.integerValue = Tastaturwert as! Int
-
-       }
-
-       if let Tastewert = note["taste"]
+         TastenwertFeld.integerValue = Tastaturwert as! Int
+         
+      }
+      
+      if let Tastewert = note["taste"]
       {
-          TasteFeld.integerValue = Tastewert as! Int
-
-       }
-       var potwertA = 0;
-       if let wert = note["potwerta"]
-       {
-          potwertA = wert as! Int
-       }
-       var potwertB = 0;
-       if let wert = note["potwertb"]
-       {
-          potwertB = wert as! Int
-       }
-       
-       print("potwertA: \(potwertA) potwertB: \(potwertB)")
-        var homeanschlagCount = 0
-           if let wert = note["homeanschlagset"]
-           {
-               homeanschlagCount = wert as! Int
-           }
-
-        if outposition > PositionFeld.integerValue
+         TasteFeld.integerValue = Tastewert as! Int
+         
+      }
+      var potwertA = 0;
+      if let wert = note["potwerta"]
+      {
+         potwertA = wert as! Int
+      }
+      var potwertB = 0;
+      if let wert = note["potwertb"]
+      {
+         potwertB = wert as! Int
+      }
+      
+      print("potwertA: \(potwertA) potwertB: \(potwertB)")
+      
+      
+      var homeanschlagCount = 0
+      if let wert = note["homeanschlagset"]
+      {
+         homeanschlagCount = wert as! Int
+      }
+      
+      if outposition > PositionFeld.integerValue
+      {
+         PositionFeld.integerValue = outposition
+         ProfilFeld.stepperposition = outposition
+         ProfilFeld.needsDisplay = true
+         
+      }
+      
+      switch abschnittfertig
+      {
+      case 0xB8: // Tastaturwert
+         print("Tastatur Tastaturwert: \(TastenwertFeld.integerValue)")
+         
+      case 0xBD: // Abschnitt fertig
+         PositionFeld.integerValue = Stepperposition
+         ProfilFeld.stepperposition = Stepperposition
+         ProfilFeld.needsDisplay = true
+         CNC_busySpinner.stopAnimation(nil)
+         if taskfertig > 0
          {
-             PositionFeld.integerValue = outposition
-             ProfilFeld.stepperposition = outposition
-             ProfilFeld.needsDisplay = true
-             
-         }
-
-        switch abschnittfertig
-        {
-        case 0xB8: // Tastaturwert
-           print("Tastatur Tastaturwert: \(TastenwertFeld.integerValue)")
-        case 0xBD:
-            PositionFeld.integerValue = Stepperposition
-            ProfilFeld.stepperposition = Stepperposition
-            ProfilFeld.needsDisplay = true
-           CNC_busySpinner.stopAnimation(nil)
-            if taskfertig > 0
-            {
-               self.DC_Funktion(pwm: 0)
-                let warnung = NSAlert.init()
-                warnung.messageText = "Task fertig"
-                warnung.addButton(withTitle: "OK")
-                warnung.runModal()
-                taskfertig = 0
-               
-               
-            }
-
-
-        default:
-            break
+            self.DC_Funktion(pwm: 0)
+            let warnung = NSAlert.init()
+            warnung.messageText = "Task fertig"
+            warnung.addButton(withTitle: "OK")
+            warnung.runModal()
+            taskfertig = 0
             
-        } // switch abschnittfertig
-        
-    }
+            
+         }
+         
+         
+         
+      default:
+         break
+         
+      } // switch abschnittfertig
+      
+   }
     
-    @objc func USBReadFunktion(dataDic:[String:Int])
-    {
-        if let outposition = dataDic["outposition"]
-        {
-            if outposition > PositionFeld.integerValue
-            {
-                PositionFeld.integerValue = outposition
-                ProfilFeld.stepperposition = outposition - 1
-                ProfilFeld.needsDisplay = true
-                
-            }
-        }
-       
-       if let Tastaturwert = dataDic["tastaturwert"]
-      {
-          TastenwertFeld.integerValue = Tastaturwert
 
-       }
-         /*
-        if let stepperposition = dataDic["stepperposition"]
-        {
-            if stepperposition > CNCPositionFeld.integerValue
-            {
-                PositionFeld.integerValue = stepperposition
-                ProfilFeld.stepperposition = stepperposition - 1
-                ProfilFeld.needsDisplay = true
-                
-            }
-        }
-        else
-        {
-            return
-        }
-         */
-        var homeanschlagCount = 0
-        if let wert = dataDic["homeanschlagset"]
-        {
-            homeanschlagCount = dataDic["homeanschlagset"]!
-        }
-
-        
-        
-    }
     
     
     

@@ -16018,11 +16018,9 @@ return returnInt;
    //NSLog(@"homeanschlagCount: %d",homeanschlagCount);
    //if([[note userInfo]objectForKey:@"abschnittcode"])
    
-//   if([[note userInfo]objectForKey:@"abschnittcode"])
    if([[note userInfo]objectForKey:@"abschnittfertig"])
    {
       
-      //int abschnittfertig=[[[note userInfo]objectForKey:@"abschnittcode"]intValue];
       int abschnittfertig=[[[note userInfo]objectForKey:@"abschnittfertig"]intValue];
       
       uint16_t stepperposition = [[[note userInfo]objectForKey:@"stepperposition"]intValue];
@@ -16033,12 +16031,14 @@ return returnInt;
       {
          //NSLog(@"AVR  USBReadAktion 18");
       }
+      
       if (abschnittfertig >= 0xA0)
       {
          [CNC_busySpinner stopAnimation:NULL];
       }
       uint8_t teensy_cncstatus = [[[note userInfo]objectForKey:@"cncstatus"]intValue];
       NSLog(@"AVR  USBReadAktion teensy_cncstatus hex: %.02X",teensy_cncstatus);
+      
       switch (abschnittfertig)
       {
          case 0xE1: // Antwort auf Mouseup 0xE0 HALT

@@ -2864,6 +2864,7 @@ Element</string>
                         <outlet property="Blockdicke" destination="jYI-5X-Bze" id="FYv-kN-jkE"/>
                         <outlet property="BreiteAFeld" destination="ZDW-Xm-XIx" id="u0C-TE-Qwc"/>
                         <outlet property="BreiteBFeld" destination="KIN-QV-EPS" id="WHq-Cg-ITh"/>
+                        <outlet property="CNCPositionFeld" destination="wHl-dQ-5qy" id="ypa-5W-ckZ"/>
                         <outlet property="CNC_BlockAnfuegenTaste" destination="dfb-FX-Mzv" id="MZH-YP-0qo"/>
                         <outlet property="CNC_BlockKonfigurierenTaste" destination="kIa-7l-zCB" id="efH-yf-w5f"/>
                         <outlet property="CNC_Halttaste" destination="cQO-hQ-Uky" id="d2o-S3-kHG"/>

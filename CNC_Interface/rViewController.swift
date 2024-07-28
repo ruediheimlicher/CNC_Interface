@@ -646,7 +646,7 @@ class rViewController: NSViewController, NSWindowDelegate
            print("DCAktion: kein pwm")
            return
         }
-        print("DCAktion  pwm: \(pwm)")
+        print("VC DC_Funktion  pwm: \(pwm)")
         Stepperposition = 0;
         var wertarray = [UInt8](repeating: 0, count: Int(BufferSize()))
         
@@ -656,7 +656,7 @@ class rViewController: NSViewController, NSWindowDelegate
         wertarray[20]=pwm as! UInt8; // pwm
         
         usb_schnittdatenarray.append(wertarray)
-         print("DCAktion writeCNCAbschnitt")
+         print("VC DC_Funktion writeCNCAbschnitt")
         writeCNCAbschnitt()
         teensy.clear_data()
 
@@ -1099,6 +1099,7 @@ class rViewController: NSViewController, NSWindowDelegate
    @objc func newDataAktion(_ notification:Notification) 
     {
        // Reaktion auf eingehende USB-Daten
+       print("VC newDataAktion start");
        var lastData = teensy.getlastDataRead()
        let lastDataArray = [UInt8](lastData)
        //print("VC newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")
@@ -1505,16 +1506,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    break
                 }// switch abschnittfertig
                 
-                 /*
-                 if Stepperposition > CNCPositionFeld.integerValue
-                      {
-                          PositionFeld.integerValue = stepperposition
-                          ProfilFeld.stepperposition = stepperposition - 1
-                          ProfilFeld.needsDisplay = true
-                          
-                      }
-*/
-                if AnschlagSet.count > 0
+                 if AnschlagSet.count > 0
                 {
                    print("AnschlagSet count 0")
                    //var i=0
@@ -1588,12 +1580,12 @@ class rViewController: NSViewController, NSWindowDelegate
                 }
                    //print("HomeAnschlagSet: \(HomeAnschlagSet)")
                    NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
-                  NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
+                   NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
                    NotificationDic["home"] = Int(home)
                    NotificationDic["abschnittfertig"] = Int(abschnittfertig)
                    print("VC newDataAktion Notific: \(NotificationDic)")
                   
-                // xxx
+                
                     let nc = NotificationCenter.default
                     nc.post(name:Notification.Name(rawValue:"usbread"),
                     object: nil,
@@ -1602,14 +1594,7 @@ class rViewController: NSViewController, NSWindowDelegate
                 
              } // if abschnittfertig > A0
              
-             //writeCNCAbschnitt()
-             //print("dic end\n")
-              /*
-              let nc = NotificationCenter.default
-              nc.post(name:Notification.Name(rawValue:"usbreadXXX"),
-                      object: nil,
-                      userInfo: NotificationDic)
-               */
+            
           } // if count > 0
           
        } // if d

@@ -346,15 +346,15 @@ var outletdaten:[String:AnyObject] = [:]
    @IBOutlet weak var CNC_StepsSegControl: NSSegmentedControl!
    @IBOutlet weak var CNC_microPop: NSPopUpButton!
 
-   @IBOutlet weak var CNC_Uptaste: NSButton!
-   @IBOutlet weak var CNC_Downtaste: NSButton!
-   @IBOutlet weak var CNC_Lefttaste: NSButton!
+   @IBOutlet weak var CNC_Uptaste: rPfeil_Feld!
+   @IBOutlet weak var CNC_Downtaste: rPfeil_Feld!
+   @IBOutlet weak var CNC_Lefttaste: rPfeil_Feld!
+   @IBOutlet weak var CNC_Righttaste: rPfeil_Feld!
    @IBOutlet weak var CNC_busySpinner: NSProgressIndicator!
     
-   @IBOutlet weak var CNC_Linkstaste: NSButton!
-    
-   @IBOutlet weak var CNC_Righttaste: NSButton!
-    
+   
+
+   
    @IBOutlet weak var CNC_Seite1Check: NSButton!
     @objc var  cnc_seite1check:Int = 0
    @IBOutlet weak var CNC_Seite2Check: NSButton!
@@ -2787,8 +2787,8 @@ var outletdaten:[String:AnyObject] = [:]
       
       switch abschnittfertig
       {
-      case 0xB8: // Tastaturwert
-         print("Tastatur Tastaturwert: \(TastenwertFeld.integerValue)")
+      //case 0xB8: // Tastaturwert
+      //   print("Tastatur Tastaturwert: \(TastenwertFeld.integerValue)")
          
       case 0xBD: // Abschnitt fertig
          PositionFeld.integerValue = Stepperposition
@@ -2804,11 +2804,50 @@ var outletdaten:[String:AnyObject] = [:]
             warnung.runModal()
             taskfertig = 0
             
-            
          }
+      case 0xB5:
+      
+         print("AVR Anschlag A0 home first")
+      break;
          
+      case 0xB6:
+      
+         print("AVR Anschlag B0 home first")
+      break;
          
+      case 0xB7:
+      
+         print("AVR Anschlag C0 home first")
+      break;
          
+      case 0xB8:
+      
+         print("AVR Anschlag D0 home first")
+      break;
+         
+      case 0xA5:
+         print("AVR Anschlag A0")
+         AnschlagLinksIndikator.isTransparent = false
+         
+         CNC_Lefttaste.isEnabled = false
+      
+      case 0xA6:
+         print("AVR Anschlag B0")
+         AnschlagUntenIndikator.isTransparent = false
+         CNC_Downtaste.isEnabled = false
+      
+      case 0xA7:
+         print("AVR Anschlag C0")
+         AnschlagLinksIndikator.isTransparent = false
+         CNC_Lefttaste.isEnabled = false
+      
+      case 0xA8:
+         print("AVR Anschlag D0")
+         AnschlagUntenIndikator.isTransparent = false
+         CNC_Downtaste.isEnabled = false
+      
+     
+      
       default:
          break
          
@@ -3951,12 +3990,17 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        
        
        
+       
        let zoomfaktor = 1
+       SpeedFeld.integerValue = 6
+       
+       AVR?.manFeldRichtung(3,mousestatus: 0,pfeilstep: 100)
+       
         
         var HomeSchnittdatenArray = [[String:Double]]()
         
        
-        AVR?.homeSenkrechtSchicken()
+     //   AVR?.homeSenkrechtSchicken()
         
     }
     
@@ -4492,7 +4536,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         
         print("reportHome")
         //AVR!.reportHome(nil)
-        AVR!.goHome()
+        AVR?.reportHome(nil)
    
 
     }

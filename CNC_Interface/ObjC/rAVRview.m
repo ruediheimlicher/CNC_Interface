@@ -942,7 +942,7 @@ NSMutableDictionary* cncdatendic;
    debugArray=[[NSMutableArray alloc]initWithCapacity:0];
 
    GraphEnd=0;
-  CNC=[[rCNC alloc]init];
+   CNC=[[rCNC alloc]init];
    ProfilDatenOA=[[NSArray alloc]init];
    ProfilDatenUA=[[NSArray alloc]init];
    

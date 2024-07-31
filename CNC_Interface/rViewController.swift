@@ -1506,7 +1506,16 @@ class rViewController: NSViewController, NSWindowDelegate
                    break
                 }// switch abschnittfertig
                 
-                 if AnschlagSet.count > 0
+                 /*
+                 if Stepperposition > CNCPositionFeld.integerValue
+                      {
+                          PositionFeld.integerValue = stepperposition
+                          ProfilFeld.stepperposition = stepperposition - 1
+                          ProfilFeld.needsDisplay = true
+                          
+                      }
+*/
+                if AnschlagSet.count > 0
                 {
                    print("AnschlagSet count 0")
                    //var i=0

@@ -599,6 +599,7 @@
 @interface rAVRview(rTools)
 //- (NSArray*)SteuerdatenArrayVonDic:(NSDictionary*)derDatenDic;
 - (NSArray*)Tool_CNC_SchnittdatenArrayVonSteuerdaten:(NSDictionary*)derDatenDic;
+
 - (NSDictionary*)Tool_SteuerdatenVonDic:(NSDictionary*)derDatenDic;
 - (NSArray*)Tool_SchnittdatenVonDic:(NSDictionary*)derDatenDic;
 @end

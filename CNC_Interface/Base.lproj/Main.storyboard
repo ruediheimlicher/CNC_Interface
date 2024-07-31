@@ -2022,17 +2022,6 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K30-gw-pu9">
-                                <rect key="frame" x="679" y="406" width="43" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" title="&lt;&lt;" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="iC8-kb-asE">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="reportRandlinks:" target="cif-Bn-lJY" id="K4g-ft-0YD"/>
-                                </connections>
-                            </button>
                             <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LBc-27-GbQ">
                                 <rect key="frame" x="332" y="448" width="29" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -2843,6 +2832,17 @@ Element</string>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K30-gw-pu9">
+                                <rect key="frame" x="678" y="390" width="43" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="&lt;&lt;" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="iC8-kb-asE">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="reportRandlinks:" target="cif-Bn-lJY" id="K4g-ft-0YD"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <connections>
@@ -2867,9 +2867,12 @@ Element</string>
                         <outlet property="CNCPositionFeld" destination="wHl-dQ-5qy" id="ypa-5W-ckZ"/>
                         <outlet property="CNC_BlockAnfuegenTaste" destination="dfb-FX-Mzv" id="MZH-YP-0qo"/>
                         <outlet property="CNC_BlockKonfigurierenTaste" destination="kIa-7l-zCB" id="efH-yf-w5f"/>
+                        <outlet property="CNC_Downtaste" destination="hN9-4U-5Np" id="YlG-of-eqb"/>
                         <outlet property="CNC_Halttaste" destination="cQO-hQ-Uky" id="d2o-S3-kHG"/>
                         <outlet property="CNC_Joystick" destination="MYI-CC-1Kz" id="lv0-YZ-TgJ"/>
+                        <outlet property="CNC_Lefttaste" destination="gBg-hH-Y0N" id="whF-yc-8gG"/>
                         <outlet property="CNC_Neutaste" destination="UWG-pU-oa5" id="rJM-UR-6cA"/>
+                        <outlet property="CNC_Righttaste" destination="H42-lo-eJU" id="O0W-xP-4TO"/>
                         <outlet property="CNC_Scroller" destination="lKd-d9-ZYd" id="YHa-X1-7XP"/>
                         <outlet property="CNC_Seite1Check" destination="AVD-KX-yAS" id="Be5-Jz-Nf4"/>
                         <outlet property="CNC_Seite2Check" destination="uiY-2p-xZf" id="Q97-gB-2Js"/>
@@ -2878,6 +2881,7 @@ Element</string>
                         <outlet property="CNC_StepsSegControl" destination="XSL-Tj-hAW" id="Sqk-qF-EQw"/>
                         <outlet property="CNC_Stoptaste" destination="Uuk-HH-4dU" id="zaH-zt-wpw"/>
                         <outlet property="CNC_Table" destination="jyL-T7-yst" id="9tv-Ed-XcO"/>
+                        <outlet property="CNC_Uptaste" destination="gcT-aM-85D" id="HGk-cW-rfW"/>
                         <outlet property="CNC_busySpinner" destination="Zef-u3-88H" id="Fqj-ci-VCQ"/>
                         <outlet property="CNC_microPop" destination="hzN-Xe-Pmo" id="KIG-8e-SWD"/>
                         <outlet property="DC_PWM" destination="hTr-eE-IhT" id="Vuj-qa-vTp"/>
@@ -2906,7 +2910,6 @@ Element</string>
                         <outlet property="MinimaldistanzFeld" destination="Uax-e3-Hx6" id="lB1-f5-4t2"/>
                         <outlet property="NeuesElementTaste" destination="kmm-eU-K0J" id="co1-4a-igZ"/>
                         <outlet property="OberseiteCheckbox" destination="BUI-k3-04w" id="z6x-8X-t8I"/>
-                        <outlet property="PfeilfeldLinks" destination="gBg-hH-Y0N" id="jfh-vM-DY6"/>
                         <outlet property="Portalabstand" destination="sFU-jt-Xll" id="eTq-He-yeS"/>
                         <outlet property="PositionFeld" destination="LBc-27-GbQ" id="ZpW-Ij-NU3"/>
                         <outlet property="Profil1Pop" destination="XYU-EZ-61z" id="OWf-Ba-6sF"/>
@@ -3002,7 +3005,7 @@ Element</string>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
-                            <button tag="3" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CDj-is-gC3">
+                            <button tag="5" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CDj-is-gC3">
                                 <rect key="frame" x="750" y="420" width="22" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="home" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="BGT-Z1-YX9">

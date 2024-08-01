@@ -2786,23 +2786,23 @@ Element</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="pfeil_links_grau" id="KSU-MZ-59g"/>
                             </imageView>
-                            <imageView identifier="arrowleft" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="gcT-aM-85D" customClass="rPfeil_Feld" customModule="CNC_Interface" customModuleProvider="target">
+                            <imageView identifier="arrowup" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="gcT-aM-85D" customClass="rPfeil_Feld" customModule="CNC_Interface" customModuleProvider="target">
                                 <rect key="frame" x="740" y="449" width="26" height="26"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="pfeil_up_grau" id="qRn-fN-Wrr"/>
                             </imageView>
-                            <imageView identifier="arrowleft" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" tag="4" translatesAutoresizingMaskIntoConstraints="NO" id="hN9-4U-5Np" customClass="rPfeil_Feld" customModule="CNC_Interface" customModuleProvider="target">
+                            <imageView identifier="arrowdown" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" tag="4" translatesAutoresizingMaskIntoConstraints="NO" id="hN9-4U-5Np" customClass="rPfeil_Feld" customModule="CNC_Interface" customModuleProvider="target">
                                 <rect key="frame" x="738" y="391" width="26" height="26"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="pfeil_down_grau" id="xnf-It-GNf"/>
                             </imageView>
-                            <imageView identifier="arrowleft" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="H42-lo-eJU" customClass="rPfeil_Feld" customModule="CNC_Interface" customModuleProvider="target">
+                            <imageView identifier="arrowright" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="H42-lo-eJU" customClass="rPfeil_Feld" customModule="CNC_Interface" customModuleProvider="target">
                                 <rect key="frame" x="767" y="421" width="26" height="26"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="pfeil_rechts_grau" id="ErD-Hi-GFT"/>
                             </imageView>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cQO-hQ-Uky">
-                                <rect key="frame" x="596" y="397" width="84" height="76"/>
+                                <rect key="frame" x="596" y="397" width="76" height="77"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" alternateTitle="Stop" bezelStyle="regularSquare" image="Halt" imagePosition="overlaps" alignment="center" alternateImage="Halt_alt" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="y7K-gY-oDa">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
@@ -3092,7 +3092,7 @@ Element</string>
                                 </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lCK-UN-f1U">
-                                <rect key="frame" x="601" y="392" width="84" height="76"/>
+                                <rect key="frame" x="601" y="392" width="76" height="77"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" alternateTitle="Stop" bezelStyle="regularSquare" image="Halt" imagePosition="overlaps" alignment="center" alternateImage="Halt_alt" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9wz-98-m4X">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>

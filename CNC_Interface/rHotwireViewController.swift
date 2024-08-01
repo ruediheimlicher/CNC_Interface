@@ -1234,7 +1234,7 @@ var outletdaten:[String:AnyObject] = [:]
     @objc override func writeCNCAbschnitt()
     {
         cncwritecounter += 1
-        print("swift override writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray) cncwritecounter: \(cncwritecounter)")
+        print("HW swift override writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray) cncwritecounter: \(cncwritecounter)")
        let count = usb_schnittdatenarray.count
        //print("writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
        
@@ -1885,7 +1885,7 @@ var outletdaten:[String:AnyObject] = [:]
         //micro_Feld.integerValue = micro
      }
 */
-   // MARK: NEU-Taste
+   // MARK: *** NEU-Taste
     @IBAction func reportNeuTaste(_ sender: NSButton)
     {
         print("swift reportNeuTaste")
@@ -2084,6 +2084,9 @@ var outletdaten:[String:AnyObject] = [:]
         outletdaten["pwm"] = pwm as AnyObject
         var zoomfaktor = ProfilTiefeFeldA.doubleValue / 1000
         outletdaten["zoom"] = zoomfaktor as AnyObject
+       
+       outletdaten["home"] = 0 as AnyObject
+       
         // Daten leeren
         CNC_DatenArray.removeAll()
         SchnittdatenArray.removeAll()
@@ -2154,6 +2157,9 @@ var outletdaten:[String:AnyObject] = [:]
         outletdaten["pwm"] = pwm as AnyObject
         var zoomfaktor = ProfilTiefeFeldA.doubleValue / 1000
         outletdaten["zoom"] = zoomfaktor as AnyObject
+       
+       outletdaten["home"] = 0 as AnyObject
+       
         // Daten leeren
         CNC_DatenArray.removeAll()
         SchnittdatenArray.removeAll()
@@ -2828,22 +2834,25 @@ var outletdaten:[String:AnyObject] = [:]
       case 0xA5:
          print("AVR Anschlag A0")
          AnschlagLinksIndikator.isTransparent = false
-         
+         AnschlagLinksIndikator.layer?.backgroundColor = NSColor.blue.cgColor
          CNC_Lefttaste.isEnabled = false
       
       case 0xA6:
          print("AVR Anschlag B0")
          AnschlagUntenIndikator.isTransparent = false
+         AnschlagUntenIndikator.layer?.backgroundColor = NSColor.blue.cgColor
          CNC_Downtaste.isEnabled = false
       
       case 0xA7:
          print("AVR Anschlag C0")
          AnschlagLinksIndikator.isTransparent = false
+         AnschlagLinksIndikator.layer?.backgroundColor = NSColor.blue.cgColor
          CNC_Lefttaste.isEnabled = false
       
       case 0xA8:
          print("AVR Anschlag D0")
          AnschlagUntenIndikator.isTransparent = false
+         AnschlagUntenIndikator.layer?.backgroundColor = NSColor.blue.cgColor
          CNC_Downtaste.isEnabled = false
       
      
@@ -3317,42 +3326,44 @@ var outletdaten:[String:AnyObject] = [:]
     
    @IBAction func reportManRight(_ sender: rPfeil_Taste)
    {
-      //print("swift reportManRight: \(sender.tag)")
-       
-       AnschlagLinksIndikator.layer?.backgroundColor = NSColor.green.cgColor
-       
-       cnc_seite1check = CNC_Seite1Check.state.rawValue as Int
-       cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
-       outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
-       outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
-       outletdaten["speed"] = SpeedFeld.integerValue as AnyObject
-       outletdaten["micro"] = micro as AnyObject
-       outletdaten["boardindex"] = boardindex as AnyObject
-       print("outletdaten: \(outletdaten)")
-       var pfeildaten:[String:Int] = [:]
-       pfeildaten["cnc_seite1check"] = (CNC_Seite1Check.state.rawValue)
-       pfeildaten["cnc_seite2check"] = (CNC_Seite2Check.state.rawValue)
-       pfeildaten["speed"] = SpeedFeld.integerValue
-       pfeildaten["micro"] = micro
-       pfeildaten["motorsteps"] = motorsteps
-       pfeildaten["boardindex"] = boardindex
-       print("pfeildaten: \(pfeildaten)")
-       
-       
-       
-       AVR?.manRichtung(1, mousestatus:1, pfeilstep:100)
+      print("swift reportManRight: \(sender.tag)")
+      CNC_Lefttaste.isEnabled = true
+      AnschlagLinksIndikator.layer?.backgroundColor = NSColor.green.cgColor
+      
+      cnc_seite1check = CNC_Seite1Check.state.rawValue as Int
+      cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
+      outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
+      outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
+      outletdaten["speed"] = SpeedFeld.integerValue as AnyObject
+      outletdaten["micro"] = micro as AnyObject
+      outletdaten["boardindex"] = boardindex as AnyObject
+      
+      outletdaten["home"] = 0 as AnyObject
+      
+      print("outletdaten: \(outletdaten)")
+      var pfeildaten:[String:Int] = [:]
+      pfeildaten["cnc_seite1check"] = (CNC_Seite1Check.state.rawValue)
+      pfeildaten["cnc_seite2check"] = (CNC_Seite2Check.state.rawValue)
+      pfeildaten["speed"] = SpeedFeld.integerValue
+      pfeildaten["micro"] = micro
+      pfeildaten["motorsteps"] = motorsteps
+      pfeildaten["boardindex"] = boardindex
+      print("pfeildaten: \(pfeildaten)")
+      
+      AVR?.manRichtung(1, mousestatus:1, pfeilstep:100)
    }
     
     @IBAction func reportManUp(_ sender: rPfeil_Taste)
     {
        print("swift reportManUp: \(sender.tag)")
+       CNC_Downtaste.isEnabled = true
         cnc_seite1check = CNC_Seite1Check.state.rawValue as Int
         cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
         outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
         outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
         outletdaten["speed"] = SpeedFeld.integerValue as AnyObject
         outletdaten["micro"] = micro as AnyObject
-
+       outletdaten["home"] = 0 as AnyObject
 
         AVR?.manRichtung(2, mousestatus:1, pfeilstep:100)
     }
@@ -3360,13 +3371,14 @@ var outletdaten:[String:AnyObject] = [:]
     @IBAction func reportManLeft(_ sender: rPfeil_Taste)
     {
        print("swift reportManLeft: \(sender.tag)")
+       CNC_Righttaste.isEnabled = true
         cnc_seite1check = CNC_Seite1Check.state.rawValue as Int
         cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
         outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
         outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
         outletdaten["speed"] = SpeedFeld.integerValue as AnyObject
         outletdaten["micro"] = micro as AnyObject
-
+       outletdaten["home"] = 0 as AnyObject
 
         AVR?.manRichtung(3, mousestatus:1, pfeilstep:100)
     }
@@ -3380,7 +3392,7 @@ var outletdaten:[String:AnyObject] = [:]
       outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
       outletdaten["speed"] = SpeedFeld.integerValue as AnyObject
       outletdaten["micro"] = micro as AnyObject
-      
+      outletdaten["home"] = 0 as AnyObject
       
       AVR?.manRichtung(4, mousestatus:1, pfeilstep:100)
       
@@ -3952,13 +3964,23 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
     }
     
    
-    
+   // MARK: *** report_Home
 
     @IBAction func report_Home(_ sender: NSButton)
     {
         print("swift report_Home: \(sender.tag)")
        CNC_Halttaste.state = NSControl.StateValue.on
        CNC_Halttaste.isEnabled = true
+       
+       cnc_seite1check = CNC_Seite1Check.state.rawValue as Int
+       cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
+       outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
+       outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
+       outletdaten["speed"] = SpeedFeld.integerValue as AnyObject
+       outletdaten["micro"] = 1 as AnyObject
+       
+       outletdaten["home"] = 1 as AnyObject
+
        
        
         let nc = NotificationCenter.default
@@ -3986,21 +4008,14 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        
        let zeilendicC:[String:Double] = ["ax": PositionA.x, "ay":PositionA.y, "bx": PositionB.x, "by":PositionB.y, "index":Double(index), "lage":3]
        AnfahrtArray.append(zeilendicC)
-
        
        
-       
-       
-       let zoomfaktor = 1
-       SpeedFeld.integerValue = 6
-       
-       AVR?.manFeldRichtung(3,mousestatus: 0,pfeilstep: 100)
+       AVR?.home_Horizontal()
        
         
-        var HomeSchnittdatenArray = [[String:Double]]()
         
        
-     //   AVR?.homeSenkrechtSchicken()
+     
         
     }
     
@@ -4140,7 +4155,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
 
        NotificationCenter.default.addObserver(self, selector:#selector(usbstatusAktion(_:)),name:NSNotification.Name(rawValue: "usb_status"),object:nil)
 
-       NotificationCenter.default.addObserver(self, selector:#selector(PfeilAktion(_:)),name:NSNotification.Name(rawValue: "pfeil"),object:nil)
+  //     NotificationCenter.default.addObserver(self, selector:#selector(PfeilAktion(_:)),name:NSNotification.Name(rawValue: "pfeil"),object:nil)
 
        NotificationCenter.default.addObserver(self, selector:#selector(PfeilFeldAktion(_:)),name:NSNotification.Name(rawValue: "pfeilfeld"),object:nil)
 
@@ -4526,21 +4541,12 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       
    }//viewDidLoad
     
-   
+   // MARK: reportHome
+ 
     // TODO: *** *** *** *** *** *** reportHome
    // @objc IBAction reportHome:(id)sender
     
-    @IBAction func reportHome(_ sender: NSButton)
-    {
-        
-        
-        print("reportHome")
-        //AVR!.reportHome(nil)
-        AVR?.reportHome(nil)
-   
-
-    }
-    
+       
     @IBAction func reportDC_Stepper(_ sender: NSStepper)
     {
         print("reportDC_Stepper wert: \(sender.integerValue)")
@@ -5286,15 +5292,18 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
             {
             case MANDOWN:
                 print("PfeilFeldAktion MANDOWN")
+               CNC_Downtaste.isEnabled = true
             case MANUP:
                 print("PfeilFeldAktion MANUP")
                 AnschlagUntenIndikator.layer?.backgroundColor = NSColor.green.cgColor
+               CNC_Downtaste.isEnabled = true
             case MANLEFT:
                 print("PfeilFeldAktion MANLEFT")
+               CNC_Righttaste.isEnabled = true
             case MANRIGHT:
                 print("PfeilFeldAktion MANRIGHT")
                 AnschlagLinksIndikator.layer?.backgroundColor = NSColor.green.cgColor
-                
+               CNC_Lefttaste.isEnabled = true
                 
             default:
                 break
@@ -5308,9 +5317,10 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
             AVR?.manFeldRichtung(Int32(quelle), mousestatus:Int32(mausistdown), pfeilstep:80)
         }
     }
-    
-    @objc func PfeilAktion(_ notification:Notification)
+    /*
+    @objc func PfeilAktion(_ notification:Notification) // > PfeilFeldAktion
     {
+       return;
         let info = notification.userInfo
         print(" PfeilAktion: info: \(notification.userInfo) \(info)")
         if  let mauscounter = info?["mousedownconter"]
@@ -5343,21 +5353,24 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         if mausistdown > 0
         {
             switch quelle
-            {
+           {
             case MANDOWN:
-                print("PfeilAktion MANDOWN")
+               print("PfeilAktion MANDOWN")
+               //CNC_Downtaste.isEnabled = true
             case MANUP:
-                print("PfeilAktion MANUP")
-                AnschlagUntenIndikator.layer?.backgroundColor = NSColor.green.cgColor
+               print("PfeilAktion MANUP")
+               AnschlagUntenIndikator.layer?.backgroundColor = NSColor.green.cgColor
+               //CNC_Downtaste.isEnabled = true
             case MANLEFT:
-                print("PfeilAktion MANLEFT")
+               print("PfeilAktion MANLEFT")
+               CNC_Righttaste.isEnabled = true
             case MANRIGHT:
-                print("PfeilAktion MANRIGHT")
-                AnschlagLinksIndikator.layer?.backgroundColor = NSColor.green.cgColor
-                
-                
+               print("PfeilAktion MANRIGHT")
+               AnschlagLinksIndikator.layer?.backgroundColor = NSColor.green.cgColor
+               CNC_Lefttaste.isEnabled = true
+               
             default:
-                break
+               break
             }// switch quelle
             AVR?.manRichtung(Int32(quelle), mousestatus:Int32(mausistdown), pfeilstep:700)
             
@@ -5370,7 +5383,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         
         
     }// Pfeilaktion
-
+*/
 
     func numberOfRows(in tableView: NSTableView) -> Int {
         

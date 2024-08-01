@@ -829,12 +829,12 @@ NSMutableDictionary* cncdatendic;
               name:@"mausdaten"
             object:nil];
    
-   
+  /* 
    [nc addObserver:self
           selector:@selector(PfeilAktion:)
               name:@"Pfeil"
             object:nil];
-   
+   */
    [nc addObserver:self
           selector:@selector(ElementeingabeAktion:)
               name:@"Elementeingabe"
@@ -5998,6 +5998,7 @@ return returnInt;
 
 #pragma mark "Pfeil"
 
+/*
 - (void)PfeilAktion:(NSNotification*)note
 {
    //[self reportManDown:NULL];
@@ -6012,14 +6013,7 @@ return returnInt;
    }
    else
    {
-  //   xxx
-      /* von stepperavrcontroller pfeilaktion
-       sendbuffer[16]=0xE0;
-       sendbuffer[20]=pwm;
-       int senderfolg= rawhid_send(0, sendbuffer, 32, 50);
-
-       */
-       
+        
       NSBeep();
       quelle = 0;
       mausistdown = 0;
@@ -6060,7 +6054,7 @@ return returnInt;
                }break;
                case MANRIGHT:
                {
-                  NSLog(@"AVR PfeilAktion man right mose right");
+                  NSLog(@"AVR PfeilAktion man right mouse right");
                   [CNC_Lefttaste setEnabled:YES];
                   [AnschlagLinksIndikator setTransparent:YES];
                  // [self reportManRight:NULL];
@@ -6080,6 +6074,7 @@ return returnInt;
    NSLog(@"AVR PfeilAktion end");
 
 }
+*/
 
 - (int)PfeiltasteStatus
 {
@@ -14453,11 +14448,108 @@ return returnInt;
    
 }
 
+- (void)home_Horizontal
+{
+   // von ManFeldRichtung left
+   NSDictionary* outletdaten = [rHotwireViewController cncoutletdaten];
+   NSLog(@"home_Horizontal outletdaten: %@",outletdaten);
+   int zoomfaktor=1.0;
+   int code=0;
+   int i=0;
+   boardindex = [outletdaten[@"cnc_seite1check"]integerValue];
+   speed = [outletdaten[@"speed"]integerValue];
+   steps = [outletdaten[@"motorsteps"]integerValue];
+   int seite1check = [outletdaten[@"cnc_seite1check"]integerValue];
+   int seite2check = [outletdaten[@"cnc_seite2check"]integerValue];
+   
+  int home = [outletdaten[@"home"]integerValue];
+
+   NSMutableArray* AnfahrtArray = [[NSMutableArray alloc]initWithCapacity:0];
+
+   NSPoint PositionA = NSMakePoint(0, 0);
+   NSPoint PositionB = NSMakePoint(0, 0);
+   int index=0;
+   [AnfahrtArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:3],@"lage",nil]];
+   
+   int offsetx = 200;
+   int offsety = 200;
+   PositionA.x -=200;
+   PositionB.x -=200;
+   code=0xF0;
+   
+   index++;
+   [AnfahrtArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:3],@"lage",nil]];
+
+   // von reportOberkanteAnfahren
+   
+   NSMutableArray* HomeSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
+   int lastSpeed = [CNC speed];
+   [CNC setredpwm:[red_pwmFeld floatValue]];
+   int homecode=0xF0;
+   
+   NSPoint tempStartPunktA= NSMakePoint([[[AnfahrtArray objectAtIndex:i]objectForKey:@"ax"]floatValue]*zoomfaktor,[[[AnfahrtArray objectAtIndex:i]objectForKey:@"ay"]floatValue]*zoomfaktor);
+   NSString* tempStartPunktAString= NSStringFromPoint(tempStartPunktA);
+   
+   //NSPoint tempEndPunkt= [[KoordinatenTabelle objectAtIndex:i+1]objectForKey:@"punktstring"];
+   NSPoint tempEndPunktA= NSMakePoint([[[AnfahrtArray objectAtIndex:i+1]objectForKey:@"ax"]floatValue]*zoomfaktor,[[[AnfahrtArray objectAtIndex:i+1]objectForKey:@"ay"]floatValue]*zoomfaktor);
+   NSString* tempEndPunktAString= NSStringFromPoint(tempEndPunktA);
+   //NSLog(@"tempStartPunktString: %@ tempEndPunktString: %@",tempStartPunktString,tempEndPunktString);
+   
+   // Seite B
+   NSPoint tempStartPunktB= NSMakePoint([[[AnfahrtArray objectAtIndex:i]objectForKey:@"bx"]floatValue]*zoomfaktor,[[[AnfahrtArray objectAtIndex:i]objectForKey:@"by"]floatValue]*zoomfaktor);
+   NSString* tempStartPunktBString= NSStringFromPoint(tempStartPunktB);
+   
+   NSPoint tempEndPunktB= NSMakePoint([[[AnfahrtArray objectAtIndex:i+1]objectForKey:@"bx"]floatValue]*zoomfaktor,[[[AnfahrtArray objectAtIndex:i+1]objectForKey:@"by"]floatValue]*zoomfaktor);
+   NSString* tempEndPunktBString= NSStringFromPoint(tempEndPunktB);
+   
+   // Dic zusammenstellen
+   NSMutableDictionary* tempDic= [[NSMutableDictionary alloc]initWithCapacity:0];
+   
+   [tempDic setObject:tempStartPunktAString forKey:@"startpunkt"];
+   [tempDic setObject:tempEndPunktAString forKey:@"endpunkt"];
+   
+   // AB
+   [tempDic setObject:tempStartPunktAString forKey:@"startpunkta"];
+   [tempDic setObject:tempStartPunktBString forKey:@"startpunktb"];   
+   [tempDic setObject:tempEndPunktAString forKey:@"endpunkta"];
+   [tempDic setObject:tempEndPunktBString forKey:@"endpunktb"];
+   [tempDic setObject:[NSNumber numberWithInt:i] forKey:@"index"];
+   [tempDic setObject:[NSNumber numberWithFloat:zoomfaktor] forKey:@"zoomfaktor"];
+   [tempDic setObject:[NSNumber numberWithInt:code] forKey:@"code"];
+
+   int position=0;
+   position |= (1<<FIRST_BIT);
+   position |= (1<<LAST_BIT);
+   
+   [tempDic setObject:[NSNumber numberWithInt:position] forKey:@"position"];
+   [tempDic setObject:[NSNumber numberWithInt:speed] forKey:@"speed"];
+
+   
+   [HomeSchnittdatenArray addObject:[self Tool_CNC_SchnittdatenArrayVonSteuerdaten:tempDic]];
+   
+   HomeSchnittdatenArray[i][24] = [NSNumber numberWithInt:homecode];
+   HomeSchnittdatenArray[i][26] = [NSNumber numberWithInt:home]; // home
+   [CNC setSpeed:lastSpeed];
+   NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+  
+   [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:home] forKey:@"home"];
+   [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
+   [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
+   NSLog(@"AVR  home_horizontal HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
+   [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"art"]; //
+
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+   [nc postNotificationName:@"usbschnittdaten" object:self userInfo:HomeSchnittdatenDic];
+
+
+   
+}
+
 - (void)ManFeldRichtung:(int)richtung mousestatus:(int)status pfeilstep:(int)step
 {
     NSLog(@"\n\n*****************  AVR  ManFeldRichtung");
     NSDictionary* outletdaten = [rHotwireViewController cncoutletdaten];
-    NSLog(@"homeSenkrechtSchicken outletdaten: %@",outletdaten);
+    NSLog(@"ManFeldRichtung outletdaten: %@",outletdaten);
     int zoomfaktor=1.0;
     int code=0;
     int i=0;
@@ -14467,6 +14559,7 @@ return returnInt;
     int seite1check = [outletdaten[@"cnc_seite1check"]integerValue];
     int seite2check = [outletdaten[@"cnc_seite2check"]integerValue];
     
+   int home = [outletdaten[@"home"]integerValue];
     
     NSLog(@"AVR  ManFeldRichtung richtung: %d speed: %d  mousestatus: %d seite1check: %d seite2check: %d",richtung, speed, status,seite1check,seite2check);
     
@@ -14475,7 +14568,7 @@ return returnInt;
         NSLog(@"kein seitencheck");
         return;
     }
-    NSLog(@"Vertikal ab bis Anschlag");
+    //NSLog(@"ManFeldRichtung Vertikal ab bis Anschlag");
     //return;
     NSMutableArray* AnfahrtArray = [[NSMutableArray alloc]initWithCapacity:0];
     
@@ -14518,7 +14611,7 @@ return returnInt;
         case MANRIGHT:
         {
             printf("G/n");
-            NSLog(@"AVR PfeilAktion man right mose right");
+            NSLog(@"AVR PfeilAktion man right mouse right");
             PositionA.x =200;
             PositionB.x =200;
             
@@ -14551,7 +14644,8 @@ return returnInt;
             code=0xC2;
         }
         
-    }
+    } // boardindex
+   
     {
         //NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
         index++;
@@ -14564,6 +14658,7 @@ return returnInt;
         int lastSpeed = [CNC speed];
         [CNC setredpwm:[red_pwmFeld floatValue]];
         int homecode=0xF0;
+       
         
         //for (i=0;i<[AnfahrtArray count]-1;i++)
         {
@@ -14622,19 +14717,19 @@ return returnInt;
 
             NSDictionary* tempSteuerdatenDic=[self Tool_SteuerdatenVonDic:tempDic];
             
-            
             [HomeSchnittdatenArray addObject:[self Tool_SchnittdatenVonDic:tempSteuerdatenDic]];
             
         }
         
         HomeSchnittdatenArray[i][24] = [NSNumber numberWithInt:homecode];
-        HomeSchnittdatenArray[i][26] = [NSNumber numberWithInt:1]; // home
+        HomeSchnittdatenArray[i][26] = [NSNumber numberWithInt:home]; // home
         
         
         [CNC setSpeed:lastSpeed];
         
         NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
-        [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:1] forKey:@"home"];
+       
+        [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:home] forKey:@"home"];
         [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
         [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
         NSLog(@"AVR  reportHome HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
@@ -14670,6 +14765,7 @@ return returnInt;
     int seite2check = [outletdaten[@"cnc_seite2check"]integerValue];
     int richtung = 1;
     int status = 1;
+   //speed = 8;
     NSLog(@"AVR  homeSenkrechtSchicken richtung: %d speed: %d  mousestatus: %d seite1check: %d seite2check: %d",richtung, speed, status,seite1check,seite2check);
 
     if ((cncstatus)|| !(outletdaten[@"cnc_seite1check"] || (outletdaten[@"cnc_seite2check"])))
@@ -14698,7 +14794,8 @@ return returnInt;
    int i=0;
    int zoomfaktor=1.0;
    NSMutableArray* HomeSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
-   int lastSpeed = [CNC speed];
+   int lastSpeed = speed;
+   
    [CNC setredpwm:[red_pwmFeld floatValue]];
    int homecode=0xF0;
    NSLog(@"homeSenkrechtSchicken A");
@@ -14746,15 +14843,14 @@ return returnInt;
       
       NSLog(@"homeSenkrechtSchicken C");
       int position=0;
-      if (i==0)
-      {
-         position |= (1<<FIRST_BIT);
-      }
-      if (i==[AnfahrtArray count]-2)
-      {
-         position |= (1<<LAST_BIT);
-      }
+     
+      position |= (1<<FIRST_BIT);
+     
+      position |= (1<<LAST_BIT);
+      
       [tempDic setObject:[NSNumber numberWithInt:position] forKey:@"position"];
+      [tempDic setObject:[NSNumber numberWithInt:speed] forKey:@"speed"];
+      
       NSLog(@"homeSenkrechtSchicken D");
       NSDictionary* tempSteuerdatenDic=[self Tool_SteuerdatenVonDic:tempDic];
       NSLog(@"homeSenkrechtSchicken E");
@@ -14770,13 +14866,15 @@ return returnInt;
    HomeSchnittdatenArray[i][26] = [NSNumber numberWithInt:1]; // home
 
    
-   [CNC setSpeed:lastSpeed];
+  // [CNC setSpeed:speed];
+  // [CNC setSpeed:8];
    
    NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+   
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:1] forKey:@"home"];
    [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
-   NSLog(@"AVR  reportHome HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
+   NSLog(@"AVR  homeSenkrechtSchicken HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
    
    // vertikalabschnitt signalisieren1
    int code=0; // zeigt home an

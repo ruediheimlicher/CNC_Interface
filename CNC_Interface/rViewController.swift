@@ -258,6 +258,7 @@ class rViewController: NSViewController, NSWindowDelegate
     
     var schnittdatenstring:String = ""
     
+   var HomeIndexCounter = 0;
     var steps = 48
     var micro = 1
 
@@ -522,7 +523,7 @@ class rViewController: NSViewController, NSWindowDelegate
         cncwritecounter += 1
         //print("swift rViewController writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray) cncwritecounter: \(cncwritecounter)")
        let count = usb_schnittdatenarray.count
-       print("writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
+       print("VC writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
        
        if(Stepperposition < count)
        {
@@ -805,7 +806,7 @@ class rViewController: NSViewController, NSWindowDelegate
      usb_schnittdatenarray.removeAll()
      
      let info = notification.userInfo
-     print("info: \(info)")
+     print("VC usbschnittdatenAktion info: \(info)")
      //    let usb_pwm =  info?["pwm"] as! UInt8
      //    let usb_delayok =  info?["delayok"] as! UInt8
     
@@ -1096,13 +1097,13 @@ class rViewController: NSViewController, NSWindowDelegate
    }
  
  
-   @objc func newDataAktion(_ notification:Notification) 
+   @objc func newDataAktion(_ notification:Notification) // entspricht readUSB in USB_Stepper
     {
        // Reaktion auf eingehende USB-Daten
        print("VC newDataAktion start");
        var lastData = teensy.getlastDataRead()
        let lastDataArray = [UInt8](lastData)
-       //print("VC newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")
+       print("VC newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")
        
   //     print("newDataAktion start")
  /*
@@ -1130,6 +1131,7 @@ class rViewController: NSViewController, NSWindowDelegate
        while i < 10
        {
           //print("i: \(i)  wert: \(lastDataRead[i])\t")
+          
           i = i+1
        }
        
@@ -1141,13 +1143,13 @@ class rViewController: NSViewController, NSWindowDelegate
           //if  usbdata = info!["data"] as! [String] // Data vornanden
           if  usbdata.count > 0 // Data vorhanden
           {
-             // print("usbdata:")
-             for i in 24...63
+              print("usbdata:")
+             for i in 0...32
              {
                 
-                //print("i: \(i) \(usbdata[i])")
+               // print("i: \(i) \(usbdata[i])")
              }
-             //print("usbdata: \(usbdata)\n") // d: [0, 9, 56, 0, 0,...
+             print("usbdata: \(usbdata)\n") // d: [0, 9, 56, 0, 0,...
              var NotificationDic = [String:Int]()
              
              let abschnittfertig:UInt8 =   usbdata[0] // code vom teensy
@@ -1182,7 +1184,7 @@ class rViewController: NSViewController, NSWindowDelegate
                 NotificationDic["home"] = Int(usbdata[13])
                 NotificationDic["cncstatus"] = Int(usbdata[22])
                 NotificationDic["anschlagstatus"] = Int(usbdata[19])
-               NotificationDic["abschnittfertig"] = Int(abschnittfertig)
+                NotificationDic["abschnittfertig"] = Int(abschnittfertig)
 
                 NotificationDic["tastaturwert"] = Int(usbdata[57])
                 NotificationDic["taste"] = Int(usbdata[58])
@@ -1542,8 +1544,7 @@ class rViewController: NSViewController, NSWindowDelegate
                 var EndIndexSet = IndexSet(integersIn:0xAA...0xAD)  // End Abschnitt von A - D
                 EndIndexSet.insert(integersIn:0xA5...0xA8)          // // Anschlag A0 - D0, gesetzt wenn abschnittfertig ist in AA - AD 
                 
-                var HomeIndexSet = IndexSet(integersIn:0xAA...0xAD) // End Abschnitt von A - D
-                EndIndexSet.insert(integersIn:0xB5...0xB8)          // Anschlag A0 home first
+                var HomeIndexSet = IndexSet(integersIn:0xB5...0xB8) // Homeindex B5 - B8
                 
                 print("newDataAktion EndIndexSet: \(EndIndexSet)")
                //  print("HomeIndexSet: \(HomeIndexSet)")
@@ -1564,14 +1565,21 @@ class rViewController: NSViewController, NSWindowDelegate
                       if HomeAnschlagSet.count == 1
                       {
                          print("HomeAnschlagSet.count == 1")
+                         HomeIndexCounter = 2
                       }
                       else if HomeAnschlagSet.count == 4
                       {
                          print("HomeAnschlagSet.count == 4")
+                         AVR?.setBusy(0)
+                   //      DC_Funktion(pwm:0)
+                         teensy.stop_timer()
+                         
                       }
-                      else if home == 2
+                      else if HomeIndexCounter == 2
                       {
                          print("home == 2")
+                         HomeIndexCounter = 3
+                         AVR?.homeSenkrechtSchicken()
                       }
                    }
                    else

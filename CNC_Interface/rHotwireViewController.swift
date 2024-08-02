@@ -421,7 +421,7 @@ var outletdaten:[String:AnyObject] = [:]
     
    @IBOutlet weak var startdelayFeld: NSTextField!  //
     
-   //@IBOutlet weak var USBKontrolle!
+   
     
    @IBOutlet weak var HomeTaste: NSButton!
 
@@ -4546,10 +4546,31 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
     // TODO: *** *** *** *** *** *** reportHome
    // @objc IBAction reportHome:(id)sender
     
-       
-    @IBAction func reportDC_Stepper(_ sender: NSStepper)
+   
+   @IBAction func reportPWM_Slider(_ sender: NSSlider)
+   {
+      print("reportPWM_Slider wert: \(sender.integerValue)")
+      DC_PWM.integerValue = sender.integerValue
+      DC_Stepper.integerValue = sender.integerValue
+      outletdaten["pwm"] = sender.integerValue as AnyObject
+      if CNC_busy > 0
+      {
+          if DC_Taste.state == NSControl.StateValue.on
+          {
+              let dataDic = ["pwm":sender.integerValue]
+              self.DCAktion(datadic:dataDic)
+          }
+          else
+          {
+              let dataDic = ["pwm":0]
+              self.DCAktion(datadic:dataDic)
+          }
+      }
+      
+   }
+    @IBAction func reportPWM_Stepper(_ sender: NSStepper)
     {
-        print("reportDC_Stepper wert: \(sender.integerValue)")
+        print("reportPWM_Stepper wert: \(sender.integerValue)")
         DC_PWM.integerValue = sender.integerValue
         DC_Slider.integerValue = sender.integerValue
         outletdaten["pwm"] = sender.integerValue as AnyObject

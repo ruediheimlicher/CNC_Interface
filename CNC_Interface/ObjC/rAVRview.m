@@ -4163,9 +4163,9 @@ return returnInt;
    
 }
 
-- (IBAction)reportDC_Stepper:(id)sender
+- (IBAction)reportPWM_Stepper:(id)sender
 {
-   NSLog(@"reportDC_Stepper Wert: %d ",[sender intValue]); 
+   NSLog(@"reportPWM_Stepper Wert: %d ",[sender intValue]); 
    
    [DC_PWM setIntValue:[sender intValue]];
    [DC_Slider setIntValue:[sender intValue]];
@@ -4175,12 +4175,12 @@ return returnInt;
       if ([DC_Taste state])
       {
          [self DC_ON:[sender intValue]];
-         //NSLog(@"reportDC_Stepper Taste ON");
+         //NSLog(@"reportPWM_Stepper Taste ON");
       }
       else
       {
          [self DC_ON:0];
-         //NSLog(@"reportDC_Stepper Taste OFF");
+         //NSLog(@"reportPWM_Stepper Taste OFF");
       }
    }
 }

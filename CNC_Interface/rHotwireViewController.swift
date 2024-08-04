@@ -67,8 +67,9 @@ var outletdaten:[String:AnyObject] = [:]
         let startPoint = theEvent.locationInWindow
             print(startPoint) //for top left it prints (0, 900)
         feldklickcounter += 1
-        print("swift Pfeil_Feld mouseDown  feldklickcounter: \(feldklickcounter)")
-        let pfeiltag:Int = self.tag
+       let pfeiltag:Int = self.tag
+        print("swift Pfeil_Feld mouseDown pfeiltag: \(pfeiltag)  feldklickcounter: \(feldklickcounter)")
+        
         self.image = pressediconarray[self.tag-1]
         
         var userinformation:[String : Any]
@@ -86,10 +87,11 @@ var outletdaten:[String:AnyObject] = [:]
     {
         super.mouseUp(with: theEvent)
         let startPoint = theEvent.locationInWindow
-            print(startPoint) //for top left it prints (0, 900)
-        feldklickcounter += 1
-        print("swift Pfeil_Feld mouseUp  feldklickcounter: \(feldklickcounter)")
+         //print(startPoint) //for top left it prints (0, 900)
+        feldklickcounter -= 1
+        
         let pfeiltag:Int = self.tag
+       print("swift Pfeil_Feld mouseUp pfeiltag: \(pfeiltag) feldklickcounter: \(feldklickcounter)")
         self.image = releasediconarray[self.tag-1]
         var userinformation:[String : Any]
         userinformation = ["richtung":pfeiltag,  "push": 0 , ] as [String : Any]
@@ -4163,7 +4165,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        NotificationCenter.default.addObserver(self, selector:#selector(MausGraphAktion(_:)),name:NSNotification.Name(rawValue: "mauspunkt"),object:nil)
        NotificationCenter.default.addObserver(self, selector:#selector(MausDragAktion(_:)),name:NSNotification.Name(rawValue: "mausdrag"),object:nil)
 
-       NotificationCenter.default.addObserver(self, selector:#selector(PfeilFeldAktion(_:)),name:NSNotification.Name(rawValue: "pfeilfeld"),object:nil)
+  //     NotificationCenter.default.addObserver(self, selector:#selector(PfeilFeldAktion(_:)),name:NSNotification.Name(rawValue: "pfeilfeld"),object:nil)
 
        NotificationCenter.default.addObserver(self, selector:#selector(LibProfileingabeAktion(_:)),name:NSNotification.Name(rawValue: "libprofileingabe"),object:nil)
        
@@ -5290,7 +5292,8 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
     @objc func PfeilFeldAktion(_ notification:Notification)
     {
         let info = notification.userInfo
-        print(" PfeilFeldAktion: info: \(notification.userInfo) \(info)")
+        //
+       //print(" PfeilFeldAktion: info: \(notification.userInfo) \(info)")
         if (info?["richtung"] != nil)
         {
             quelle = info?["richtung"] as! Int
@@ -5322,19 +5325,18 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
                 print("PfeilFeldAktion MANLEFT")
                CNC_Righttaste.isEnabled = true
             case MANRIGHT:
-                print("PfeilFeldAktion MANRIGHT")
+                //print("PfeilFeldAktion MANRIGHT")
                 AnschlagLinksIndikator.layer?.backgroundColor = NSColor.green.cgColor
                CNC_Lefttaste.isEnabled = true
                 
             default:
                 break
             }// switch quelle
-            //AVR?.homeSenkrechtSchicken()
             AVR?.manFeldRichtung(Int32(quelle), mousestatus:Int32(mausistdown), pfeilstep:700)
         } // mausistdown > 0
         else // Button released
         {
-            print("swift PfeilFeldAktion Button released quelle: \(quelle)")
+            //print("swift PfeilFeldAktion Button released quelle: \(quelle)")
             AVR?.manFeldRichtung(Int32(quelle), mousestatus:Int32(mausistdown), pfeilstep:80)
         }
     }

@@ -524,7 +524,7 @@ class rViewController: NSViewController, NSWindowDelegate
         cncwritecounter += 1
         //print("swift rViewController writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray) cncwritecounter: \(cncwritecounter)")
        let count = usb_schnittdatenarray.count
-       print("VC writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
+       //print("VC writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
        
        if(Stepperposition < count)
        {
@@ -564,7 +564,7 @@ class rViewController: NSViewController, NSWindowDelegate
           {
              
              let aktuellezeile:[UInt8] = usb_schnittdatenarray[Stepperposition]
-             print("VC Stepperposition: \(Stepperposition) aktuellezeile: \(aktuellezeile) count: \(aktuellezeile.count)")
+             //print("VC Stepperposition: \(Stepperposition) aktuellezeile: \(aktuellezeile) count: \(aktuellezeile.count)")
              let writecode = aktuellezeile[16]
              var string:String = ""
              var index=0
@@ -583,13 +583,13 @@ class rViewController: NSViewController, NSWindowDelegate
              schnittdatenstring.append(string)
              schnittdatenstring.append("\n")
              
-              print("writeCNCAbschnitt")
+              //print("writeCNCAbschnitt")
 
              print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
              if (globalusbstatus > 0)
              {
                 let senderfolg = teensy.send_USB()
-                print("writeCNCAbschnitt senderfolg: \(senderfolg)")
+                //print("VC writeCNCAbschnitt senderfolg: \(senderfolg)")
              }
              // print("Stepperposition: \(Stepperposition) \n\(schnittdatenstring)");
              var ausschlussindex:[UInt8] = [0xE2]
@@ -794,6 +794,8 @@ class rViewController: NSViewController, NSWindowDelegate
       steps 25
       micro 26
       
+      richtiung 29
+      
       */
      
      Stepperposition = 0
@@ -807,7 +809,7 @@ class rViewController: NSViewController, NSWindowDelegate
      usb_schnittdatenarray.removeAll()
      
      let info = notification.userInfo
-     print("VC usbschnittdatenAktion info: \(info)")
+     //print("VC usbschnittdatenAktion info: \(info)")
      //    let usb_pwm =  info?["pwm"] as! UInt8
      //    let usb_delayok =  info?["delayok"] as! UInt8
     
@@ -839,7 +841,7 @@ class rViewController: NSViewController, NSWindowDelegate
           return
       }
      
-     //HomeAnschlagSet.removeAll()
+     
      
      var zeilenindex = 0
      for zeile in   zeilenzahlarray
@@ -858,8 +860,19 @@ class rViewController: NSViewController, NSWindowDelegate
            wertarray.append(0)
            
         }
+        var richtung = 0xFF
+        if let richtungraw = info?["richtung"] as?Int 
+        {
+           richtung = richtungraw
+           print("usbschnittdatenaktion Richtung: \(richtung)")
+        }
+        else
+        {
+           print("usbschnittdatenaktion keine Richtung")
+        }
         wertarray[25] = UInt8(steps)
         wertarray[26] = UInt8(micro)
+        wertarray[29] = UInt8(richtung)
          
         
         /*
@@ -918,9 +931,9 @@ class rViewController: NSViewController, NSWindowDelegate
      }
      else
      {
-        print("teensy.read_OK ist true")
+        //print("teensy.read_OK ist true")
      }
-      print("readOK vor writeCNCAbschnitt: \(teensy.read_OK.boolValue)\n usb_schnittdatenarray: \(usb_schnittdatenarray)")
+      //print("readOK vor writeCNCAbschnitt: \(teensy.read_OK.boolValue)\n usb_schnittdatenarray: \(usb_schnittdatenarray)")
       writeCNCAbschnitt()
     }
     
@@ -1103,7 +1116,7 @@ class rViewController: NSViewController, NSWindowDelegate
    @objc func newDataAktion(_ notification:Notification) // entspricht readUSB in USB_Stepper
     {
        // Reaktion auf eingehende USB-Daten
-       print("VC newDataAktion start");
+       print("\nVC newDataAktion start");
        var lastData = teensy.getlastDataRead()
        let lastDataArray = [UInt8](lastData)
        print("VC newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")
@@ -1506,7 +1519,17 @@ class rViewController: NSViewController, NSWindowDelegate
                            object: nil,
                            userInfo: joystickDic)
                    break
-                
+                case 0xC1: // Antwort von mousedown von Pfeiltaste
+                   print("newDataAktion mousedown C1 richtung: \(usbdata[29])\n")
+                   
+                   break
+
+                case 0xC3: // Antwort von mouseup von Pfeiltaste
+                   print("newDataAktion mouseup C3 richtung: \(usbdata[29])\n")
+                   
+                   break
+                   
+                   
                 default:
                    break
                 }// switch abschnittfertig
@@ -1555,7 +1578,7 @@ class rViewController: NSViewController, NSWindowDelegate
                 
                 if EndIndexSet.contains(Int(abschnittfertig))
                 {
-                   print("VC EndIndexSet contains abschnittfertig: \(EndIndexSet) ")
+                   print("VC EndIndexSet contains abschnittfertig: \(abschnittfertig)  ")
                    //teensy.DC_pwm(0)
    //                AVR?.setBusy(0)
     //               teensy.read_OK = false

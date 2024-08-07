@@ -9938,7 +9938,7 @@ return returnInt;
             // reduziertes pwm: Schneiden aus dem Einstich heraus
             if ([[EndleistenEinlaufArrayA objectAtIndex:k]count]>2) // Angaben fuer pwm an index 2
             {
-               //NSLog(@"EndleistenEinlaufArrayA pwm: %2.2f",[[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:2]floatValue]);
+               NSLog(@"EndleistenEinlaufArrayA pwm: %2.2f",[[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:2]floatValue]);
                int temppwm = [[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:2]floatValue]*origpwm;
                
                [tempZeilenDic setObject:[NSNumber numberWithInt:temppwm] forKey:@"pwm"];
@@ -11727,7 +11727,7 @@ return returnInt;
     float red_pwm = [[eingabeDic objectForKey:@"redpwm"]floatValue]; // 0 - 1
     float abbrand = [[eingabeDic objectForKey:@"abbrand"]floatValue];
     
-   // [CNC setredpwm:red_pwm];
+    [CNC setredpwm:red_pwm];
     int aktuellepwm = [[eingabeDic objectForKey:@"pwm"]floatValue];
     
     int lage=0;
@@ -14397,8 +14397,9 @@ return returnInt;
    
    int offsetx = 200;
    int offsety = 200;
-   PositionA.x -=200;
-   PositionB.x -=200;
+   
+   PositionA.x -=500;
+   PositionB.x -=500;
    code=0xF0;
    
    index++;
@@ -14608,12 +14609,24 @@ return returnInt;
    [tempDic setObject:tempEndPunktAString forKey:@"endpunkt"];
    
    // AB
+   /*
    [tempDic setObject:tempStartPunktAString forKey:@"startpunkta"];
    [tempDic setObject:tempStartPunktBString forKey:@"startpunktb"];
    
    [tempDic setObject:tempEndPunktAString forKey:@"endpunkta"];
    [tempDic setObject:tempEndPunktBString forKey:@"endpunktb"];
-   
+   */
+   if ([[outletdaten valueForKey:@"cnc_seite1check"]integerValue])
+  {
+     [tempDic setObject:tempStartPunktAString forKey:@"startpunkta"];
+     [tempDic setObject:tempEndPunktAString forKey:@"endpunkta"];
+  }
+  if ([[outletdaten valueForKey:@"cnc_seite2check"]integerValue])
+  {
+     [tempDic setObject:tempStartPunktBString forKey:@"startpunktb"];         
+     [tempDic setObject:tempEndPunktBString forKey:@"endpunktb"];
+  }
+
    
    [tempDic setObject:[NSNumber numberWithInt:i] forKey:@"index"];
    

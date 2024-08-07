@@ -1761,7 +1761,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3545"
             endingLineNumber = "3545"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibElementEinfuegen:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1777,7 +1777,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3630"
             endingLineNumber = "3630"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibElementSpiegelnHorizontal:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1953,7 +1953,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "4068"
             endingLineNumber = "4068"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportProfilEinfuegen:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1969,7 +1969,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "4216"
             endingLineNumber = "4216"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-setProfilGraphDaten"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2017,7 +2017,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "4291"
             endingLineNumber = "4291"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportForm1Pop:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2081,7 +2081,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "4310"
             endingLineNumber = "4310"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportForm2Pop:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2097,7 +2097,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "4322"
             endingLineNumber = "4322"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportForm2Pop:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2503,7 +2503,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "4359"
             endingLineNumber = "4359"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportFormEinfuegen:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2639,7 +2639,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3723"
             endingLineNumber = "3723"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-doLibTaskMitElement:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2655,7 +2655,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3479"
             endingLineNumber = "3479"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibPop:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2671,7 +2671,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3500"
             endingLineNumber = "3500"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibPop:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2687,7 +2687,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3528"
             endingLineNumber = "3528"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibElementEinfuegen:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2703,7 +2703,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3773"
             endingLineNumber = "3773"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-readProfilLib"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2767,7 +2767,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3478"
             endingLineNumber = "3478"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibPop:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2783,7 +2783,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3507"
             endingLineNumber = "3507"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibPop:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -3209,7 +3209,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3486"
             endingLineNumber = "3486"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibPop:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -3465,7 +3465,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3770"
             endingLineNumber = "3770"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-readProfilLib"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -3481,7 +3481,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3777"
             endingLineNumber = "3777"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-readProfilLib"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4089,7 +4089,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3804"
             endingLineNumber = "3804"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-SetLibProfile:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4505,7 +4505,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3806"
             endingLineNumber = "3806"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-SetLibProfile:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4999,7 +4999,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3513"
             endingLineNumber = "3513"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibPop:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -5047,7 +5047,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3421"
             endingLineNumber = "3421"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-readLib"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -5111,7 +5111,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3450"
             endingLineNumber = "3450"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibPop:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -5127,7 +5127,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3449"
             endingLineNumber = "3449"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibPop:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -5287,7 +5287,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3445"
             endingLineNumber = "3445"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-SetLibElemente:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -6433,7 +6433,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "4282"
             endingLineNumber = "4282"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportForm1Pop:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -6545,7 +6545,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3620"
             endingLineNumber = "3620"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibElementLoeschen:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -6561,7 +6561,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3531"
             endingLineNumber = "3531"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibElementEinfuegen:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -8193,7 +8193,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3784"
             endingLineNumber = "3784"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-readProfilLib"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -9871,7 +9871,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3633"
             endingLineNumber = "3633"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibElementSpiegelnHorizontal:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -9887,7 +9887,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3685"
             endingLineNumber = "3685"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibElementAnfangZuEnde:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -9903,7 +9903,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3576"
             endingLineNumber = "3576"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibElementLoeschen:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -9919,7 +9919,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3634"
             endingLineNumber = "3634"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibElementSpiegelnHorizontal:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -9935,7 +9935,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3656"
             endingLineNumber = "3656"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibElementSpiegelnVertikal:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -9951,7 +9951,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3752"
             endingLineNumber = "3752"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-flipProfil:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -9983,7 +9983,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3798"
             endingLineNumber = "3798"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-readProfilLib"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -10015,7 +10015,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3742"
             endingLineNumber = "3742"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-setLibGraphDaten"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -10111,7 +10111,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3700"
             endingLineNumber = "3700"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibElementAnfangZuEnde:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -10127,7 +10127,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3711"
             endingLineNumber = "3711"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-doLibTaskMitElement:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -11677,7 +11677,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3738"
             endingLineNumber = "3738"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-setLibGraphDaten"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -12651,7 +12651,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3550"
             endingLineNumber = "3550"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportLibElementEinfuegen:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -14123,7 +14123,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "4061"
             endingLineNumber = "4061"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportProfilEinfuegen:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -14377,8 +14377,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14782"
-            endingLineNumber = "14782"
+            startingLineNumber = "14795"
+            endingLineNumber = "14795"
             landmarkName = "-homeSenkrechtSchicken"
             landmarkType = "7">
          </BreakpointContent>
@@ -14521,8 +14521,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14781"
-            endingLineNumber = "14781"
+            startingLineNumber = "14794"
+            endingLineNumber = "14794"
             landmarkName = "-homeSenkrechtSchicken"
             landmarkType = "7">
          </BreakpointContent>
@@ -14537,8 +14537,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14784"
-            endingLineNumber = "14784"
+            startingLineNumber = "14797"
+            endingLineNumber = "14797"
             landmarkName = "-homeSenkrechtSchicken"
             landmarkType = "7">
          </BreakpointContent>
@@ -14779,7 +14779,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "4614"
             endingLineNumber = "4614"
-            landmarkName = "-ProfilPopAktion:"
+            landmarkName = "-reportFigElementEinfuegen:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -15305,8 +15305,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "16091"
-            endingLineNumber = "16091"
+            startingLineNumber = "16104"
+            endingLineNumber = "16104"
             landmarkName = "-USBReadAktion:"
             landmarkType = "7">
          </BreakpointContent>
@@ -15481,8 +15481,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14503"
-            endingLineNumber = "14503"
+            startingLineNumber = "14504"
+            endingLineNumber = "14504"
             landmarkName = "-ManFeldRichtung:mousestatus:pfeilstep:"
             landmarkType = "7">
          </BreakpointContent>
@@ -15497,8 +15497,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14589"
-            endingLineNumber = "14589"
+            startingLineNumber = "14590"
+            endingLineNumber = "14590"
             landmarkName = "-ManFeldRichtung:mousestatus:pfeilstep:"
             landmarkType = "7">
          </BreakpointContent>
@@ -15513,8 +15513,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14630"
-            endingLineNumber = "14630"
+            startingLineNumber = "14643"
+            endingLineNumber = "14643"
             landmarkName = "-ManFeldRichtung:mousestatus:pfeilstep:"
             landmarkType = "7">
          </BreakpointContent>
@@ -15529,8 +15529,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14649"
-            endingLineNumber = "14649"
+            startingLineNumber = "14662"
+            endingLineNumber = "14662"
             landmarkName = "-ManFeldRichtung:mousestatus:pfeilstep:"
             landmarkType = "7">
          </BreakpointContent>
@@ -15545,8 +15545,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14672"
-            endingLineNumber = "14672"
+            startingLineNumber = "14685"
+            endingLineNumber = "14685"
             landmarkName = "-ManFeldRichtung:mousestatus:pfeilstep:"
             landmarkType = "7">
          </BreakpointContent>
@@ -15577,8 +15577,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14582"
-            endingLineNumber = "14582"
+            startingLineNumber = "14583"
+            endingLineNumber = "14583"
             landmarkName = "-ManFeldRichtung:mousestatus:pfeilstep:"
             landmarkType = "7">
          </BreakpointContent>
@@ -15641,8 +15641,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14486"
-            endingLineNumber = "14486"
+            startingLineNumber = "14487"
+            endingLineNumber = "14487"
             landmarkName = "-ManFeldRichtung:mousestatus:pfeilstep:"
             landmarkType = "7">
          </BreakpointContent>
@@ -15657,8 +15657,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14622"
-            endingLineNumber = "14622"
+            startingLineNumber = "14635"
+            endingLineNumber = "14635"
             landmarkName = "-ManFeldRichtung:mousestatus:pfeilstep:"
             landmarkType = "7">
          </BreakpointContent>
@@ -15705,8 +15705,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14509"
-            endingLineNumber = "14509"
+            startingLineNumber = "14510"
+            endingLineNumber = "14510"
             landmarkName = "-ManFeldRichtung:mousestatus:pfeilstep:"
             landmarkType = "7">
          </BreakpointContent>
@@ -15721,8 +15721,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14548"
-            endingLineNumber = "14548"
+            startingLineNumber = "14549"
+            endingLineNumber = "14549"
             landmarkName = "-ManFeldRichtung:mousestatus:pfeilstep:"
             landmarkType = "7">
          </BreakpointContent>
@@ -15737,8 +15737,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14584"
-            endingLineNumber = "14584"
+            startingLineNumber = "14585"
+            endingLineNumber = "14585"
             landmarkName = "-ManFeldRichtung:mousestatus:pfeilstep:"
             landmarkType = "7">
          </BreakpointContent>
@@ -15769,8 +15769,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14465"
-            endingLineNumber = "14465"
+            startingLineNumber = "14466"
+            endingLineNumber = "14466"
             landmarkName = "-home_Horizontal"
             landmarkType = "7">
          </BreakpointContent>
@@ -15785,8 +15785,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14682"
-            endingLineNumber = "14682"
+            startingLineNumber = "14695"
+            endingLineNumber = "14695"
             landmarkName = "-homeSenkrechtSchicken"
             landmarkType = "7">
          </BreakpointContent>
@@ -15801,8 +15801,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14720"
-            endingLineNumber = "14720"
+            startingLineNumber = "14733"
+            endingLineNumber = "14733"
             landmarkName = "-homeSenkrechtSchicken"
             landmarkType = "7">
          </BreakpointContent>
@@ -15817,8 +15817,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14775"
-            endingLineNumber = "14775"
+            startingLineNumber = "14788"
+            endingLineNumber = "14788"
             landmarkName = "-homeSenkrechtSchicken"
             landmarkType = "7">
          </BreakpointContent>
@@ -15961,8 +15961,8 @@
             filePath = "CNC_Interface/ObjC/rAVRview.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14653"
-            endingLineNumber = "14653"
+            startingLineNumber = "14666"
+            endingLineNumber = "14666"
             landmarkName = "-ManFeldRichtung:mousestatus:pfeilstep:"
             landmarkType = "7">
          </BreakpointContent>
@@ -15996,6 +15996,246 @@
             startingLineNumber = "1528"
             endingLineNumber = "1528"
             landmarkName = "newDataAktion(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D07EBE7B-047B-43C0-8CF9-E9A494A2CCB4"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/ObjC/rAVRview.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "14411"
+            endingLineNumber = "14411"
+            landmarkName = "-home_Horizontal"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "442A73E3-9887-4C19-A430-B89BECD9DDF7"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/ObjC/rAVRview.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "14389"
+            endingLineNumber = "14389"
+            landmarkName = "-home_Horizontal"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DA47DA7D-2F2D-4058-A0DA-5213B0B8820A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/ObjC/rAVRview.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "5091"
+            endingLineNumber = "5091"
+            landmarkName = "-ManRichtung:mousestatus:pfeilstep:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7A23D18E-FD30-4E44-8EAF-CC166470CB12"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/rHotwireViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "3369"
+            endingLineNumber = "3369"
+            landmarkName = "reportManUp(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "428ADB0E-57E9-4DC8-8EA4-60D1AEE99254"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/rHotwireViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "3353"
+            endingLineNumber = "3353"
+            landmarkName = "reportManRight(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5DECF8C4-5FE2-494D-B8B5-0D0E17A09A62"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/rHotwireViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "3355"
+            endingLineNumber = "3355"
+            landmarkName = "reportManRight(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "91607849-1B4B-4815-88A1-064CC4685A65"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/ObjC/rAVRview.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "14619"
+            endingLineNumber = "14619"
+            landmarkName = "-ManFeldRichtung:mousestatus:pfeilstep:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "90C98269-A27C-4483-9D40-E243B6C9CF7F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/rHotwireViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "5218"
+            endingLineNumber = "5218"
+            landmarkName = "saveHotwire_PList()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "013C4543-9C3B-43EB-B7C4-ADB26849CF2F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/rHotwireViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "4435"
+            endingLineNumber = "4435"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "99C973F2-B4BE-425E-9C10-A14043CFC0CD"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/rHotwireViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "4777"
+            endingLineNumber = "4777"
+            landmarkName = "readHotwire_PList()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "900BFD8E-A769-4980-ADB1-05AB866EA2F5"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/rHotwireViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "4792"
+            endingLineNumber = "4792"
+            landmarkName = "readHotwire_PList()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BADD3958-9406-45C3-BBBC-0A2FF358B154"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/ObjC/rAVRview.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "7706"
+            endingLineNumber = "7706"
+            landmarkName = "-RumpfelementmitDic:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "CDFB7CE8-3B6A-4A78-9CC2-49AC2B5196C3"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/ObjC/rAVRview.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "9939"
+            endingLineNumber = "9939"
+            landmarkName = "-LibProfileingabeFunktion:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "AB70BEDE-DEE5-416C-A13C-7E8291DF665E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/ObjC/rAVRview.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "9668"
+            endingLineNumber = "9668"
+            landmarkName = "-LibProfileingabeFunktion:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BD151F1E-56FE-4A68-B6CB-AE00686B9C97"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/ObjC/rAVRview.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "12078"
+            endingLineNumber = "12078"
+            landmarkName = "-reportBlockkonfigurieren:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

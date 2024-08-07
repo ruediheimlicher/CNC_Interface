@@ -53,7 +53,7 @@ if ((self = [super init]) != nil)
 	speed=7;
 	steps=48;
    micro = 1;
-   red_pwm = 0.4;
+   red_pwm = 0.7;
 
 return self;
 }

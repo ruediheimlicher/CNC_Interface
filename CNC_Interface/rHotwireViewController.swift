@@ -2264,8 +2264,8 @@ var outletdaten:[String:AnyObject] = [:]
             {
             case .alertFirstButtonReturn: // first button
                DC_Taste.state = NSControl.StateValue.on
-               let dc_pwm = UInt8(DC_Taste.intValue)
-               //self.DC_Funktion(pwm: dc_pwm)
+               let dc_pwm = UInt8(DC_Stepper.intValue)
+               self.DC_Funktion(pwm: dc_pwm)
                DC_Taste.isEnabled = true
                delayok = 1
             case .alertSecondButtonReturn:
@@ -4195,7 +4195,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         
   //     NotificationCenter.default.addObserver(self, selector:#selector(neuesElementSichernAktion(_:)),name:NSNotification.Name(rawValue: "newdata"),object:nil)
 
-      Auslauftiefe.integerValue = 10
+      Auslauftiefe.integerValue = 13
       
        hotwireplist =  readHotwire_PList()
       
@@ -4434,7 +4434,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
 
       if (hotwireplist["auslauftiefe"] != nil)
       {
-         let plistwert = hotwireplist["auslauflaenge"]  as! Int
+         let plistwert = hotwireplist["auslauftiefe"]  as! Int
          Auslauftiefe.integerValue = plistwert
       }
       else
@@ -4787,9 +4787,9 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
          //print("xml: \(plistXML) anz: \(plistXML.count)")
          for zeile in plistData
          {
-     //       print("zeile: \(zeile)")
+  //          print("zeile: \(zeile)")
          }
-     //    print("0: \(plistData["0"])")
+         print("0: \(plistData["0"])")
        }
       
       
@@ -5292,6 +5292,15 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
     @objc func PfeilFeldAktion(_ notification:Notification)
     {
         let info = notification.userInfo
+       cnc_seite1check = CNC_Seite1Check.state.rawValue as Int
+       cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
+       outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
+       outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
+       outletdaten["speed"] = speed as AnyObject
+       outletdaten["micro"] = micro as AnyObject
+       outletdaten["boardindex"] = boardindex as AnyObject
+       outletdaten["pwm"] = pwm as AnyObject
+
         //
        //print(" PfeilFeldAktion: info: \(notification.userInfo) \(info)")
         if (info?["richtung"] != nil)

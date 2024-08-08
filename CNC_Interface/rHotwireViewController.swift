@@ -2075,6 +2075,7 @@ var outletdaten:[String:AnyObject] = [:]
         micro = CNC_microPop.selectedItem?.tag ?? 1
         speed = SpeedFeld.integerValue
         pwm = DC_PWM.integerValue
+        red_pwm = red_pwmFeld.doubleValue
         CNC_busySpinner.stopAnimation(nil)
         cnc_seite1check = CNC_Seite1Check.state.rawValue as Int
         cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
@@ -2084,6 +2085,7 @@ var outletdaten:[String:AnyObject] = [:]
         outletdaten["micro"] = micro as AnyObject
         outletdaten["boardindex"] = boardindex as AnyObject
         outletdaten["pwm"] = pwm as AnyObject
+         outletdaten["red_pwm"] = red_pwm as AnyObject
         var zoomfaktor = ProfilTiefeFeldA.doubleValue / 1000
         outletdaten["zoom"] = zoomfaktor as AnyObject
        
@@ -2309,7 +2311,7 @@ var outletdaten:[String:AnyObject] = [:]
       let nc = NotificationCenter.default
       var SchnittdatenDic = [String:Any]()
       
-      SchnittdatenDic["pwm"] = pwm
+      SchnittdatenDic["pwm"] = UInt8(DC_Stepper.intValue)
       
       SchnittdatenDic["schnittdatenarray"] = SchnittdatenArray
       
@@ -2923,7 +2925,7 @@ var outletdaten:[String:AnyObject] = [:]
         datenDic["mitoberseite"] = 1
         datenDic["mitunterseite"] = 0
         
-        datenDic["pwm"] = pwm
+       datenDic["pwm"] = DC_PWM.integerValue
         
         let redpwm = red_pwmFeld.doubleValue
         datenDic["redpwm"] = redpwm
@@ -3982,6 +3984,8 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        outletdaten["micro"] = 1 as AnyObject
        
        outletdaten["home"] = 1 as AnyObject
+       
+       outletdaten["pwm"] = DC_PWM.integerValue as AnyObject
 
        
        

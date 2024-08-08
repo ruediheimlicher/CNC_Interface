@@ -11724,9 +11724,9 @@ return returnInt;
     // Lage: 0: Einlauf 1: Auslauf
     
     float full_pwm = [[eingabeDic objectForKey:@"pwm"]floatValue];
-    float red_pwm = [[eingabeDic objectForKey:@"redpwm"]floatValue]; // 0 - 1
+    float red_pwm = [[eingabeDic objectForKey:@"redpwm"]floatValue] * full_pwm; // 0 - 1
     float abbrand = [[eingabeDic objectForKey:@"abbrand"]floatValue];
-    
+   NSLog(@"blockkonfigfunktion full_pwm: %2.2F red_pwm: %2.2F ",full_pwm,red_pwm);
     [CNC setredpwm:red_pwm];
     int aktuellepwm = [[eingabeDic objectForKey:@"pwm"]floatValue];
     
@@ -12076,7 +12076,7 @@ return returnInt;
    // Lage: 0: Einlauf 1: Auslauf
    
    float full_pwm = 1;
-   float red_pwm = [red_pwmFeld floatValue];
+   float red_pwm = [red_pwmFeld floatValue] * full_pwm;
    [CNC setredpwm:red_pwm];
    int aktuellepwm=[DC_PWM intValue];
    
@@ -13748,19 +13748,24 @@ return returnInt;
    NSDictionary* tempDic=[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:ANDERESEITEANFAHREN] forKey:@"usb"];
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
  //  [nc postNotificationName:@"usbopen" object:self userInfo:tempDic];
+   NSDictionary* outletdaten = [rHotwireViewController cncoutletdaten];
+   NSLog(@"outletdaten: %@",outletdaten);
+   NSLog(@"speed: %@ ",[outletdaten valueForKey:@"speed"]);
 
-   float full_pwm = 1;
-   float red_pwm = [red_pwmFeld floatValue];
-   [CNC setredpwm:red_pwm];
-   int aktuellepwm=[DC_PWM intValue];
-   int lastSpeed = [CNC speed];
+   float full_pwm = [[outletdaten valueForKey:@"pwm"]intValue];
+ //  float red_pwm = [red_pwmFeld floatValue] * full_pwm;
+ //  [CNC setredpwm:red_pwm];
+//   int aktuellepwm=[DC_PWM intValue];
+   int lastSpeed = [[outletdaten valueForKey:@"speed"]intValue];
    int nowpwm =0;
    if ([DC_Taste state])
    {
-      nowpwm = [DC_PWM intValue]; // Standardwert wenn nichts anderes angegeben
+      nowpwm = [[outletdaten valueForKey:@"pwm"]intValue]; // Standardwert wenn nichts anderes angegeben
+      
    }
    else 
    {
+      
       [CNC setSpeed:14]; // Schnellgang ohne Schnitt
 
    }

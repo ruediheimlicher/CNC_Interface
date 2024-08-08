@@ -248,7 +248,8 @@ class rViewController: NSViewController, NSWindowDelegate
     var halt = 0
     var home = 0
 
-    var pwm = 1
+    var pwm = 50
+   var red_pwm = 0.5
     
     var HomeAnschlagSet = IndexSet()
      // end IOWarriorWindowController
@@ -846,7 +847,7 @@ class rViewController: NSViewController, NSWindowDelegate
      var zeilenindex = 0
      for zeile in   zeilenzahlarray
      {
-        //print("index: \(zeilenindex) zeile: \(zeile)")
+        print("index: \(zeilenindex) zeile: \(zeile)")
         var wertarray = [UInt8]()
         var elementindex = 0
         for el in zeile

@@ -15,7 +15,7 @@
 uint8_t vs[4]={9,5,6,10};	//Tabelle Vollschritt Rechtslauf
 uint8_t hs[8]={9,1,5,4,6,2,10,8}; //Tabelle Halbschritt Rechtslauf
 
-float full_pwm = 1;
+
 
 #define MOTOR_A 0
 #define MOTOR_B 1
@@ -209,7 +209,15 @@ return NULL;
 - (void)setredpwm:(float)red_pwmwert
 {
 	red_pwm = red_pwmwert; // reduzierte Heizleistung
+   NSLog(@"CNC setfullpwm: %2.2F ",red_pwmwert);
 }
+
+- (void)setfullpwm:(int)full_pwmwert
+{
+   full_pwm = full_pwmwert; // volle Heizleistung
+   NSLog(@"CNC setfullpwm: %d ",full_pwmwert);
+}
+
 
 
 - (float)speed
@@ -3559,10 +3567,12 @@ PortA=vs[n & 3]; warte10ms(); n++;
 
 - (NSArray*)EndleisteneinlaufMitWinkel:(float)winkel mitLaenge:(float)laenge mitTiefe:(float)tiefe 
 {
+   
    //float tiefe=10;// Schlitztiefe
-   float dicke=0.5; // Schlitzbreite
-   float full_pwm = 1;
+   //float dicke=0.5; // Schlitzbreite
+   //float full_pwm = 1;
    //red_pwm = 0.4;
+   float red = full_pwm*red_pwm;
    NSMutableArray* EinlaufpunkteArray=[[NSMutableArray alloc]initWithCapacity:0];
 
    NSPoint Startpunkt = NSMakePoint(0,0);
@@ -3580,18 +3590,19 @@ PortA=vs[n & 3]; warte10ms(); n++;
        // Ausstich
        Endpunkt.x -=tiefe * sinf(winkel);
        Endpunkt.y +=tiefe * cosf(winkel);
-       NSArray* tempEinlaufArray3 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:red_pwm], nil];
+      
+       NSArray* tempEinlaufArray3 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:red_pwm*full_pwm], nil];
        [EinlaufpunkteArray addObject:tempEinlaufArray3];
        
        // Ueberschneiden oben:
        Endpunkt.y += 4;
-       //Endpunkt.x +=10;
-       NSArray* tempEinlaufArray4 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:red_pwm], nil];
+       
+       NSArray* tempEinlaufArray4 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:full_pwm], nil];
        [EinlaufpunkteArray addObject:tempEinlaufArray4];
  
        Endpunkt.y -= 4;
        //Endpunkt.x -=10;
-       NSArray* tempEinlaufArray5= [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:red_pwm], nil];
+       NSArray* tempEinlaufArray5= [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:red_pwm*full_pwm], nil];
        [EinlaufpunkteArray addObject:tempEinlaufArray5];
 
 
@@ -3622,9 +3633,9 @@ PortA=vs[n & 3]; warte10ms(); n++;
     {
        float ax = [EinlaufpunkteArray[i][0]floatValue];
        float ay = [EinlaufpunkteArray[i][1]floatValue];
-      
+       float pwm = [EinlaufpunkteArray[i][2]intValue];
        
-       fprintf(stderr,"%2.4f \t  %2.4f \t  \n",ax,ay);
+       fprintf(stderr,"%d %2.4f \t  %2.4f \t %2.2F \n",i,ax,ay,pwm);
     }
 
     
@@ -3633,11 +3644,9 @@ PortA=vs[n & 3]; warte10ms(); n++;
 
 - (NSArray*)NasenleistenauslaufMitLaenge:(float)laenge  mitTiefe:(float)tiefe
 {
-   //float tiefe=10;// Schlitztiefe
-   float dicke=0.5; // Schlitzbreite
-   float full_pwm = 1;
+   //float full_pwm = 1;
    
-
+   float red = full_pwm*red_pwm;
    NSMutableArray* AuslaufpunkteArray=[[NSMutableArray alloc]initWithCapacity:0];
 
    NSPoint Endpunkt = NSMakePoint(0,0);
@@ -3649,7 +3658,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    tempEinlaufArray0 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y], [NSNumber numberWithFloat:full_pwm],nil];
    [AuslaufpunkteArray addObject:tempEinlaufArray0];
    Endpunkt.y -= 4;
-   tempEinlaufArray0 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y], [NSNumber numberWithFloat:red_pwm],nil];
+   tempEinlaufArray0 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y], [NSNumber numberWithFloat:red_pwm*full_pwm],nil];
    [AuslaufpunkteArray addObject:tempEinlaufArray0];
   
    
@@ -3680,7 +3689,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
        */
       // Ausstich
       Endpunkt.y +=tiefe;
-      NSArray* tempEinlaufArray3 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:red_pwm], nil];
+      NSArray* tempEinlaufArray3 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y],[NSNumber numberWithFloat:red_pwm*full_pwm], nil];
       [AuslaufpunkteArray addObject:tempEinlaufArray3];
    }
    

@@ -217,6 +217,8 @@
     
     int motorsteps;
     int micro;
+   int full_pwm;
+   float red_pwm;
     
     NSMutableArray*             CNCDatenArray;
     NSMutableArray*             SchnittdatenArray;

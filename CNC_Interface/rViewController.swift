@@ -643,12 +643,13 @@ class rViewController: NSViewController, NSWindowDelegate
         usb_schnittdatenarray.removeAll()
         //print("DCAktion: \(notification)")
         let info = notification.userInfo
+        
         guard let pwm = notification.userInfo?["pwm"] else
         {
            print("DCAktion: kein pwm")
            return
         }
-        print("VC DC_Funktion  pwm: \(pwm)")
+        print("VC DC_Aktion  pwm: \(pwm)")
         Stepperposition = 0;
         var wertarray = [UInt8](repeating: 0, count: Int(BufferSize()))
         
@@ -810,9 +811,7 @@ class rViewController: NSViewController, NSWindowDelegate
      
      let info = notification.userInfo
      //print("VC usbschnittdatenAktion info: \(info)")
-     //    let usb_pwm =  info?["pwm"] as! UInt8
-     //    let usb_delayok =  info?["delayok"] as! UInt8
-    
+     
      guard let usb_home = info?["home"] as? Int else {
         print("Basis usbstatusAktion: kein home\n")
         return
@@ -860,7 +859,8 @@ class rViewController: NSViewController, NSWindowDelegate
            wertarray.append(0)
            
         }
-        var richtung = 0xFF
+        //var richtung = 0xFF
+        /*
         if let richtungraw = info?["richtung"] as?Int 
         {
            richtung = richtungraw
@@ -868,8 +868,9 @@ class rViewController: NSViewController, NSWindowDelegate
         }
         else
         {
-           print("usbschnittdatenaktion keine Richtung")
+           print("zeilenindex: \(zeilenindex) zeile: \(zeile) usbschnittdatenaktion keine Richtung")
         }
+         */
         wertarray[25] = UInt8(steps)
         wertarray[26] = UInt8(micro)
         wertarray[29] = UInt8(richtung)
@@ -885,7 +886,7 @@ class rViewController: NSViewController, NSWindowDelegate
         }
          */
         usb_schnittdatenarray.append(wertarray)
-         
+        zeilenindex += 1
   
      }
      
@@ -1534,15 +1535,6 @@ class rViewController: NSViewController, NSWindowDelegate
                    break
                 }// switch abschnittfertig
                 
-                 /*
-                 if Stepperposition > CNCPositionFeld.integerValue
-                      {
-                          PositionFeld.integerValue = stepperposition
-                          ProfilFeld.stepperposition = stepperposition - 1
-                          ProfilFeld.needsDisplay = true
-                          
-                      }
-*/
                 if AnschlagSet.count > 0
                 {
                    print("AnschlagSet count 0")
@@ -1597,7 +1589,8 @@ class rViewController: NSViewController, NSWindowDelegate
                       {
                          print("HomeAnschlagSet.count == 4")
                          AVR?.setBusy(0)
-                   //      DC_Funktion(pwm:0)
+                         AVR?.dc_(on: 0);
+                         //DC_Aktion(pwm:0)
                          teensy.stop_timer()
                          
                       }

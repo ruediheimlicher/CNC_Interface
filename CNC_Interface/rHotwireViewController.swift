@@ -543,7 +543,7 @@ var outletdaten:[String:AnyObject] = [:]
       var infoDic = notification.userInfo as? [String:Any]
       
       
-      print("LibElementeingabeAktion KoordinatenTabelle Start: \(KoordinatenTabelle)")
+      print("FigElementeingabeAktion KoordinatenTabelle Start: \(KoordinatenTabelle)")
       var ax:Double = 0
       var ay:Double = 0
       var bx:Double = 0
@@ -594,13 +594,14 @@ var outletdaten:[String:AnyObject] = [:]
       }
       
       
-      var pwm:Double = 0
+      var pwm:Int = 0
       if let tempwert = infoDic?["pwm"]
       {
-          pwm = tempwert as! Double
+          pwm = tempwert as! Int
       }
       else
       {
+         pwm = DC_PWM.integerValue 
       }
 
       
@@ -618,7 +619,34 @@ var outletdaten:[String:AnyObject] = [:]
           oldbx = (KoordinatenTabelle.last?["bx"] ?? 0) - startx
           oldby = (KoordinatenTabelle.last?["by"] ?? 0) - starty
       }
+      var tempElementKoordinatenArray = infoDic?["koordinatentabelle"] as? [[Double]]
+      let anz:Int = tempElementKoordinatenArray!.count
+      for i in 0..<anz
+      {
+          let zeile = tempElementKoordinatenArray?[i]
+      //    let dx:Double = tempElementKoordinatenArray?[i][0] ?? 0
+      //    let dy:Double = tempElementKoordinatenArray?[i][1] ?? 0
+          let ax:Double = tempElementKoordinatenArray?[i][0] ?? 0
+          let ay:Double = tempElementKoordinatenArray?[i][1] ?? 0
 
+          
+          var tempDic = [String:Double]()
+          tempDic["ax"] = (oldax ?? 0) + ax
+          tempDic["ay"] = (olday ?? 0) + ay
+          tempDic["bx"] = (oldbx ?? 0) + ax
+          tempDic["by"] = (oldby ?? 0) + ay
+          tempDic["index"] = Double(i)
+          tempDic["pwm"] = Double(pwm)
+          tempDic["teil"] = 60
+
+          KoordinatenTabelle.append(tempDic)
+      } // for i
+      
+      CNC_Table.reloadData()
+      CNC_Table.scrollRowToVisible(KoordinatenTabelle.count - 1)
+      ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
+      ProfilFeld.needsDisplay = true
+      CNC_Stoptaste.isEnabled = true
       
       
       
@@ -684,14 +712,15 @@ var outletdaten:[String:AnyObject] = [:]
         }
         
         
-        var pwm:Double = 0
-        if let tempwert = infoDic?["pwm"]
-        {
-            pwm = tempwert as! Double
-        }
-        else
-        {
-        }
+       var pwm:Int = 0
+       if let tempwert = infoDic?["pwm"]
+       {
+           pwm = tempwert as! Int
+       }
+       else
+       {
+          pwm = DC_PWM.integerValue 
+       }
 
         
         
@@ -726,7 +755,7 @@ var outletdaten:[String:AnyObject] = [:]
             tempDic["bx"] = (oldbx ?? 0) + ax
             tempDic["by"] = (oldby ?? 0) + ay
             tempDic["index"] = Double(i)
-            tempDic["pwm"] = pwm
+            tempDic["pwm"] = Double(pwm)
             tempDic["teil"] = 60
 
             KoordinatenTabelle.append(tempDic)
@@ -742,6 +771,8 @@ var outletdaten:[String:AnyObject] = [:]
     
     @objc func LibProfileingabeAktion(_ notification:Notification)
     {
+       setOutletdaten()
+       
         let info = notification.userInfo
        // print("LibProfileingabeAktion: \(info)")
         var infodic = notification.userInfo as? [String:Any]
@@ -796,8 +827,9 @@ var outletdaten:[String:AnyObject] = [:]
         
         infodic!["wertax"] = 35
         infodic!["wertay"] = 25
-        
-        infodic!["pwm"] = DC_PWM.floatValue
+        let temppwm = DC_PWM.integerValue
+       
+        infodic!["pwm"] = DC_PWM.integerValue
         
        infodic!["abbrand"] = AbbrandFeld.floatValue
         
@@ -2061,6 +2093,30 @@ var outletdaten:[String:AnyObject] = [:]
         //       KoordinatenTabelle.append(AVR?.schnittdatenVonDic(tempSteuerdatenDic) as! [String : Double]  )
     }
     
+   @objc  func setOutletdaten()
+   {
+      let stepsindex = CNC_StepsSegControl.selectedSegment
+      motorsteps = CNC_StepsSegControl.tag(forSegment:stepsindex)
+      outletdaten["motorsteps"] = CNC_StepsSegControl.tag(forSegment:stepsindex)  as AnyObject
+      micro = CNC_microPop.selectedItem?.tag ?? 1
+      speed = SpeedFeld.integerValue
+      pwm = DC_PWM.integerValue
+      CNC_busySpinner.stopAnimation(nil)
+      cnc_seite1check = CNC_Seite1Check.state.rawValue as Int
+      cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
+      outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
+      outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
+      outletdaten["speed"] = speed as AnyObject
+      outletdaten["micro"] = micro as AnyObject
+      outletdaten["boardindex"] = boardindex as AnyObject
+      outletdaten["pwm"] = pwm as AnyObject
+      outletdaten["redpwm"] = red_pwmFeld.doubleValue as AnyObject
+      var zoomfaktor = ProfilTiefeFeldA.doubleValue / 1000
+      outletdaten["zoom"] = zoomfaktor as AnyObject
+     
+     outletdaten["home"] = 0 as AnyObject
+
+   }
     
     @objc  @IBAction func reportStopTaste(_ sender: NSButton)
     {
@@ -2264,7 +2320,7 @@ var outletdaten:[String:AnyObject] = [:]
             {
             case .alertFirstButtonReturn: // first button
                DC_Taste.state = NSControl.StateValue.on
-               let dc_pwm = UInt8(DC_Stepper.intValue)
+               let dc_pwm = UInt8(DC_PWM.intValue)
                self.DC_Funktion(pwm: dc_pwm)
                DC_Taste.isEnabled = true
                delayok = 1
@@ -2870,12 +2926,7 @@ var outletdaten:[String:AnyObject] = [:]
     
     
     
-    @IBAction func reportAndereSeiteAnfahren(_ sender: NSButton)
-    {
-        print("swift reportAndereSeiteAnfahren")
-          
-        
-    }
+    
 // MARK:  *** *** ***  reportProfilOberseiteTask
     @IBAction func reportProfilOberseiteTask(_ sender: NSButton)
     {
@@ -4138,8 +4189,8 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        
        let objCInstance = AVR
 
-       AndereSeiteTaste.target = objCInstance
-       AndereSeiteTaste.action = #selector(AVR?.reportAndereSeiteAnfahren(_ :))
+       //AndereSeiteTaste.target = objCInstance
+       //AndereSeiteTaste.action = #selector(AVR?.reportAndereSeiteAnfahren(_ :))
        
        let ProfilnamenArray = AVR?.readProfilLib() as! [String]
        print("ProfilnamenArray: \(ProfilnamenArray[0])")
@@ -4207,6 +4258,9 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        outletdaten["motorsteps"] = CNC_StepsSegControl.tag(forSegment:stepsindex)  as AnyObject
 
        micro = CNC_microPop.selectedItem?.tag ?? 1
+      
+      
+      
        
        if let rumpfteildic = hotwireplist["rumpfteildic"]
        {
@@ -4221,6 +4275,8 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        {
            Einlaufrand.integerValue = 15
        }
+      
+      
  
        if let auslaufrand = hotwireplist["auslaufrand"]
        {
@@ -4511,6 +4567,15 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
            print("rumpfdatenarray nicht da")
        }
 
+      if let profil1name = hotwireplist["profilnamea"]
+      {
+         Profil1Pop.selectItem(withTitle: profil1name as! String)
+      }
+      if let profil2name = hotwireplist["profilnameb"]
+      {
+         Profil2Pop.selectItem(withTitle: profil2name as! String)
+      }
+
        outletdaten["speed"] = SpeedFeld.integerValue as AnyObject
        //outletdaten["steps"] = steps_Feld.integerValue as AnyObject
        var NotificationDic = [String:Int]()
@@ -4604,10 +4669,11 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
     {
         
        print("reportDC_Taste state");
-      
+       outletdaten["pwm"] = DC_PWM.integerValue as AnyObject
         if sender.state ==  NSControl.StateValue.on
        {
             let dataDic = ["pwm":DC_PWM.integerValue]
+           
             self.DCAktion(datadic:dataDic)
 
        }
@@ -4679,7 +4745,14 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        // NSModalSession session = [NSApp beginModalSessionForWindow:[CNC_Eingabe window]];
     }
     
-    
+   @IBAction func reportAndereSeiteAnfahren(_ sender: NSButton)
+   {
+      print("reportAndereSeiteAnfahren")
+      setOutletdaten()
+      AVR?.reportAndereSeiteAnfahren(nil)
+      
+   }
+   
     @IBAction func reportLinkeRechteSeite(_ sender: NSButton)
     {
         print("reportLinkeRechteSeite")
@@ -4740,6 +4813,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         }
         print("DCAktion  pwmraw: \(pwmraw)")
        let pwm = abs(pwmraw as! Int)
+       outletdaten["pwm"] = pwm as AnyObject
         Stepperposition = 0;
         var wertarray = [UInt8](repeating: 0, count: Int(BufferSize()))
         
@@ -5216,7 +5290,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         hotwireplist["einlauflaenge"] = Einlauflaenge.integerValue as AnyObject
         hotwireplist["einlauftiefe"] = Einlauftiefe.integerValue as AnyObject
         hotwireplist["auslauflaenge"] = Auslauflaenge.integerValue as AnyObject
-        hotwireplist["ausauftiefe"] = Auslauftiefe.integerValue as AnyObject
+        hotwireplist["auslauftiefe"] = Auslauftiefe.integerValue as AnyObject
         
         
         hotwireplist["basisabstand"] = Basisabstand.integerValue as AnyObject
@@ -5299,7 +5373,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        outletdaten["speed"] = speed as AnyObject
        outletdaten["micro"] = micro as AnyObject
        outletdaten["boardindex"] = boardindex as AnyObject
-       outletdaten["pwm"] = pwm as AnyObject
+       outletdaten["pwm"] = DC_PWM.integerValue as AnyObject
 
         //
        //print(" PfeilFeldAktion: info: \(notification.userInfo) \(info)")

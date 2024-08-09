@@ -18,6 +18,7 @@ float det(float v0[],float v1[]);
 	int			steps;
    int micro;
    float red_pwm;
+   int full_pwm;
    float schalendicke;
 
 }
@@ -34,6 +35,7 @@ float det(float v0[],float v1[]);
 
 
 - (void)setredpwm:(float)red_pwmwert;
+- (void)setfullpwm:(int)full_pwmwert;
 - (NSDictionary*)SteuerdatenVonDic:(NSDictionary*)derDatenDic;
 - (NSDictionary*)SteuerdatenVonDic:(NSDictionary*)derDatenDic mitAbbrand:(int)mitabbrand;
 

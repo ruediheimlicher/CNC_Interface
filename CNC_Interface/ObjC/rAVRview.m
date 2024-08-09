@@ -669,6 +669,11 @@ NSMutableDictionary* cncdatendic;
    double px[] = {0.25,0.22221,0.19562,0.17033,0.14645,0.12408,0.10332,0.08427,0.06699,0.05156,0.03806,0.02653,0.01704,0.00961,0.00428,0.00107};
    double py[] = {0.08996,0.08774,0.08483,0.08113,0.0766,0.07134,0.06552,0.05939,0.05313,0.04677,0.04027,0.03352,0.02652,0.01943,0.01254,0.00616};
    
+   
+   full_pwm = 50;
+   red_pwm = 1;
+ 
+   
    int length = 16;
    double polykoeffarray[length];
    int von = 5;
@@ -3395,7 +3400,7 @@ return returnInt;
     return tempschnittdatenarray;
 }
 
-- (IBAction)reportStopKnopf:(id)sender
+- (IBAction)reportStopKnopf:(id)sender // nicht verwendet
 {
    
    //NSLog(@"reportStopKnopf state: %d",[sender state]);
@@ -3453,6 +3458,7 @@ return returnInt;
    if ([DC_PWM intValue])
    {
       [CNC setredpwm:[red_pwmFeld floatValue]];
+      [CNC setfullpwm:full_pwm];
    }
    else
    {
@@ -4202,6 +4208,8 @@ return returnInt;
 
 }
 
+
+
 - (IBAction)reportSpeedStepper:(id)sender
 {
    NSLog(@"reportSpeedStepper state: %d ",[sender intValue]); 
@@ -4218,6 +4226,7 @@ return returnInt;
    {
       [DC_Taste setState:0];
    }
+   
    NSMutableDictionary* DCDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    
    [DCDic setObject:[NSNumber numberWithInt:pwmwert] forKey:@"pwm"]; // DC ein/aus, nur fuer AVRController
@@ -4634,7 +4643,8 @@ return returnInt;
    [nc postNotificationName:@"usbopen" object:self userInfo:tempDic];
    int lastSpeed = [CNC speed];
    [CNC setSpeed:14];
-   [CNC setredpwm:[red_pwmFeld floatValue]];
+   [CNC setredpwm:[red_pwmFeld floatValue]*[DC_PWM intValue]];
+   [CNC setfullpwm:[DC_PWM intValue]];
    
    float plattendicke = 50;
    
@@ -7667,7 +7677,7 @@ return returnInt;
    return NULL;
 }
 
-- (NSArray*)RumpfelementmitDic:(NSDictionary*)rumpfteildic
+- (NSArray*)RumpfelementmitDic:(NSDictionary*)rumpfteildic // von Taste Teil
 {
     NSLog(@"RumpfelementmitDic");
     
@@ -7943,7 +7953,7 @@ return returnInt;
     tempPunktB.x += breiteB - 2*radiusB;
     effektivebreite  = MAX(effektivebreite, MAX(tempPunktA.x,tempPunktB.x));
     // 13
-    [rumpfkoordinatentabelle addObject:[self nextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:redpwm teil:20]];
+    [rumpfkoordinatentabelle addObject:[self nextPunktA:(tempPunktA) nextPunktB:tempPunktB pwm:origpwm teil:20]];
 
     unterseiteeinstichAr = tempPunktA.x;
     unterseiteeinstichBr = tempPunktB.x;
@@ -9541,9 +9551,20 @@ return returnInt;
 
 - (NSArray*)LibProfileingabeFunktion:(NSDictionary*)eingabeDic
 {
+   
+   NSDictionary* outletdaten = [rHotwireViewController cncoutletdaten];
+   if([outletdaten objectForKey:@"pwm"])
+      {
+         full_pwm = [[outletdaten objectForKey:@"pwm"]intValue];
+   }
+   if([outletdaten objectForKey:@"redpwm"])
+      {
+         red_pwm = [[outletdaten objectForKey:@"redpwm"]floatValue];
+   }
+
     NSMutableArray* LibKoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
-   NSLog(@"LibProfileingabeFunktion start");
-    //NSLog(@"eingabeDic: %@",eingabeDic);
+   NSLog(@"LibProfileingabeFunktion start fullpwm: %d redpwm: %2.2F",full_pwm, red_pwm);
+    NSLog(@"eingabeDic: %@",eingabeDic);
    //[self KT];
    if([[eingabeDic objectForKey:@"profil1name"] isEqual: @"***"])
    {
@@ -9562,6 +9583,9 @@ return returnInt;
     {
         CNC = [[rCNC alloc]init];
     }
+
+   [CNC setfullpwm:full_pwm ];
+   [CNC setredpwm:red_pwm ];
 
     float minimaldistanz = [[eingabeDic objectForKey:@"minimaldistanz"]floatValue ];
     int ProfilTiefeA = [[eingabeDic objectForKey:@"profiltiefea"]integerValue ];
@@ -9643,7 +9667,7 @@ return returnInt;
     20:  Oberseite
     30:  Unterseite, rueckwaerts eingesetzt
     40:  Nasenleisteauslauf
-    50: Sicherheitsschnitt nach oben
+    50: Sicherheitsschnitt nach oben (in Enleisteneinlaufarray)
     */
    //NSLog(@"LibProfileingabeAktion start [LibKoordinatenTabelle count] beim Start: %d",[LibKoordinatenTabelle count]);;
    
@@ -9665,7 +9689,6 @@ return returnInt;
    
     
    
-    float origpwm= [[eingabeDic objectForKey:@"pwm"]floatValue];
    
    if ([LibKoordinatenTabelle count]) // 6 elements ax ay bx by pwm index
    {
@@ -9931,25 +9954,27 @@ return returnInt;
             // Einstich, full PWM
             float tempax = [[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:0]floatValue];
             float tempay = [[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:1]floatValue];
-            NSLog(@"tempx: %2.2f tempy: %2.2f",tempax, tempay);
+            int temppwm = [[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:2]intValue];
+            //NSLog(@"tempx: %2.2f tempy: %2.2f",tempax, tempay);
             [tempZeilenDic setObject:[NSNumber numberWithFloat:ax+tempax]forKey:@"ax"];
             [tempZeilenDic setObject:[NSNumber numberWithFloat:ay+tempay]forKey:@"ay"];
-            
+            [tempZeilenDic setObject:[NSNumber numberWithInt:temppwm]forKey:@"pwm"];
+            /*
             // reduziertes pwm: Schneiden aus dem Einstich heraus
             if ([[EndleistenEinlaufArrayA objectAtIndex:k]count]>2) // Angaben fuer pwm an index 2
             {
                NSLog(@"EndleistenEinlaufArrayA pwm: %2.2f",[[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:2]floatValue]);
-               int temppwm = [[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:2]floatValue]*origpwm;
+               int temppwm = [[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:2]floatValue]*full_pwm;
                
-               [tempZeilenDic setObject:[NSNumber numberWithInt:temppwm] forKey:@"pwm"];
+               [tempZeilenDic setObject:[NSNumber numberWithInt:red_pwm*full_pwm] forKey:@"pwm"];
                //NSLog(@"EndleistenEinlaufArrayA pwm: %2.2f",temppwm);
                
             }
             else
             {
-               [tempZeilenDic setObject:[NSNumber numberWithInt:origpwm] forKey:@"pwm"];
+               [tempZeilenDic setObject:[NSNumber numberWithInt:full_pwm] forKey:@"pwm"];
             }
-            
+            */
             float tempbx = [[[EndleistenEinlaufArrayB objectAtIndex:k]objectAtIndex:0]floatValue];
             float tempby = [[[EndleistenEinlaufArrayB objectAtIndex:k]objectAtIndex:1]floatValue];
             
@@ -9976,7 +10001,7 @@ return returnInt;
          
           
           
-         NSLog(@"LibProfileingabeAktion NACH endleistenarray: LibKoordinatenTabelle");
+         NSLog(@"LibProfileingabeFunktion NACH endleistenarray: LibKoordinatenTabelle");
          for (int i=0;i<EndleistenEinlaufArrayA.count;i++)
          {
             //fprintf(stderr,"%f \t%2.4f \t  %2.4f \n",[[[EndleistenEinlaufArrayA objectAtIndex:i]objectAtIndex:0]floatValue]);
@@ -9988,8 +10013,8 @@ return returnInt;
          float ay = [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ay"]floatValue];
          float bx = [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
          float by = [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
-         
-         fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
+         int temppwm = [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"pwm"]intValue];
+         fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \t %d\n",i,ax,ay,bx,by,temppwm);
       }
 
  
@@ -10134,7 +10159,7 @@ return returnInt;
          NSMutableDictionary* tempZeilenDic = [redOberseiteArray objectAtIndex:index];
          [tempZeilenDic setObject:[NSNumber numberWithInt:20] forKey:@"teil"]; // Kennzeichnung Oberseite
          // pwm
-         [tempZeilenDic setObject:[NSNumber numberWithInt:origpwm] forKey:@"pwm"];
+         [tempZeilenDic setObject:[NSNumber numberWithInt:full_pwm] forKey:@"pwm"];
          [tempZeilenDic setObject:[NSNumber numberWithInt:index+profilstartindex] forKey:@"index"];
          
          [LibKoordinatenTabelle addObject:tempZeilenDic];
@@ -10186,7 +10211,7 @@ return returnInt;
          NSMutableDictionary* tempZeilenDicA = [redUnterseiteArray objectAtIndex:index];
          [tempZeilenDicA setObject:[NSNumber numberWithInt:30] forKey:@"teil"]; // Kennzeichnung Unterseite
          // pwm
-         [tempZeilenDicA setObject:[NSNumber numberWithInt:origpwm] forKey:@"pwm"];
+         [tempZeilenDicA setObject:[NSNumber numberWithInt:full_pwm] forKey:@"pwm"];
          [tempZeilenDicA setObject:[NSNumber numberWithInt:index+profilstartindex] forKey:@"index"];
 
          [LibKoordinatenTabelle addObject:tempZeilenDicA];
@@ -10224,6 +10249,7 @@ return returnInt;
          NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
          float tempx = [[[NasenleistenAuslaufArray objectAtIndex:l]objectAtIndex:0]floatValue];
          float tempy = [[[NasenleistenAuslaufArray objectAtIndex:l]objectAtIndex:1]floatValue];
+         int temppwm = [[[NasenleistenAuslaufArray objectAtIndex:l]objectAtIndex:2]intValue];
          if ([AbbrandCheckbox state])
          {
             tempy += [AbbrandFeld floatValue];
@@ -10233,6 +10259,7 @@ return returnInt;
          [tempZeilenDic setObject:[NSNumber numberWithFloat:ay+tempy]forKey:@"ay"];
          [tempZeilenDic setObject:[NSNumber numberWithFloat:bx+tempx]forKey:@"bx"];
          [tempZeilenDic setObject:[NSNumber numberWithFloat:by+tempy]forKey:@"by"];
+         [tempZeilenDic setObject:[NSNumber numberWithInt:temppwm]forKey:@"pwm"];
          [tempZeilenDic setObject:[NSNumber numberWithInt:l] forKey:@"index"];
          [tempZeilenDic setObject:[NSNumber numberWithInt:40] forKey:@"teil"]; // Kennzeichnung Auslauf
          
@@ -10240,19 +10267,20 @@ return returnInt;
          //float temppwm = [[[NasenleistenAuslaufArray objectAtIndex:l]objectAtIndex:2]floatValue]*origpwm;
          //NSLog(@"NasenleistenAuslaufArray pwm: %2.2f",temppwm);
          
-         
+         /*
          if ([[NasenleistenAuslaufArray objectAtIndex:l]count]>2) // Angaben fuer pwm sind an index 2
          {
             //NSLog(@"NasenleistenAuslaufArray pwm-index: %2.2f",[[[NasenleistenAuslaufArray objectAtIndex:l]objectAtIndex:2]floatValue]);
-            float temppwm = [[[NasenleistenAuslaufArray objectAtIndex:l]objectAtIndex:2]floatValue]*origpwm;
+            //float temppwm = [[[NasenleistenAuslaufArray objectAtIndex:l]objectAtIndex:2]floatValue]*origpwm;
             //NSLog(@"NasenleistenAuslaufArray pwm: %2.2f",temppwm);
-            [tempZeilenDic setObject:[NSNumber numberWithInt:temppwm] forKey:@"pwm"];
+            [tempZeilenDic setObject:[NSNumber numberWithInt:red_pwm] forKey:@"pwm"];
             
          }
          else
          {
-            [tempZeilenDic setObject:[NSNumber numberWithInt:origpwm] forKey:@"pwm"];
+            [tempZeilenDic setObject:[NSNumber numberWithInt:full_pwm] forKey:@"pwm"];
          }
+          */
          //NSLog(@"LibProfilEingabeAktion l: %d tempZeilenDic: %@",l,[tempZeilenDic description]);
          
          [LibKoordinatenTabelle addObject:tempZeilenDic];
@@ -10415,7 +10443,7 @@ return returnInt;
        return LibKoordinatenTabelle;
 }
 
-- (void)LibProfileingabeAktion:(NSNotification*)note
+- (void)LibProfileingabeAktion:(NSNotification*)note // nicht verwendet
 {
    
    NSLog(@"LibProfileingabeAktion start");
@@ -11700,374 +11728,376 @@ return returnInt;
 
 - (NSArray*)blockkonfigurierenFunktion:(NSDictionary*) eingabeDic
 {
-    NSMutableArray* eingabekoordinatentabelle = NSMutableArray.new;
-    
-    NSMutableArray* blockkoordinatentabelle = NSMutableArray.new;
-       
-    [eingabekoordinatentabelle addObjectsFromArray:[eingabeDic objectForKey:@"koordinatentabelle"]];
-    //NSLog(@"reportBlockkonfigurieren eingabekoordinatentabelle");
-    for (int i=0;i<eingabekoordinatentabelle.count;i++)
-    {
-       float ax = [[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
-       float ay = [[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"ay"]floatValue];
-       
-       float bx = [[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
-       float by = [[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
-       
-       
-       //fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
-    }
-
-    //NSLog(@"reportBlockkonfigurieren Seite: %d",[LinkeRechteSeite selectedSegment]);
-    
-    // Einlauf und Auslauf in gleicher funktion. Unterschieden durch Parameter 'Lage'.
-    // Lage: 0: Einlauf 1: Auslauf
-    
-    float full_pwm = [[eingabeDic objectForKey:@"pwm"]floatValue];
-    float red_pwm = [[eingabeDic objectForKey:@"redpwm"]floatValue]; // 0 - 1
-    float abbrand = [[eingabeDic objectForKey:@"abbrand"]floatValue];
-    
-    [CNC setredpwm:red_pwm];
-    int aktuellepwm = [[eingabeDic objectForKey:@"pwm"]floatValue];
-    
-    int lage=0;
-    
-    // Einlauf:
-    float einlaufAX;
-    float einlaufAY;
-    float einlaufBX;
-    float einlaufBY;
-    
-    // Auslauf:
-    float auslaufAX;
-    float auslaufAY;
-    float auslaufBX;
-    float auslaufBY;
-    float zugabeoben= 3 + abbrand;
-    float zugabeunten= 10;
-    
-    // offset beim start
-    float einstichx = 6;
-    float einstichy = 4;
-    float plattendicke = 50;
-    
-    float profilrandy = 5; // sicherheitsschnitt am Profilrand
-    
-    
-    float maxx=0,minx=MAXFLOAT; // Startwerte fuer Suche nach Rand
-    float maxy=0,miny=MAXFLOAT;
-    NSLog(@"eingabekoordinatentabelle count: %d",eingabekoordinatentabelle.count);
-    if ([eingabekoordinatentabelle count])
-    {
-        // Beginn der Schnittlinie des Profils incl. Einlauf, wird vom Block angefahren
-        einlaufAX = [[[eingabekoordinatentabelle objectAtIndex:0]objectForKey:@"ax"]floatValue];
-        einlaufAY = [[[eingabekoordinatentabelle objectAtIndex:0]objectForKey:@"ay"]floatValue];
-        einlaufBX = [[[eingabekoordinatentabelle objectAtIndex:0]objectForKey:@"bx"]floatValue];
-        einlaufBY = [[[eingabekoordinatentabelle objectAtIndex:0]objectForKey:@"by"]floatValue];
-        //NSLog(@"reportBlockkonfigurieren einlaufAX: %2.2f einlaufBX: %2.2f",einlaufAX,einlaufBX);
-        //NSLog(@"reportBlockkonfigurieren einlaufAY: %2.2f einlaufBY: %2.2f",einlaufAY,einlaufBY);
-        
-        // Ende der Schnittlinie des Profils incl. Auslauf, anschliessend wird der Block fertiggestellt
-        auslaufAX = [[[eingabekoordinatentabelle lastObject]objectForKey:@"ax"]floatValue];
-        auslaufAY = [[[eingabekoordinatentabelle lastObject]objectForKey:@"ay"]floatValue];
-        auslaufBX = [[[eingabekoordinatentabelle lastObject]objectForKey:@"bx"]floatValue];
-        auslaufBY = [[[eingabekoordinatentabelle lastObject]objectForKey:@"by"]floatValue];
-        int i;
-        
-        // maximum und minimum  von x, y bestimmen
-        for (i=0;i<[eingabekoordinatentabelle count]; i++)
-        {
-            // y-werte
-            // max y von Seite a und b
-            float tempy = fmax([[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"ay"]floatValue],[[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"by"]floatValue]);
-            if (tempy > maxy)
-            {
-                maxy = tempy;
-            }
-            
-            // min y von Seite a und b
-            tempy = fmin([[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"ay"]floatValue],[[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"by"]floatValue]);
-            if (tempy < miny)
-            {
-                miny = tempy;
-            }
-            
-            // x-werte
-            float tempx = fmax([[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"ax"]floatValue],[[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"bx"]floatValue]);
-            if (tempx > maxx)
-            {
-                maxx = tempx;
-            }
-            tempx = fmin([[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"ax"]floatValue],[[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"bx"]floatValue]);
-            if (tempx < minx)
-            {
-                minx = tempx;
-            }
-            
-            
-            
-        }
-        
-        // Abmessungen des Profils
-        
-        float ausmassx = maxx-minx;
-        float ausmassy = maxy-miny;
-        NSLog(@"tBlockkonfigurierenFunktion ausmassx: %2.2f ausmassy: %2.2f",ausmassx,ausmassy);
-        
-        //NSLog(@"reportBlockkonfigurieren maxy: %2.2f miny: %2.2f",maxy,miny);
-        //NSLog(@"reportBlockkonfigurieren maxx: %2.2f minx: %2.2f",maxx,minx);
-        
-        //      maxy -= fmax(einlaufAY,einlaufBY);       // Abstand von Einlauf bis oberster Punkt
-        float abstandoben = maxy - fmax(einlaufAY,einlaufBY);       // Abstand von Einlauf bis oberster Punkt
-        
-        //      miny -= fmax(einlaufAY,einlaufBY);      // Abstand von Einlauf bis unterster Punkt
-        float abstandunten = fmax(einlaufAY,einlaufBY) - miny;       // Abstand von Einlauf bis oberster Punkt
-        
-        //NSLog(@"BlockkonfigurierenFunktion maxy: %2.2f miny: %2.2f",maxy,miny);
-        
-        float breite = [[eingabeDic objectForKey:@"blockbreite"]floatValue];
-        float rand = [[eingabeDic objectForKey:@"einlaufrand"]floatValue];
-        
-        float dicke = [[eingabeDic objectForKey:@"dicke"]floatValue];
-        
-        float blockoberkante = [[eingabeDic objectForKey:@"blockoberkante"]floatValue];
-        //blockoberkante = plattendicke-5;
-        
-        if ((maxy + fabs(miny))>dicke)
-        {
-            NSLog(@"Block ist nicht dick genug");
-        }
-        
-        // Rahmen
-        if ([[eingabeDic objectForKey:@"mitoberseite"]floatValue] && [[eingabeDic objectForKey:@"mitunterseite"]floatValue]) // kein ein/auslauf
-        {
-            dicke = (abstandoben+abstandunten)+zugabeoben +zugabeoben;
-            rand = 5;
-        }
-        else
-        {
-            dicke = (abstandoben+abstandunten)+zugabeoben +zugabeunten; // (maxy-miny) ist Dicke ohne zugaben
-        }
-        
-        
-        
-        //NSLog(@"reportBlockkonfigurieren dicke: %2.2f",dicke);
-   //     [Blockoberkante setIntValue:dicke];
-        //[Blockoberkante setIntValue:plattendicke-5];
-        
-        [OberkantenStepper setIntValue:[Blockoberkante intValue]];
-        
-        [Blockdicke setIntValue:dicke];
-        [Einlaufrand setIntValue:einlaufrand];
-        [Auslaufrand setIntValue:auslaufrand];
-        
-        [Blockbreite setIntValue:maxx+einlaufrand - minx + auslaufrand];
-        [AbmessungX setIntValue:[Blockbreite intValue] + einstichx];
-        
-        // neue Berechnung
-        
-        
-        NSPoint EckeLinksUnten = NSMakePoint(einlaufAX - rand, fmax(einlaufAY,einlaufBY) - abstandunten  - zugabeunten);
-        NSPoint EckeLinksOben = NSMakePoint(EckeLinksUnten.x, EckeLinksUnten.y + dicke);
-        
-        NSPoint EckeRechtsOben = NSMakePoint(EckeLinksOben.x + ausmassx + einlaufrand + auslaufrand, EckeLinksOben.y);
-        NSPoint EckeRechtsUnten = NSMakePoint(EckeRechtsOben.x, EckeLinksUnten.y);
-        
-        //NSLog(@"reportBlockkonfigurieren EckeRechtsOben x: %2.2f  y: %2.2f",EckeRechtsOben.x,EckeRechtsOben.y);
-        
-        BlockrahmenArray = [NSMutableArray arrayWithObjects:NSStringFromPoint(EckeLinksOben),NSStringFromPoint(EckeRechtsOben),NSStringFromPoint(EckeRechtsUnten),NSStringFromPoint(EckeLinksUnten), nil];
-        
-        
-        //NSLog(@"reportBlockkonfigurieren RahmenArray: %@",[BlockrahmenArray description]);
-        
-        [ProfilGraph setRahmenArray:BlockrahmenArray];
-        
-        
-        [ProfilGraph setNeedsDisplay:YES];
-        // Start Konfig Schnittlinie
-        /*
-         // Startpunkt ist EckeLinksOben. Lage: 0: Einlauf 1: Auslauf
-         NSPoint PositionA = EckeLinksOben;
-         NSPoint PositionB = EckeLinksOben;
-         */
-        // Startpunkt ist EckeLinksUnten. Lage: 0: Einlauf 1: Auslauf
-        NSPoint PositionA = EckeLinksUnten;
-        NSPoint PositionB = EckeLinksUnten;
-        
-        
-        // Start des Schnittes ist um einstichx, einstichy zurueckverschoben. Start vorerst dorthin verlegen
-        
-        //    einstichy = plattendicke - dicke;
-        [[eingabeDic objectForKey:@"kote"]floatValue];
-        einstichy = [[eingabeDic objectForKey:@"kote"]floatValue];
-        
-        PositionA.x -=einstichx;
-        PositionA.y -=3;
-        PositionB.x -=einstichx;
-        PositionB.y -=3;
-        
-        
-        // nach einfuehren VerikalSpiegeln: Horizontaler Einlauf ohne Hochfahren, -=einstichy auskomm
-        //     PositionA.y -=einstichy;
-        //     PositionB.y -=einstichy;
-        
-        int index=0;
-        
-        //NSLog(@"Einstich: Werte in blockkoordinatentabelle einsetzen");
-        // A
-        [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:full_pwm],@"pwm",nil]];
-        
-        index++;
-        
-        // Hochfahren auf Kote
-        
-        // nach einfuehren VerikalSpiegeln: Horizontaler Einlauf ohne Hochfahren, -=einstichy auskomm
-        
-        /*
-         PositionA.y +=einstichy;
-         PositionB.y +=einstichy;
+   NSMutableArray* eingabekoordinatentabelle = NSMutableArray.new;
+   
+   NSMutableArray* blockkoordinatentabelle = NSMutableArray.new;
+   
+   [eingabekoordinatentabelle addObjectsFromArray:[eingabeDic objectForKey:@"koordinatentabelle"]];
+   //NSLog(@"reportBlockkonfigurieren eingabekoordinatentabelle");
+   for (int i=0;i<eingabekoordinatentabelle.count;i++)
+   {
+      float ax = [[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
+      float ay = [[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"ay"]floatValue];
+      
+      float bx = [[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
+      float by = [[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
+      
+      
+      //fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
+   }
+   
+   //NSLog(@"reportBlockkonfigurieren Seite: %d",[LinkeRechteSeite selectedSegment]);
+   
+   // Einlauf und Auslauf in gleicher funktion. Unterschieden durch Parameter 'Lage'.
+   // Lage: 0: Einlauf 1: Auslauf
+   
+   float full_pwm = [[eingabeDic objectForKey:@"pwm"]floatValue];
+   float red_pwm = [[eingabeDic objectForKey:@"redpwm"]floatValue]; // 0 - 1
+   float abbrand = [[eingabeDic objectForKey:@"abbrand"]floatValue];
+   
+   [CNC setredpwm:red_pwm];
+   [CNC setfullpwm:full_pwm];
+   int aktuellepwm = [[eingabeDic objectForKey:@"pwm"]floatValue];
+   
+   int lage=0;
+   
+   // Einlauf:
+   float einlaufAX;
+   float einlaufAY;
+   float einlaufBX;
+   float einlaufBY;
+   
+   // Auslauf:
+   float auslaufAX;
+   float auslaufAY;
+   float auslaufBX;
+   float auslaufBY;
+   float zugabeoben= 3 + abbrand;
+   float zugabeunten= 10;
+   
+   // offset beim start
+   float einstichx = 6;
+   float einstichy = 4;
+   float plattendicke = 50;
+   
+   float profilrandy = 5; // sicherheitsschnitt am Profilrand
+   
+   
+   float maxx=0,minx=MAXFLOAT; // Startwerte fuer Suche nach Rand
+   float maxy=0,miny=MAXFLOAT;
+   NSLog(@"eingabekoordinatentabelle count: %d",eingabekoordinatentabelle.count);
+   if ([eingabekoordinatentabelle count])
+   {
+      // Beginn der Schnittlinie des Profils incl. Einlauf, wird vom Block angefahren
+      einlaufAX = [[[eingabekoordinatentabelle objectAtIndex:0]objectForKey:@"ax"]floatValue];
+      einlaufAY = [[[eingabekoordinatentabelle objectAtIndex:0]objectForKey:@"ay"]floatValue];
+      einlaufBX = [[[eingabekoordinatentabelle objectAtIndex:0]objectForKey:@"bx"]floatValue];
+      einlaufBY = [[[eingabekoordinatentabelle objectAtIndex:0]objectForKey:@"by"]floatValue];
+      //NSLog(@"reportBlockkonfigurieren einlaufAX: %2.2f einlaufBX: %2.2f",einlaufAX,einlaufBX);
+      //NSLog(@"reportBlockkonfigurieren einlaufAY: %2.2f einlaufBY: %2.2f",einlaufAY,einlaufBY);
+      
+      // Ende der Schnittlinie des Profils incl. Auslauf, anschliessend wird der Block fertiggestellt
+      auslaufAX = [[[eingabekoordinatentabelle lastObject]objectForKey:@"ax"]floatValue];
+      auslaufAY = [[[eingabekoordinatentabelle lastObject]objectForKey:@"ay"]floatValue];
+      auslaufBX = [[[eingabekoordinatentabelle lastObject]objectForKey:@"bx"]floatValue];
+      auslaufBY = [[[eingabekoordinatentabelle lastObject]objectForKey:@"by"]floatValue];
+      int i;
+      
+      // maximum und minimum  von x, y bestimmen
+      for (i=0;i<[eingabekoordinatentabelle count]; i++)
+      {
+         // y-werte
+         // max y von Seite a und b
+         float tempy = fmax([[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"ay"]floatValue],[[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"by"]floatValue]);
+         if (tempy > maxy)
+         {
+            maxy = tempy;
+         }
          
-         //NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+         // min y von Seite a und b
+         tempy = fmin([[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"ay"]floatValue],[[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"by"]floatValue]);
+         if (tempy < miny)
+         {
+            miny = tempy;
+         }
+         
+         // x-werte
+         float tempx = fmax([[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"ax"]floatValue],[[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"bx"]floatValue]);
+         if (tempx > maxx)
+         {
+            maxx = tempx;
+         }
+         tempx = fmin([[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"ax"]floatValue],[[[eingabekoordinatentabelle objectAtIndex:i]objectForKey:@"bx"]floatValue]);
+         if (tempx < minx)
+         {
+            minx = tempx;
+         }
          
          
          
-         [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:full_pwm],@"pwm",nil]];
-         index++;
-         */
-        
-        
-        //NSLog(@"von Einstich zum Blockrand");
-        
-        // A vom Einstich  zum Blockrand waagrecht
-        PositionA.x +=einstichx;
-        PositionA.y +=3;
-        PositionB.x +=einstichx;
-        PositionB.y +=3;
-        
-        //NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
-        [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:full_pwm],@"pwm",nil]];
-        index++;
-        
-        
-        // B Anfahrt von unten: Zuerst senkrecht nach oben schneiden bis Blockrand
-        
-        // Hochfahren auf Einlauf. Liegt auf gleicher Hoehe, wenn kein wrench
-        //float deltaAY = zugabeunten - miny;
-        //float deltaBY = zugabeunten - miny;
-        
-        float deltaAY = einlaufAY - EckeLinksUnten.y; //       einlaufAY: eingabekoordinatentabelle[0] "ay"
-        
-        float deltaBY = einlaufBY - EckeLinksUnten.y;
-        
-        //NSLog(@"Anfahrt von unten bis profilkote");
-        
-        PositionA.y +=deltaAY;
-        PositionB.y +=deltaBY;
-        //NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
-        [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:full_pwm],@"pwm",nil]];
-        index++;
-        
-        //NSLog(@"Rand bei Einlauf");
-        
-        // Schneiden zum Einlauf. Kann in x und y unterschiedlich sein.
-        //     NSLog(@"reportBlockkonfigurieren vor Schneiden zum Einlauf EckeRechtsOben x: %2.2f  y: %2.2f",EckeRechtsOben.x,EckeRechtsOben.y);
-        //NSLog(@"vor index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
-        
-        
-        float deltaAX = einlaufAX - PositionA.x;
-        deltaAY = einlaufAY - PositionA.y;
-        
-        PositionA.x +=deltaAX;
-        PositionA.y +=deltaAY;
-        
-        
-        float deltaBX =   einlaufBX - PositionB.x;
-        deltaBY =  einlaufBY - PositionB.y;
-        
-        PositionB.x +=deltaBX;
-        PositionB.y +=deltaBY;
-        
-        //NSLog(@"AAA");
-        
-        //NSLog(@"nach index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
-        
-        [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:full_pwm],@"pwm",nil]];
-        index++;
-        
-         //NSLog(@"blockkoordinatentabelle Einlauf: %@",[blockkoordinatentabelle description]);
-        //NSLog(@"reportBlockkonfigurieren nach Schneiden zum Einlauf EckeRechtsOben x: %2.2f  y: %2.2f",EckeRechtsOben.x,EckeRechtsOben.y);
-        
-        // Hier profil einseten
-        // **********************************
-        // Nach Profil und ev. Ausstich:
-        // **********************************
-        
-        
-        // Auslauf
-        lage=1;
-        
-        //NSLog(@"BBB");
-        //Letzte Position
-        PositionA = NSMakePoint(auslaufAX, auslaufAY);
-        PositionB = NSMakePoint(auslaufBX, auslaufBY);
-        //NSLog(@"Auslauf start index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
-        
-        // Distanz ist unterschiedlich
-        
-        
-        //Schneiden an Blockrand rechts Eventuell Strom red
-        
-        PositionA.x = EckeRechtsOben.x;
-        PositionB.x = EckeRechtsOben.x;
-        //NSLog(@"Auslauf Rand rechts index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
-        
-        //[blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:red_pwm],@"pwm",nil]];
-        
-        // Korr 3 7 2013: red pwm eliminiert. Wird schon in Profileinfuegen erledigt
-        [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:aktuellepwm*red_pwm],@"pwm",nil]];
-        
-        index++;
-        //Schneiden zu Blockunterkante rechts
-        
-        //NSLog(@"Schneiden zu Blockunterkante rechts");
-        PositionA.y = EckeRechtsUnten.y;// - einstichy + 3;
-        PositionB.y = EckeRechtsUnten.y;// - einstichy + 3;
-        
-        [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:full_pwm],@"pwm",nil]];
-        index++;
-        
-        
-        //Schneiden an Blockunterkante links
-        //NSLog(@"Schneiden zu Blockunterkante links");
-        
-        //PositionA.x = EckeLinksUnten.x - 4;//-einstichx+1; // Nicht bis Anschlag fahren
-        PositionA.x = EckeLinksUnten.x;// - einstichx; // Bis Anschlag fahren
-        
-        //PositionB.x = EckeLinksUnten.x - 4;//-einstichx+1;
-        PositionB.x = EckeLinksUnten.x;// - einstichx;
-        
-        [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:full_pwm],@"pwm",nil]];
-        index++;
-        
-        PositionA.x -=einstichx;
-        PositionA.y -=3;
-        PositionB.x -=einstichx;
-        PositionB.y -=3;
-
-        [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:full_pwm],@"pwm",nil]];
-        index++;
-
-        
-        
-        
-    } // if count
-    else
-    {
-        return nil;
-    }
-    return blockkoordinatentabelle;
+      }
+      
+      // Abmessungen des Profils
+      
+      float ausmassx = maxx-minx;
+      float ausmassy = maxy-miny;
+      NSLog(@"tBlockkonfigurierenFunktion ausmassx: %2.2f ausmassy: %2.2f",ausmassx,ausmassy);
+      
+      //NSLog(@"reportBlockkonfigurieren maxy: %2.2f miny: %2.2f",maxy,miny);
+      //NSLog(@"reportBlockkonfigurieren maxx: %2.2f minx: %2.2f",maxx,minx);
+      
+      //      maxy -= fmax(einlaufAY,einlaufBY);       // Abstand von Einlauf bis oberster Punkt
+      float abstandoben = maxy - fmax(einlaufAY,einlaufBY);       // Abstand von Einlauf bis oberster Punkt
+      
+      //      miny -= fmax(einlaufAY,einlaufBY);      // Abstand von Einlauf bis unterster Punkt
+      float abstandunten = fmax(einlaufAY,einlaufBY) - miny;       // Abstand von Einlauf bis oberster Punkt
+      
+      //NSLog(@"BlockkonfigurierenFunktion maxy: %2.2f miny: %2.2f",maxy,miny);
+      
+      float breite = [[eingabeDic objectForKey:@"blockbreite"]floatValue];
+      float rand = [[eingabeDic objectForKey:@"einlaufrand"]floatValue];
+      
+      float dicke = [[eingabeDic objectForKey:@"dicke"]floatValue];
+      
+      float blockoberkante = [[eingabeDic objectForKey:@"blockoberkante"]floatValue];
+      //blockoberkante = plattendicke-5;
+      
+      if ((maxy + fabs(miny))>dicke)
+      {
+         NSLog(@"Block ist nicht dick genug");
+      }
+      
+      // Rahmen
+      if ([[eingabeDic objectForKey:@"mitoberseite"]floatValue] && [[eingabeDic objectForKey:@"mitunterseite"]floatValue]) // kein ein/auslauf
+      {
+         dicke = (abstandoben+abstandunten)+zugabeoben +zugabeoben;
+         rand = 5;
+      }
+      else
+      {
+         dicke = (abstandoben+abstandunten)+zugabeoben +zugabeunten; // (maxy-miny) ist Dicke ohne zugaben
+      }
+      
+      
+      
+      //NSLog(@"reportBlockkonfigurieren dicke: %2.2f",dicke);
+      //     [Blockoberkante setIntValue:dicke];
+      //[Blockoberkante setIntValue:plattendicke-5];
+      
+      [OberkantenStepper setIntValue:[Blockoberkante intValue]];
+      
+      [Blockdicke setIntValue:dicke];
+      [Einlaufrand setIntValue:einlaufrand];
+      [Auslaufrand setIntValue:auslaufrand];
+      
+      [Blockbreite setIntValue:maxx+einlaufrand - minx + auslaufrand];
+      [AbmessungX setIntValue:[Blockbreite intValue] + einstichx];
+      
+      // neue Berechnung
+      
+      
+      NSPoint EckeLinksUnten = NSMakePoint(einlaufAX - rand, fmax(einlaufAY,einlaufBY) - abstandunten  - zugabeunten);
+      NSPoint EckeLinksOben = NSMakePoint(EckeLinksUnten.x, EckeLinksUnten.y + dicke);
+      
+      NSPoint EckeRechtsOben = NSMakePoint(EckeLinksOben.x + ausmassx + einlaufrand + auslaufrand, EckeLinksOben.y);
+      NSPoint EckeRechtsUnten = NSMakePoint(EckeRechtsOben.x, EckeLinksUnten.y);
+      
+      //NSLog(@"reportBlockkonfigurieren EckeRechtsOben x: %2.2f  y: %2.2f",EckeRechtsOben.x,EckeRechtsOben.y);
+      
+      BlockrahmenArray = [NSMutableArray arrayWithObjects:NSStringFromPoint(EckeLinksOben),NSStringFromPoint(EckeRechtsOben),NSStringFromPoint(EckeRechtsUnten),NSStringFromPoint(EckeLinksUnten), nil];
+      
+      
+      //NSLog(@"reportBlockkonfigurieren RahmenArray: %@",[BlockrahmenArray description]);
+      
+      [ProfilGraph setRahmenArray:BlockrahmenArray];
+      
+      
+      [ProfilGraph setNeedsDisplay:YES];
+      // Start Konfig Schnittlinie
+      /*
+       // Startpunkt ist EckeLinksOben. Lage: 0: Einlauf 1: Auslauf
+       NSPoint PositionA = EckeLinksOben;
+       NSPoint PositionB = EckeLinksOben;
+       */
+      // Startpunkt ist EckeLinksUnten. Lage: 0: Einlauf 1: Auslauf
+      NSPoint PositionA = EckeLinksUnten;
+      NSPoint PositionB = EckeLinksUnten;
+      
+      
+      // Start des Schnittes ist um einstichx, einstichy zurueckverschoben. Start vorerst dorthin verlegen
+      
+      //    einstichy = plattendicke - dicke;
+      [[eingabeDic objectForKey:@"kote"]floatValue];
+      einstichy = [[eingabeDic objectForKey:@"kote"]floatValue];
+      
+      PositionA.x -=einstichx;
+      PositionA.y -=3;
+      PositionB.x -=einstichx;
+      PositionB.y -=3;
+      
+      
+      // nach einfuehren VerikalSpiegeln: Horizontaler Einlauf ohne Hochfahren, -=einstichy auskomm
+      //     PositionA.y -=einstichy;
+      //     PositionB.y -=einstichy;
+      
+      int index=0;
+      
+      //NSLog(@"Einstich: Werte in blockkoordinatentabelle einsetzen");
+      // A
+      [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:full_pwm],@"pwm",nil]];
+      
+      index++;
+      
+      // Hochfahren auf Kote
+      
+      // nach einfuehren VerikalSpiegeln: Horizontaler Einlauf ohne Hochfahren, -=einstichy auskomm
+      
+      /*
+       PositionA.y +=einstichy;
+       PositionB.y +=einstichy;
+       
+       //NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+       
+       
+       
+       [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:full_pwm],@"pwm",nil]];
+       index++;
+       */
+      
+      
+      //NSLog(@"von Einstich zum Blockrand");
+      
+      // A vom Einstich  zum Blockrand waagrecht
+      PositionA.x +=einstichx;
+      PositionA.y +=3;
+      PositionB.x +=einstichx;
+      PositionB.y +=3;
+      
+      //NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+      [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:full_pwm],@"pwm",nil]];
+      index++;
+      
+      
+      // B Anfahrt von unten: Zuerst senkrecht nach oben schneiden bis Blockrand
+      
+      // Hochfahren auf Einlauf. Liegt auf gleicher Hoehe, wenn kein wrench
+      //float deltaAY = zugabeunten - miny;
+      //float deltaBY = zugabeunten - miny;
+      
+      float deltaAY = einlaufAY - EckeLinksUnten.y; //       einlaufAY: eingabekoordinatentabelle[0] "ay"
+      
+      float deltaBY = einlaufBY - EckeLinksUnten.y;
+      
+      //NSLog(@"Anfahrt von unten bis profilkote");
+      
+      PositionA.y +=deltaAY;
+      PositionB.y +=deltaBY;
+      //NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+      [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:full_pwm],@"pwm",nil]];
+      index++;
+      
+      //NSLog(@"Rand bei Einlauf");
+      
+      // Schneiden zum Einlauf. Kann in x und y unterschiedlich sein.
+      //     NSLog(@"reportBlockkonfigurieren vor Schneiden zum Einlauf EckeRechtsOben x: %2.2f  y: %2.2f",EckeRechtsOben.x,EckeRechtsOben.y);
+      //NSLog(@"vor index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+      
+      
+      float deltaAX = einlaufAX - PositionA.x;
+      deltaAY = einlaufAY - PositionA.y;
+      
+      PositionA.x +=deltaAX;
+      PositionA.y +=deltaAY;
+      
+      
+      float deltaBX =   einlaufBX - PositionB.x;
+      deltaBY =  einlaufBY - PositionB.y;
+      
+      PositionB.x +=deltaBX;
+      PositionB.y +=deltaBY;
+      
+      //NSLog(@"AAA");
+      
+      //NSLog(@"nach index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+      
+      [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:full_pwm],@"pwm",nil]];
+      index++;
+      
+      //NSLog(@"blockkoordinatentabelle Einlauf: %@",[blockkoordinatentabelle description]);
+      //NSLog(@"reportBlockkonfigurieren nach Schneiden zum Einlauf EckeRechtsOben x: %2.2f  y: %2.2f",EckeRechtsOben.x,EckeRechtsOben.y);
+      
+      // Hier profil einseten: LibProfileingabefunktion
+      // **********************************
+      // Nach Profil und ev. Ausstich:
+      // **********************************
+      
+      
+      // Auslauf
+      lage=1;
+      
+      //NSLog(@"BBB");
+      //Letzte Position
+      PositionA = NSMakePoint(auslaufAX, auslaufAY);
+      PositionB = NSMakePoint(auslaufBX, auslaufBY);
+      //NSLog(@"Auslauf start index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+      
+      // Distanz ist unterschiedlich
+      
+      
+      //Schneiden an Blockrand rechts Eventuell Strom red
+      
+      PositionA.x = EckeRechtsOben.x;
+      PositionB.x = EckeRechtsOben.x;
+      //NSLog(@"Auslauf Rand rechts index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+      
+      //[blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:red_pwm],@"pwm",nil]];
+      
+      // Korr 3 7 2013: red pwm eliminiert. Wird schon in Profileinfuegen erledigt
+      [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:aktuellepwm*red_pwm],@"pwm",nil]];
+      
+      index++;
+      //Schneiden zu Blockunterkante rechts
+      
+      //NSLog(@"Schneiden zu Blockunterkante rechts");
+      PositionA.y = EckeRechtsUnten.y;// - einstichy + 3;
+      PositionB.y = EckeRechtsUnten.y;// - einstichy + 3;
+      
+      [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:full_pwm],@"pwm",nil]];
+      index++;
+      
+      
+      //Schneiden an Blockunterkante links
+      //NSLog(@"Schneiden zu Blockunterkante links");
+      
+      //PositionA.x = EckeLinksUnten.x - 4;//-einstichx+1; // Nicht bis Anschlag fahren
+      PositionA.x = EckeLinksUnten.x;// - einstichx; // Bis Anschlag fahren
+      
+      //PositionB.x = EckeLinksUnten.x - 4;//-einstichx+1;
+      PositionB.x = EckeLinksUnten.x;// - einstichx;
+      
+      [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:full_pwm],@"pwm",nil]];
+      index++;
+      
+      PositionA.x -=einstichx;
+      PositionA.y -=3;
+      PositionB.x -=einstichx;
+      PositionB.y -=3;
+      
+      [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:full_pwm],@"pwm",nil]];
+      index++;
+      
+      
+      
+      
+   } // if count
+   else
+   {
+      return nil;
+   }
+   return blockkoordinatentabelle;
 }
 
+// nicht verwendet, > ...funktion
 - (IBAction)reportBlockkonfigurieren:(id)sender
 {
    //NSLog(@"reportBlockkonfigurieren Seite: %d",[LinkeRechteSeite selectedSegment]);
@@ -13745,15 +13775,31 @@ return returnInt;
 - (IBAction)reportAndereSeiteAnfahren:(id)sender
 {
     NSLog(@"AVR reportAndereSeiteAnfahren");
+   NSDictionary* outletdaten = [rHotwireViewController cncoutletdaten];
+
+   NSLog(@"reportAndereSeiteAnfahren outletdaten: %@",outletdaten);
    NSDictionary* tempDic=[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:ANDERESEITEANFAHREN] forKey:@"usb"];
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
  //  [nc postNotificationName:@"usbopen" object:self userInfo:tempDic];
+   if ([outletdaten valueForKey:@"pwm"])
+   {
+      full_pwm = [[outletdaten valueForKey:@"pwm"]integerValue];
+   }
+   if ([outletdaten valueForKey:@"redpwm"])
+   {
+      red_pwm = [[outletdaten valueForKey:@"redpwm"]integerValue];
+   }
 
-   float full_pwm = 1;
-   float red_pwm = [red_pwmFeld floatValue];
+   if ([outletdaten valueForKey:@"speed"])
+   {
+      speed = [[outletdaten valueForKey:@"speed"]integerValue];
+   }
+
+   
    [CNC setredpwm:red_pwm];
-   int aktuellepwm=[DC_PWM intValue];
-   int lastSpeed = [CNC speed];
+   //int aktuellepwm=[DC_PWM intValue];
+   int lastSpeed = speed;
+   
    int nowpwm =0;
    if ([DC_Taste state])
    {

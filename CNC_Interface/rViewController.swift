@@ -859,8 +859,8 @@ class rViewController: NSViewController, NSWindowDelegate
            wertarray.append(0)
            
         }
-        //var richtung = 0xFF
-        /*
+        var richtung = 0xFF
+        
         if let richtungraw = info?["richtung"] as?Int 
         {
            richtung = richtungraw
@@ -870,7 +870,7 @@ class rViewController: NSViewController, NSWindowDelegate
         {
            print("zeilenindex: \(zeilenindex) zeile: \(zeile) usbschnittdatenaktion keine Richtung")
         }
-         */
+         
         wertarray[25] = UInt8(steps)
         wertarray[26] = UInt8(micro)
         wertarray[29] = UInt8(richtung)

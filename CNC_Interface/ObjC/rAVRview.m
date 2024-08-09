@@ -10186,7 +10186,7 @@ return returnInt;
       //NSLog(@"Nase weg index: %d x: %1.1f",index,[[[ProfilArrayA objectAtIndex:[ProfilArrayA count]-1]objectForKey:@"ax"]floatValue]);
       if ([LibKoordinatenTabelle count]>2)
       {
-         [LibKoordinatenTabelle removeObjectAtIndex:[LibKoordinatenTabelle count]-1]; // Letzen Punkt entfernen
+         //[LibKoordinatenTabelle removeObjectAtIndex:[LibKoordinatenTabelle count]-1]; // Letzen Punkt entfernen
       }
    }
    
@@ -10202,23 +10202,45 @@ return returnInt;
 
       
       //for (index = Profil1UnterseiteArray.count-1;index >= 0; index--)
-      
-      for (index = redUnterseiteArray.count-1;index >= 0; index--)
-   
+      if (mitOberseite && mitUnterseite) 
       {
-         //NSLog(@"Unterseite einfuegen A index: %d ", index);
-         //NSDictionary* tempZeilenDicA = [Profil1UnterseiteArray objectAtIndex:index];
-         NSMutableDictionary* tempZeilenDicA = [redUnterseiteArray objectAtIndex:index];
-         [tempZeilenDicA setObject:[NSNumber numberWithInt:30] forKey:@"teil"]; // Kennzeichnung Unterseite
-         // pwm
-         [tempZeilenDicA setObject:[NSNumber numberWithInt:full_pwm] forKey:@"pwm"];
-         [tempZeilenDicA setObject:[NSNumber numberWithInt:index+profilstartindex] forKey:@"index"];
-
-         [LibKoordinatenTabelle addObject:tempZeilenDicA];
-         //NSLog(@"index: %d x: %1.1f",index,[[[ProfilArrayA objectAtIndex:index]objectForKey:@"ax"]floatValue]);
-         NSLog(@"Unterseite einfuegen for end index: %d",index);
+         int indexoffset = [LibKoordinatenTabelle count];
+         for (index = 0;index <redUnterseiteArray.count; index++)
+            
+         {
+            //NSLog(@"Unterseite einfuegen A index: %d ", index);
+            //NSDictionary* tempZeilenDicA = [Profil1UnterseiteArray objectAtIndex:index];
+            NSMutableDictionary* tempZeilenDicA = [redUnterseiteArray objectAtIndex:index];
+            [tempZeilenDicA setObject:[NSNumber numberWithInt:30] forKey:@"teil"]; // Kennzeichnung Unterseite
+            // pwm
+            [tempZeilenDicA setObject:[NSNumber numberWithInt:full_pwm] forKey:@"pwm"];
+            [tempZeilenDicA setObject:[NSNumber numberWithInt:index+indexoffset] forKey:@"index"];
+            
+            [LibKoordinatenTabelle addObject:tempZeilenDicA];
+            //NSLog(@"index: %d x: %1.1f",index,[[[ProfilArrayA objectAtIndex:index]objectForKey:@"ax"]floatValue]);
+            NSLog(@"Unterseite einfuegen for end index: %d",index);
+         }
       }
-      
+      else
+      {
+         
+         for (index = redUnterseiteArray.count-1;index >= 0; index--)
+            
+         {
+            //NSLog(@"Unterseite einfuegen A index: %d ", index);
+            //NSDictionary* tempZeilenDicA = [Profil1UnterseiteArray objectAtIndex:index];
+            NSMutableDictionary* tempZeilenDicA = [redUnterseiteArray objectAtIndex:index];
+            [tempZeilenDicA setObject:[NSNumber numberWithInt:30] forKey:@"teil"]; // Kennzeichnung Unterseite
+            // pwm
+            [tempZeilenDicA setObject:[NSNumber numberWithInt:full_pwm] forKey:@"pwm"];
+            [tempZeilenDicA setObject:[NSNumber numberWithInt:index+profilstartindex] forKey:@"index"];
+            
+            [LibKoordinatenTabelle addObject:tempZeilenDicA];
+            //NSLog(@"index: %d x: %1.1f",index,[[[ProfilArrayA objectAtIndex:index]objectForKey:@"ax"]floatValue]);
+            NSLog(@"Unterseite einfuegen for end index: %d",index);
+         }
+         
+      }
       
       // Endindex fixieren, wird fuer Abbrand gebraucht fuer 'bis'
       profilendindex = [[[LibKoordinatenTabelle lastObject]objectForKey:@"index"]intValue];

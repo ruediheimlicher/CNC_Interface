@@ -3740,9 +3740,13 @@ PortA=vs[n & 3]; warte10ms(); n++;
     
     */
    //fprintf(stderr,"i\t ax\tay\tpreva[0]\tpreva[1]\tnexta[0]\tnexta[1]\twha[0]\twha[1]\t prevnorma[0]\tprevnorma[1]\tnextnorma[0]\tnextnorma[1]\tcosphia\tlastwha[0]\tlastwha[1]\tprevhypoa\tnexthypoa\tcospsia\n");
-
+   if(bis >= [Koordinatentabelle count])
+   {
+      bis = [Koordinatentabelle count] - 1;
+   }
    for (i=0; i<[Koordinatentabelle count];i++)
    {
+     
       int seitenkorrektura = 1;
       int seitenkorrekturb = 1;
       NSMutableDictionary* tempDic=[NSMutableDictionary dictionaryWithDictionary:[Koordinatentabelle objectAtIndex:i]];
@@ -3782,7 +3786,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
          }
          
          
-         if (i>von) // Schon im Abbrandbereich von: vorherigen Wert lesen
+         if ((i>0) && (i>von)) // Schon im Abbrandbereich von: vorherigen Wert lesen
          {
             prevax = [[[Koordinatentabelle objectAtIndex:i-1]objectForKey:@"ax"]floatValue];
             prevay = [[[Koordinatentabelle objectAtIndex:i-1]objectForKey:@"ay"]floatValue];
@@ -3803,7 +3807,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
                
                float mittevor[2] = {(ax+prevax)/2,(prevay+ay)/2};
                float mittenach[2] = {(ax+nextax)/2,(nextay+ay)/2};
-          //     fprintf(stderr,"Kruemmungen \t%d\tmittevor %2.8f\tmittenach %2.8f\n",i,diffvor[2],diffnach[2]);
+          //     fprintf(stderr,"Kruemmungen \t%d\tmittevor %2.8f\tmittenach %2.8f\n",i,mittevor[2],mittenach[2]);
 
                //fprintf(stderr,"mittelpunkt \t%d\t%2.8f\t%2.8f\t%2.8f\t%2.8f\t%2.8f\n",i,mittevor[0],mittevor[1],mittenach[0],mittenach[1],1);
 
@@ -3888,7 +3892,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
                   //
                   if (radius < abbrandmassa )
                   {
-                     fprintf(stderr,"mittelpunkt \t%d\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\n",i,ax,ay,detvor,detnach,mittelpunkt[0],mittelpunkt[1],radius);
+                     //fprintf(stderr,"mittelpunkt \t%d\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\n",i,ax,ay,detvor,detnach,mittelpunkt[0],mittelpunkt[1],radius);
                   }
                   
                }
@@ -4235,6 +4239,8 @@ PortA=vs[n & 3]; warte10ms(); n++;
             
             
             // letzte wh : lastwha, lastwhb gespeichert in vorherigem Durchgang
+            
+            
             //  Seite A
             float lasthypoa = hypotf(lastwha[0],lastwha[1]);   // Laenge der vorherigen WH
             float currhypoa = hypotf(wha[0],wha[1]);           // Laenge der aktuellen WH
@@ -4383,10 +4389,18 @@ PortA=vs[n & 3]; warte10ms(); n++;
          }
          else
          {
-         [tempDic setObject:[NSNumber numberWithFloat:ax+abbranda[0]] forKey:@"abrax"];
+            //printf("ax: %2.2f \t  abray: %2.2f \t ay: %2.2f \t  abray: %2.2f \n",ax,abbranda[0],ay,abbranda[1]);
+         
+            [tempDic setObject:[NSNumber numberWithFloat:ax+abbranda[0]] forKey:@"abrax"];
          [tempDic setObject:[NSNumber numberWithFloat:ay+abbranda[1]] forKey:@"abray"];
          [tempDic setObject:[NSNumber numberWithFloat:bx+abbrandb[0]] forKey:@"abrbx"];
          [tempDic setObject:[NSNumber numberWithFloat:by+abbrandb[1]] forKey:@"abrby"];
+            /*
+            [tempDic setObject:[NSNumber numberWithFloat:ax-abbranda[0]] forKey:@"abrax"];
+            [tempDic setObject:[NSNumber numberWithFloat:ay-abbranda[1]] forKey:@"abray"];
+            [tempDic setObject:[NSNumber numberWithFloat:bx-abbrandb[0]] forKey:@"abrbx"];
+            [tempDic setObject:[NSNumber numberWithFloat:by-abbrandb[1]] forKey:@"abrby"];
+              */
          }
   //       float hypa = hypotf(ax, ay);
   //       float hypb = hypotf(bx, by);
@@ -4415,7 +4429,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
 
        }
 
-       
+      printf("%d\t %2.2f \t %2.2f \t %2.2f \t %2.2f \n",i,ax,ay,[[tempDic objectForKey:@"abrax"]floatValue],[[tempDic objectForKey:@"abray"]floatValue]);
       
       [AbbrandArray addObject:tempDic];
       

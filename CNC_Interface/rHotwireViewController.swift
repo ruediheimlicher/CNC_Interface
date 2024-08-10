@@ -856,7 +856,7 @@ var outletdaten:[String:AnyObject] = [:]
         
         
    //     let eingabedic = info! as NSDictionary
-        
+         //print("LibProfilEG infodic: \(infodic)")
         
         KoordinatenTabelle = AVR?.libProfileingabeFunktion(infodic) as! [[String : Double]]
         
@@ -886,7 +886,8 @@ var outletdaten:[String:AnyObject] = [:]
         ProfilFeld.setScale(derScalefaktor:CGFloat(scalefaktor))
         ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
         ProfilFeld.needsDisplay = true
-        
+       CNC_Table.reloadData()
+       CNC_Table.selectRowIndexes(.init(integer: 0), byExtendingSelection: false) 
         
         let startindexoffset = KoordinatenTabelle.count - 1
         print("LibProfileingabeAktion startindexoffset: \(startindexoffset)")
@@ -898,9 +899,9 @@ var outletdaten:[String:AnyObject] = [:]
 
         var origpwm:Double = DC_PWM.doubleValue
         
- return
+ //return
 
-        
+       CNC_Stoptaste.isEnabled = true
         
     }// LibProfileingabeAktion
     
@@ -2355,7 +2356,7 @@ var outletdaten:[String:AnyObject] = [:]
          
       }
       
-      print("reportUSB_sendArray cncposition: \(cncposition) \nschnittdatenarray 0: \(SchnittdatenArray[0])")
+      //print("reportUSB_sendArray cncposition: \(cncposition) \nschnittdatenarray 0: \(SchnittdatenArray[0])")
       CNC_Halttaste.isEnabled = true
       CNC_Stoptaste.state = NSControl.StateValue.off
       PositionFeld.integerValue = 0
@@ -2400,7 +2401,7 @@ var outletdaten:[String:AnyObject] = [:]
          
       }
       
-      print("swift reportUSB_sendArray NotificationDic: \(SchnittdatenDic)")
+      //print("swift reportUSB_sendArray NotificationDic: \(SchnittdatenDic)")
       /*
        nc.post(name:Notification.Name(rawValue:"usbschnittdaten"),
        object: nil,

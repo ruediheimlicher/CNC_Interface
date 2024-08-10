@@ -508,7 +508,7 @@ class rProfilfeldView: NSView
                     {
                         l = i
                         ok = 1
-                        startabbrandindexA = i
+                       startabbrandindexA += 1;
                     }
                     //break
                 }

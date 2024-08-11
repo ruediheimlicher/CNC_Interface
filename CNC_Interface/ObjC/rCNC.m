@@ -3821,12 +3821,12 @@ PortA=vs[n & 3]; warte10ms(); n++;
                // vor
                if (diffvor[0]) // nicht senkrecht
                {
-                  steigungvor = diffvor[1]/diffvor[0];
+                  steigungvor = diffvor[1]/diffvor[0]; // dy/dx
                  
                }
                if (diffvor[1])
                {
-                  senkrechtvor = -diffvor[0]/diffvor[1];
+                  senkrechtvor = -diffvor[0]/diffvor[1]; // -dy/dx
                }
 
                // nach
@@ -3986,7 +3986,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
             // Laengen der Vektoren bestimmen
             
             
-            if (preva[0] || preva[1])
+            if (preva[0] || preva[1]) // preva: {dx,dy}
             {
                prevhypoa=hypot(preva[0],preva[1]); // Laenge des vorherigen Weges
             }
@@ -4035,7 +4035,8 @@ PortA=vs[n & 3]; warte10ms(); n++;
 
             
             
-            // Winkel aus Skalarprodukt der Einheitsvektoren
+            // Cosinus-Satz Winkel aus Skalarprodukt der Einheitsvektoren
+            
             cosphia=prevnorma[0]*nextnorma[0]+ prevnorma[1]*nextnorma[1]; // cosinus des Zwischenwinkels
             
             

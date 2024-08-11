@@ -3597,6 +3597,64 @@ var outletdaten:[String:AnyObject] = [:]
     {
        print("reportWertBYStepper IntVal: \(sender.integerValue)")
     }
+   
+   @IBAction  func reportZeileWeg(_ sender:NSButton) 
+   {
+      //NSLog(@"ZeileWeg Zeile: %d",[IndexFeld intValue]);
+      if (KoordinatenTabelle.count > 1) && (CNC_Table.numberOfSelectedRows > 0)
+      {
+         let  aktuelleZeile = IndexFeld.intValue
+         let index = IndexFeld.intValue
+         let anz = KoordinatenTabelle.count
+         if (aktuelleZeile == 0) // erster Punkt weg
+         {
+            
+            KoordinatenTabelle.remove(at:0)
+            /*
+             StartKoordinate.cellAtIndex:0.doubleValue = [[[KoordinatenTabelle objectAtIndex:1]objectForKey:@"ax"]floatValue]];
+             [[StartKoordinate cellAtIndex:1]setFloatValue:[[[KoordinatenTabelle objectAtIndex:1]objectForKey:@"ay"]floatValue]];
+             [[StartKoordinate cellAtIndex:0]setFloatValue:[[[KoordinatenTabelle objectAtIndex:1]objectForKey:@"bx"]floatValue]];
+             [[StartKoordinate cellAtIndex:1]setFloatValue:[[[KoordinatenTabelle objectAtIndex:1]objectForKey:@"by"]floatValue]];
+             */
+            
+            
+         }
+         else if aktuelleZeile == anz - 1 // letzter Punkt weg
+         {
+            KoordinatenTabelle.remove(at:anz - 1)
+            /*
+             [[StopKoordinate cellAtIndex:0]setFloatValue:[[[KoordinatenTabelle objectAtIndex:[KoordinatenTabelle count]-2]objectForKey:@"ax"]floatValue]];
+             [[StopKoordinate cellAtIndex:1]setFloatValue:[[[KoordinatenTabelle objectAtIndex:[KoordinatenTabelle count]-2]objectForKey:@"ay"]floatValue]];
+             [[StopKoordinate cellAtIndex:0]setFloatValue:[[[KoordinatenTabelle objectAtIndex:[KoordinatenTabelle count]-2]objectForKey:@"bx"]floatValue]];
+             [[StopKoordinate cellAtIndex:1]setFloatValue:[[[KoordinatenTabelle objectAtIndex:[KoordinatenTabelle count]-2]objectForKey:@"by"]floatValue]];
+             */
+            
+         }
+         else
+         {
+            KoordinatenTabelle.remove(at:Int(aktuelleZeile))
+         }
+         updateIndex()
+         
+         
+         CNC_Table.reloadData()
+         let rowindexset =  IndexSet(integer: 0)
+         CNC_Table.selectRowIndexes(rowindexset, byExtendingSelection: false)
+         ProfilFeld.DatenArray = KoordinatenTabelle as NSArray
+         ProfilFeld.needsDisplay = true
+         
+      }
+   }
+   
+   @objc func updateIndex()
+   {
+      print ("updateIndex")
+      
+      for i in 0..<KoordinatenTabelle.count
+      {
+         KoordinatenTabelle[i]["index"] = Double(i)
+      }
+   }
     
    @IBAction  func reportProfilPop(_ sender:NSPopUpButton)
    {

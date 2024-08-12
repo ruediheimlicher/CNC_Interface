@@ -404,6 +404,7 @@ class rProfilfeldView: NSView
             ax = line["ax"]!
             ay = line["ay"]!
             EndPunktA = NSMakePoint(ax*scale,ay*scale)
+           
             bx = line["bx"]!
             by = line["by"]!
             EndPunktB = NSMakePoint(bx*scale,by*scale)
@@ -417,7 +418,7 @@ class rProfilfeldView: NSView
             
             if screen > 0
             {
-                
+                // Gitter
                 var line = DatenArray[0] as! [String:Any]
                 
                 var ax = line["ax"] as! Double
@@ -533,8 +534,7 @@ class rProfilfeldView: NSView
             let startabray = startlineA["ay"]! + 5
             
             var AbbrandStartPunktA = NSMakePoint(startabrax! * scale,startabray * scale)
-            
-           AbbrandLinieA.move(to: AbbrandStartPunktA)
+            AbbrandLinieA.move(to: AbbrandStartPunktA)
 
             let startabrbx = startlineA["bx"]
             let startabrby = startlineA["by"]! + 5
@@ -559,6 +559,8 @@ class rProfilfeldView: NSView
                 }
             }
             print("startabbrandindexB: \(startabbrandindexB)")
+           
+           
              
             for i in 0..<anz
             {
@@ -670,7 +672,7 @@ class rProfilfeldView: NSView
                         }
                         else
                         {
-                            AbbrandPunktA.y  += CGFloat(abbranddelay)
+                            //AbbrandPunktA.y  += CGFloat(abbranddelay)
                             AbbrandLinieA.line(to:AbbrandPunktA)
                             var AbbranddeltaA = NSBezierPath()
                             
@@ -704,7 +706,7 @@ class rProfilfeldView: NSView
                         }
                         else
                         {
-                            AbbrandPunktB.y  += CGFloat(abbranddelay)
+                            //AbbrandPunktB.y  += CGFloat(abbranddelay)
                             AbbrandLinieB.line(to:AbbrandPunktB)
                             
                             var AbbranddeltaB = NSBezierPath()

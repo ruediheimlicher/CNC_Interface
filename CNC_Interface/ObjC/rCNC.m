@@ -3729,7 +3729,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    //NSLog(@"addAbbrandVonKoordinaten start: %@",[Koordinatentabelle  description]);
    //NSLog(@"addAbbrandVonKoordinaten start: %@",[[Koordinatentabelle objectAtIndex:0] description]);
    
-   //fprintf(stderr, "i \tprev x \tprev y \tnext x \tnexy \tprefhyp \tnexthyp \tprevnorm x \tprevnorm y \tnextnorm x  \tnextnorm y\n");
+   //fprintf(stderr, "i \t ax\t ay\tpreva x \tpreva y \tnexta x \t nexay \t wha x \t wha y\tprefhyp \tnexthyp \tprevnorm x \tprevnorm y \tnextnorm x  \tnextnorm y\n");
    
    /*
     Fuer jeden Punkt:
@@ -3744,6 +3744,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    {
       bis = [Koordinatentabelle count] - 1;
    }
+   fprintf(stderr, "i \t ax\t ay\tpreva x \tpreva y \tnexta x \t nexay \n");
    for (i=0; i<[Koordinatentabelle count];i++)
    {
      
@@ -3794,13 +3795,17 @@ PortA=vs[n & 3]; warte10ms(); n++;
             prevby = [[[Koordinatentabelle objectAtIndex:i-1]objectForKey:@"by"]floatValue];
          }
          
+         if((i > 40) && (i<80))
+         {
+            fprintf(stderr, "%d \t %2.4f\t %2.4f\t%2.4f  \t%2.4f  \t%2.4f  \t %2.4f \n",i,ax,ay,prevax, prevay, nextax, nextay);
+         }
           
          if ((i<bis-1) && (i>von)) // Punkt im Abbrandbereich
          {
              // Kruemmungen berechnen
             if (i<bis && i>von+1)
             {
-               float diffvor[2] = {ax-prevax, ay-prevay};
+               float diffvor[2] = {ax-prevax, ay-prevay};   // dx,dy
                float diffnach[2] = {nextax-ax, nextay-ay};
          //      fprintf(stderr,"Kruemmungen \t%d\tdiffvor %2.8f\tdiffnach %2.8f\n",i,diffvor[2],diffnach[2]);
 
@@ -3819,23 +3824,23 @@ PortA=vs[n & 3]; warte10ms(); n++;
                float senkrechtnach = 0;
                
                // vor
-               if (diffvor[0]) // nicht senkrecht
+               if (diffvor[0]!=0) // nicht senkrecht
                {
                   steigungvor = diffvor[1]/diffvor[0]; // dy/dx
                  
                }
-               if (diffvor[1])
+               if (diffvor[1]!=0)
                {
                   senkrechtvor = -diffvor[0]/diffvor[1]; // -dy/dx
                }
 
                // nach
-               if (diffnach[0]) // nicht waagrecht
+               if (diffnach[0]!=0) // nicht waagrecht
                {
                   steigungnach = diffnach[1]/diffnach[0];
                   
                }
-               if (diffnach[1])
+               if (diffnach[1]!=0)
                {
                   senkrechtnach = -diffnach[0]/diffnach[1];
                }
@@ -3883,7 +3888,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
                float d[2] = {senkrechtnach,constnach};
                float detnach = determinante(c,d);
                
-               if (detconst)
+               if (detconst!=0)
                {
                   float mittelpunkt[2] = {detvor/detconst,detnach/detconst};
                   float radius = hypotf(mittelpunkt[0]-ax,mittelpunkt[1]-ay);
@@ -3905,19 +3910,17 @@ PortA=vs[n & 3]; warte10ms(); n++;
             // ********
             
             // Vektoren vorher, nachher
-            //float preva[2] = {prevax-ax,prevay-ay};
-            //float preva[2] = {prevax-ax,prevay-ay};
-            
-            float preva[2] = {ax-prevax,ay-prevay};
-            float nexta[2] = {nextax-ax,nextay-ay};
-            //NSLog(@"i: %d  preva[0]: %2.4f preva[1]: %2.4f nexta[0]: %1.4f nexta[1]: %2.4f",i,preva[0],preva[1],nexta[0],nexta[1]);
+             
+            float deltapreva[2] = {ax-prevax,ay-prevay};
+            float deltanexta[2] = {nextax-ax,nextay-ay};
+            //NSLog(@"i: %d  deltapreva[0]: %2.4f deltapreva[1]: %2.4f deltanexta[0]: %1.4f deltanexta[1]: %2.4f",i,deltapreva[0],deltapreva[1],deltanexta[0],deltanexta[1]);
             
             /*
-            float prevhypoa=hypot(preva[0],preva[1]); // Laenge des vorherigen Weges
-            float nexthypoa=hypot(nexta[0],nexta[1]); // Laenge des naechsten Weges
+            float prevhypoa=hypot(deltapreva[0],deltapreva[1]); // Laenge des vorherigen Weges
+            float nexthypoa=hypot(deltanexta[0],deltanexta[1]); // Laenge des naechsten Weges
             
-            float prevnorma[2]= {(preva[0])/prevhypoa,(preva[1])/prevhypoa}; // vorheriger Normalenvektor
-            float nextnorma[2]= {(nexta[0])/nexthypoa,(nexta[1])/nexthypoa}; // naechster Normalenvektor
+            float prevnorma[2]= {(deltapreva[0])/prevhypoa,(deltapreva[1])/prevhypoa}; // vorheriger Normalenvektor
+            float nextnorma[2]= {(deltanexta[0])/nexthypoa,(deltanexta[1])/nexthypoa}; // naechster Normalenvektor
             */
             
             
@@ -3986,9 +3989,9 @@ PortA=vs[n & 3]; warte10ms(); n++;
             // Laengen der Vektoren bestimmen
             
             
-            if (preva[0] || preva[1]) // preva: {dx,dy}
+            if ((deltapreva[0]!=0) || (deltapreva[1]!=0)) // deltapreva: {dx,dy}
             {
-               prevhypoa=hypot(preva[0],preva[1]); // Laenge des vorherigen Weges
+               prevhypoa=hypot(deltapreva[0],deltapreva[1]); // Laenge des vorherigen Weges
             }
             else
             {
@@ -3996,9 +3999,9 @@ PortA=vs[n & 3]; warte10ms(); n++;
                
             }
             
-            if (nexta[0] || nexta[1])
+            if ((deltanexta[0]!=0) || (deltanexta[1]!=0))
             {
-               nexthypoa = hypot(nexta[0],nexta[1]); // Laenge des naechsten Weges
+               nexthypoa = hypot(deltanexta[0],deltanexta[1]); // Laenge des naechsten Weges
             }
             else
             {
@@ -4009,10 +4012,10 @@ PortA=vs[n & 3]; warte10ms(); n++;
             //NSLog(@"i: %d  prevhypoa: %2.4f nexthypoa: %2.4f",i,prevhypoa,nexthypoa);
             
             float prevnorma[2] = {0.0,0.0};
-            if (prevhypoa)
+            if (prevhypoa!=0)
             {
-               prevnorma[0]= -(preva[1])/prevhypoa;
-               prevnorma[1] = (preva[0])/prevhypoa; // vorheriger Normalenvektor
+               prevnorma[0]= -(deltapreva[1])/prevhypoa;
+               prevnorma[1] = (deltapreva[0])/prevhypoa; // vorheriger Normalenvektor
             }
             else
             {
@@ -4022,10 +4025,10 @@ PortA=vs[n & 3]; warte10ms(); n++;
             
             
             float nextnorma[2] = {0.0,0.0};
-            if (nexthypoa)
+            if (nexthypoa!=0)
             {
-               nextnorma[0]= -(nexta[1])/nexthypoa;
-               nextnorma[1] = (nexta[0])/nexthypoa; // vorheriger Normalenvektor
+               nextnorma[0]= -(deltanexta[1])/nexthypoa;
+               nextnorma[1] = (deltanexta[0])/nexthypoa; // naechster Normalenvektor
             }
             else
             {
@@ -4090,6 +4093,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
             }
             
             // Winkelhalbierende
+            
           
             wha[0] = prevnorma[0]+ nextnorma[0];                // Winkelhalbierende als Vektorsumme der Normalenvektoren
             wha[1] = prevnorma[1]+ nextnorma[1];
@@ -4098,13 +4102,13 @@ PortA=vs[n & 3]; warte10ms(); n++;
             /*
              Determinante:
              Erste Gerade:
-             preva[0] preva[1]
+             deltapreva[0] deltapreva[1]
              zweite Gerade:
              wha[0] wha[1]
-             determinante = preva[0]*wha[1]-preva[1]*wha[0]
+             determinante = deltapreva[0]*wha[1]-deltapreva[1]*wha[0]
              */
             
-            float deta = preva[0]*wha[1]-preva[1]*wha[0];
+            float deta = deltapreva[0]*wha[1]-deltapreva[1]*wha[0];
             
             if (deta < 0)
             {
@@ -4132,10 +4136,6 @@ PortA=vs[n & 3]; warte10ms(); n++;
             // Seite 2
             // *******
             
-            if (i==131)
-            {
-               int a=i;
-            }
             float prevb[2]= {bx-prevbx,by-prevby};
             float nextb[2]= {nextbx-bx,nextby-by};
             
@@ -4251,7 +4251,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
             
          if (i>[Koordinatentabelle count]-20)
          {
-          //  fprintf(stderr,"%d\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.6f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.6f\n",i, ax,ay,preva[0],preva[1],nexta[0],nexta[1],wha[0],wha[1], prevnorma[0],prevnorma[1],nextnorma[0],nextnorma[1],cosphia,lastwha[0],lastwha[1],prevhypoa,nexthypoa,cospsia);
+          //  fprintf(stderr,"%d\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.6f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.6f\n",i, ax,ay,deltapreva[0],deltapreva[1],deltanexta[0],deltanexta[1],wha[0],wha[1], prevnorma[0],prevnorma[1],nextnorma[0],nextnorma[1],cosphia,lastwha[0],lastwha[1],prevhypoa,nexthypoa,cospsia);
          }
             //            NSLog(@"i: %d  lasthypoa: %2.4f currhypoa: %2.4f cospsia: %1.8f",i,lasthypoa,currhypoa,cospsia);
             
@@ -4430,7 +4430,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
 
        }
 
-      printf("%d\t %2.2f \t %2.2f \t %2.2f \t %2.2f \n",i,ax,ay,[[tempDic objectForKey:@"abrax"]floatValue],[[tempDic objectForKey:@"abray"]floatValue]);
+     // printf("%d\t %2.2f \t %2.2f \t %2.2f \t %2.2f \n",i,ax,ay,[[tempDic objectForKey:@"abrax"]floatValue],[[tempDic objectForKey:@"abray"]floatValue]);
       
       [AbbrandArray addObject:tempDic];
       

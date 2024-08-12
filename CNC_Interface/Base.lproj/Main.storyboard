@@ -619,7 +619,7 @@
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e64-ue-Obj">
                                 <rect key="frame" x="11" y="461" width="75" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="check" title="Abbrand" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="ibS-SA-A3C">
+                                <buttonCell key="cell" type="check" title="Abbrand" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="ibS-SA-A3C">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>

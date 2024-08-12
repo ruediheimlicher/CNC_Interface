@@ -9564,7 +9564,7 @@ return returnInt;
 
     NSMutableArray* LibKoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
    NSLog(@"LibProfileingabeFunktion start fullpwm: %d redpwm: %2.2F",full_pwm, red_pwm);
-    NSLog(@"eingabeDic: %@",eingabeDic);
+    //NSLog(@"eingabeDic: %@",eingabeDic);
    //[self KT];
    if([[eingabeDic objectForKey:@"profil1name"] isEqual: @"***"])
    {
@@ -10541,7 +10541,7 @@ return returnInt;
         // [[[LibKoordinatenTabelle objectAtIndex:i]mutableCopy]setObject:[NSNumber numberWithInt:i]forKey:@"index"];
         // [[LibKoordinatenTabelle objectAtIndex:i]setObject:[NSNumber numberWithInt:i]forKey:@"index"];
       }
-       
+
       
       fprintf(stderr,"send to drawrect LibKoordinatenTabelle\n");
      for (int i=0;i<LibKoordinatenTabelle.count;i++)

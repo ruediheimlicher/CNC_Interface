@@ -392,6 +392,7 @@ class rProfilfeldView: NSView
             var ax = line["ax"]!
             var ay = line["ay"]!
             StartPunktA = NSMakePoint(ax*scale,ay*scale)
+           
             var bx = line["bx"]!
             //bx += CGFloat(GraphOffset)
             var by = line["by"]!
@@ -532,7 +533,8 @@ class rProfilfeldView: NSView
             let startabray = startlineA["ay"]! + 5
             
             var AbbrandStartPunktA = NSMakePoint(startabrax! * scale,startabray * scale)
-            AbbrandLinieA.move(to: AbbrandStartPunktA)
+            
+           AbbrandLinieA.move(to: AbbrandStartPunktA)
 
             let startabrbx = startlineA["bx"]
             let startabrby = startlineA["by"]! + 5

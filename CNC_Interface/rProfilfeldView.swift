@@ -419,10 +419,10 @@ class rProfilfeldView: NSView
             if screen > 0
             {
                 // Gitter
-                var line = DatenArray[0] as! [String:Any]
+               let line = DatenArray[0] as! [String:Any]
                 
                 var ax = line["ax"] as! Double
-                var ay = line["ay"] as! Double
+               let ay = line["ay"] as! Double
                 
                 
                 let AA = NSMakePoint(0,ay*scale)
@@ -435,12 +435,12 @@ class rProfilfeldView: NSView
                 NSColor.blue.set() // choose color
                 
                 var bx = line["bx"] as! Double
-                var by = line["by"] as! Double
+               let by = line["by"] as! Double
                 
                 let BA = NSMakePoint(0,(by + Double(GraphOffset))*scale)
                 let BB = NSMakePoint(w - BA.x - 4,(by + Double(GraphOffset))*scale)
                 
-                var GrundLinieB = NSBezierPath()
+               let GrundLinieB = NSBezierPath()
                 GrundLinieB.move(to: BA)
                 GrundLinieB.line(to: BB)
                 GrundLinieB.lineWidth = 0.3
@@ -463,8 +463,8 @@ class rProfilfeldView: NSView
             var StartMarkA = NSBezierPath.init(ovalIn:StartMarkARect)
             NSColor.blue.set()
             StartMarkA.stroke()
-            var LinieA = NSBezierPath()
-            var KlickLinieA = NSBezierPath()
+           let LinieA = NSBezierPath()
+           let KlickLinieA = NSBezierPath()
             LinieA.move(to:StartPunktA)
             
             var  StartMarkBRect:NSRect = NSMakeRect(StartPunktB.x-1.5, StartPunktB.y-1, 3, 3)
@@ -472,17 +472,17 @@ class rProfilfeldView: NSView
             var StartMarkB = NSBezierPath.init(ovalIn:StartMarkBRect)
             NSColor.blue.set()
             StartMarkB.stroke()
-            var LinieB = NSBezierPath()
-            var KlickLinieB = NSBezierPath()
+           let LinieB = NSBezierPath()
+           let KlickLinieB = NSBezierPath()
             LinieB.move(to:StartPunktB)
             
             
             // ********************************************
             // Abbrand
             //  Seite 1
-            var AbbrandLinieA = NSBezierPath()
+           let AbbrandLinieA = NSBezierPath()
             var startabbrandindexA:Int = 0
-            var AbbrandLinieB = NSBezierPath()
+           let AbbrandLinieB = NSBezierPath()
             var startabbrandindexB:Int = 0
             
             var abrax:Double = 0
@@ -674,7 +674,7 @@ class rProfilfeldView: NSView
                         {
                             //AbbrandPunktA.y  += CGFloat(abbranddelay)
                             AbbrandLinieA.line(to:AbbrandPunktA)
-                            var AbbranddeltaA = NSBezierPath()
+                            let AbbranddeltaA = NSBezierPath()
                             
                             AbbranddeltaA.move(to: PunktA)
                             AbbranddeltaA.line(to: AbbrandPunktA)

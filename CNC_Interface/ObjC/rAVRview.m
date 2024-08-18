@@ -10398,9 +10398,16 @@ return returnInt;
       
       // letztes Element am Anfang einsetzen
       NSMutableDictionary* lastdic = [LibKoordinatenTabelle lastObject];
+      int lastabray = [[lastdic objectForKey:@"ay"]intValue];
+      //[lastdic setObject:[lastdic objectForKey:@"ay"]forKey:@"abray"];
+      //[lastdic setObject:[lastdic objectForKey:@"by"]forKey:@"abrby"];
+
       [lastdic setObject:[NSNumber numberWithInt:15] forKey:@"teil"];
       [LibKoordinatenTabelle insertObject:lastdic atIndex:0];
       bis++;
+      bis++;
+     
+      
       
       // Einlauf
       
@@ -10425,13 +10432,16 @@ return returnInt;
       float firstby = [[firstDic objectForKey:@"by"]floatValue];
       
       float deltax = 5;
-      float deltay = firstay - miny + wasserunterkiel;
+      float deltay = firstay - miny + wasserunterkiel + abbranda;
       
       // 10 pkt nach links
       [firstDic setObject:[NSNumber numberWithFloat:firstax - deltax] forKey:@"ax"];
       [firstDic setObject:[NSNumber numberWithFloat:firstay] forKey:@"ay"];
       [firstDic setObject:[NSNumber numberWithFloat:firstbx - deltax] forKey:@"bx"];
       [firstDic setObject:[NSNumber numberWithFloat:firstby] forKey:@"by"];
+      [firstDic setObject:[firstDic objectForKey:@"ay"]forKey:@"abray"];
+      [firstDic setObject:[firstDic objectForKey:@"by"]forKey:@"abrby"];
+
       [LibKoordinatenTabelle insertObject:firstDic atIndex:0];
       von++;
       firstDic=[[LibKoordinatenTabelle objectAtIndex:0]mutableCopy];
@@ -10439,7 +10449,8 @@ return returnInt;
       firstay = [[firstDic objectForKey:@"ay"]floatValue];
       firstbx = [[firstDic objectForKey:@"bx"]floatValue];
       firstby = [[firstDic objectForKey:@"by"]floatValue];
-      
+      [firstDic setObject:[firstDic objectForKey:@"ay"]forKey:@"abray"];
+      [firstDic setObject:[firstDic objectForKey:@"by"]forKey:@"abrby"];
       [firstDic setObject:[NSNumber numberWithFloat:firstax - deltax] forKey:@"ax"];
       [firstDic setObject:[NSNumber numberWithFloat:firstay - deltay] forKey:@"ay"];
       [firstDic setObject:[NSNumber numberWithFloat:firstbx - deltax] forKey:@"bx"];
@@ -10462,6 +10473,9 @@ return returnInt;
       [lastDic setObject:[NSNumber numberWithFloat:lastay] forKey:@"ay"];
       [lastDic setObject:[NSNumber numberWithFloat:lastbx - deltax] forKey:@"bx"];
       [lastDic setObject:[NSNumber numberWithFloat:lastby] forKey:@"by"];
+      [lastDic setObject:[lastDic objectForKey:@"ay"]forKey:@"abray"];
+      [lastDic setObject:[lastDic objectForKey:@"by"]forKey:@"abrby"];
+
       [LibKoordinatenTabelle addObject:lastDic];
       bis++;
       
@@ -10476,6 +10490,9 @@ return returnInt;
       [lastDic setObject:[NSNumber numberWithFloat:lastay - deltay] forKey:@"ay"];
       [lastDic setObject:[NSNumber numberWithFloat:lastbx - deltax] forKey:@"bx"];
       [lastDic setObject:[NSNumber numberWithFloat:lastby - deltay] forKey:@"by"];
+      [lastDic setObject:[lastDic objectForKey:@"ay"]forKey:@"abray"];
+      [lastDic setObject:[lastDic objectForKey:@"by"]forKey:@"abrby"];
+
       [LibKoordinatenTabelle addObject:lastDic];
       bis++;
    }

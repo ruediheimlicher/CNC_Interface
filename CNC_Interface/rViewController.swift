@@ -1498,9 +1498,9 @@ class rViewController: NSViewController, NSWindowDelegate
                    joystickDic["calibminb"] = Int(calibminB)
                    
                      
-                   print("joystickstatus: \(joystickstatus) maxminstatus: \(maxminstatus)")
-                   print("potwertA: \(potwertA) potmitte A: \(potmitteA) mapdiff A: \(mapdiffa) \t\t calibmaxA: \(calibmaxA)  calibminA: \(calibminA)\t mapdiffA: \(mapdiffa)")
-                   print("potwertB: \(potwertB) potmitte B: \(potmitteB) mapdiff B: \(mapdiffb) \t\t calibmaxB: \(calibmaxB)  calibminB: \(calibminB)\t mapdiffB: \(mapdiffb)")
+                   //print("joystickstatus: \(joystickstatus) maxminstatus: \(maxminstatus)")
+                   //print("potwertA: \(potwertA) potmitte A: \(potmitteA) mapdiff A: \(mapdiffa) \t\t calibmaxA: \(calibmaxA)  calibminA: \(calibminA)\t mapdiffA: \(mapdiffa)")
+                   //print("potwertB: \(potwertB) potmitte B: \(potmitteB) mapdiff B: \(mapdiffb) \t\t calibmaxB: \(calibmaxB)  calibminB: \(calibminB)\t mapdiffB: \(mapdiffb)")
                    
                    
                    if(potwertA > potmaxA)
@@ -1619,7 +1619,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
                    NotificationDic["home"] = Int(home)
                    NotificationDic["abschnittfertig"] = Int(abschnittfertig)
-                   print("VC newDataAktion Notific: \(NotificationDic)")
+                  // print("VC newDataAktion Notific: \(NotificationDic)")
                   
                 
                     let nc = NotificationCenter.default

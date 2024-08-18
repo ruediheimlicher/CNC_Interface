@@ -2833,7 +2833,7 @@ var outletdaten:[String:AnyObject] = [:]
          potwertB = wert as! Int
       }
       
-      print("potwertA: \(potwertA) potwertB: \(potwertB)")
+      //print("potwertA: \(potwertA) potwertB: \(potwertB)")
       
       
       var homeanschlagCount = 0

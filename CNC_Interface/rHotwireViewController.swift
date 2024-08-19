@@ -1985,15 +1985,17 @@ var outletdaten:[String:AnyObject] = [:]
         tempDic["home"] = 0
      //   var tempSteuerdatenDic = [String:Any]()
       // tempSteuerdatenDic = AVR?.tool_SteuerdatenVonDic(tempDic) as! [String : Double]
-        
-        var tempSchnittdatenArray:[Int] = ((AVR?.tool_CNC_SchnittdatenArrayVonSteuerdaten(tempDic))) as! [Int]
-        let nc = NotificationCenter.default
+       let newArray:[[Int]] = ((AVR?.tool_CNC_SchnittdatenArrayVonSteuerdaten(tempDic))) as! [[Int]]
+       
+        var tempSchnittdatenArray = [[Int]]()
+       //tempSchnittdatenArray.append(newArray)
+       let nc = NotificationCenter.default
         var NotificationDic = [String:Any]()
         
         NotificationDic["cncposition"] = 0
         NotificationDic["home"] = 0
         
-        NotificationDic["schnittdatenarray"] = tempSchnittdatenArray
+        NotificationDic["schnittdatenarray"] = newArray
         
         print("swift reportNeuTaste NotificationDic: \(NotificationDic)")
 

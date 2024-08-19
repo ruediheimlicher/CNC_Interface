@@ -3175,7 +3175,8 @@ return returnInt;
        }
         //NSLog(@"reportStop i: %d vor Tool_SteuerdatenVonDic tempDic: %@",i,tempDic);
     NSDictionary* tempSteuerdatenDic = [self Tool_SteuerdatenVonDic:tempDic];
-        //NSLog(@"reportStop i: %d nach Tool_SteuerdatenVonDic tempSteuerdatenDic: %@",i,tempSteuerdatenDic);
+        
+       //NSLog(@"reportStop i: %d nach Tool_SteuerdatenVonDic tempSteuerdatenDic: %@",i,tempSteuerdatenDic);
         //NSArray* a = [self SteuerdatenArrayVonDic: tempDic];
         
        
@@ -3213,6 +3214,7 @@ return returnInt;
        
    //    [tempkoordinatentabelle addObject:[self Tool_SchnittdatenVonDic:tempSteuerdatenDic]];
         [tempschnittdatenarray addObject:[self Tool_SchnittdatenVonDic:tempSteuerdatenDic]];
+   
        //NSLog(@"tempSteuerdatenDic: %@",[tempSteuerdatenDic description]);
        cncindex++;
     } // for i

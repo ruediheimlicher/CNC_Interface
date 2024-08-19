@@ -802,17 +802,16 @@ class rViewController: NSViewController, NSWindowDelegate
      Stepperposition = 0
      //print("viewcontroller usbschnittdatenAktion")
      
-      
-       
   //     guard let steps:Int32 = AVR?.motorsteps()  else {return}
        
      //print("viewcontroller usbschnittdatenAktion steps: \(steps)")
      usb_schnittdatenarray.removeAll()
      
      let info = notification.userInfo
-     //print("VC usbschnittdatenAktion info: \(info)")
+     print("VC usbschnittdatenAktion info: \(info)")
      
-     guard let usb_home = info?["home"] as? Int else {
+     guard let usb_home = info?["home"] as? Int else 
+     {
         print("Basis usbstatusAktion: kein home\n")
         return
      }
@@ -874,7 +873,8 @@ class rViewController: NSViewController, NSWindowDelegate
         wertarray[25] = UInt8(steps)
         wertarray[26] = UInt8(micro)
         wertarray[29] = UInt8(richtung)
-         
+        //print("usbschnittdatenAktion zeilenindex: \(zeilenindex) zeile: \(zeile) code: \(zeile[16])")
+
         
         /*
          print("usbschnittdatenAktion usb_schnittdatenarray 0-48");
@@ -889,7 +889,6 @@ class rViewController: NSViewController, NSWindowDelegate
         zeilenindex += 1
   
      }
-     
      
      if (globalusbstatus == 0)
      {

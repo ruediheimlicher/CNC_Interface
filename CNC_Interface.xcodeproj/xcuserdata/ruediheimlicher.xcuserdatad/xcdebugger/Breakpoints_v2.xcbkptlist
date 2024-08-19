@@ -17619,7 +17619,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "BDC24689-D6D1-497B-99C4-65B3ECDEBE92"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CNC_Interface/rHotwireViewController.swift"
@@ -17629,36 +17629,6 @@
             endingLineNumber = "1991"
             landmarkName = "reportNeuTaste(_:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "BDC24689-D6D1-497B-99C4-65B3ECDEBE92 - d8347c491d8fcfe3"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "CNC_Interface.rHotwireViewController.reportNeuTaste(__C.NSButton) -&gt; ()"
-                  moduleName = "CNC_Interface"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ruediheimlicher/Documents/Programming/CNC-Projekt/CNC_Interface/CNC_Interface/rHotwireViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1991"
-                  endingLineNumber = "1991">
-               </Location>
-               <Location
-                  uuid = "BDC24689-D6D1-497B-99C4-65B3ECDEBE92 - d8347c491d8fc802"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "CNC_Interface.rHotwireViewController.reportNeuTaste(__C.NSButton) -&gt; ()"
-                  moduleName = "CNC_Interface"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ruediheimlicher/Documents/Programming/CNC-Projekt/CNC_Interface/CNC_Interface/rHotwireViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1992"
-                  endingLineNumber = "1992">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

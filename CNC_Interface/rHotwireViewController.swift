@@ -4095,8 +4095,13 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        
        outletdaten["home"] = 1 as AnyObject
 
+       SchnittdatenArray.removeAll()
+ 
        
+       var homecode=0xF0;
+       AVR?.homeWaagrechtSchicken();
        
+       /*
         let nc = NotificationCenter.default
         var NotificationDic = [String:Int]()
 
@@ -4123,9 +4128,20 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        let zeilendicC:[String:Double] = ["ax": PositionA.x, "ay":PositionA.y, "bx": PositionB.x, "by":PositionB.y, "index":Double(index), "lage":3]
        AnfahrtArray.append(zeilendicC)
        
+       // von reportNeuTaste
+       var tempDic = [String:Int]()
+       tempDic["code"] = Int(homecode)
+       tempDic["position"] = 3
+       tempDic["cncposition"] = 0
+       tempDic["home"] = 1
+       NSDictionary* tempSteuerdatenDic=[self Tool_SteuerdatenVonDic:tempDic];
+
+       
+       let newArray:[[Int]] = ((AVR?.tool_CNC_SchnittdatenArrayVonSteuerdaten(tempDic))) as! [[Int]]
+
        
        AVR?.home_Horizontal()
-       
+       */
         
         
        

@@ -465,6 +465,7 @@
    - (int)motorsteps;
    - (int)CNC_micro;
 - (void)homeSenkrechtSchicken;
+- (void)homeWaagrechtSchicken;
 
    -(void) killWindow:(NSAlert *)alert with:(NSTimer *) theTimer;
 

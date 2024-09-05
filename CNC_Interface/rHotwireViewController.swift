@@ -415,7 +415,9 @@ var outletdaten:[String:AnyObject] = [:]
    @IBOutlet weak var Einlaufrand: NSTextField!
    @IBOutlet weak var Auslaufrand: NSTextField!
    @IBOutlet weak var AnschlagLinksIndikator: NSBox!
+   @IBOutlet weak var AnschlagRechtsIndikator: NSBox!
    @IBOutlet weak var AnschlagUntenIndikator: NSBox!
+   @IBOutlet weak var AnschlagObenIndikator: NSBox!
     
    @IBOutlet weak var Basisabstand: NSTextField!  // Abstand CNC zu Block
    @IBOutlet weak var Portalabstand: NSTextField!
@@ -2167,9 +2169,84 @@ var outletdaten:[String:AnyObject] = [:]
         }
         ProfilFeld.setgraphstatus(status: 1)
         
-        let tempSchnittdatenArray = AVR?.stopFunktion(KoordinatenTabelle, outletdaten: outletdaten)
+       print("KoordinatenTabelle: \(KoordinatenTabelle)")
+       // Steigungen berechnen
+       //var i:Int = 0
+       var tempkoordinatentabelle = [[String:Double]]()
+       var ramp = 0.0;
+       print("index: \tax: \tay: \tlastax: \tlastay: \tnextax: \tnextay: \t\tskalarprod: \tbetragvor:  \tbetragnext:  \tcosphi: ")
+
+       for i in 0..<KoordinatenTabelle.count
+       {
+          var punktdaten = KoordinatenTabelle[i]
+          punktdaten["ramp"] = ramp
+          let index:Int = Int(punktdaten["index"] ?? Double(i))
+          let ax = punktdaten["ax"] ?? 0
+          let ay = punktdaten["ay"] ?? 0.0
+          
+          //print("index: \(index)\tax: \t\(ax)\tay: \t\(ay)")
+          if ((i > 0) && (i < Int(KoordinatenTabelle.count - 1)))
+               
+          {
+             let lastpunktdaten = KoordinatenTabelle[i-1]
+             let lastax = lastpunktdaten["ax"] ?? 0.0
+             let lastay = lastpunktdaten["ay"] ?? 0.0
+             let nextpunktdaten = KoordinatenTabelle[i+1]
+             let nextax = nextpunktdaten["ax"] ?? 0.0
+             let nextay = nextpunktdaten["ay"] ?? 0.0
+             
+             
+             //print("index: \(index)\tax: \t\(ax)\tay: \t\(ay) \tlastax: \t\(lastax)\tlastay: \t\(lastay)")
+             let lastdeltax = ax - lastax
+             let lastdeltay = ay - lastay
+             var laststeigung = 0.0
+             if abs(lastdeltay) > 0
+             {
+                laststeigung = lastdeltax/lastdeltay
+             }
+             
+             let nextdeltax = nextax - ax
+             let nextdeltay = nextay - ay
+             
+             // winkel vor-nach
+             let skalarprod = lastdeltax * nextdeltax + lastdeltay * nextdeltay
+             
+             let betragvor = hypot(lastdeltax, lastdeltay)
+
+             let betragnext = hypot(nextdeltax, nextdeltay)
+             
+             let cosphi = skalarprod / (betragvor * betragnext)
+             
+             print("\(index)\t\(ax)\t\(ay)\t\(lastax)\t\(lastay)\t\(nextax)\t\(nextay)\t\t\(skalarprod) \t\(betragvor)\t \(betragnext) \t\(cosphi)")
+             
+             if cosphi < 0.2
+             {
+                ramp = 1
+                print("*** ramp bei \(i)")
+             }
+             punktdaten["ramp"] = ramp
+             punktdaten["steigung"] = laststeigung
+             //print("index: \(index)\tax: \t\(ax)\tay: \t\(ay) \tlastax: \t\(lastax)\tlastay: \t\(lastay)\tlaststeigung: \(laststeigung)")
+             
+             
+          }
+                        
+          
+         tempkoordinatentabelle.append(punktdaten)
         
-      //  print("tempSchnittdatenArray: \(tempSchnittdatenArray)")
+       }
+       
+       print("tempkoordinatentabelle: \n")
+       for zeile in tempkoordinatentabelle
+       {
+          print(zeile)
+       }
+       
+       //let tempSchnittdatenArray = AVR?.stopFunktion(KoordinatenTabelle, outletdaten: outletdaten)
+
+       let tempSchnittdatenArray = AVR?.stopFunktion(tempkoordinatentabelle, outletdaten: outletdaten)
+        
+        //print("tempSchnittdatenArray: \(tempSchnittdatenArray)")
         
         for i in 0..<tempSchnittdatenArray!.count
         {
@@ -2242,7 +2319,7 @@ var outletdaten:[String:AnyObject] = [:]
         
         let tempSchnittdatenArray = AVR?.stopFunktion(KoordinatenTabelle, outletdaten: outletdaten)
         
-      //  print("tempSchnittdatenArray: \(tempSchnittdatenArray)")
+       // print("tempSchnittdatenArray: \(tempSchnittdatenArray)")
         
         for i in 0..<tempSchnittdatenArray!.count
         {
@@ -2280,6 +2357,11 @@ var outletdaten:[String:AnyObject] = [:]
          return
       }// leer
       
+      for element in SchnittdatenArray
+      {
+         print("element ramp: \(element[35])")
+      }
+      
       if SpeedFeld.integerValue == 0
       {
          let warnung = NSAlert.init()
@@ -2297,6 +2379,7 @@ var outletdaten:[String:AnyObject] = [:]
          {
             AnschlagLinksIndikator.fillColor = NSColor.green
          }
+         
          
          if (SchnittdatenArray[0][3] <= 0x7F) || (SchnittdatenArray[0][11] <= 0x7F)
          {
@@ -2504,7 +2587,7 @@ var outletdaten:[String:AnyObject] = [:]
                  
               }
               */
-              if abschnittfertig >= 0xA0 // Code fuer Fertig: AD
+              if abschnittfertig >= 0x80 // Code fuer Fertig: AD
               {
                  print("HW  newDataAktion abschnittfertig > A0")
                  let Abschnittnummer = Int(usbdata[5])
@@ -2524,6 +2607,25 @@ var outletdaten:[String:AnyObject] = [:]
                  
                  switch abschnittfertig
                  {
+                    
+                 case 0x83: // Pfeil LEFT
+                    print("HT newDataAktion newDataAktion 0x83")
+                    let pfeilrichtung = Int(usbdata[2])
+                    let deleteindikator = Int(usbdata[3])
+                    print("HT newDataAktion newDataAktion pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator)")
+                //    AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+                    break
+                 case 0x81: //Pfeil RIGHT    
+                    print("HT newDataAktion newDataAktion 0x81")
+                    let pfeilrichtung = Int(usbdata[2])
+                    let deleteindikator = Int(usbdata[3])
+                    print("HT newDataAktion newDataAktion pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator)")
+                 //   AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+                    
+                    break
+
+                    
+                    
                  case 0xAE: // joysticdaten
                     print("HW  newDataAktion newDataAktion AE joysticdaten")
                     
@@ -2805,12 +2907,16 @@ var outletdaten:[String:AnyObject] = [:]
 
     @objc func USBReadAktion(_ notification:Notification)
    {
+      
       let note = notification.userInfo as![String:Any]
       let abschnittfertig = note["abschnittfertig"]  as! Int
       let outposition = note["outposition"] as! Int
       Stepperposition = note["stepperposition"] as! Int
+      xxx
+//      let pfeilrichtung = note["pfeilrichtung"] as! Int
+//      let deleteindikator = note["deleteindikator"] as! Int
       CNCPositionFeld.integerValue = Stepperposition
-      
+//      print("USBReadAktion abschnittfertig: \(abschnittfertig) pfeilrichtung: \(pfeilrichtung)")
       let anzsteps = SchnittdatenArray.count
       
       if let Tastaturwert = note["tastaturwert"]
@@ -2871,6 +2977,7 @@ var outletdaten:[String:AnyObject] = [:]
             warnung.runModal()
             taskfertig = 0
             
+            
          }
       case 0xB5:
       
@@ -2897,25 +3004,25 @@ var outletdaten:[String:AnyObject] = [:]
          AnschlagLinksIndikator.isTransparent = false
          AnschlagLinksIndikator.layer?.backgroundColor = NSColor.blue.cgColor
          CNC_Lefttaste.isEnabled = false
-      
+         break
       case 0xA6:
          print("AVR Anschlag B0")
          AnschlagUntenIndikator.isTransparent = false
          AnschlagUntenIndikator.layer?.backgroundColor = NSColor.blue.cgColor
          CNC_Downtaste.isEnabled = false
-      
+         break
       case 0xA7:
          print("AVR Anschlag C0")
-         AnschlagLinksIndikator.isTransparent = false
-         AnschlagLinksIndikator.layer?.backgroundColor = NSColor.blue.cgColor
+         AnschlagRechtsIndikator.isTransparent = false
+         AnschlagRechtsIndikator.layer?.backgroundColor = NSColor.blue.cgColor
          CNC_Lefttaste.isEnabled = false
-      
+         break
       case 0xA8:
          print("AVR Anschlag D0")
-         AnschlagUntenIndikator.isTransparent = false
-         AnschlagUntenIndikator.layer?.backgroundColor = NSColor.blue.cgColor
+         AnschlagObenIndikator.isTransparent = false
+         AnschlagObenIndikator.layer?.backgroundColor = NSColor.blue.cgColor
          CNC_Downtaste.isEnabled = false
-      
+         break
      
       
       default:
@@ -4123,8 +4230,8 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        let zeilendicC:[String:Double] = ["ax": PositionA.x, "ay":PositionA.y, "bx": PositionB.x, "by":PositionB.y, "index":Double(index), "lage":3]
        AnfahrtArray.append(zeilendicC)
        
-       
-       AVR?.home_Horizontal()
+       AVR?.manFeldRichtung(3,mousestatus:Int32(1), pfeilstep:700)
+       //AVR?.home_Horizontal()
        
         
         
@@ -4212,9 +4319,13 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       
        AnschlagLinksIndikator.wantsLayer = true
        AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+      AnschlagRechtsIndikator.wantsLayer = true
+      AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.green.cgColor
  
        AnschlagUntenIndikator.wantsLayer = true
        AnschlagUntenIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+      AnschlagObenIndikator.wantsLayer = true
+      AnschlagObenIndikator?.layer?.backgroundColor = NSColor.green.cgColor
 
        // CNC_Table
        CNC_Table.dataSource = self
@@ -5460,6 +5571,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
             {
             case MANDOWN:
                 print("PfeilFeldAktion MANDOWN")
+               AnschlagObenIndikator.layer?.backgroundColor = NSColor.green.cgColor
                CNC_Downtaste.isEnabled = true
             case MANUP:
                 print("PfeilFeldAktion MANUP")
@@ -5467,6 +5579,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
                CNC_Downtaste.isEnabled = true
             case MANLEFT:
                 print("PfeilFeldAktion MANLEFT")
+               AnschlagRechtsIndikator.layer?.backgroundColor = NSColor.green.cgColor
                CNC_Righttaste.isEnabled = true
             case MANRIGHT:
                 //print("PfeilFeldAktion MANRIGHT")
@@ -5482,6 +5595,9 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         {
             //print("swift PfeilFeldAktion Button released quelle: \(quelle)")
             AVR?.manFeldRichtung(Int32(quelle), mousestatus:Int32(mausistdown), pfeilstep:80)
+           
+           
+           
         }
     }
     /*
@@ -5523,6 +5639,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
            {
             case MANDOWN:
                print("PfeilAktion MANDOWN")
+               AnschlagObenIndikator.layer?.backgroundColor = NSColor.green.cgColor
                //CNC_Downtaste.isEnabled = true
             case MANUP:
                print("PfeilAktion MANUP")
@@ -5531,6 +5648,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
             case MANLEFT:
                print("PfeilAktion MANLEFT")
                CNC_Righttaste.isEnabled = true
+               AnschlagRechtsIndikator.layer?.backgroundColor = NSColor.green.cgColor
             case MANRIGHT:
                print("PfeilAktion MANRIGHT")
                AnschlagLinksIndikator.layer?.backgroundColor = NSColor.green.cgColor

@@ -808,7 +808,7 @@ class rViewController: NSViewController, NSWindowDelegate
      usb_schnittdatenarray.removeAll()
      
      let info = notification.userInfo
-     print("VC usbschnittdatenAktion info: \(info)")
+     //print("VC usbschnittdatenAktion info: \(info)")
      
      guard let usb_home = info?["home"] as? Int else 
      {
@@ -1186,8 +1186,41 @@ class rViewController: NSViewController, NSWindowDelegate
              //print("VC newDataAktion Tastaturwert: \(Tastaturwert) Taste: \(Taste)")
              NotificationDic["tastaturwert"] = Int(Tastaturwert)
              NotificationDic["taste"] = Int(Taste)
+             /*
+             if (abschnittfertig > 0 ) && (abschnittfertig < 0x80)
+             {
+                print("VC newDataAktion newDataAktion < 0x80 abschnittfertig: \(abschnittfertig)")
+                switch abschnittfertig
+                {
+                   
+                case 0x03: // Pfeil LEFT
+                   print("VC newDataAktion newDataAktion 0x03")
+                   let pfeilrichtung = Int(usbdata[2])
+                   let deleteindikator = Int(usbdata[3])
+                   print("VC newDataAktion newDataAktion pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator)")
+               //    AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+                   break
+                case 0x01: //Pfeil RIGHT    
+                   print("VC newDataAktion newDataAktion 0x01")
+                   let pfeilrichtung = Int(usbdata[2])
+                   let deleteindikator = Int(usbdata[3])
+                   print("VC newDataAktion newDataAktion pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator)")
+                //   AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+                   
+                   break
+                   
+                   
+                   
+                default:
+                   break
+                } // switch
+                
+                
+                
+             }
+             */
              
-             if abschnittfertig >= 0xA0 // Code fuer Fertig: AD
+             if abschnittfertig >= 0x80 // Code fuer Fertig: AD
              {
                 print("VC newDataAktion abschnittfertig > A0")
                 let Abschnittnummer = Int(usbdata[5])
@@ -1213,6 +1246,33 @@ class rViewController: NSViewController, NSWindowDelegate
                 
                 switch abschnittfertig
                 {
+                case 0x83: // Pfeil LEFT
+                   print("VC newDataAktion newDataAktion 0x83")
+                   let pfeilrichtung = Int(usbdata[2])
+                   let deleteindikator = Int(usbdata[3])
+                   NotificationDic["deleteindikator"] = Int(deleteindikator)
+                   NotificationDic["pfeilrichtung"] = Int(pfeilrichtung)
+                   
+                   print("VC newDataAktion newDataAktion pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator)")
+               //    AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+                   break
+                case 0x81: //Pfeil RIGHT    
+                   print("VC newDataAktion newDataAktion 0x81")
+                   let pfeilrichtung = Int(usbdata[2])
+                   let deleteindikator = Int(usbdata[3])
+                   NotificationDic["deleteindikator"] = Int(deleteindikator)
+                   NotificationDic["pfeilrichtung"] = Int(pfeilrichtung)
+
+                   print("VC newDataAktion newDataAktion pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator)")
+                //   AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+                   
+                   break
+                  
+                   
+                   
+                case 0x03:
+                   print("VC newDataAktion newDataAktion 0x03")
+                   break
                    
                 case 0xE1:// Antwort auf mouseup 0xE0 HALT
                    print("VC newDataAktion newDataAktion E1 mouseup")
@@ -1235,34 +1295,47 @@ class rViewController: NSViewController, NSWindowDelegate
                 // Anschlag first
                 case 0xA5:
                    print("VC newDataAktion A5:  Anschlag A0")
+                   AnschlagSet.insert(0xA5) 
+                   /*
                    AnschlagSet.insert(0) // schritteax lb
                    AnschlagSet.insert(1) // schritteax hb
                    AnschlagSet.insert(4) // delayax lb
                    AnschlagSet.insert(5) // delayax lb
+                    */
                    break;
                    
                 case 0xA6:
                    print("VC newDataAktion A6:   Anschlag B0")
+                   AnschlagSet.insert(0xA6) 
+                   /*
                    AnschlagSet.insert(2) // schritteax lb
                    AnschlagSet.insert(3) // schritteax hb
                    AnschlagSet.insert(6) // delayax lb
                    AnschlagSet.insert(7) // delayax lb
+                    */
                    break;
                    
                 case 0xA7:
                    print("VC newDataAktion  Anschlag C0")
+                   AnschlagSet.insert(0xA7) 
+                   /*
                    AnschlagSet.insert(8) // schrittebx lb
                    AnschlagSet.insert(9) // schrittebx hb
                    AnschlagSet.insert(12) // delayabx lb
                    AnschlagSet.insert(13) // delaybx lb
+                    */
                    break;
                    
                 case 0xA8:
                    print("VC newDataAktion  Anschlag D0")
+                   AnschlagSet.insert(0xA8) 
+                   //AnschlagSet.insert(IndexSet.Element(abschnittfertig)) 
+                   /*
                    AnschlagSet.insert(10) // schritteby lb
                    AnschlagSet.insert(11) // schritteby hb
                    AnschlagSet.insert(14) // delayby lb
                    AnschlagSet.insert(15) // delayby lb
+                   */
                    break;
                    
                 // Anschlag home first
@@ -1534,18 +1607,26 @@ class rViewController: NSViewController, NSWindowDelegate
                    break
                 }// switch abschnittfertig
                 
+                if AnschlagSet.contains(0xA5)
+                {
+                  // AnschlagLinksIndikator.isTransparent = false
+                }
+                
                 if AnschlagSet.count > 0
                 {
-                   print("AnschlagSet count 0")
+                   print("AnschlagSet count > 0")
                    //var i=0
-                   for i in Stepperposition-1..<usb_schnittdatenarray.count
+                   if usb_schnittdatenarray.count > 0
                    {
-                      var tempZeilenArray = usb_schnittdatenarray[i]
-                      for k in 0..<tempZeilenArray.count
+                      for i in Stepperposition-1..<usb_schnittdatenarray.count
                       {
-                         if AnschlagSet.contains(k)
+                         var tempZeilenArray = usb_schnittdatenarray[i]
+                         for k in 0..<tempZeilenArray.count
                          {
-                            tempZeilenArray[k] = 0
+                            if AnschlagSet.contains(k)
+                            {
+                               tempZeilenArray[k] = 0
+                            }
                          }
                       }
                    }
@@ -1563,13 +1644,14 @@ class rViewController: NSViewController, NSWindowDelegate
                 
                 var HomeIndexSet = IndexSet(integersIn:0xB5...0xB8) // Homeindex B5 - B8
                 
-                print("newDataAktion EndIndexSet: \(EndIndexSet)")
+                print("newDataAktion AnschlagSet: \(AnschlagSet)")
                //  print("HomeIndexSet: \(HomeIndexSet)")
 
                 
-                if EndIndexSet.contains(Int(abschnittfertig))
+              //  if EndIndexSet.contains(Int(abschnittfertig))
+               if AnschlagSet.contains(Int(abschnittfertig))
                 {
-                   print("VC EndIndexSet contains abschnittfertig: \(abschnittfertig)  ")
+                   print("VC AnschlagSet contains abschnittfertig: \(abschnittfertig)  ")
                    //teensy.DC_pwm(0)
    //                AVR?.setBusy(0)
     //               teensy.read_OK = false
@@ -1606,7 +1688,7 @@ class rViewController: NSViewController, NSWindowDelegate
                       if (usb_schnittdatenarray.count > 0) // nicht HALT
                       {
                       //if (Int(usbdata[10]) == 0)
-                         print("HomeAnschlagSet: \(HomeAnschlagSet)")
+                      //   print("HomeAnschlagSet: \(HomeAnschlagSet)")
                       
                          writeCNCAbschnitt()
                          
@@ -1614,7 +1696,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    }
                 }
                    //print("HomeAnschlagSet: \(HomeAnschlagSet)")
-                   NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
+                   NotificationDic["anschlagset"] = Int(AnschlagSet.count)
                    NotificationDic["homeanschlagset"] = Int(HomeAnschlagSet.count)
                    NotificationDic["home"] = Int(home)
                    NotificationDic["abschnittfertig"] = Int(abschnittfertig)

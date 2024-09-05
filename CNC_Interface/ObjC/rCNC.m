@@ -841,7 +841,6 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
    //NSLog(@"steigungint: %d steigungfloat: %.3f",steigungint,[[derDatenDic objectForKey:@"steigung"]floatValue]);
    if (steigungint > 0)
    {
-      int aa = (1234 & 0xFF00)>>8;
       steigungl = (steigungint & 0xFF);
       steigungh = (steigungint>>8) & 0xFF;
    }

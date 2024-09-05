@@ -51,7 +51,7 @@ class rProfilfeldView: NSView
     
     func setKlickpunkt(derPunkt:Int)
     {
-        print("setKlickpunkt punkt: \(derPunkt)")
+        //print("setKlickpunkt punkt: \(derPunkt)")
         Klickpunkt = derPunkt
         startklickpunkt = derPunkt
     }
@@ -91,7 +91,7 @@ class rProfilfeldView: NSView
          var tempPunktA:NSPoint = NSMakePoint(ax,ay)
          var tempPunktB:NSPoint = NSMakePoint(bx, by)
          
-        print("clickedPunktvonMaus tempPunktA: \(tempPunktA) tempPunktB: \(tempPunktB)")
+        //print("clickedPunktvonMaus tempPunktA: \(tempPunktA) tempPunktB: \(tempPunktB)")
          if self.mouse(tempPunktA, in: KlickFeld)
          {
              print("clickedPunktvonMaus  Seite A")
@@ -558,7 +558,7 @@ class rProfilfeldView: NSView
                     break
                 }
             }
-            print("startabbrandindexB: \(startabbrandindexB)")
+            //print("startabbrandindexB: \(startabbrandindexB)")
            
            
              
@@ -959,7 +959,7 @@ class rProfilfeldView: NSView
         lokalpunkt.y /= scale;
         var userinformation:[String : Any]
         let hyp =  hypot((oldMauspunkt.x - lokalpunkt.x), (oldMauspunkt.y - lokalpunkt.y))
-        Swift.print("Profilfeld mouseDragged lokalpunkt: \(lokalpunkt) oldMauspunkt: \(oldMauspunkt) hyp: \(hyp) Klickseite: \(Klickseite) Klickpunkt: \(Klickpunkt)")
+        //Swift.print("Profilfeld mouseDragged lokalpunkt: \(lokalpunkt) oldMauspunkt: \(oldMauspunkt) hyp: \(hyp) Klickseite: \(Klickseite) Klickpunkt: \(Klickpunkt)")
         if Klickseite == 2
         {
             lokalpunkt.y -= Double(GraphOffset)

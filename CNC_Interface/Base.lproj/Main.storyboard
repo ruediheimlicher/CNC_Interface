@@ -2792,7 +2792,7 @@ Element</string>
                                 </view>
                             </box>
                             <box autoresizesSubviews="NO" focusRingType="none" fixedFrame="YES" borderType="line" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="eMs-tX-lfG">
-                                <rect key="frame" x="10" y="16" width="11" height="368"/>
+                                <rect key="frame" x="10" y="13" width="11" height="368"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="58w-GZ-LRs">
                                     <rect key="frame" x="4" y="5" width="3" height="360"/>
@@ -2800,7 +2800,7 @@ Element</string>
                                 </view>
                             </box>
                             <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eDu-46-r99" customClass="rProfilfeldView" customModule="CNC_Interface" customModuleProvider="target">
-                                <rect key="frame" x="23" y="20" width="1202" height="363"/>
+                                <rect key="frame" x="27" y="15" width="1202" height="363"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </customView>
                             <imageView identifier="arrowleft" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" tag="3" translatesAutoresizingMaskIntoConstraints="NO" id="gBg-hH-Y0N" customClass="rPfeil_Feld" customModule="CNC_Interface" customModuleProvider="target">
@@ -2874,6 +2874,22 @@ Element</string>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <box autoresizesSubviews="NO" focusRingType="none" fixedFrame="YES" borderType="line" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="wvW-2R-4Vh">
+                                <rect key="frame" x="1231" y="11" width="11" height="368"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <view key="contentView" id="qtN-PJ-IFp">
+                                    <rect key="frame" x="4" y="5" width="3" height="360"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                            </box>
+                            <box autoresizesSubviews="NO" focusRingType="none" fixedFrame="YES" borderType="line" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="XWH-W6-sic">
+                                <rect key="frame" x="21" y="376" width="1208" height="11"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <view key="contentView" id="673-kT-CxR">
+                                    <rect key="frame" x="4" y="5" width="1200" height="3"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                            </box>
                         </subviews>
                     </view>
                     <connections>
@@ -2883,6 +2899,8 @@ Element</string>
                         <outlet property="Analogstatusfeld" destination="2uN-DI-GFR" id="0fR-0H-uMr"/>
                         <outlet property="AndereSeiteTaste" destination="CJb-6A-qKv" id="Tgf-S6-7IK"/>
                         <outlet property="AnschlagLinksIndikator" destination="eMs-tX-lfG" id="rNV-2r-5Z7"/>
+                        <outlet property="AnschlagObenIndikator" destination="XWH-W6-sic" id="XDf-aI-TD2"/>
+                        <outlet property="AnschlagRechtsIndikator" destination="wvW-2R-4Vh" id="DVn-1I-Qrm"/>
                         <outlet property="AnschlagUntenIndikator" destination="Ok9-2I-eVV" id="DZx-24-Amf"/>
                         <outlet property="AnzahlFeld" destination="kX6-qR-YAO" id="ZIm-3A-6lo"/>
                         <outlet property="AuslaufCheckbox" destination="2ZM-yG-Izq" id="r82-nB-57q"/>

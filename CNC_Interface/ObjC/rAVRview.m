@@ -3268,12 +3268,17 @@ return returnInt;
           {
              cos = skalarproda/nennera;
           }
+
           float cosdegree = acosf(cos)/M_PI*180;
-          
+          fprintf(stderr,"i: %d +++   +++   +++   \t cos: %.3f  arccos: %.3f cosdegree:\t %.2f\n",i,cos,acosf(cos),cosdegree);
+
           //if(fabs(cos) > 0.98)
-          if((cos < -0.98) || (cos==0))
+          
+          //if((cos < -0.95) || (cos==0))
+         if(cos < 0.2)
+
           {
-   //          fprintf(stderr,"i: %d +++   +++   +++   \t wendepunkt cos: %.3f  arccos: %.3f cosdegree:\t %.2f\n",i,cos,acosf(cos),cosdegree);
+             fprintf(stderr,"i: %d +++   +++   ***   ***   \t wendepunkt cos: %.3f  arccos: %.3f cosdegree:\t %.2f\n",i,cos,acosf(cos),cosdegree);
              tempschnittdatenarray[i][35] = [NSNumber numberWithInt:1];
           }
   //        fprintf(stderr,"i: %d cos: %.3f  arccos: %.3f cosdegree:\t %.2f\n",i,cos,acosf(cos),cosdegree);
@@ -14219,32 +14224,12 @@ return returnInt;
          NSLog(@"boardindex: %d",boardindex);
          if (boardindex == 1)
          {
-            /*
-            if (status) // mousedown
-            {
-               code=0xC0;
-            }
-            else 
-            {
-               code=0xC2;
-            }
-             */
             
             code = 0xF0;
          }
          else // Fuer teensy++2: andere Rueckgabe: status 1: default
          {
-            /*
-            if (status)
-            {
-               //code=0xC0;
-            }
-            else 
-            {
-               code=0xE0;
-            }
-*/
-           
+            
          }
          [tempDic setObject:[NSNumber numberWithInt:code] forKey:@"code"];
          
@@ -16268,7 +16253,7 @@ return returnInt;
          //NSLog(@"AVR  USBReadAktion 18");
       }
       
-      if (abschnittfertig >= 0xA0)
+      if (abschnittfertig >= 0x80)
       {
          [CNC_busySpinner stopAnimation:NULL];
       }

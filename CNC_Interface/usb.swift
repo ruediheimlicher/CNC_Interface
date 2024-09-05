@@ -285,7 +285,7 @@ class rTimerInfo {
          {
             return
          }
-         if read_byteArray[0] > 0xA0
+         if read_byteArray[0] > 0x80
          {
             //print("*cont_read_USB result: \(result) code: \(read_byteArray[0]) tastaturwert: \(read_byteArray[57]) Taste: \(read_byteArray[58]) potwertA: \(read_byteArray[13])")
          }

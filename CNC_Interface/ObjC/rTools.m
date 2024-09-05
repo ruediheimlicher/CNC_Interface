@@ -41,37 +41,34 @@
     
     Array:
     
-    schritteax lb
-    schritteax hb
-    schritteay lb
-    schritteay hb
+    0   schritteax lb
+    1   schritteax hb
+    2   schritteay lb
+    3   schritteay hb
     
-    delayax lb
-    delayax hb
-    delayay lb
-    delayay hb
+    4   delayax lb
+    5   delayax hb
+    6   delayay lb
+    7   delayay hb
     
-    schrittebx lb
-    schrittebx hb
-    schritteby lb
-    schritteby hb
+    8   schrittebx lb
+    9   schrittebx hb
+    10   schritteby lb
+    11   schritteby hb
     
-    delaybx lb
-    delaybx hb
-    delayby lb
-    delayby hb
+    12   delaybx lb
+    13   delaybx hb
+    14   delayby lb
+    15   delayby hb
     
-    code
-    position // first, last, ...
-    indexh
-    indexl
-    
-    pwm (pos 20)
-    motorstatus (pos 21)
-    
-    steps // 48, 200
-    micro // microsteps, 1,2 4
-    */
+    16   code
+    17   position // first, last, ...
+    18   indexh
+    19   indexl
+    20   pwm (pos 20)
+    21   motorstatus (pos 21)
+    22   steps // 48, 200
+    23   micro // microsteps, 1,2 4    */
    
    if ([[derDatenDic objectForKey:@"indexl"]intValue] < 3)
    {

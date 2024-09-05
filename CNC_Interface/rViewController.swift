@@ -1163,7 +1163,7 @@ class rViewController: NSViewController, NSWindowDelegate
              for i in 0...32
              {
                 
-               // print("i: \(i) \(usbdata[i])")
+                //print("i: \(i) \(usbdata[i])")
              }
              print("usbdata: \(usbdata)\n") // d: [0, 9, 56, 0, 0,...
              var NotificationDic = [String:Int]()
@@ -1186,43 +1186,11 @@ class rViewController: NSViewController, NSWindowDelegate
              //print("VC newDataAktion Tastaturwert: \(Tastaturwert) Taste: \(Taste)")
              NotificationDic["tastaturwert"] = Int(Tastaturwert)
              NotificationDic["taste"] = Int(Taste)
-             /*
-             if (abschnittfertig > 0 ) && (abschnittfertig < 0x80)
-             {
-                print("VC newDataAktion newDataAktion < 0x80 abschnittfertig: \(abschnittfertig)")
-                switch abschnittfertig
-                {
-                   
-                case 0x03: // Pfeil LEFT
-                   print("VC newDataAktion newDataAktion 0x03")
-                   let pfeilrichtung = Int(usbdata[2])
-                   let deleteindikator = Int(usbdata[3])
-                   print("VC newDataAktion newDataAktion pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator)")
-               //    AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.green.cgColor
-                   break
-                case 0x01: //Pfeil RIGHT    
-                   print("VC newDataAktion newDataAktion 0x01")
-                   let pfeilrichtung = Int(usbdata[2])
-                   let deleteindikator = Int(usbdata[3])
-                   print("VC newDataAktion newDataAktion pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator)")
-                //   AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.green.cgColor
-                   
-                   break
-                   
-                   
-                   
-                default:
-                   break
-                } // switch
-                
-                
-                
-             }
-             */
+  
              
              if abschnittfertig >= 0x80 // Code fuer Fertig: AD
              {
-                print("VC newDataAktion abschnittfertig > A0")
+                print("VC newDataAktion abschnittfertig > 80")
                 let Abschnittnummer = Int(usbdata[5])
                 NotificationDic["inposition"] = Int(Abschnittnummer)
                 let ladePosition = Int(usbdata[6])
@@ -1250,21 +1218,23 @@ class rViewController: NSViewController, NSWindowDelegate
                    print("VC newDataAktion newDataAktion 0x83")
                    let pfeilrichtung = Int(usbdata[2])
                    let deleteindikator = Int(usbdata[3])
+                   let randomnummer = Int(usbdata[4])
                    NotificationDic["deleteindikator"] = Int(deleteindikator)
                    NotificationDic["pfeilrichtung"] = Int(pfeilrichtung)
                    
-                   print("VC newDataAktion newDataAktion pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator)")
-               //    AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+                   print("VC newDataAktion newDataAktion pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator) *** randomnummer: \(randomnummer)")
+                   //AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.green.cgColor
                    break
                 case 0x81: //Pfeil RIGHT    
                    print("VC newDataAktion newDataAktion 0x81")
                    let pfeilrichtung = Int(usbdata[2])
                    let deleteindikator = Int(usbdata[3])
+                   let randomnummer = Int(usbdata[4])
                    NotificationDic["deleteindikator"] = Int(deleteindikator)
                    NotificationDic["pfeilrichtung"] = Int(pfeilrichtung)
 
-                   print("VC newDataAktion newDataAktion pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator)")
-                //   AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+                   print("VC newDataAktion newDataAktion pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator) *** randomnummer: \(randomnummer)")
+                   //AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.green.cgColor
                    
                    break
                   
@@ -1272,6 +1242,16 @@ class rViewController: NSViewController, NSWindowDelegate
                    
                 case 0x03:
                    print("VC newDataAktion newDataAktion 0x03")
+                   let pfeilrichtung = Int(usbdata[2])
+                   let deleteindikator = Int(usbdata[3])
+                   NotificationDic["deleteindikator"] = Int(deleteindikator)
+                   NotificationDic["pfeilrichtung"] = Int(pfeilrichtung)
+
+                   print("VC newDataAktion newDataAktion pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator)")
+                //   AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+
+                   
+                   
                    break
                    
                 case 0xE1:// Antwort auf mouseup 0xE0 HALT

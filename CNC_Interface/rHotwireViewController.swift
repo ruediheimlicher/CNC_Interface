@@ -2912,9 +2912,20 @@ var outletdaten:[String:AnyObject] = [:]
       let abschnittfertig = note["abschnittfertig"]  as! Int
       let outposition = note["outposition"] as! Int
       Stepperposition = note["stepperposition"] as! Int
-      xxx
-//      let pfeilrichtung = note["pfeilrichtung"] as! Int
-//      let deleteindikator = note["deleteindikator"] as! Int
+      var pfeilrichtung = 0xFF
+      var deleteindikator = 0
+      if   let rawpfeilrichtung:Int = note["pfeilrichtung"] as? Int
+      {
+         print("pfeilrichtung OK: \(rawpfeilrichtung)")
+         pfeilrichtung = rawpfeilrichtung
+      }
+    if let rawdeleteindikator = note["deleteindikator"] as? Int
+      {
+         print("deleteindikator OK: \(rawdeleteindikator)")
+         deleteindikator = rawdeleteindikator
+       
+      }
+      
       CNCPositionFeld.integerValue = Stepperposition
 //      print("USBReadAktion abschnittfertig: \(abschnittfertig) pfeilrichtung: \(pfeilrichtung)")
       let anzsteps = SchnittdatenArray.count
@@ -2960,6 +2971,17 @@ var outletdaten:[String:AnyObject] = [:]
       
       switch abschnittfertig
       {
+      case 0x81: //Pfeil RIGHT    
+         print("HW newDataAktion USBReadAktion 0x81")
+         AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+         break
+      case 0x83: //Pfeil RIGHT    
+         print("HW newDataAktion USBReadAktion 0x83")
+         AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+         break
+         
+         
+         
       //case 0xB8: // Tastaturwert
       //   print("Tastatur Tastaturwert: \(TastenwertFeld.integerValue)")
          

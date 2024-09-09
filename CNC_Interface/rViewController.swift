@@ -585,7 +585,7 @@ class rViewController: NSViewController, NSWindowDelegate
              
               //print("writeCNCAbschnitt")
 
-             print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
+             //print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
              if (globalusbstatus > 0)
              {
                 let senderfolg = teensy.send_USB()
@@ -1117,16 +1117,15 @@ class rViewController: NSViewController, NSWindowDelegate
     {
        // Reaktion auf eingehende USB-Daten
        print("\nVC newDataAktion start");
-       var lastData = teensy.getlastDataRead()
+       let lastData = teensy.getlastDataRead()
        let lastDataArray = [UInt8](lastData)
-       print("VC newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")
+       //print("VC newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")
        
-  //     print("newDataAktion start")
  /*
        var ii = 0
-  //    while ii < 10
+      while ii < 8
        {
-  //        print("ii: \(ii)  wert: \(lastData[ii])\t")
+          print("ii: \(ii)  wert: \(lastData[ii])")
           ii = ii+1
        }
   */
@@ -1159,7 +1158,7 @@ class rViewController: NSViewController, NSWindowDelegate
           //if  usbdata = info!["data"] as! [String] // Data vornanden
           if  usbdata.count > 0 // Data vorhanden
           {
-              print("usbdata:")
+              //print("usbdata:")
              for i in 0...32
              {
                 
@@ -1171,8 +1170,8 @@ class rViewController: NSViewController, NSWindowDelegate
              let abschnittfertig:UInt8 =   usbdata[0] // code vom teensy
              // https://useyourloaf.com/blog/swift-string-cheat-sheet/
              let home = Int(usbdata[13])
-             
-             // print("VC newDataAktion abschnittfertig abschnittfertig: \(hex(abschnittfertig))")
+             let anschlagcheck = Int(usbdata[9])
+              print("VC newDataAktion abschnittfertig abschnittfertig: \(hex(abschnittfertig)) anschlagcheck: \(anschlagcheck)")
              NotificationDic["abschnittfertig"] = Int(abschnittfertig)
              
              let abschnittnummer:Int = Int((usbdata[5] << 8) | usbdata[6])
@@ -1215,29 +1214,52 @@ class rViewController: NSViewController, NSWindowDelegate
                 switch abschnittfertig
                 {
                 case 0x83: // Pfeil LEFT
-                   print("VC newDataAktion newDataAktion 0x83")
+                   print("VC newDataAktion newDataAktion 0x83 left")
                    let pfeilrichtung = Int(usbdata[2])
                    let deleteindikator = Int(usbdata[3])
                    let randomnummer = Int(usbdata[4])
                    NotificationDic["deleteindikator"] = Int(deleteindikator)
                    NotificationDic["pfeilrichtung"] = Int(pfeilrichtung)
                    
-                   print("VC newDataAktion newDataAktion pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator) *** randomnummer: \(randomnummer)")
+                   print("VC newDataAktion newDataAktion 83 pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator) *** randomnummer: \(randomnummer)")
                    //AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.green.cgColor
                    break
                 case 0x81: //Pfeil RIGHT    
-                   print("VC newDataAktion newDataAktion 0x81")
+                   print("VC newDataAktion newDataAktion 0x81 right")
                    let pfeilrichtung = Int(usbdata[2])
                    let deleteindikator = Int(usbdata[3])
                    let randomnummer = Int(usbdata[4])
                    NotificationDic["deleteindikator"] = Int(deleteindikator)
                    NotificationDic["pfeilrichtung"] = Int(pfeilrichtung)
 
-                   print("VC newDataAktion newDataAktion pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator) *** randomnummer: \(randomnummer)")
-                   //AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.green.cgColor
-                   
+                   print("VC newDataAktion newDataAktion 81 pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator) *** randomnummer: \(randomnummer)")
+                    
                    break
-                  
+ 
+                case 0x82: //Pfeil UP  
+                   print("VC newDataAktion newDataAktion 0x82 up")
+                   let pfeilrichtung = Int(usbdata[2])
+                   let deleteindikator = Int(usbdata[3])
+                   let randomnummer = Int(usbdata[4])
+                   NotificationDic["deleteindikator"] = Int(deleteindikator)
+                   NotificationDic["pfeilrichtung"] = Int(pfeilrichtung)
+
+                   print("VC newDataAktion newDataAktion 82 pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator) *** randomnummer: \(randomnummer)")
+                    
+                   break
+
+                case 0x84: //Pfeil DOWN  
+                   print("VC newDataAktion newDataAktion 0x84 Down")
+                   let pfeilrichtung = Int(usbdata[2])
+                   let deleteindikator = Int(usbdata[3])
+                   let randomnummer = Int(usbdata[4])
+                   NotificationDic["deleteindikator"] = Int(deleteindikator)
+                   NotificationDic["pfeilrichtung"] = Int(pfeilrichtung)
+
+                   print("VC newDataAktion newDataAktion 84 pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator) *** randomnummer: \(randomnummer)")
+                    
+                   break
+
                    
                    
                 case 0x03:
@@ -1274,7 +1296,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    
                 // Anschlag first
                 case 0xA5:
-                   print("VC newDataAktion A5:  Anschlag A0")
+                   print("VC newDataAktion A5:  Anschlag A0  A5")
                    AnschlagSet.insert(0xA5) 
                    /*
                    AnschlagSet.insert(0) // schritteax lb
@@ -1285,7 +1307,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    break;
                    
                 case 0xA6:
-                   print("VC newDataAktion A6:   Anschlag B0")
+                   print("VC newDataAktion A6:   Anschlag B0  A6")
                    AnschlagSet.insert(0xA6) 
                    /*
                    AnschlagSet.insert(2) // schritteax lb
@@ -1296,7 +1318,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    break;
                    
                 case 0xA7:
-                   print("VC newDataAktion  Anschlag C0")
+                   print("VC newDataAktion  Anschlag C0  A7")
                    AnschlagSet.insert(0xA7) 
                    /*
                    AnschlagSet.insert(8) // schrittebx lb
@@ -1307,7 +1329,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    break;
                    
                 case 0xA8:
-                   print("VC newDataAktion  Anschlag D0")
+                   print("VC newDataAktion  Anschlag D0  A8")
                    AnschlagSet.insert(0xA8) 
                    //AnschlagSet.insert(IndexSet.Element(abschnittfertig)) 
                    /*
@@ -1624,14 +1646,15 @@ class rViewController: NSViewController, NSWindowDelegate
                 
                 var HomeIndexSet = IndexSet(integersIn:0xB5...0xB8) // Homeindex B5 - B8
                 
-                print("newDataAktion AnschlagSet: \(AnschlagSet)")
+                //print("newDataAktion AnschlagSet: \(AnschlagSet)")
                //  print("HomeIndexSet: \(HomeIndexSet)")
 
                 
               //  if EndIndexSet.contains(Int(abschnittfertig))
                if AnschlagSet.contains(Int(abschnittfertig))
                 {
-                   print("VC AnschlagSet contains abschnittfertig: \(abschnittfertig)  ")
+                  let abschnittfertighex = String(format:"%02X", abschnittfertig)
+                   print("VC AnschlagSet contains abschnittfertig: \(abschnittfertig)  \(abschnittfertighex)")
                    //teensy.DC_pwm(0)
    //                AVR?.setBusy(0)
     //               teensy.read_OK = false

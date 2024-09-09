@@ -65,10 +65,10 @@ var outletdaten:[String:AnyObject] = [:]
     {
         super.mouseDown(with: theEvent)
         let startPoint = theEvent.locationInWindow
-            print(startPoint) //for top left it prints (0, 900)
+            //print(startPoint) //for top left it prints (0, 900)
         feldklickcounter += 1
        let pfeiltag:Int = self.tag
-        print("swift Pfeil_Feld mouseDown pfeiltag: \(pfeiltag)  feldklickcounter: \(feldklickcounter)")
+        //print("swift Pfeil_Feld mouseDown pfeiltag: \(pfeiltag)  feldklickcounter: \(feldklickcounter)")
         
         self.image = pressediconarray[self.tag-1]
         
@@ -2972,14 +2972,31 @@ var outletdaten:[String:AnyObject] = [:]
       switch abschnittfertig
       {
       case 0x81: //Pfeil RIGHT    
-         print("HW newDataAktion USBReadAktion 0x81")
+         print("HW USBReadAktion 0x81")
          AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+         CNC_Lefttaste.isEnabled = true;
          break
-      case 0x83: //Pfeil RIGHT    
-         print("HW newDataAktion USBReadAktion 0x83")
-         AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+
+      case 0x82: //Pfeil UP    
+         print("HW USBReadAktion 0x82")
+         AnschlagUntenIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+         CNC_Downtaste.isEnabled = true;
          break
          
+         
+         
+      case 0x83: //Pfeil RIGHT    
+         print("HW USBReadAktion 0x83")
+         AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+         CNC_Righttaste.isEnabled = true;
+         break
+ 
+      case 0x84: //Pfeil DOWN    
+         print("HW USBReadAktion 0x84")
+         AnschlagObenIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+         CNC_Uptaste.isEnabled = true;
+         break
+
          
          
       //case 0xB8: // Tastaturwert

@@ -14659,7 +14659,7 @@ return returnInt;
 
 - (void)ManFeldRichtung:(int)richtung mousestatus:(int)status pfeilstep:(int)step
 {
-   NSLog(@"\n\n*****************  AVR  ManFeldRichtung richtung: %d",richtung);
+   NSLog(@"\n\n*****************  AVR  ManFeldRichtung richtung: %d mousestatus: %d step: %d", richtung, status, step );
    NSDictionary* outletdaten = [rHotwireViewController cncoutletdaten];
    //NSLog(@"ManFeldRichtung outletdaten: %@",outletdaten);
    int zoomfaktor=1.0;
@@ -14711,7 +14711,6 @@ return returnInt;
          
          //[AnschlagUntenIndikator setTransparent:YES];
          
-         // [self reportManUp:NULL];
       }break;
       case MANLEFT:
       {

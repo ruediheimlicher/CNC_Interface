@@ -782,7 +782,7 @@
                                 </textFieldCell>
                             </textField>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2ZM-yG-Izq">
-                                <rect key="frame" x="186" y="531" width="58" height="15"/>
+                                <rect key="frame" x="186" y="531.5" width="58" height="15"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Auslauf" bezelStyle="regularSquare" imagePosition="right" alignment="left" controlSize="small" state="on" inset="2" id="SsD-BC-87V">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -790,7 +790,7 @@
                                 </buttonCell>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nvA-Iq-1qa">
-                                <rect key="frame" x="263" y="531" width="54" height="15"/>
+                                <rect key="frame" x="263" y="531.5" width="54" height="15"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Einlauf" bezelStyle="regularSquare" imagePosition="right" alignment="left" controlSize="small" state="on" inset="2" id="KfZ-3B-hzU">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -816,7 +816,7 @@
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AVD-KX-yAS">
-                                <rect key="frame" x="186" y="509" width="58" height="16"/>
+                                <rect key="frame" x="186" y="509.5" width="58" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Seite 1" bezelStyle="regularSquare" imagePosition="right" controlSize="small" state="on" inset="2" id="y73-RR-REW">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -824,7 +824,7 @@
                                 </buttonCell>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uiY-2p-xZf">
-                                <rect key="frame" x="260" y="509" width="59" height="15"/>
+                                <rect key="frame" x="260" y="509.5" width="59" height="15"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Seite 2" bezelStyle="regularSquare" imagePosition="right" controlSize="small" state="on" inset="2" id="Dcs-v5-D6y">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -3096,7 +3096,7 @@ Element</string>
                                 </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SRD-O9-JEm">
-                                <rect key="frame" x="189" y="529" width="58" height="14"/>
+                                <rect key="frame" x="189" y="529.5" width="58" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Auslauf" bezelStyle="regularSquare" imagePosition="right" alignment="left" controlSize="small" state="on" inset="2" id="Bxu-qV-9RG">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -3104,7 +3104,7 @@ Element</string>
                                 </buttonCell>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TrN-2p-wGd">
-                                <rect key="frame" x="266" y="529" width="54" height="14"/>
+                                <rect key="frame" x="266" y="529.5" width="54" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Einlauf" bezelStyle="regularSquare" imagePosition="right" alignment="left" controlSize="small" state="on" inset="2" id="2iv-0e-vqo">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -3321,7 +3321,7 @@ Element</string>
                                 </connections>
                             </stepper>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YNb-Na-Rfm">
-                                <rect key="frame" x="189" y="507" width="58" height="15"/>
+                                <rect key="frame" x="189" y="507.5" width="58" height="15"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Seite 1" bezelStyle="regularSquare" imagePosition="right" controlSize="small" state="on" inset="2" id="LCe-do-nel">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -3329,7 +3329,7 @@ Element</string>
                                 </buttonCell>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="54v-xE-xzK">
-                                <rect key="frame" x="263" y="507" width="59" height="14"/>
+                                <rect key="frame" x="263" y="507.5" width="59" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Seite 2" bezelStyle="regularSquare" imagePosition="right" controlSize="small" state="on" inset="2" id="EZU-de-jQC">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>

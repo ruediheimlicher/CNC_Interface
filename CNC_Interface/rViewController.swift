@@ -522,7 +522,7 @@ class rViewController: NSViewController, NSWindowDelegate
     @objc func writeCNCAbschnitt()
     {
         cncwritecounter += 1
-        //print("swift rViewController writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray) cncwritecounter: \(cncwritecounter)")
+        print("swift rViewController writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray) cncwritecounter: \(cncwritecounter)")
        let count = usb_schnittdatenarray.count
        //print("VC writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
        
@@ -694,7 +694,7 @@ class rViewController: NSViewController, NSWindowDelegate
      }
 
     
-    @objc  func contDataAktion(_ notification:Notification)
+    @objc  func contDataAktion(_ notification:Notification) // 
     {
        let lastData = teensy.getlastDataRead()
       print("contDataAktion notification: \n\(notification)\n lastData:\n \(lastData) ")
@@ -1171,7 +1171,8 @@ class rViewController: NSViewController, NSWindowDelegate
              // https://useyourloaf.com/blog/swift-string-cheat-sheet/
              let home = Int(usbdata[13])
              let anschlagcheck = Int(usbdata[9])
-              print("VC newDataAktion abschnittfertig abschnittfertig: \(hex(abschnittfertig)) anschlagcheck: \(anschlagcheck)")
+             let pfeiltastenrichtung = Int(usbdata[29])
+            print("VC newDataAktion abschnittfertig abschnittfertig: \(hex(abschnittfertig)) anschlagcheck: \(anschlagcheck) pfeiltastenrichtung: \(pfeiltastenrichtung)")
              NotificationDic["abschnittfertig"] = Int(abschnittfertig)
              
              let abschnittnummer:Int = Int((usbdata[5] << 8) | usbdata[6])
@@ -1204,6 +1205,8 @@ class rViewController: NSViewController, NSWindowDelegate
 
                 NotificationDic["tastaturwert"] = Int(usbdata[57])
                 NotificationDic["taste"] = Int(usbdata[58])
+                NotificationDic["pfeiltastenrichtung"] = Int(usbdata[29])
+                
                 //print("newDataAktion cncstatus: \(usbdata[22])")
                 var AnschlagSet = IndexSet()
                 
@@ -1654,7 +1657,7 @@ class rViewController: NSViewController, NSWindowDelegate
                if AnschlagSet.contains(Int(abschnittfertig))
                 {
                   let abschnittfertighex = String(format:"%02X", abschnittfertig)
-                   print("VC AnschlagSet contains abschnittfertig: \(abschnittfertig)  \(abschnittfertighex)")
+                   //print("VC AnschlagSet contains abschnittfertig: \(abschnittfertig)  \(abschnittfertighex)")
                    //teensy.DC_pwm(0)
    //                AVR?.setBusy(0)
     //               teensy.read_OK = false

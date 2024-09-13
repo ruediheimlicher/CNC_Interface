@@ -2965,8 +2965,7 @@ var outletdaten:[String:AnyObject] = [:]
       {
          PositionFeld.integerValue = outposition
          ProfilFeld.stepperposition = outposition
-         ProfilFeld.needsDisplay = true
-         
+         ProfilFeld.needsDisplay = true         
       }
       
       switch abschnittfertig
@@ -5013,32 +5012,32 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
     }
 
     @objc func DCAktion(datadic:[String:Int])
-    {
-        usb_schnittdatenarray.removeAll()
-        //print("DCAktion: \(notification)")
-        //let info = notification.userInfo
-       guard let pwmraw = datadic["pwm"]  else
-        {
-            print("DCAktion: kein pwm")
-            return
-        }
-        print("DCAktion  pwmraw: \(pwmraw)")
-       let pwm = abs(pwmraw as! Int)
-       outletdaten["pwm"] = pwm as AnyObject
-        Stepperposition = 0;
-        var wertarray = [UInt8](repeating: 0, count: Int(BufferSize()))
-        
-        wertarray[16] = 0xE2
-        wertarray[24] = 0xE2
-        wertarray[18]=0; // indexh, indexl ergibt abschnittnummer
-       wertarray[20]=UInt8(pwm) //as! UInt8; // pwm
-        
-        usb_schnittdatenarray.append(wertarray)
-        print("DCAktion writeCNCAbschnitt")
-        writeCNCAbschnitt()
-        teensy.clear_data()
-        
-    }
+   {
+      usb_schnittdatenarray.removeAll()
+      //print("DCAktion: \(notification)")
+      //let info = notification.userInfo
+      guard let pwmraw = datadic["pwm"]  else
+      {
+         print("DCAktion: kein pwm")
+         return
+      }
+      print("DCAktion  pwmraw: \(pwmraw)")
+      let pwm = abs(pwmraw as! Int)
+      outletdaten["pwm"] = pwm as AnyObject
+      Stepperposition = 0;
+      var wertarray = [UInt8](repeating: 0, count: Int(BufferSize()))
+      
+      wertarray[16] = 0xE2
+      wertarray[24] = 0xE2
+      wertarray[18]=0; // indexh, indexl ergibt abschnittnummer
+      wertarray[20]=UInt8(pwm) //as! UInt8; // pwm
+      
+      usb_schnittdatenarray.append(wertarray)
+      print("DCAktion writeCNCAbschnitt")
+      writeCNCAbschnitt()
+      teensy.clear_data()
+      
+   }
     @objc func readHotwire_PList() -> [String:AnyObject]
     {
         var dateiname = ""
@@ -5137,8 +5136,8 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
     }
 
     @objc func setRumpfteilDic(rumpfteildic:([String:Double]) , rumpfteil:(Int))
-    {
-     }
+   {
+   }
    
    // MARK: JoystickAktion
    @objc override func joystickAktion(_ notification:Notification) 
@@ -5224,7 +5223,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
             if (wegindex > 1)
             {
                print("")
- //              print("basis joystickAktion cont achse0: \(achse0) achse1: \(achse1)  achse2: \(achse2) anz: \(String(describing: anz)) wegindex: \(wegindex)")
+               //              print("basis joystickAktion cont achse0: \(achse0) achse1: \(achse1)  achse2: \(achse2) anz: \(String(describing: anz)) wegindex: \(wegindex)")
                
                let lastposition = servoPfad?.pfadarray.last
                
@@ -5262,15 +5261,15 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
             else
             {
                print("basis joystickAktion start achse0: \(achse0) achse1: \(achse1)  achse2: \(achse2) anz: \(anz) wegindex: \(wegindex)")
-          /*
-               teensy.write_byteArray[HYP_BYTE_H] = 0 // hb // Start, keine Hypo
-               teensy.write_byteArray[HYP_BYTE_L] = 0 // lb
-               teensy.write_byteArray[INDEX_BYTE_H] = 0 // hb // Start, Index 0
-               teensy.write_byteArray[INDEX_BYTE_L] = 0 // lb
-            */   
+               /*
+                teensy.write_byteArray[HYP_BYTE_H] = 0 // hb // Start, keine Hypo
+                teensy.write_byteArray[HYP_BYTE_L] = 0 // lb
+                teensy.write_byteArray[INDEX_BYTE_H] = 0 // hb // Start, Index 0
+                teensy.write_byteArray[INDEX_BYTE_L] = 0 // lb
+                */   
             }
             
- //           servoPfad?.addPosition(newx: achse0, newy: achse1, newz: 0)
+            //           servoPfad?.addPosition(newx: achse0, newy: achse1, newz: 0)
          }
          
          if (usbstatus > 0)
@@ -5621,7 +5620,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
                AnschlagRechtsIndikator.layer?.backgroundColor = NSColor.green.cgColor
                CNC_Righttaste.isEnabled = true
             case MANRIGHT:
-                //print("PfeilFeldAktion MANRIGHT")
+                print("PfeilFeldAktion MANRIGHT")
                 AnschlagLinksIndikator.layer?.backgroundColor = NSColor.green.cgColor
                CNC_Lefttaste.isEnabled = true
                 

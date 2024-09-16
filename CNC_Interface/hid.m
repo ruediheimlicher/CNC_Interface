@@ -549,11 +549,13 @@ static void attach_callback(void *context, IOReturn r, void *hid_mgr, IOHIDDevic
       fprintf(stderr,"attach callback not kIOReturnSuccess\n");
       return;
    }
+   
 	h = (hid_t *)malloc(sizeof(hid_t));
 	if (!h) 
    {
       fprintf(stderr,"attach callback not h\n");
       return;
+      
    }
 	memset(h, 0, sizeof(hid_t));
    
@@ -563,7 +565,7 @@ static void attach_callback(void *context, IOReturn r, void *hid_mgr, IOHIDDevic
 	h->open = 1;
 	add_hid(h);
    hid_usbstatus=1;
-
+   
    /*
    r = rawhid_open(1, 0x16C0, 0x0480, 0xFFAB, 0x0200);
    if (r <= 0) 

@@ -14693,6 +14693,12 @@ return returnInt;
    int offsetx = 200;
    int offsety = 200;
    
+   /*
+    #define MANRIGHT     1
+    #define MANUP        2
+    #define MANLEFT      3
+    #define MANDOWN      4    
+    */
    //
    switch (richtung)
    {

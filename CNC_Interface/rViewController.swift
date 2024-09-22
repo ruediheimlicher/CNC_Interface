@@ -292,81 +292,81 @@ class rViewController: NSViewController, NSWindowDelegate
    
    override func viewDidLoad()
    {
-       if loadcounter > 0
-       {
-           return
-       }
+      if loadcounter > 0
+      {
+         return
+      }
       super.viewDidLoad()
       self.view.wantsLayer = true
       self.view.superview?.wantsLayer = true
-
+      
       view.window?.delegate = self // https://stackoverflow.com/questions/44685445/trying-to-know-when-a-window-closes-in-a-macos-document-based-application
       self.view.window?.acceptsMouseMovedEvents = true
- 
+      
       formatter.maximumFractionDigits = 1
       formatter.minimumFractionDigits = 2
       formatter.minimumIntegerDigits = 1
       //formatter.roundingMode = .down
-
+      
       /*
        let TEENSY3_TITLE = "Teensy 3.x"
        let TEENSY3_VID = 0x16C0
        let TEENSY3_PID = 0x0486
-
+       
        let TEENSY2_TITLE = "Teensy 2"
        let TEENSY2_VID = 0x16C0
        let TEENSY2_PID = 0x0480
-
+       
        */
       var ringbufferarray = [UInt16]()
       var ringbufferindex = 0
       
- 
+      
       //USB_OK.backgroundColor = NSColor.greenColor()
       // Do any additional setup after loading the view.
       let newdataname = Notification.Name("newdata")
-  //    NotificationCenter.default.addObserver(self, selector:#selector(newDataAktion(_:)),name:newdataname,object:nil)
-  //     NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "newdata"), object: nil)
-
-       loadcounter += 1
+      //    NotificationCenter.default.addObserver(self, selector:#selector(newDataAktion(_:)),name:newdataname,object:nil)
+      //     NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "newdata"), object: nil)
+      
+      loadcounter += 1
       
       
-           NotificationCenter.default.addObserver(self, selector:#selector(joystickAktion(_:)),name:NSNotification.Name(rawValue: "joystick"),object:nil)
+      NotificationCenter.default.addObserver(self, selector:#selector(joystickAktion(_:)),name:NSNotification.Name(rawValue: "joystick"),object:nil)
       
-           NotificationCenter.default.addObserver(self, selector:#selector(tabviewAktion(_:)),name:NSNotification.Name(rawValue: "tabview"),object:nil)
-           
-           //      NotificationCenter.default.addObserver(self, selector: #selector(usbsendAktion), name:NSNotification.Name(rawValue: "usbsend"), object: nil)
-           NotificationCenter.default.addObserver(self, selector: #selector(beendenAktion), name:NSNotification.Name(rawValue: "beenden"), object: nil)
-
- 
-           // von CNCVIWC
-           NotificationCenter.default.addObserver(self, selector: #selector(usbsendAktion), name:NSNotification.Name(rawValue: "usbsend"), object: nil)
-           NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
-           NotificationCenter.default.addObserver(self, selector: #selector(usbschnittdatenAktion), name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
-       
-           NotificationCenter.default.addObserver(self, selector:#selector(newDataAktion(_:)),name:NSNotification.Name(rawValue: "newdata"),object:nil)
-       
-           NotificationCenter.default.addObserver(self, selector:#selector(contDataAktion(_:)),name:NSNotification.Name(rawValue: "contdata"),object:nil)
-           NotificationCenter.default.addObserver(self, selector:#selector(usbattachAktion(_:)),name:NSNotification.Name(rawValue: "usb_attach"),object:nil)
-           
+      NotificationCenter.default.addObserver(self, selector:#selector(tabviewAktion(_:)),name:NSNotification.Name(rawValue: "tabview"),object:nil)
+      
+      //      NotificationCenter.default.addObserver(self, selector: #selector(usbsendAktion), name:NSNotification.Name(rawValue: "usbsend"), object: nil)
+      NotificationCenter.default.addObserver(self, selector: #selector(beendenAktion), name:NSNotification.Name(rawValue: "beenden"), object: nil)
+      
+      
+      // von CNCVIWC
+      NotificationCenter.default.addObserver(self, selector: #selector(usbsendAktion), name:NSNotification.Name(rawValue: "usbsend"), object: nil)
+      NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
+      NotificationCenter.default.addObserver(self, selector: #selector(usbschnittdatenAktion), name:NSNotification.Name(rawValue: "usbschnittdaten"), object: nil)
+      
+      NotificationCenter.default.addObserver(self, selector:#selector(newDataAktion(_:)),name:NSNotification.Name(rawValue: "newdata"),object:nil)
+      
+      NotificationCenter.default.addObserver(self, selector:#selector(contDataAktion(_:)),name:NSNotification.Name(rawValue: "contdata"),object:nil)
+      NotificationCenter.default.addObserver(self, selector:#selector(usbattachAktion(_:)),name:NSNotification.Name(rawValue: "usb_attach"),object:nil)
+      
       NotificationCenter.default.addObserver(self, selector: #selector(slaveresetAktion), name:NSNotification.Name(rawValue: "slavereset"), object: nil)
-       
-           NotificationCenter.default.removeObserver(self, name: Notification.Name("steps"), object: nil)
-
-       NotificationCenter.default.addObserver(self, selector: #selector(stepsAktion), name:NSNotification.Name(rawValue: "steps"), object: nil)
-           
-           NotificationCenter.default.removeObserver(self, name: Notification.Name("micro"), object: nil)
-
-       NotificationCenter.default.addObserver(self, selector: #selector(microAktion), name:NSNotification.Name(rawValue: "micro"), object: nil)
- 
-           NotificationCenter.default.addObserver(self, selector: #selector(stoptimerAktion), name:NSNotification.Name(rawValue: "stoptimer"), object: nil)
-           
-           NotificationCenter.default.addObserver(self, selector: #selector(haltAktion), name:NSNotification.Name(rawValue: "halt"), object: nil)
-           
-           NotificationCenter.default.addObserver(self, selector: #selector(DCAktion), name:NSNotification.Name(rawValue: "dc_pwm"), object: nil)
-       
-       
-       // end CNCViewC
+      
+      NotificationCenter.default.removeObserver(self, name: Notification.Name("steps"), object: nil)
+      
+      NotificationCenter.default.addObserver(self, selector: #selector(stepsAktion), name:NSNotification.Name(rawValue: "steps"), object: nil)
+      
+      NotificationCenter.default.removeObserver(self, name: Notification.Name("micro"), object: nil)
+      
+      NotificationCenter.default.addObserver(self, selector: #selector(microAktion), name:NSNotification.Name(rawValue: "micro"), object: nil)
+      
+      NotificationCenter.default.addObserver(self, selector: #selector(stoptimerAktion), name:NSNotification.Name(rawValue: "stoptimer"), object: nil)
+      
+      NotificationCenter.default.addObserver(self, selector: #selector(haltAktion), name:NSNotification.Name(rawValue: "halt"), object: nil)
+      
+      NotificationCenter.default.addObserver(self, selector: #selector(DCAktion), name:NSNotification.Name(rawValue: "dc_pwm"), object: nil)
+      
+      
+      // end CNCViewC
       
       
       defaults.set(25, forKey: "Age")
@@ -378,14 +378,14 @@ class rViewController: NSViewController, NSWindowDelegate
       
       let name = "John Doe"
       let robot1 = 300
-//      robotPList.set(name, forKey: "name")
+      //      robotPList.set(name, forKey: "name")
       robotPList.set(robot1, forKey: "robot1")
       
       
       var preferences = Preferences(webserviceURL: "https://api.twitter.com", itemsPerPage: 12, backupEnabled: false,robot1_offset: 300)
       print("preferences: \(preferences)")
       preferences.robot1_offset = 400
- 
+      
       
       let encoder = PropertyListEncoder()
       encoder.outputFormat = .xml
@@ -398,15 +398,15 @@ class rViewController: NSViewController, NSWindowDelegate
       } catch {
          print(error)
       }
-     
+      
       if  let path        = Bundle.main.path(forResource: "Preferences", ofType: "plist"),
-         let xml         = FileManager.default.contents(atPath: path),
-         let preferences = try? PropertyListDecoder().decode(Preferences.self, from: xml)
+          let xml         = FileManager.default.contents(atPath: path),
+          let preferences = try? PropertyListDecoder().decode(Preferences.self, from: xml)
       {
          print(preferences.webserviceURL)
       }
       
-    }
+   }
     
     @objc override func viewWillDisappear()
     {
@@ -957,7 +957,7 @@ class rViewController: NSViewController, NSWindowDelegate
           USBKontrolle.stringValue = "USB ON"
           globalusbstatus = 1
            print("ViewController usbattachAktion USBATTACHED")
-        }
+       }
         
         
      }

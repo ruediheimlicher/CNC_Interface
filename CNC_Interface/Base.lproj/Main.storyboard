@@ -2800,7 +2800,7 @@ Element</string>
                                 </view>
                             </box>
                             <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eDu-46-r99" customClass="rProfilfeldView" customModule="CNC_Interface" customModuleProvider="target">
-                                <rect key="frame" x="27" y="15" width="1202" height="363"/>
+                                <rect key="frame" x="23" y="15" width="1206" height="363"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </customView>
                             <imageView identifier="arrowleft" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" tag="3" translatesAutoresizingMaskIntoConstraints="NO" id="gBg-hH-Y0N" customClass="rPfeil_Feld" customModule="CNC_Interface" customModuleProvider="target">
@@ -2883,7 +2883,7 @@ Element</string>
                                 </view>
                             </box>
                             <box autoresizesSubviews="NO" focusRingType="none" fixedFrame="YES" borderType="line" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="XWH-W6-sic">
-                                <rect key="frame" x="21" y="376" width="1208" height="11"/>
+                                <rect key="frame" x="23" y="376" width="1208" height="11"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="673-kT-CxR">
                                     <rect key="frame" x="4" y="5" width="1200" height="3"/>

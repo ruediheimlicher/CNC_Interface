@@ -474,6 +474,7 @@
 - (void)ManFeldRichtung:(int)richtung mousestatus:(int)status pfeilstep:(int)step;
 
    -(void)home_Horizontal;
+-(void)goHome;
 
    - (IBAction)reportSpeedStepper:(id)sender;
 

@@ -194,6 +194,8 @@ var outletdaten:[String:AnyObject] = [:]
     let  FIRST_BIT = 0 // in 'position' von reportStopKnopf: Abschnitt ist first
     let  LAST_BIT = 1 // in 'position' von reportStopKnopf: Abschnitt ist last
 
+   
+   let MAX_SPEED = 24
    var  oldMauspunkt :  NSPoint  = NSZeroPoint
    /*
    var ProfilDatenOA: NSArray
@@ -2119,7 +2121,7 @@ var outletdaten:[String:AnyObject] = [:]
       var zoomfaktor = ProfilTiefeFeldA.doubleValue / 1000
       outletdaten["zoom"] = zoomfaktor as AnyObject
      
-     outletdaten["home"] = 0 as AnyObject
+    // outletdaten["home"] = home as AnyObject
 
    }
     
@@ -2243,7 +2245,9 @@ var outletdaten:[String:AnyObject] = [:]
        }
        
        //let tempSchnittdatenArray = AVR?.stopFunktion(KoordinatenTabelle, outletdaten: outletdaten)
-
+       
+       
+       
        let tempSchnittdatenArray = AVR?.stopFunktion(tempkoordinatentabelle, outletdaten: outletdaten)
         
         //print("tempSchnittdatenArray: \(tempSchnittdatenArray)")
@@ -3197,6 +3201,9 @@ var outletdaten:[String:AnyObject] = [:]
         //print("datendic vor blockanfuegenFunktion: \(datenDic)")
        
         KoordinatenTabelle.removeAll()
+       
+        setOutletdaten()
+       
         KoordinatenTabelle = AVR?.blockanfuegenFunktion(datenDic) as! [[String : Double]];
         //print("reportProfilOberseiteTask KoordinatenTabelle: ")
         // Abmessungen block
@@ -3466,6 +3473,7 @@ var outletdaten:[String:AnyObject] = [:]
         
         datenDic["mitoberseite"] = 1
         datenDic["mitunterseite"] = 1
+       datenDic["home"] = 0
         
         OberseiteCheckbox.state = NSControl.StateValue.on
         UnterseiteCheckbox.state = NSControl.StateValue.on
@@ -3542,7 +3550,7 @@ var outletdaten:[String:AnyObject] = [:]
       
       outletdaten["home"] = 0 as AnyObject
       
-      print("outletdaten: \(outletdaten)")
+      print("VC outletdaten: \(outletdaten)")
       var pfeildaten:[String:Int] = [:]
       pfeildaten["cnc_seite1check"] = (CNC_Seite1Check.state.rawValue)
       pfeildaten["cnc_seite2check"] = (CNC_Seite2Check.state.rawValue)
@@ -3551,7 +3559,7 @@ var outletdaten:[String:AnyObject] = [:]
       pfeildaten["motorsteps"] = motorsteps
       pfeildaten["boardindex"] = boardindex
       print("pfeildaten: \(pfeildaten)")
-      
+      setOutletdaten()
       AVR?.manRichtung(1, mousestatus:1, pfeilstep:100)
    }
     
@@ -3566,7 +3574,7 @@ var outletdaten:[String:AnyObject] = [:]
         outletdaten["speed"] = SpeedFeld.integerValue as AnyObject
         outletdaten["micro"] = micro as AnyObject
        outletdaten["home"] = 0 as AnyObject
-
+       setOutletdaten()
         AVR?.manRichtung(2, mousestatus:1, pfeilstep:100)
     }
 
@@ -3581,6 +3589,7 @@ var outletdaten:[String:AnyObject] = [:]
         outletdaten["speed"] = SpeedFeld.integerValue as AnyObject
         outletdaten["micro"] = micro as AnyObject
        outletdaten["home"] = 0 as AnyObject
+       setOutletdaten()
 
         AVR?.manRichtung(3, mousestatus:1, pfeilstep:100)
     }
@@ -3595,7 +3604,7 @@ var outletdaten:[String:AnyObject] = [:]
       outletdaten["speed"] = SpeedFeld.integerValue as AnyObject
       outletdaten["micro"] = micro as AnyObject
       outletdaten["home"] = 0 as AnyObject
-      
+      setOutletdaten()
       AVR?.manRichtung(4, mousestatus:1, pfeilstep:100)
       
    }
@@ -3944,7 +3953,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         
         RumpfelementDic["pwm"] = DC_PWM.doubleValue
         RumpfelementDic["redpwm"] = red_pwmFeld.doubleValue
-        
+       RumpfelementDic["home"] = 0
         
         print("reportRumpf RumpfelementDic:\n \(RumpfelementDic)")
         
@@ -4240,7 +4249,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        outletdaten["micro"] = 1 as AnyObject
        
        outletdaten["home"] = 1 as AnyObject
-
+       
        
        
         let nc = NotificationCenter.default
@@ -4256,21 +4265,22 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         AnfahrtArray.append(zeilendicA)
         
        //Horizontal bis Anschlag
-        PositionA.x -= 500
-        PositionB.x -= 500
+        PositionA.x -= 1000
+        PositionB.x -= 1000
         index += 1
         let zeilendicB:[String:Double] = ["ax": PositionA.x, "ay":PositionA.y, "bx": PositionB.x, "by":PositionB.y, "index":Double(index), "lage":3]
         AnfahrtArray.append(zeilendicB)
         
        // Vertikal ab bis Anschlag
-       PositionA.y -= 200;
-       PositionB.y -= 200;
+       PositionA.y -= 400;
+       PositionB.y -= 400;
        
        let zeilendicC:[String:Double] = ["ax": PositionA.x, "ay":PositionA.y, "bx": PositionB.x, "by":PositionB.y, "index":Double(index), "lage":3]
        AnfahrtArray.append(zeilendicC)
+       setOutletdaten()
+       //AVR?.manFeldRichtung(3,mousestatus:Int32(1), pfeilstep:700)
        
-       AVR?.manFeldRichtung(3,mousestatus:Int32(1), pfeilstep:700)
-       //AVR?.home_Horizontal()
+       AVR?.home_Horizontal()
        
         
         
@@ -4402,7 +4412,9 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
 
        //AndereSeiteTaste.target = objCInstance
        //AndereSeiteTaste.action = #selector(AVR?.reportAndereSeiteAnfahren(_ :))
-       
+      
+       setOutletdaten()
+      
        let ProfilnamenArray = AVR?.readProfilLib() as! [String]
        print("ProfilnamenArray: \(ProfilnamenArray[0])")
        Profil1Pop.removeAllItems()
@@ -4752,6 +4764,9 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        {
            print("rumpfdatenarray da")
            RumpfdatenArray = hotwireplist["rumpfdatenarray"] as! [[String : Double]]
+          
+          
+          
            if RumpfdatenArray.count > 0
            {
                AVR?.setRumpfteilDic(RumpfdatenArray[0], forPart: 0)
@@ -5581,7 +5596,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
        outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
        outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
-       outletdaten["speed"] = speed as AnyObject
+       outletdaten["speed"] = MAX_SPEED   as AnyObject
        outletdaten["micro"] = micro as AnyObject
        outletdaten["boardindex"] = boardindex as AnyObject
        outletdaten["pwm"] = DC_PWM.integerValue as AnyObject
@@ -5639,75 +5654,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
            
         }
     }
-    /*
-    @objc func PfeilAktion(_ notification:Notification) // > PfeilFeldAktion
-    {
-       return;
-        let info = notification.userInfo
-        print(" PfeilAktion: info: \(notification.userInfo) \(info)")
-        if  let mauscounter = info?["mousedownconter"]
-        {
-            let mc = mauscounter as! Int
-            print(" PfeilAktion: mauscounter: \(mc)")
-        }
-        else
-        {
-            
-        }
-        
-        if (info?["richtung"] != nil)
-        {
-            quelle = info?["richtung"] as! Int
-            
-            if info?["push"] != nil
-            {
-                mausistdown = info?["push"] as!Int
-            } // if push
-        }// if richtung
-        else
-        {
-            NSSound.beep()
-            quelle = 0
-            mausistdown = 0
-            return
-        }
-        
-        if mausistdown > 0
-        {
-            switch quelle
-           {
-            case MANDOWN:
-               print("PfeilAktion MANDOWN")
-               AnschlagObenIndikator.layer?.backgroundColor = NSColor.green.cgColor
-               //CNC_Downtaste.isEnabled = true
-            case MANUP:
-               print("PfeilAktion MANUP")
-               AnschlagUntenIndikator.layer?.backgroundColor = NSColor.green.cgColor
-               //CNC_Downtaste.isEnabled = true
-            case MANLEFT:
-               print("PfeilAktion MANLEFT")
-               CNC_Righttaste.isEnabled = true
-               AnschlagRechtsIndikator.layer?.backgroundColor = NSColor.green.cgColor
-            case MANRIGHT:
-               print("PfeilAktion MANRIGHT")
-               AnschlagLinksIndikator.layer?.backgroundColor = NSColor.green.cgColor
-               CNC_Lefttaste.isEnabled = true
-               
-            default:
-               break
-            }// switch quelle
-            AVR?.manRichtung(Int32(quelle), mousestatus:Int32(mausistdown), pfeilstep:700)
-            
-        } // mausistdown > 0
-        else // Button released
-        {
-            print("swift Pfeilaktion Button released quelle: \(quelle)")
-            AVR?.manRichtung(Int32(quelle), mousestatus:Int32(mausistdown), pfeilstep:80)
-        }
-        
-        
-    }// Pfeilaktion
-*/
+ 
 
     func numberOfRows(in tableView: NSTableView) -> Int {
         

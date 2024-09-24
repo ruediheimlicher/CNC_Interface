@@ -565,7 +565,7 @@ static void attach_callback(void *context, IOReturn r, void *hid_mgr, IOHIDDevic
    hid_usbstatus=1;
 
    /*
-   r = rawhid_open(1, 0x16C0, 0x0480, 0xFFAB, 0x0200);
+   r = rawhid_open(1, 0x16C0, 0x0486, 0xFFAB, 0x0200);
    if (r <= 0) 
    {
       fprintf(stderr,"no rawhid device found\n");

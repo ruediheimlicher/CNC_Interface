@@ -2197,7 +2197,7 @@ class rViewController: NSViewController, NSWindowDelegate
             //   print("USBOpen erfolg: \(erfolg) usbstatus: \(usbstatus)")
 
          }
-         //   return
+            return
          
       }
       else

@@ -68,6 +68,9 @@ class rTimerInfo {
        let PID:Int32 = Int32(code["PID"] as! Int32)//
        let VID:Int32 = Int32(code["VID"] as! Int32)//
        print("func usb_teensy.USBOpen PID: \(PID) VID: \(VID)")
+       
+      // VID: 5824
+      // PID: 1158 
        // rawhid_open(int max, int vid, int pid, int usage_page, int usage)
        
        if (hid_usbstatus > 0)
@@ -83,7 +86,7 @@ class rTimerInfo {
           return 1;
        }
        
-       
+       // VID: 
        
        let    out = rawhid_open(1,  VID, PID, 0xFFAB, 0x0200)
        

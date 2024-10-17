@@ -906,7 +906,7 @@ NSMutableDictionary* cncdatendic;
     
 
     NSDictionary* outletdaten = [rHotwireViewController cncoutletdaten];
-    
+  // NSMutableArray* SVGArray = [rHotwireViewController  readSVGFigur];
     
     outletstatusdic = [[NSMutableDictionary alloc]initWithCapacity:0];
    
@@ -11499,7 +11499,7 @@ return returnInt;
 
 }
 
-- (void)FigElementeingabeAktion:(NSNotification*)note
+- (void)FigElementeingabeAktion:(NSNotification*)note // in HW
 {
    NSLog(@"FigElementeingabeAktion note: %@",[[note userInfo] description]);
    // ElementKoordinatenArray von CNC_Eingabe lesen

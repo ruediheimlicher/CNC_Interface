@@ -11,6 +11,40 @@
 #include <stdlib.h>
 
 #include<math.h>
+#include <MacTypes.h>
+ 
+// To find orientation of ordered triplet (p1, p2, p3).
+// The function returns following values
+// 0 --> p, q and r are collinear
+// 1 --> Clockwise
+// 2 --> Counterclockwise
+
+
+
+int orientation(struct Punkt p1,  struct Punkt p2, struct Punkt p3)
+{
+   //printf("orientation\n");
+    // See 10th slides from following link for derivation
+    // of the formula
+   printf("orient p1x: %2.2f \t p1y: %2.2f\n",p1.x,p1.y);
+    float val = (p2.y - p1.y) * (p3.x - p2.x)
+              - (p2.x - p1.x) * (p3.y - p2.y);
+   printf("orient val: %2.2f \n",val);
+    if (val == 0)
+        return 0; // collinear
+ 
+    return (val > 0) ? 1 : 2; // clock or counterclock wise
+}
+
+// Given three colinear points p, q, r, the function checks if 
+// point q lies on line segment 'pr' 
+
+bool onSegment(struct Punkt p, struct Punkt q, struct Punkt  r) 
+{ 
+   //return false;
+    return ((q.x <= fmax(p.x, r.x) && q.x >= fmin(p.x, r.x)) && (q.y <= fmax(p.y, r.y) && q.y >= fmin(p.y, r.y)));
+       
+} 
 
 /*******
  Function that performs Gauss-Elimination and returns the Upper triangular matrix and solution of equations:

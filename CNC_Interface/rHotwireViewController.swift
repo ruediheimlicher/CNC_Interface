@@ -522,6 +522,8 @@ var outletdaten:[String:AnyObject] = [:]
    //       micro_Feld.integerValue = micro
        }
 */
+   
+   
     @objc func vertikalspiegelnVonProfil(profilarray:[[String:Double]]) -> [[String:Double]]
     {
         var fliparray = [[String:Double]]()
@@ -540,6 +542,15 @@ var outletdaten:[String:AnyObject] = [:]
         return fliparray
     }
    
+   
+   @objc func getkonvexline(punktarray:[[Double:Double]]) ->[[Double:Double]]
+   {
+      var konvexline = [[Double:Double]]()
+       
+      
+      return konvexline
+   }
+   
    @objc func FigElementeingabeAktion(_ notification:Notification)
    {
       let info = notification.userInfo
@@ -556,7 +567,7 @@ var outletdaten:[String:AnyObject] = [:]
       var StartpunktA:NSPoint
       var StartpunktB:NSPoint
 
-      // letztes Element der Koordinatentabelle
+      // letztes Element der vorhandenen Koordinatentabelle
       if KoordinatenTabelle.count > 0
       {
           ax = (KoordinatenTabelle.last?["ax"])!
@@ -651,8 +662,6 @@ var outletdaten:[String:AnyObject] = [:]
       ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
       ProfilFeld.needsDisplay = true
       CNC_Stoptaste.isEnabled = true
-      
-      
       
       
    } // FigElementeingabeAktion
@@ -3075,9 +3084,506 @@ var outletdaten:[String:AnyObject] = [:]
       
    }
     
+   // MARK:  *** *** ***  readSVG
+   
+   @objc func readSVGAktion(_ notification:Notification)
+   {
+      print("HW readSVGAktion")
+      var svgarray:[[Double]] = readSVG()
+      for i in 0..<svgarray.count
+      {
+         svgarray[i].insert (Double(i), at: 0)
+         svgarray[i].removeLast()
+      }
+      
+      
+      let nc = NotificationCenter.default
+      var svgdatenDic = [String:Any]() 
+      
+      // an Einstellungen schicken fuer Anzeige
+      svgdatenDic["svgdaten"] = svgarray
+      nc.post(name:Notification.Name(rawValue:"svgdaten"),
+               object: nil,
+               userInfo:svgdatenDic)
+      
+      
+   }
+   
+   func punktarrayvonTXT(txtarray: [String])->[[Double]]
+   {
+      let minabstand = 1.8
+      var k=0
+      var punktarray = [[Double]]()
+      var txtpunktarray = [[Double]]()
+      var okstringarray = [String]()
+      var okindexset = IndexSet()
+      
+      var nearindexset = IndexSet()
+      
+      // Abstand filtern
+      var doppelindex = 0
+      for k in 0..<txtarray.count
+      {
+         var checkzeile = txtarray[k].split(separator: "\r")[0] // \r entfernen
+         let checkpunktarray = checkzeile.split(separator: "\t")
+         if checkpunktarray.count == 3
+         {            
+            
+            let checkindex = Double(checkpunktarray[0])
+            
+            let checkx = Double(checkpunktarray[1])
+            let checky = Double(checkpunktarray[2])
+            
+            // array fuer NN: x,y,z
+            let checkpunktzeilenarray:[Double] = [checkindex!,checkx!,checky!]
+            txtpunktarray.append(checkpunktzeilenarray)
+            
+            let checkxint = round(checkx ?? 0)
+            let checkyint = round(checky ?? 0)
+            //print("index: \(checkindex) x: \(checkx) y: \(checky)")
+            
+            for kk in k..<txtarray.count
+            {
+               if kk == k
+               {
+                  
+               }
+               else
+               {
+                  //print("k: \(k)")
+                  var tempzeile = txtarray[kk].split(separator: "\r")[0] // \r entfernen
+                  
+                  let checkpunktarray = tempzeile.split(separator: "\t")
+                  
+                  let tempcheckx = Double(checkpunktarray[1]) 
+                  let tempchecky = Double(checkpunktarray[2])
+                  
+                  let abstand:Double = hypot(((tempcheckx ?? 0) - (checkx ?? 0)),((tempchecky ?? 0) - (checky ?? 0)))
+                  //print("kk: \(kk) abstand: \(abstand)")
+                  if abstand < minabstand
+                  { 
+                     nearindexset.insert(kk)
+                     if k > doppelindex
+                     {
+                        
+                        doppelindex = k
+                        print("*** doppelindex: \(doppelindex)")
+                        
+                     }
+                     print("\tkk: \(kk) abstand: \(abstand)")
+                  }
+                  else
+                  {
+                     
+                     let okpunkt = k
+                     var okarray:[Double] = [checkindex!,checkx!,checky!]
+                     let okstring:String = String(Int(checkpunktarray[0]) ?? 0) + "\t" + String(checkpunktarray[0]) + "\t"  + String(checkpunktarray[1])
+                     if okindexset.contains(k)
+                         {
+                        
+                        }
+                     else 
+                         {
+                        okindexset.insert(k)
+                        punktarray.append(okarray)
+                        okstringarray.append(okstring)
+                     }
+                     
+                     
+                  }
+               }
+            }
+            
+            
+         }// if checkpunktarray.count
+         
+      }
+      
+      
+      //print (okstringarray)
+      print("txtpunktarray: \(txtpunktarray)")
+      
+      var mill_floatarray = [[Double]]() //
+      /*
+      for zeilenindex in stride(from: 0, to: txtpunktarray.count, by: 1)
+      {
+         //print("zeilenindex: \(zeilenindex) data: \(txtpunktarray[zeilenindex])")
+             let millindex = nn_array[zeilenindex]
+            var tempfloatarray:[Double] = txtpunktarray[millindex]
+            //print("zeilenindex: \(zeilenindex) tempfloatarray: \(tempfloatarray)")
+            // index neu einsetzen
+            tempfloatarray[0] = Double(zeilenindex)
+            mill_floatarray.append(tempfloatarray)
+      }
+      */
+      
 
+      
+      return txtpunktarray // array mit array von 3 Double-werten x,y,z
+   }
     
-    
+   
+   @objc func punktarrayvonSGV(sgvarray: [String])->[[Double]]
+   {
+      var i=0
+      var circle = 0
+      var circlenummer = 0
+      var circlearray = [[Int]]()
+      var circleelementarray = [Int]()
+      var circlefloatelementarray = [Double]()
+      var circleelementdic = [String:Int]()
+      var punktarray = [[Double]]()
+      var circlefloatelementdic = [String:Double]()
+      var circleorellipsefloatelementdic = [String:Double]() // direkt aufgebaut, mit transform
+      
+      var circleorellipsefloatelementarray = [Double]()
+      
+      var transformdoublearray = [Double]()
+      var transformok = 0 //1: transform ist vorhanden
+      // transform: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform
+      let labelarray:[String] = ["cx","cy","transform"] // relevante daten
+      let lastlabel:String = String(labelarray.last ?? "") // label "transform"
+      var zeilenindex:Double = 0
+      var circlecount = 0
+      var circlecountB = 0
+      var circlecountC = 0
+      for zeile in sgvarray
+      {
+         //print("i: \(i) zeile: \(zeile)")
+         let trimmzeile = zeile.trimmingCharacters(in: .whitespaces)
+         
+         
+         if (trimmzeile.contains("circle") || trimmzeile.contains("ellipse")) // relevante zeile mit circle oder ellipse, start data-Block
+         {
+            circlecount += 1
+            //print("\n\t\tcircle oder ellipse\ti: \(i) trimmzeile: \(trimmzeile)")
+            circle = 9
+            circlenummer = i
+            circleelementarray.removeAll()
+            circlefloatelementarray.removeAll()
+            transformdoublearray.removeAll() // koeff array leeren
+            circleelementdic = [:]
+            circlefloatelementdic = [:]
+            circleorellipsefloatelementdic = [:]
+            circleorellipsefloatelementarray.removeAll()
+            transformok = 0 // wer weiss?
+         }
+
+         // circle detektiert. Anzahl ist max 7 
+         // trenner: </g>
+         if circle > 0 // circle oder ellipse detektiert
+         {
+            
+            
+            if circle < 9 // circle wird mit jeder zeile decrementiert, 9 wird uebersprungen
+            {     
+               
+              // print("\nneue Zeile i: \(i)\t circle: \(circle)  \ttrimmzeile: \(trimmzeile)")
+               let zeilenarray = trimmzeile.split(separator: "=") // aufteilen in label und data
+              //print("\t\t neue Zeile i: \(i) \t zeilenarray: \(zeilenarray)")
+               
+               
+               // neu mit labelarray
+               
+               if (zeilenarray.count > 1)  // = ist vorhanden, Daten
+               {
+                  
+                  let firstelement:String = String(zeilenarray[0]) // label
+                 //print("i: \(i) zeilenindex: \(zeilenindex) \t firstelement: \t*\(firstelement)*")
+                  
+                  let contains = labelarray.contains(where:{$0 == firstelement})
+                  
+                  if contains == true // zeile ist relevant
+                  {
+                     
+                     var partB = zeilenarray[1].replacingOccurrences(of: "\"", with: "")
+                     partB = partB.replacingOccurrences(of: "/>", with: "")
+                     //print("i: \(i) \t firstelement: \t \(firstelement) \t partB neu: \t\(partB)")
+                     if lastlabel == firstelement // transform lesen firstelement ist "transform"
+                     {
+                        transformok = 1
+                        print("transform: partB raw: \(partB)")
+                        partB = partB.replacingOccurrences(of: "matrix(", with: "")
+                        partB = partB.replacingOccurrences(of: ")", with: "")
+                        //print("transform: partB sauber: \(partB)")
+                        let transformarray = partB.split(separator: ",")
+                        
+                        //print("transformarray: \(transformarray[0]) \t \(transformarray[1]) \t \(transformarray[2])\t\(transformarray[3])")
+                        guard let koeff_a:Double = Double(transformarray[0]) else { return punktarray} 
+                        guard let koeff_b:Double = Double(transformarray[1]) else { return punktarray}
+                        guard let koeff_c:Double = Double(transformarray[2]) else { return punktarray}
+                        guard let koeff_d:Double = Double(transformarray[3]) else { return punktarray}
+                        guard let koeff_e:Double = Double(transformarray[4]) else { return punktarray} 
+                        guard let koeff_f:Double = Double(transformarray[5]) else { return punktarray}
+                        
+                        // transform-matrix bereitstellen
+                        transformdoublearray = [koeff_a,koeff_b,koeff_c,koeff_d,koeff_e,koeff_f]
+                        //print("i: \(i) \t firstelement: \(firstelement) transformdoublearray: \(transformdoublearray)")
+                        
+                        
+                     }
+                     
+                     else // Datazeile
+                     {
+                        let partfloat = (partB as NSString).doubleValue  
+                        //print("i: \(i) append: \t firstelement: \(firstelement) partfloat: \(partfloat)")
+                        
+                        circleorellipsefloatelementdic[firstelement] = partfloat
+                        circleorellipsefloatelementarray.append(partfloat)
+                        
+                     }
+                       // Floatwerte
+                  }
+                  else if (firstelement == "r")
+                  {
+                     circle = 1
+                     //print("circle ist 1 zeilenindex: \(zeilenindex) firstelement ist r circlecount: \(circlecount) circlecountB: \(circlecountB) circleorellipsefloatelementarray: \(circleorellipsefloatelementarray)\n")
+ 
+                  }
+               
+                     
+                     } // if zeilenarray.count > 1
+               else  
+               {
+                  // arrays aufbauen
+                  let firstelement:String = String(zeilenarray[0]) // label
+                  var element0 = String(zeilenarray[0])
+                  element0 = element0.replacingOccurrences(of: "<", with: "") // "erste zeile detekteren
+                  let contains = labelarray.contains(where:{$0 == firstelement})
+                  if contains == true // zeile ist relevant
+                  {
+                     // erste zeile, ueberspringen, 
+                     //print("erste zeile: firstelement: \(firstelement) element0\(element0)")
+                     
+                  }
+                  else
+                  {
+                     circle = 1 // serie end, 
+                     circlecountB += 1
+                     /*
+                     if (circlecount > circlecountB)
+                     {
+                        print("zeilenindex: \(zeilenindex) DIFF")
+                     }
+                     */
+                     
+                     //print("circle ist 1 zeilenindex: \(zeilenindex) circlecount: \(circlecount) circlecountB: \(circlecountB) circleorellipsefloatelementarray: \(circleorellipsefloatelementarray)\n")
+                     
+                     zeilenindex += 1
+                     
+                     
+                  }
+               }
+               
+               
+               // end labelarray
+
+
+            } // circle < 9
+            //print("\n*** *** *** *** ende circle: circle: \(circle)")
+            if circle == 1 // Zeilen des Blocks sind abgearbeitet
+            {
+               //print("\n*** *** *** *** circle ist 1   \ni: \(i) circleorellipsefloatelementarray: \(circleorellipsefloatelementarray)")
+               if (transformok == 1)
+               {
+                  
+                 // print("transform circleorellipsefloatelementarray: \(circleorellipsefloatelementarray)")
+                 //print(" transformdoublearray: \(transformdoublearray)")
+                  let a = transformdoublearray[0]
+                  let b = transformdoublearray[1]
+                  
+                  let c = transformdoublearray[2]
+                  let d = transformdoublearray[3]
+                  
+                  let e = transformdoublearray[4]
+                  let f = transformdoublearray[5]
+                  
+                  let ax_raw = circleorellipsefloatelementarray[0] // x
+                  let ay_raw = circleorellipsefloatelementarray[1] // y
+                  
+                  let ax_transform = a * ax_raw + c * ay_raw + e
+                  let ay_transform = b * ax_raw + d * ay_raw + f
+                  
+                  print("ax_raw: \(ax_raw) ay_raw: \(ay_raw)")
+                  print("ax_transform: \(ax_transform) ay_transform: \(ay_transform)")
+                  circleorellipsefloatelementarray[0] = ax_transform
+                  circleorellipsefloatelementarray[1] = ay_transform
+                  
+                  transformok = 0
+               }
+               
+               if circleorellipsefloatelementarray.count > 0
+               {
+                  //print("i: \(i) circleorellipsefloatelementarray: \(circleorellipsefloatelementarray)")
+                  circleorellipsefloatelementarray.append(0.0)
+                  
+                  
+                  punktarray.append(circleorellipsefloatelementarray)
+               }
+               else
+               {
+                  print("i: \(i) circleorellipsefloatelementarray ist leer")
+               }
+               
+               circle = 0
+            }// if circle = 1
+            
+            circle -= 1
+            
+         }// circle > 0
+         i += 1
+      } // for zeile
+      
+      print("circlecount: \(circlecount) circlecountB: \(circlecountB) circlecountC: \(circlecountC)")
+      //print("punktarray: \n\(punktarray)")
+      return punktarray
+   }
+   @objc func readSVG()->[[Double]]
+   {
+      print("HW readSVG")
+      var punktarray = [[Double]]()
+      // transform: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform
+      let labelarray:[String] = ["id","cx","cy","transform"] // relevante daten
+          var dateiname:String = ""
+      var dateisuffix = ""
+      var urlstring:String = ""
+      //var fileURL:URL 
+      
+      guard let fileURL = openFile() else { return punktarray }
+      
+      urlstring = fileURL.absoluteString
+      dateiname = urlstring.components(separatedBy: "/").last ?? "-"
+      print("report_readSVG fileURL: \(fileURL)")
+      
+      dateiname = dateiname.components(separatedBy: ".").first ?? "-"
+      let converteddateiname = dateiname.replacingOccurrences(of: "%20", with: " ")
+      print(converteddateiname) // Output: "Hello World"
+      //SVG_Pfad.stringValue = converteddateiname
+      //@IBOutlet weak var SVG_Pfad: NSTextField!
+      //
+      
+      
+      
+      //    print(Array(svgdicarray.keys))
+      //    print(Array(svgdicarray.values))
+      
+     
+      
+         
+      var circledicarray = [[String:Int]]()
+      
+      var circlefloatdicarray = [[String:Double]]()
+      
+      var circlearray = [[Int]]() // Koordinaten der Punkte
+      
+      var circlefloatarray = [[Double]]() // Koordinaten der Punkte als double 
+      
+      var circlefloatarray_raw = [[Double]]() // Koordinaten der Punkte aus input
+      
+
+      circledicarray.removeAll()
+      circlefloatarray.removeAll()
+      circlefloatdicarray.removeAll()
+       //ablaufzeitFeld.stringValue = zeitformatter.string(from: TimeInterval(0))!
+      //reading
+      do {
+         
+         guard let  fileURL = URL.init(string:urlstring) else {return punktarray}
+         
+         //guard 
+         //let  fileURL = URL(fileURLWithPath: "/Users/ruediheimlicher/Desktop/CNC_SVG/ATest0.svg" )// else {return }
+         
+         print("readSVG URL: \(fileURL)")
+         dateisuffix = urlstring.components(separatedBy: ".").last ?? "-"         
+     //    print("report_readSVG propfaktor: \(propfaktor)")
+         circlearray = [[Int]]()
+         
+         switch dateisuffix 
+         {
+         case "svg":
+            
+            
+            // SVG
+            let SVG_data = try String(contentsOf: fileURL , encoding: String.Encoding.utf8)
+            //print("SVGdata: \(SVG_data)")
+            //let anz = SVG_data.count
+            //print("SVGdata count: \(anz)")
+            
+            
+            let SVG_text = SVG_data.components(separatedBy: "\n")
+            // print("SVG_text: \(SVG_text)")
+            let SVG_array = Array(SVG_text)
+            var i=0
+            var circle = 0
+            var circlenummer = 0
+            
+            punktarray = punktarrayvonSGV(sgvarray:SVG_array)
+            if punktarray.count == 0
+            {
+               
+               return punktarray
+            }
+            print("punktarray: \(punktarray)")
+            break
+            
+         case "txt":
+            print("suffix: \(dateisuffix)")
+            let TXT_data = try String(contentsOf: fileURL , encoding: String.Encoding.utf8)
+            //print("TXT_data: \(TXT_data)")
+            let anz = TXT_data.count
+            //print("TXT_data count: \(anz)")
+            
+            
+            let TXT_text = TXT_data.components(separatedBy: "\n")
+            // print("TXT_data: \(TXT_data)")
+            let TXT_array = Array(TXT_text)
+            
+            //var txtdata = punktarrayvonTXT(txtarray:TXT_array)
+            punktarray = punktarrayvonTXT(txtarray:TXT_array)
+            if punktarray.count == 0
+            {
+               
+               return punktarray
+            }
+            
+            
+            break
+            
+            
+         default:
+            break
+         }
+         
+         let formater = NumberFormatter()
+         formater.groupingSeparator = "."
+         formater.maximumFractionDigits = 3
+         formater.minimumFractionDigits = 3
+         formater.numberStyle = .decimal
+         
+         //print("report_readSVG circlefloatarray; \(circlefloatarray)")
+         //print("report_readSVG punktarray; \(punktarray)")
+         circlefloatarray = punktarray
+         
+         /*
+          print("report_readSVG circlefloatarray A count: \(circlefloatarray.count)")
+          var iii = 0
+          for el in circlefloatarray
+          {
+          print("\(iii)\t\(el[1])\t \(el[2])  ")
+          iii += 1
+          }
+          */
+         
+      }
+      catch 
+      {
+         print("readSVG  error: \(error)")
+         
+         /* error handling here */
+         //return [[Doouble]]()
+      }
+      return punktarray
+   }
     
     
 // MARK:  *** *** ***  reportProfilOberseiteTask
@@ -3448,6 +3954,7 @@ var outletdaten:[String:AnyObject] = [:]
 
     @IBAction func reportNeuesElement(_ sender:NSButton)
     {
+       
         // Sicherheitshalber: letzten Punkt der bisherigen Datentabelle auswählen und Werte in Felder fuellen. Sonst wird neues Element nicht mit Endpunkt verbunden
         let rowindexset =  IndexSet(integer: KoordinatenTabelle.count)
         CNC_Table.selectRowIndexes(rowindexset, byExtendingSelection: false)   //
@@ -4462,13 +4969,16 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        NotificationCenter.default.addObserver(self, selector: #selector(neuesElementSichernAktion), name:NSNotification.Name(rawValue: "elementsichern"), object: nil)
 
       
+      
       NotificationCenter.default.addObserver(self, selector: #selector(CNC_JoystickAktion), name:NSNotification.Name(rawValue: "setjoystick"), object: nil)
 
       NotificationCenter.default.addObserver(self, selector:#selector(joystickAktion(_:)),name:NSNotification.Name(rawValue: "joystick"),object:nil)
 
         
   //     NotificationCenter.default.addObserver(self, selector:#selector(neuesElementSichernAktion(_:)),name:NSNotification.Name(rawValue: "newdata"),object:nil)
-
+      NotificationCenter.default.addObserver(self, selector:#selector(readSVGAktion(_:)),name:NSNotification.Name(rawValue: "readsvg"),object:nil)
+   
+  
       Auslauftiefe.integerValue = 13
       
        hotwireplist =  readHotwire_PList()
@@ -4910,10 +5420,25 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        }
 
     }
+   
+   
+  
+   
+   @objc  func KonvexLineAktion(_ notification:Notification)
+   {
+      print("HWKonvexLineAktion")
+      
+   }
+   
     
     @IBAction func reportNeueFigur(_ sender: NSButton)
     {
         print("reportNeueFigur")
+       /*
+       var svgarray = [[Double]]()
+       
+       svgarray = readSVG()
+       */
         if CNC_Eingabe == nil
         {
             

@@ -493,7 +493,11 @@ class rViewController: NSViewController, NSWindowDelegate
       
    }
     
-    
+   @IBAction func reportKonvexLine(_ sender: NSButton)
+   {
+      print("VCreportKonvexLine")
+      
+   }
     
     @objc func stepsAktion(_ notification:Notification)
         {

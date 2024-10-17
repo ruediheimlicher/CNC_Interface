@@ -351,6 +351,11 @@
                                                 <action selector="reportPrint:" target="Ady-hI-5gd" id="Axz-GG-Iof"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="getkonvexline" keyEquivalent="P" id="hfy-iD-kMZ">
+                                            <connections>
+                                                <action selector="reportKonvexLine:" target="Ady-hI-5gd" id="erF-On-duo"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Element sichern..." id="7Aq-pJ-bl3">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>

@@ -262,6 +262,7 @@
    IBOutlet id          FigStartpunktY;
    IBOutlet id          FigEndpunktX;
    IBOutlet id          FigEndpunktY;
+   IBOutlet id          Konvex;
    
    NSMutableArray*      FigElementArray;
    NSString*            FigElementPfad;
@@ -349,6 +350,7 @@
 - (IBAction)reportFigElementAnfangZuEnde:(id)sender;
 - (void)setFigGraphDaten;
 
+- (IBAction)reportFigElementKonvex:(id)sender;
 
 
 - (void)setPList:(NSDictionary*)plist;

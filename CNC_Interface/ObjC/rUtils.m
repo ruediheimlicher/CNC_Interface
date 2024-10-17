@@ -1916,6 +1916,41 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    return wrenchArray;
 }
 
+- (NSArray*)readSVGFigur
+{
+   NSMutableArray* FigurArray=[[NSMutableArray alloc]initWithCapacity:0];
+   NSLog(@"Utils readSVGFigur start");
+   NSOpenPanel *SVGOpenPanel = [NSOpenPanel openPanel];
+   NSLog(@"readSVGFigur SVGOpenPanel: %@",[SVGOpenPanel description]);
+   [SVGOpenPanel setCanChooseFiles:YES];
+   [SVGOpenPanel setCanChooseDirectories:NO];
+   [SVGOpenPanel setAllowsMultipleSelection:NO];
+   [SVGOpenPanel setAllowedFileTypes:[NSArray arrayWithObject:@"svg"]];
+   if (SVGOpenPanel)
+   {
+      int antwort=[SVGOpenPanel runModal];
+      NSLog(@"SVGOpenPanel antwort: %d",antwort);
+   }
+   else{
+      NSLog(@"kein Panel");
+      return FigurArray;
+   }
+   NSURL* SVGPfad=[SVGOpenPanel URL];
+    
+   NSLog(@"readSVGFigur: URL: %@",SVGPfad);
+   NSError* err=0;
+   NSString* SVGString=[NSString stringWithContentsOfURL:SVGPfad encoding:NSUTF8StringEncoding error:&err]; // String des Speicherpfads
+   
+   NSLog(@"Utils openSVGProfil SVGString: \n%@",SVGString);
+   
+   
+   NSArray* tempArray = [NSArray array];
+   
+
+   return FigurArray;
+}
+
+
 - (NSArray*)readFigur
 {
 	NSMutableArray* FigurArray=[[NSMutableArray alloc]initWithCapacity:0];
@@ -2067,6 +2102,11 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 	}
 	
 	//NSLog(@"Utils openProfil FigurArray: \n%@",[FigurArray description]);
+   /*
+   [0]   (null)   @"index" : (int)2   
+   [1]   (null)   @"x" : @"15.0600"   
+   [2]   (null)   @"y" : @"-31.2700"   
+   */
 	return FigurArray;
 }
 

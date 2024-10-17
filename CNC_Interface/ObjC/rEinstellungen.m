@@ -10,6 +10,9 @@
 // https://dev.iachieved.it/iachievedit/using-swift-in-an-existing-objective-c-project/
 #import "CNC_Interface-Swift.h"
 #import "rUtils.h"
+#import "spline.h"
+
+
 
 @implementation rGraph
 
@@ -1048,6 +1051,11 @@
               name:@"profilpop"
             object:nil];
    
+   [nc addObserver:self
+          selector:@selector(readSVGAktion:)
+              name:@"svgdaten"
+            object:nil];
+
    
    
    zoom=1;
@@ -4568,16 +4576,11 @@
     14. Sichern.
         
     */
-  // NSArray* FigurArray = [Utils readFigur];
    //NSLog(@"CNC_Eingbe readFigur FigurArray: \n%@",[FigurArray description]);
    FigElementArray= [NSMutableArray arrayWithArray:[Utils readFigur]]; // 
    NSLog(@"CNC_Eingabe readFigur FigElementArray: \n%@",[FigElementArray description]);
    
-   
-   
-   
-   
-   
+     
    [self setFigGraphDaten];
    //NSLog(@"CNC_Eingbe readFigur A");
    [FigGraph setNeedsDisplay:YES];
@@ -4588,6 +4591,60 @@
 //- (int)SetFigElemente:(NSArray*)LibArray;
 //- (IBAction)reportLibPop:(id)sender;
 
+- (IBAction)reportReadSVGFigur:(id)sender
+{
+   NSLog(@"CNC_Eingbe readSVGFigur"); // File lesen in HW
+   //FigElementArray= [NSMutableArray arrayWithArray:[Utils readSVGFigur]]; // 
+   //NSLog(@"CNC_Eingabe readFigur FigElementArray: \n%@",[FigElementArray description]);
+
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+   [nc postNotificationName:@"readsvg" object:self userInfo:nil];
+
+   
+   //NSMutableArray* SVGArray = [rHotwireViewController  updateIndex]();
+}
+
+- (void)readSVGAktion:(NSNotification*)note
+{
+   NSLog(@"E readSVGAktion ");
+   NSDictionary* info = [note userInfo];
+   NSArray* SVGArray = [info objectForKey:@"svgdaten"];
+   NSLog(@"svgarray %@",SVGArray);
+   NSMutableDictionary* ElementDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+   [ElementDic setObject:@"SVGElement"  forKey:@"quelle"];
+   [ElementDic setObject:SVGArray forKey:@"elementarray"];
+   NSMutableArray* Koordinatentabelle=[[NSMutableArray alloc]initWithCapacity:0];
+   
+   
+   startx=0;
+   starty=0;
+   int i=0;
+   for (i=0;i<[SVGArray count];i++) // 
+   {
+      //float tempX = [[[SVGArray objectAtIndex:i]objectForKey:@"x"]floatValue] + startx;
+      //float tempY = [[[SVGArray objectAtIndex:i]objectForKey:@"y"]floatValue] + starty;
+      float tempX = [[[SVGArray objectAtIndex:i]objectAtIndex:1]floatValue] + startx;
+      float tempY = [[[SVGArray objectAtIndex:i]objectAtIndex:2]floatValue] + starty;
+       
+      [Koordinatentabelle addObject:[NSArray arrayWithObjects:[NSNumber numberWithInt:i],[NSNumber numberWithFloat:tempX],[NSNumber numberWithFloat:tempY], nil]];
+      NSDictionary* tempDic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:i],@"index",[NSNumber numberWithFloat:tempX], @"x",[NSNumber numberWithFloat:tempY], @"y",NULL];
+      
+      [FigElementArray addObject:tempDic];
+   }
+   
+    [self setFigGraphDaten];
+    //NSLog(@"CNC_Eingbe readFigur A");
+    [FigGraph setNeedsDisplay:YES];
+
+    
+   [ElementDic setObject:Koordinatentabelle forKey:@"koordinatentabelle"];
+  // [FigGraph clearGraph];
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+ //  [nc postNotificationName:@"avrelementeingabe" object:self userInfo:ElementDic];
+
+   
+}
+
 - (IBAction)reportFigElementEinfuegen:(id)sender
 {
    NSLog(@"reportFigElementEinfuegen name: %@",LibElementName);
@@ -4595,19 +4652,22 @@
    [ElementDic setObject:@"FigElement"  forKey:@"quelle"];
 	//[ElementDic setObject:FigElementName forKey:@"elementname"];
    //NSLog(@"CNC_EingabereportFigElementEinfuegen FigElementArray: %@",[FigElementArray description]);
-	[ElementDic setObject:FigElementArray forKey:@"elementarray"];
+	
+   [ElementDic setObject:FigElementArray forKey:@"elementarray"];
 
    NSMutableArray* Koordinatentabelle=[[NSMutableArray alloc]initWithCapacity:0];
    startx=0;
    starty=0;
    int i=0;
-   // bisher: for (i=1;i<[FigElementArray count];i++) // Erstes Element ist Startpunkt und schon im Array
+   
+   
    for (i=0;i<[FigElementArray count];i++) // 
    {
       float tempx = [[[FigElementArray objectAtIndex:i]objectForKey:@"x"]floatValue] + startx;
       float tempy = [[[FigElementArray objectAtIndex:i]objectForKey:@"y"]floatValue] + starty;
       [Koordinatentabelle addObject:[NSArray arrayWithObjects:[NSNumber numberWithFloat:tempx],[NSNumber numberWithFloat:tempy], nil]];
    }
+   
 	[ElementDic setObject:Koordinatentabelle forKey:@"koordinatentabelle"];
    //NSLog(@"reportFigElementEinfuegen ElementDic: %@",[ElementDic description]);
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -4637,6 +4697,144 @@
     NSLog(@"reportFigElementAnfangZuEnde");
 }
 
+int aaorientation(float x, float y)
+{
+   int orientation = 0;
+   
+   
+   return orientation;
+}
+
+- (IBAction)reportFigElementKonvex:(id)sender;
+{
+   NSLog(@"reportFigElementKonvex FigElementArray: %@",FigElementArray);
+   /*
+   struct Punkt points[] = {{2, 2}, {4, 3}, {5, 4}, 
+                      {0, 3}, {0, 2}, {0, 0}, {2, 1}, {2, 0}, {4, 0}}; 
+   struct Punkt A = {0,0};
+   struct Punkt B = {4,4};
+   struct Punkt C = {1,2};
+   
+   int orient = orientation( A,B,C);
+   NSLog(@"reportFigElementKonvex orient A: %d",orient);
+   A.x = 1;
+   A.y = 2;
+   B.x = 4;
+   B.y = 4;
+   C.x = 0;
+   C.y = 0;
+   orient = orientation( A,B,C);
+   NSLog(@"reportFigElementKonvex orient B: %d",orient);
+   A.x = 1;
+   A.y = 1;
+   B.x = 1;
+   B.y = 2;
+   C.x = 1;
+   C.y = 4;
+   orient = orientation( A,B,C);
+   NSLog(@"reportFigElementKonvex orient C: %d",orient);
+   */
+   
+   if(FigElementArray.count == 0)
+      return;
+   struct Punkt punktarray[FigElementArray.count];
+   
+   
+   for (int i = 0;i<FigElementArray.count;i++)
+   {
+      //NSLog(@"reportFigElementKonvex i: %d x: %2.2F y: %2.2F",i,[[[FigElementArray objectAtIndex:i]objectForKey:@"x"]floatValue],[[[FigElementArray objectAtIndex:i]objectForKey:@"y"]floatValue]);
+      punktarray[i].x = [[[FigElementArray objectAtIndex:i]objectForKey:@"x"]floatValue];
+      punktarray[i].y = [[[FigElementArray objectAtIndex:i]objectForKey:@"y"]floatValue];
+      //NSLog(@"punktarray i: %d p.x: %2.2f p.y: %2.2f",i,punktarray[i].x,punktarray[i].y);
+   }
+   
+   
+   // punktarray[0] ist links unten
+   
+   int linksaussen = 0;
+   
+   for (int i=1;i<FigElementArray.count;i++)
+   {
+      if(punktarray[i].x < punktarray[linksaussen].x)
+      {
+         linksaussen = i;
+      }
+      else if ((punktarray[i].x == punktarray[linksaussen].x) && (punktarray[i].y < punktarray[linksaussen].y))
+      {
+         linksaussen = i;
+      }
+   }
+   NSLog(@"reportFigElementKonvex linksaussen: %d x: %2.2f y: %2.2f",linksaussen,punktarray[linksaussen].x,punktarray[linksaussen].y);
+   
+   int p = linksaussen;
+   int q = 0;
+   int n = FigElementArray.count;
+   NSMutableArray  *hull = NSMutableArray.new;
+   do {
+      
+      
+      struct Punkt pp = punktarray[p];
+      float xx = punktarray[p].x;
+      float yy = punktarray[p].y;
+      
+      
+      [hull addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:xx], @"x",[NSNumber numberWithFloat:yy],@"y",nil]];
+      NSLog(@"p: %d hull_i: %2.2f\t %2.2f]",p,[[[hull lastObject]objectForKey:@"x"]floatValue],[[[hull lastObject]objectForKey:@"y"]floatValue]);
+      q = (p+1)%n;
+      for (int i = 0; i < n; i++) 
+      { 
+         // If i is more counterclockwise than current q, then 
+         // update q 
+         
+         int o = orientation(punktarray[p], punktarray[i], punktarray[q]);
+         NSLog(@"i: %d q: %d orient: %d",i,q,o);         
+         if (orientation(punktarray[p], punktarray[i], punktarray[q]) == 2) 
+         {
+            q = i;
+         }
+         // HANDLING COLLINEAR POINTS 
+         // If point q lies in the middle, then also update q
+         /*
+         if (p != i && orientation(points[p], points[i], points[q]) == 0 && 
+             onSegment(points[p], points[q], points[i]))
+         {
+            NSLog(@"i: %d in line: q:%d",i,q);
+            q = i; 
+         }    
+         */
+      }
+      p = q;
+      
+   } while (p != linksaussen);
+   
+   [hull addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:punktarray[0].x], @"x",[NSNumber numberWithFloat:punktarray[0].y],@"y",nil]];
+
+   for(int i=0;i<[hull count];i++)
+   {
+      //NSLog(@"i: %d hull_i: %@",i,hull[i]);
+      
+   }
+   NSMutableArray* Koordinatentabelle=[[NSMutableArray alloc]initWithCapacity:0];
+   for(int i=0;i<[hull count];i++)
+   {
+      NSLog(@"%d \t%2.2f \t %2.2f",i,[[hull[i]objectForKey:@"x"]floatValue],[[hull[i]objectForKey:@"y"]floatValue]);
+      [Koordinatentabelle addObject:[NSArray arrayWithObjects:[hull[i]objectForKey:@"x"],[hull[i]objectForKey:@"y"], nil]];
+
+   }
+   [Koordinatentabelle addObject:[NSArray arrayWithObjects:[hull[0]objectForKey:@"x"],[hull[0]objectForKey:@"y"], nil]];
+   
+   NSMutableDictionary* ElementDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+   [ElementDic setObject:@"FigElement"  forKey:@"quelle"];
+
+   [ElementDic setObject:Koordinatentabelle forKey:@"koordinatentabelle"];
+   //NSLog(@"reportFigElementEinfuegen ElementDic: %@",[ElementDic description]);
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+   [nc postNotificationName:@"figelementeingabe" object:self userInfo:ElementDic];
+   [FigGraph clearGraph];
+
+
+}
+
 - (void)setFigGraphDaten
 {
    NSMutableDictionary* datenDic = [[NSMutableDictionary alloc]initWithCapacity:0];
@@ -4652,6 +4850,7 @@
       [FigGraph setNeedsDisplay:YES];
    }
 }
+
 
 
 - (NSDictionary*)PList

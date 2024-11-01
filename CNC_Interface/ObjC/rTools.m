@@ -231,7 +231,7 @@
 {
 // Aufbereitung der Werte für die Uebergabe an Teensy, als uint8_t-Werte
    uint16_t dicindex = [[derDatenDic objectForKey:@"index"]intValue];
-   //NSLog(@"Tool_SteuerdatenVonDic start index: %d SteuerdatenVonDic: %@",dicindex, [derDatenDic description]);
+   NSLog(@"Tool_SteuerdatenVonDic start index: %d SteuerdatenVonDic: %@",dicindex, [derDatenDic description]);
     int  anzSchritte;
    int  anzaxplus=0;
    int  anzaxminus=0;
@@ -395,7 +395,7 @@
    [tempDatenDic setObject:[NSNumber numberWithFloat:(float)SchritteAX] forKey: @"schritteax"];
    [tempDatenDic setObject:[NSNumber numberWithFloat:(float)SchritteBX] forKey: @"schrittebx"];
 
-    //NSLog(@"SchritteX raw %d",SchritteX);
+    NSLog(@"SchritteX raw %d",SchritteX);
     
     int SchritteY=steps*DistanzY;    //    Schritte in Y-Richtung
     int SchritteAY=steps*DistanzAY;    //    Schritte in Y-Richtung A
@@ -412,7 +412,7 @@
     [tempDatenDic setObject:[NSNumber numberWithFloat:(float)SchritteBY] forKey: @"schritteby"];
    
     
-   //NSLog(@"SchritteY raw %d",SchritteY);
+   NSLog(@"SchritteY raw %d",SchritteY);
     
     if (SchritteX < 0) // negative Zahl
     {

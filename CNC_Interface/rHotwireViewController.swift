@@ -2235,6 +2235,7 @@ var outletdaten:[String:AnyObject] = [:]
                 ramp = 1
                 print("*** ramp bei \(i)")
              }
+              
              punktdaten["ramp"] = ramp
              punktdaten["steigung"] = laststeigung
              //print("index: \(index)\tax: \t\(ax)\tay: \t\(ay) \tlastax: \t\(lastax)\tlastay: \t\(lastay)\tlaststeigung: \(laststeigung)")
@@ -3033,32 +3034,36 @@ var outletdaten:[String:AnyObject] = [:]
          }
       case 0xB5:
       
-         print("AVR Anschlag A0 home first")
+         print("HW B5 Anschlag A0 home first")
+         AVR?.homeSenkrechtSchicken()
       break;
          
       case 0xB6:
       
-         print("AVR Anschlag B0 home first")
+         print("HW B6 Anschlag B0 home first")
+         AVR?.homeSenkrechtSchicken()
       break;
          
       case 0xB7:
       
-         print("AVR Anschlag C0 home first")
+         print("HW Anschlag C0 home first")
+         AVR?.homeSenkrechtSchicken()
       break;
          
       case 0xB8:
       
-         print("AVR Anschlag D0 home first")
+         print("HW Anschlag D0 home first")
+         AVR?.homeSenkrechtSchicken()
       break;
          
       case 0xA5:
-         print("AVR Anschlag A0")
+         print("HW Anschlag A0")
          AnschlagLinksIndikator.isTransparent = false
          AnschlagLinksIndikator.layer?.backgroundColor = NSColor.blue.cgColor
          CNC_Lefttaste.isEnabled = false
          break
       case 0xA6:
-         print("AVR Anschlag B0")
+         print("HW Anschlag B0")
          AnschlagUntenIndikator.isTransparent = false
          AnschlagUntenIndikator.layer?.backgroundColor = NSColor.blue.cgColor
          CNC_Downtaste.isEnabled = false
@@ -6121,7 +6126,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
        outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
        outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
-       outletdaten["speed"] = MAX_SPEED   as AnyObject
+       outletdaten["speed"] = SpeedFeld.integerValue   as AnyObject
        outletdaten["micro"] = micro as AnyObject
        outletdaten["boardindex"] = boardindex as AnyObject
        outletdaten["pwm"] = DC_PWM.integerValue as AnyObject

@@ -5164,7 +5164,7 @@ return returnInt;
          
    //      [tempDic setObject:[NSNumber numberWithInt:micro]forKey:@"micro"];
    //      [tempDic setObject:[NSNumber numberWithInt:steps]forKey:@"steps"];
-    
+         [tempDic setObject:[NSNumber numberWithInt:speed] forKey:@"speed"];
          
          NSDictionary* tempSteuerdatenDic=[self Tool_SteuerdatenVonDic:tempDic];
          //NSLog(@"tempSteuerdatenDic: %@",tempSteuerdatenDic);
@@ -14885,8 +14885,11 @@ return returnInt;
    i=0;
    zoomfaktor=1.0;
    NSMutableArray* MausSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
-   int lastSpeed = [CNC speed];
+   //int lastSpeed = [CNC speed];
+   
+   
    [CNC setredpwm:[red_pwmFeld floatValue]];
+   
    int homecode=0xF0;
    
    
@@ -14953,6 +14956,7 @@ return returnInt;
    {
       position |= (1<<LAST_BIT);
    }
+   //speed = 10;
    [tempDic setObject:[NSNumber numberWithInt:position] forKey:@"position"];
    [tempDic setObject:[NSNumber numberWithInt:speed] forKey:@"speed"];
    
@@ -14968,7 +14972,7 @@ return returnInt;
    MausSchnittdatenArray[i][26] = [NSNumber numberWithInt:home]; // home
    
    
-   [CNC setSpeed:lastSpeed];
+   //[CNC setSpeed:lastSpeed];
    [CNC setSpeed:10];
    
    NSMutableDictionary* MausSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
@@ -15097,12 +15101,13 @@ return returnInt;
     //  NSArray* temphomearray = [self Tool_CNC_SchnittdatenArrayVonSteuerdaten:tempSteuerdatenDic];
     //  NSLog(@"homeSenkrechtSchicken F temphomearray: %@",temphomearray);
       
-      [HomeSchnittdatenArray addObject:[self Tool_CNC_SchnittdatenArrayVonSteuerdaten:tempSteuerdatenDic]];
-      
+      //[HomeSchnittdatenArray addObject:[self Tool_CNC_SchnittdatenArrayVonSteuerdaten:tempSteuerdatenDic]];
+      HomeSchnittdatenArray = [NSMutableArray arrayWithArray:[self Tool_CNC_SchnittdatenArrayVonSteuerdaten:tempSteuerdatenDic]];
+
    } 
    NSLog(@"homeSenkrechtSchicken F");
-   HomeSchnittdatenArray[i][24] = [NSNumber numberWithInt:homecode];
-   HomeSchnittdatenArray[i][26] = [NSNumber numberWithInt:1]; // home
+   HomeSchnittdatenArray[0][24] = [NSNumber numberWithInt:homecode];
+   HomeSchnittdatenArray[0][26] = [NSNumber numberWithInt:1]; // home
 
    
   // [CNC setSpeed:speed];

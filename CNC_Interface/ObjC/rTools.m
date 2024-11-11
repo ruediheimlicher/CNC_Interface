@@ -184,7 +184,7 @@
    
    // Zusaetzliche Objekte einfuegen bis 36
    //for (uint8_t addindex = 0;addindex < 14; addindex++)
-   while ([tempArray count] < 36)
+   while ([tempArray count] < 40)
    {
       [tempArray addObject:[NSNumber numberWithInt:0]];
    }
@@ -196,7 +196,7 @@
    //NSLog(@"steigungint: %d steigungfloat: %.3f",steigungint,[[derDatenDic objectForKey:@"steigung"]floatValue]);
    if (steigungint > 0)
    {
-      int aa = (1234 & 0xFF00)>>8;
+     // int aa = (1234 & 0xFF00)>>8;
       steigungl = (steigungint & 0xFF);
       steigungh = (steigungint>>8) & 0xFF;
    }
@@ -214,9 +214,30 @@
    [tempArray replaceObjectAtIndex:33 withObject:[NSNumber numberWithInt:steigungl]];
    [tempArray replaceObjectAtIndex:34 withObject:[NSNumber numberWithInt:steigungh]];
    
+   
    [tempArray replaceObjectAtIndex:31 withObject:[NSNumber numberWithInt:17]];
-
+   
+   if ([derDatenDic objectForKey:@"micro"])
+   {
+      [tempArray replaceObjectAtIndex:26 withObject:[derDatenDic objectForKey:@"micro"]];
+   }
    [tempArray replaceObjectAtIndex:32 withObject:[NSNumber numberWithInt:3]];
+   
+   if([derDatenDic objectForKey:@"ramp"])
+   {
+      [tempArray replaceObjectAtIndex:35 withObject:[derDatenDic objectForKey:@"ramp"]];
+   }
+   
+   if([derDatenDic objectForKey:@"rampfaktor"])
+   {
+      [tempArray replaceObjectAtIndex:36 withObject:[derDatenDic objectForKey:@"rampfaktor"]];
+   }
+   if([derDatenDic objectForKey:@"timerintervall"])
+   {
+      [tempArray replaceObjectAtIndex:37 withObject:[derDatenDic objectForKey:@"timerintervall"]];
+   }
+
+   
    
    //NSLog(@"tempArray indexl: %d",[[derDatenDic objectForKey:@"indexl"]intValue]);
   // NSLog(@"SchnittdatenVonDic tempArray: %@",[tempArray description]);

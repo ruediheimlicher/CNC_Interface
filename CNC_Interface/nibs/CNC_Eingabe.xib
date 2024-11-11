@@ -122,7 +122,7 @@
                             <action selector="reportCancel:" target="-2" id="22"/>
                         </connections>
                     </button>
-                    <tabView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="66">
+                    <tabView fixedFrame="YES" initialItem="1185" translatesAutoresizingMaskIntoConstraints="NO" id="66">
                         <rect key="frame" x="22" y="50" width="539" height="409"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <font key="font" metaFont="system"/>

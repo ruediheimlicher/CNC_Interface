@@ -417,7 +417,7 @@
     
     int            speed;
     int            steps;
-    
+    int            ramp;
     
     
 }
@@ -464,6 +464,9 @@
    - (int)saveSpeed;
    - (int)motorsteps;
    - (int)CNC_micro;
+   
+
+
 - (void)homeSenkrechtSchicken;
 
    -(void) killWindow:(NSAlert *)alert with:(NSTimer *) theTimer;

@@ -434,8 +434,8 @@ class rViewController: NSViewController, NSWindowDelegate
          popindex += 1
       }
       
-      print("viewDidAppear")
-      self.view.window?.delegate = self as? NSWindowDelegate 
+      print("VC viewDidAppear")
+      self.view.window?.delegate = self //as? NSWindowDelegate 
       
       //let boardarray:NSArray = BoardPop.itemTitles as NSArray
       
@@ -509,7 +509,7 @@ class rViewController: NSViewController, NSWindowDelegate
 
         @objc func microAktion(_ notification:Notification)
         {
-           print("microAktion: \(notification)")
+           print("VC microAktion: \(notification)")
            micro = notification.userInfo?["micro"] as! Int
            print("Aktion micro: \(micro)")
            micro_Feld.integerValue = micro
@@ -874,9 +874,14 @@ class rViewController: NSViewController, NSWindowDelegate
            print("zeilenindex: \(zeilenindex) zeile: \(zeile) usbschnittdatenaktion keine Richtung")
         }
          
+        print("usbschnittdatenaktion micro: \(micro)")
         wertarray[25] = UInt8(steps)
+        
         wertarray[26] = UInt8(micro)
+        
         wertarray[29] = UInt8(richtung)
+        
+             
         //print("usbschnittdatenAktion zeilenindex: \(zeilenindex) zeile: \(zeile) code: \(zeile[16])")
 
         
@@ -937,7 +942,7 @@ class rViewController: NSViewController, NSWindowDelegate
      {
         //print("teensy.read_OK ist true")
      }
-      //print("readOK vor writeCNCAbschnitt: \(teensy.read_OK.boolValue)\n usb_schnittdatenarray: \(usb_schnittdatenarray)")
+      print("readOK vor writeCNCAbschnitt: \(teensy.read_OK.boolValue)\n usb_schnittdatenarray: \(usb_schnittdatenarray)")
       writeCNCAbschnitt()
     }
     

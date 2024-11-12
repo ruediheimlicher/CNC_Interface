@@ -14251,7 +14251,7 @@ return returnInt;
    
    [MausSchnittdatenDic setObject:[NSNumber numberWithInt:richtung] forKey:@"richtung"];
    
-   NSLog(@"AVR  ManFeldRichtung MausSchnittdatenDic: %@",[MausSchnittdatenDic description]);
+   //NSLog(@"AVR  ManFeldRichtung MausSchnittdatenDic: %@",[MausSchnittdatenDic description]);
    
    //[MausSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"home"];
    

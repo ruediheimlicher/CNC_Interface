@@ -16,6 +16,8 @@
 #include <IOKit/hid/IOHIDBase.h>
 #include "hid.h"
 
+#include <CoreFoundation/CoreFoundation.h>
+
 #define USBATTACHED           5
 #define USBREMOVED            6
 
@@ -406,6 +408,7 @@ int rawhid_open(int max, int vid, int pid, int usage_page, int usage)
 	for (p = first_hid; p; p = p->next) count++;
    
    hid_usbstatus=count;
+   printf("rawhid_open end count: %d\n",count);
 	return count;
 }
 
@@ -542,17 +545,17 @@ static void attach_callback(void *context, IOReturn r, void *hid_mgr, IOHIDDevic
 {
    struct hid_struct *h;
    
-	fprintf(stderr,"attach callback\n");
+	fprintf(stderr,"hid attach callback\n");
    //
 	if (IOHIDDeviceOpen(dev, kIOHIDOptionsTypeNone) != kIOReturnSuccess) 
    {
-      fprintf(stderr,"attach callback not kIOReturnSuccess\n");
+      fprintf(stderr,"hid attach callback not kIOReturnSuccess\n");
       return;
    }
 	h = (hid_t *)malloc(sizeof(hid_t));
 	if (!h) 
    {
-      fprintf(stderr,"attach callback not h\n");
+      fprintf(stderr,"hid attach callback not h\n");
       return;
    }
 	memset(h, 0, sizeof(hid_t));
@@ -565,6 +568,7 @@ static void attach_callback(void *context, IOReturn r, void *hid_mgr, IOHIDDevic
    hid_usbstatus=1;
 
    /*
+    
    r = rawhid_open(1, 0x16C0, 0x0486, 0xFFAB, 0x0200);
    if (r <= 0) 
    {
@@ -579,13 +583,39 @@ static void attach_callback(void *context, IOReturn r, void *hid_mgr, IOHIDDevic
    NSNotificationCenter *nc=[NSNotificationCenter defaultCenter];
    NSDictionary* NotDic = [NSDictionary  dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:USBATTACHED],@"attach", nil];
    [nc postNotificationName:@"usb_attach" object:NULL userInfo:NotDic];
-   fprintf(stderr,"attach notification\n");
+   fprintf(stderr,"nach attach notification\n");
 
 }
+
+void printCFType(CFTypeRef cf) 
+{
+    if (cf != NULL) {
+        CFStringRef description = CFCopyDescription(cf);
+        if (description != NULL) {
+            CFShow(description);
+            CFRelease(description);
+        } else {
+            printf("Object has no description.\n");
+        }
+    } else {
+        printf("NULL object passed to printCFType.\n");
+    }
+}
+
+CFRange containsSubstring(CFStringRef string, CFStringRef substring) {
+    // Use CFStringFind to search for substring in the string
+    CFRange range = CFRangeMake(0, CFStringGetLength(string)); // Search the entire string
+    CFStringCompareFlags options = kCFCompareCaseInsensitive;  // Case-insensitive comparison
+    
+    // Check if the substring is found
+    return CFStringFind(string, substring,  options);
+}
+
 
 
 int usb_present(void)
 {
+   printf("usb_present\n");
    CFMutableDictionaryRef matchingDict;
    io_iterator_t iter;
    kern_return_t kr;
@@ -593,9 +623,10 @@ int usb_present(void)
    int anzahl=0;
    
    // set up a matching dictionary for the class 
-   matchingDict = IOServiceMatching(kIOUSBDeviceClassName);
+   matchingDict = IOServiceMatching("IOUSBDevice");
    if (matchingDict == NULL)
    {
+      fprintf(stderr, "Unable to create matching dictionary\n");
       return -1; // fail
    }
    
@@ -603,20 +634,64 @@ int usb_present(void)
    kr = IOServiceGetMatchingServices(kIOMasterPortDefault, matchingDict, &iter);
    if (kr != KERN_SUCCESS)
    {
+      fprintf(stderr, "IOServiceGetMatchingServices failed\n");
       return -1;
    }
    
    // iterate 
    while ((device = IOIteratorNext(iter)))
    {
-      // do something with device, eg. check properties 
-      // ... 
-      // And free the reference taken before continuing to the next item 
-      IOObjectRelease(device);
-      anzahl++;
+      printf("\n--- Device Found ---\n");
+
+              // Retrieve the property dictionary for each device
+              CFDictionaryRef properties = NULL;
+              kr = IORegistryEntryCreateCFProperties(device, (CFMutableDictionaryRef *)&properties, kCFAllocatorDefault, 0);
+      if (kr == KERN_SUCCESS && properties) {
+         // Print each property key-value pair
+         CFIndex count = CFDictionaryGetCount(properties);
+         const void* keys[count];
+         const void* values[count];
+         CFDictionaryGetKeysAndValues(properties, keys, values);
+         
+         printf("Device Properties:\n");
+         for (CFIndex i = 0; i < count; i++) {
+            CFStringRef key = (CFStringRef)keys[i];
+            CFTypeRef value = values[i];
+            CFStringRef description = CFCopyDescription(values[i]);
+            
+             
+            // Print the key as a string
+            char keyName[256];
+            if (CFStringGetCString(key, keyName, sizeof(keyName), kCFStringEncodingUTF8))
+            {
+               //printf("keyName  %s: ", keyName);
+            }
+            //char k[256];
+      
+            CFStringRef teensystring = CFSTR("Teensyduino");
+            
+           if(strcmp(keyName,"kUSBVendorString") == 0)
+            {
+               printf("gefunden: %s value:\t",keyName);
+               printCFType(value);
+              // CFStringGetCString(description, k, 256, kCFStringEncodingUTF8);
+               
+               CFRange r = containsSubstring(description, teensystring);
+                if (r.length != 0)
+                {
+                   printf("teensy gefunden \n");
+                }
+               anzahl++;
+            }
+           }
+         
+         CFRelease(properties);
+         
+        
+      }
    }
    
    // Done, release the iterator 
-//   IOObjectRelase(iter);
+   IOObjectRelease(iter);
    return anzahl;
 }

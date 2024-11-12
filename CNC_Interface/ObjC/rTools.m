@@ -252,7 +252,7 @@
 {
 // Aufbereitung der Werte für die Uebergabe an Teensy, als uint8_t-Werte
    uint16_t dicindex = [[derDatenDic objectForKey:@"index"]intValue];
-   NSLog(@"Tool_SteuerdatenVonDic start index: %d SteuerdatenVonDic: %@",dicindex, [derDatenDic description]);
+   //NSLog(@"Tool_SteuerdatenVonDic start index: %d SteuerdatenVonDic: %@",dicindex, [derDatenDic description]);
     int  anzSchritte;
    int  anzaxplus=0;
    int  anzaxminus=0;

@@ -73,6 +73,7 @@ class rTimerInfo {
       // PID: 1158 
        // rawhid_open(int max, int vid, int pid, int usage_page, int usage)
        
+       /*
        if (hid_usbstatus > 0)
        {
           print("func usb_teensy.USBOpen USB schon offen")
@@ -85,7 +86,7 @@ class rTimerInfo {
           let antwort =  alert.runModal() == .alertFirstButtonReturn
           return 1;
        }
-       
+       */
        // VID: 
        
        let    out = rawhid_open(1,  VID, PID, 0xFFAB, 0x0200)

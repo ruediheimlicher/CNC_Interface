@@ -434,11 +434,18 @@ class rViewController: NSViewController, NSWindowDelegate
          popindex += 1
       }
       
-      print("VC viewDidAppear")
+      let teensypresent = teensy.dev_present()
+      
+      print("VC viewDidAppear dev_present: \(teensypresent)")
+     
+      if (teensypresent > 0)
+      {
+         Attach_USB()
+      }
       self.view.window?.delegate = self //as? NSWindowDelegate 
       
       //let boardarray:NSArray = BoardPop.itemTitles as NSArray
-      
+      /*
       let warnung = NSAlert.init()
       warnung.messageText = "Welches Board?"
       let boardarray = BoardPop.itemTitles
@@ -452,8 +459,11 @@ class rViewController: NSViewController, NSWindowDelegate
       boardindex = devicereturn-1000
       
       print("boardindex: \(boardindex) devicereturn: \(devicereturn)")
+      */
+      
       self.view.window?.makeKey()
       
+      /*
       if boardindex < teensyboardarray.count
       {
          BoardPop.selectItem(at:devicereturn-1000)
@@ -490,7 +500,7 @@ class rViewController: NSViewController, NSWindowDelegate
       nc.post(name:Notification.Name(rawValue:"usb_status"),
               object: nil,
               userInfo: userinformation)
-      
+      */
    }
     
    @IBAction func reportKonvexLine(_ sender: NSButton)
@@ -945,27 +955,37 @@ class rViewController: NSViewController, NSWindowDelegate
       print("readOK vor writeCNCAbschnitt: \(teensy.read_OK.boolValue)\n usb_schnittdatenarray: \(usb_schnittdatenarray)")
       writeCNCAbschnitt()
     }
+   
+   //MARK: usbattachAktion
     
     @objc func usbattachAktion(_ note:Notification) //von hid attach_callback
      {
         let info = note.userInfo
+        print("ViewController usbattachAktion info: \(info )")
         let status = info?["attach"] as! Int
-        print("ViewController usbattachAktion status: \(status)");
+        print("ViewController usbattachAktion status: \(status) globalusbstatus: \(globalusbstatus)");
         
         if (status == USBREMOVED)
         {
            USB_OK_Feld.image = notokimage
            globalusbstatus = 0
+           usbstatus = 0
            USBKontrolle.stringValue="USB OFF"
            print("ViewController usbattachAktion USBREMOVED ")
         }
        else if (status == USBATTACHED)
         {
-          //self.Attach_USB()
-           USB_OK_Feld.image = okimage
+          
+          self.Attach_USB()
+          
+          USB_OK_Feld.image = okimage
           USBKontrolle.stringValue = "USB ON"
           globalusbstatus = 1
-           print("ViewController usbattachAktion USBATTACHED")
+          usbstatus = 1
+          print("ViewController usbattachAktion USBATTACHED")
+          
+          
+          
        }
         
         
@@ -2181,6 +2201,8 @@ class rViewController: NSViewController, NSWindowDelegate
    
    @IBAction func check_USB(_ sender: NSButton)
    {
+      self.Attach_USB()
+      return;
       let present = teensy.dev_present()
       let hidstatus = teensy.status()
       let nc = NotificationCenter.default
@@ -2216,17 +2238,52 @@ class rViewController: NSViewController, NSWindowDelegate
          let boardarray = BoardPop.itemTitles 
          for titel in boardarray
          {
-            let buttonstring = titel
+            //let buttonstring = titel
             warnung.addButton(withTitle: titel)
          }
          warnung.addButton(withTitle: "cancel")
          let devicereturn:Int = warnung.runModal().rawValue
          boardindex = devicereturn-1000
-         print("devicereturn: \(devicereturn)")
+         print("boardindex: \(boardindex)")
          if boardindex >= teensyboardarray.count
          {
             return;
          }
+         
+         // rev start
+         
+         if boardindex < teensyboardarray.count
+         {
+            BoardPop.selectItem(at:devicereturn-1000)
+            
+            let teensycode = teensyboardarray[boardindex]
+            
+            let erfolg = teensy.USBOpen(code:teensycode, board: boardindex)
+            usbstatus = Int(Int(erfolg))
+            globalusbstatus = Int(erfolg)
+            print("viewDidAppear erfolg: \(erfolg) usbstatus: \(usbstatus) rawhid_status: \(rawhid_status())")
+            if usbstatus == 1
+            {
+               var timerdic:[String:Any] = [String:Any]()
+               timerdic["home"] = 0
+               
+               let result = teensy.start_read_USB(true, dic:timerdic)
+               print("teensy.read_OK ist \(result)")
+               
+               
+            }
+            else
+            {
+               USB_OK_Feld.image = notokimage
+               globalusbstatus = 0
+               USBKontrolle.stringValue="USB OFF"
+            }
+            
+         }
+
+         
+         
+         // rev end
          let device = teensyboardarray[boardindex]
          let erfolg = teensy.USBOpen(code:device,  board: boardindex)
          usbstatus = Int(erfolg)
@@ -2305,6 +2362,7 @@ class rViewController: NSViewController, NSWindowDelegate
       
       //print("antwort: \(teensy.status())")
    }
+ 
    
    @objc func Attach_USB()
    {
@@ -2312,7 +2370,7 @@ class rViewController: NSViewController, NSWindowDelegate
       let hidstatus = teensy.status()
       let nc = NotificationCenter.default
       var userinformation:[String : Any]
-      print("USBOpen usbstatus vor check: \(usbstatus) hidstatus: \(hidstatus) present: \(present)")
+      print("Attatch_USB  usbstatus vor check: \(usbstatus) hidstatus: \(hidstatus) present: \(present)")
       if (hidstatus > 0) // already open
       {
          print("USB-Device ist schon da")
@@ -2320,9 +2378,10 @@ class rViewController: NSViewController, NSWindowDelegate
          warnung.messageText = "USB"
          warnung.messageText = "USB-Device ist schon da"
          warnung.addButton(withTitle: "OK")
-         warnung.runModal()
+  //       warnung.runModal()
          USB_OK_Feld.image = okimage
-         
+        
+         /*
          print("teensyboardarray: \(teensyboardarray)")
          if teensyboardarray.count > 0
          {
@@ -2333,7 +2392,8 @@ class rViewController: NSViewController, NSWindowDelegate
             //   print("USBOpen erfolg: \(erfolg) usbstatus: \(usbstatus)")
 
          }
-         //   return
+          */
+            return
          
       }
       else
@@ -2354,14 +2414,62 @@ class rViewController: NSViewController, NSWindowDelegate
          {
             return;
          }
+         BoardPop.selectItem(at:boardindex)
+         
+         let teensycode = teensyboardarray[boardindex]
          let device = teensyboardarray[boardindex]
-         let erfolg = teensy.USBOpen(code:device,  board: boardindex)
+         let erfolg = teensy.USBOpen(code:teensycode,  board: boardindex)
          usbstatus = Int(erfolg)
          globalusbstatus = Int(erfolg)
          //   print("USBOpen erfolg: \(erfolg) usbstatus: \(usbstatus)")
+         if usbstatus == 1
+         {
+            var timerdic:[String:Any] = [String:Any]()
+            timerdic["home"] = 0
+            
+            let result = teensy.start_read_USB(true, dic:timerdic)
+            print("teensy.read_OK ist \(result)")
+            print("status 1")
+            USB_OK_Feld.image = okimage
+            print("USB-Device da")
+
+            Start_Knopf.isEnabled = true
+            Send_Knopf.isEnabled = true
+            userinformation = ["message":"usb", "usbstatus": 1, "boardindex" :boardindex] as [String : Any]
+
+            
+            
+            
+         }
+         else
+         {
+            print("status 0")
+            // USB_OK.backgroundColor = NSColor.yellow
+            // USB_OK.stringValue = "-"
+            USB_OK_Feld.image = notokimage
+            let warnung = NSAlert.init()
+            warnung.messageText = "USB"
+            warnung.messageText = "check_USB: Kein USB-Device"
+            warnung.addButton(withTitle: "OK")
+            warnung.runModal()
+
+            userinformation = ["message":"usb", "usbstatus": 0, "boardindex" :boardindex] as [String : Any]
+
+            USB_OK_Feld.image = notokimage
+            globalusbstatus = 0
+            USBKontrolle.stringValue="USB OFF"
+         }
          
+         nc.post(name:Notification.Name(rawValue:"usb_status"),
+                 object: nil,
+                 userInfo: userinformation)
+
       }
       
+ 
+      
+      
+      return;
       
       if (rawhid_status()==1) // anmeldung OK
       {

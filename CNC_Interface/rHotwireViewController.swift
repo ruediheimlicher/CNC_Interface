@@ -5014,7 +5014,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        setOutletdaten()
       
        let ProfilnamenArray = AVR?.readProfilLib() as! [String]
-       print("ProfilnamenArray: \(ProfilnamenArray[0])")
+       //print("ProfilnamenArray: \(ProfilnamenArray[0])")
        Profil1Pop.removeAllItems()
        Profil1Pop.addItem(withTitle: "Profil wählen")
        Profil1Pop.addItems(withTitles: ProfilnamenArray)
@@ -5138,7 +5138,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       if (hotwireplist["pwm"] != nil)
       {
          let plistpwm = hotwireplist["pwm"] as! Int
-         print("plistpwm: \(plistpwm)")
+         //print("plistpwm: \(plistpwm)")
          DC_PWM.integerValue = hotwireplist["pwm"] as! Int
          DC_Slider.integerValue = hotwireplist["pwm"] as! Int
          DC_Stepper.integerValue = hotwireplist["pwm"] as! Int
@@ -5155,7 +5155,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       if (hotwireplist["speed"] != nil)
       {
          let plistspeed = hotwireplist["speed"]  as! Int
-         print("speed: \(plistspeed )")
+         //print("speed: \(plistspeed )")
          SpeedFeld.integerValue = plistspeed
          SpeedStepper.integerValue = plistspeed
       }
@@ -5168,7 +5168,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       if (hotwireplist["abbrand"] != nil)
       {
          let plistabbranda = hotwireplist["abbrand"]  as! Double
-         print("speed: \(plistabbranda )")
+         //print("speed: \(plistabbranda )")
          AbbrandFeld.doubleValue = plistabbranda
       }
       else
@@ -5179,7 +5179,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        if (hotwireplist["minimaldistanz"] != nil)
        {
           let minimaldistanz = hotwireplist["minimaldistanz"]  as! Double
-          print("minimaldistanz: \(minimaldistanz )")
+          //print("minimaldistanz: \(minimaldistanz )")
           MinimaldistanzFeld.doubleValue = minimaldistanz
            
        }
@@ -5191,7 +5191,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       if (hotwireplist["profilnamea"] != nil)
       {
          let plistprofilnamea = hotwireplist["profilnamea"]  as! String
-         print("plistprofilnamea: \(plistprofilnamea )")
+         //print("plistprofilnamea: \(plistprofilnamea )")
          ProfilNameFeldA.stringValue = plistprofilnamea
       }
       else
@@ -5203,7 +5203,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       if (hotwireplist["profilnameb"] != nil)
       {
          let plistprofilnameb = hotwireplist["profilnameb"]  as! String
-         print("plistprofilnamea: \(plistprofilnameb )")
+         //print("plistprofilnamea: \(plistprofilnameb )")
          ProfilNameFeldB.stringValue = plistprofilnameb
       }
       else
@@ -5363,7 +5363,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       }
        if let rumpfdatenarray = hotwireplist["rumpfdatenarray"]
        {
-           print("rumpfdatenarray da")
+           //print("rumpfdatenarray da")
            RumpfdatenArray = hotwireplist["rumpfdatenarray"] as! [[String : Double]]
           
           
@@ -5375,13 +5375,13 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
            let zeile = RumpfdatenArray[1] as [String:Double]
            
            let zeilenkeys = zeile.keys
-           print("zeilenkeys: \(zeilenkeys)")
+           //print("zeilenkeys: \(zeilenkeys)")
            var i=0
            for k in zeilenkeys
             {
                //let tempzey = zeilenkeys[i]
                let data = zeile[k]
-              print("i: \(i) key: \(k) data: \(data)")
+              //print("i: \(i) key: \(k) data: \(data)")
                i += 1
            }
            
@@ -5687,7 +5687,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
 
       if FileManager.default.fileExists(atPath: USBPfad)
       {
-         print("PList da")
+         //print("PList da")
       }
       // https://stackoverflow.com/questions/24045570/how-do-i-get-a-plist-as-a-dictionary-in-swift
       if let plistXML = FileManager.default.contents(atPath: USBPfad)

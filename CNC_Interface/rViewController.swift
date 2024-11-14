@@ -419,7 +419,8 @@ class rViewController: NSViewController, NSWindowDelegate
     override func viewDidAppear() 
    {
       USB_OK_Feld.image = notokimage
-      
+      let nc = NotificationCenter.default
+      var userinformation:[String : Any]
       teensyboardarray.append(["titel":TEENSY2_TITLE,"PID":TEENSY2_PID,"VID":TEENSY2_VID])
       teensyboardarray.append(["titel":TEENSY3_TITLE,"PID":TEENSY3_PID,"VID":TEENSY3_VID])
       
@@ -438,10 +439,40 @@ class rViewController: NSViewController, NSWindowDelegate
       
       print("VC viewDidAppear dev_present: \(teensypresent)")
      
-      if (teensypresent > 0)
+      if (teensypresent == 0)
       {
-         Attach_USB()
+         // USB_OK.stringValue = "-"
+         USB_OK_Feld.image = notokimage
+         let warnung = NSAlert.init()
+         warnung.messageText = "USB"
+         warnung.messageText = "check_USB: Kein USB-Device"
+         warnung.addButton(withTitle: "OK")
+         warnung.runModal()
+
+         userinformation = ["message":"usb", "usbstatus": 0, "boardindex" :boardindex] as [String : Any]
+
+         USB_OK_Feld.image = notokimage
+         globalusbstatus = 0
+         USBKontrolle.stringValue="USB OFF"
+
+         
       }
+      else
+      {
+         let usb_erfolg = Attach_USB()
+      }
+      
+      /*
+      else
+      {
+         let warnung = NSAlert.init()
+         warnung.messageText = "USB"
+         warnung.messageText = "Start: Kein USB-Device"
+         warnung.addButton(withTitle: "OK")
+         warnung.runModal()
+ 
+      }
+       */
       self.view.window?.delegate = self //as? NSWindowDelegate 
       
       //let boardarray:NSArray = BoardPop.itemTitles as NSArray
@@ -538,7 +569,7 @@ class rViewController: NSViewController, NSWindowDelegate
         cncwritecounter += 1
         //print("swift rViewController writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray) cncwritecounter: \(cncwritecounter)")
        let count = usb_schnittdatenarray.count
-       //print("VC writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
+       print("VC writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
        
        if(Stepperposition < count)
        {
@@ -603,7 +634,7 @@ class rViewController: NSViewController, NSWindowDelegate
              if (globalusbstatus > 0)
              {
                 let senderfolg = teensy.send_USB()
-                //print("VC writeCNCAbschnitt senderfolg: \(senderfolg)")
+                print("VC writeCNCAbschnitt senderfolg: \(senderfolg)")
              }
              // print("Stepperposition: \(Stepperposition) \n\(schnittdatenstring)");
              var ausschlussindex:[UInt8] = [0xE2]
@@ -2215,7 +2246,7 @@ class rViewController: NSViewController, NSWindowDelegate
          warnung.messageText = "USB"
          warnung.messageText = "USB-Device ist schon da"
          warnung.addButton(withTitle: "OK")
-         warnung.runModal()
+     //    warnung.runModal()
          USB_OK_Feld.image = okimage
          
          print("teensyboardarray: \(teensyboardarray)")
@@ -2364,23 +2395,27 @@ class rViewController: NSViewController, NSWindowDelegate
    }
  
    
-   @objc func Attach_USB()
+   @objc func Attach_USB() -> Int
    {
+      var usb_return = 0
       let present = teensy.dev_present()
-      let hidstatus = teensy.status()
+      var hidstatus = teensy.status()
       let nc = NotificationCenter.default
       var userinformation:[String : Any]
       print("Attatch_USB  usbstatus vor check: \(usbstatus) hidstatus: \(hidstatus) present: \(present)")
+      
+      //hidstatus = 0
       if (hidstatus > 0) // already open
+      //if (usbstatus > 0) //
       {
          print("USB-Device ist schon da")
          let warnung = NSAlert.init()
          warnung.messageText = "USB"
          warnung.messageText = "USB-Device ist schon da"
          warnung.addButton(withTitle: "OK")
-  //       warnung.runModal()
-         USB_OK_Feld.image = okimage
-        
+    //     warnung.runModal()
+    //     USB_OK_Feld.image = okimage
+        usb_return = 1
          /*
          print("teensyboardarray: \(teensyboardarray)")
          if teensyboardarray.count > 0
@@ -2393,17 +2428,18 @@ class rViewController: NSViewController, NSWindowDelegate
 
          }
           */
-            return
+            //return usb_return
          
       }
       else
+       
       {
          let warnung = NSAlert.init()
          warnung.messageText = "Welches Board?"
          let boardarray = BoardPop.itemTitles 
          for titel in boardarray
          {
-            let buttonstring = titel
+            //let buttonstring = titel
             warnung.addButton(withTitle: titel)
          }
          warnung.addButton(withTitle: "cancel")
@@ -2412,7 +2448,7 @@ class rViewController: NSViewController, NSWindowDelegate
          print("devicereturn: \(devicereturn)")
          if boardindex >= teensyboardarray.count
          {
-            return;
+            return -1;
          }
          BoardPop.selectItem(at:boardindex)
          
@@ -2437,7 +2473,7 @@ class rViewController: NSViewController, NSWindowDelegate
             Send_Knopf.isEnabled = true
             userinformation = ["message":"usb", "usbstatus": 1, "boardindex" :boardindex] as [String : Any]
 
-            
+            usb_return = 2
             
             
          }
@@ -2458,6 +2494,7 @@ class rViewController: NSViewController, NSWindowDelegate
             USB_OK_Feld.image = notokimage
             globalusbstatus = 0
             USBKontrolle.stringValue="USB OFF"
+            usb_return = -1
          }
          
          nc.post(name:Notification.Name(rawValue:"usb_status"),
@@ -2469,7 +2506,7 @@ class rViewController: NSViewController, NSWindowDelegate
  
       
       
-      return;
+      return usb_return;
       
       if (rawhid_status()==1) // anmeldung OK
       {

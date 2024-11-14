@@ -14050,14 +14050,14 @@ return returnInt;
    int zoomfaktor=1.0;
    int code=0;
    int i=0;
-   boardindex = [outletdaten[@"cnc_seite1check"]integerValue];
-   speed = [outletdaten[@"speed"]integerValue];
+   boardindex = [outletdaten[@"boardindex"]intValue];
+   speed = [outletdaten[@"speed"]intValue];
    
-   steps = [outletdaten[@"motorsteps"]integerValue];
-   int seite1check = [outletdaten[@"cnc_seite1check"]integerValue];
-   int seite2check = [outletdaten[@"cnc_seite2check"]integerValue];
+   steps = [outletdaten[@"motorsteps"]intValue];
+   int seite1check = [outletdaten[@"cnc_seite1check"]intValue];
+   int seite2check = [outletdaten[@"cnc_seite2check"]intValue];
    
-   int home = [outletdaten[@"home"]integerValue];
+   int home = [outletdaten[@"home"]intValue];
    
    NSLog(@"AVR  ManFeldRichtung richtung: %d speed: %d  mousestatus: %d seite1check: %d seite2check: %d home: %d",richtung, speed, status,seite1check,seite2check,home);
    
@@ -14143,6 +14143,8 @@ return returnInt;
       }
       
    } // boardindex
+   
+   
    
    
    NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f code: %2X",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y,code);

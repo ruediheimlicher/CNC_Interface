@@ -1293,17 +1293,6 @@
                                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                 </textFieldCell>
                                                             </textField>
-                                                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0JL-ny-yHY">
-                                                                <rect key="frame" x="225" y="16" width="120" height="26"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <buttonCell key="cell" type="bevel" title="Profil U" bezelStyle="regularSquare" image="Taste_green breit" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="axesIndependently" inset="2" id="Sr8-bP-OQw">
-                                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                                    <font key="font" metaFont="cellTitle"/>
-                                                                </buttonCell>
-                                                                <connections>
-                                                                    <action selector="reportProfilUnterseiteTask:" target="3j8-Mp-cP5" id="J0d-Rk-qbV"/>
-                                                                </connections>
-                                                            </button>
                                                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8ou-jl-SUg">
                                                                 <rect key="frame" x="29" y="8" width="129" height="34"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES"/>
@@ -1313,6 +1302,17 @@
                                                                 </buttonCell>
                                                                 <connections>
                                                                     <action selector="reportProfilOberseiteTask:" target="3j8-Mp-cP5" id="aFA-Ld-uB1"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0JL-ny-yHY">
+                                                                <rect key="frame" x="225" y="7" width="143" height="34"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                <buttonCell key="cell" type="bevel" title="Profil U" bezelStyle="regularSquare" image="Taste_green breit" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="axesIndependently" inset="2" id="Sr8-bP-OQw">
+                                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                                    <font key="font" metaFont="cellTitle"/>
+                                                                </buttonCell>
+                                                                <connections>
+                                                                    <action selector="reportProfilUnterseiteTask:" target="3j8-Mp-cP5" id="J0d-Rk-qbV"/>
                                                                 </connections>
                                                             </button>
                                                         </subviews>
@@ -1973,7 +1973,7 @@
                                 </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n43-Kv-SFf">
-                                <rect key="frame" x="188" y="400" width="46" height="45"/>
+                                <rect key="frame" x="213" y="400" width="46" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="Start" alternateTitle="Klick" bezelStyle="regularSquare" image="Taste_green" imagePosition="overlaps" alignment="center" alternateImage="home" borderStyle="border" imageScaling="axesIndependently" inset="2" id="xhV-1j-nsi">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
@@ -1984,7 +1984,7 @@
                                 </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Uuk-HH-4dU">
-                                <rect key="frame" x="248" y="398" width="50" height="47"/>
+                                <rect key="frame" x="261" y="398" width="50" height="47"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="Stop" alternateTitle="Stopp" bezelStyle="regularSquare" image="Taste_red" imagePosition="overlaps" alignment="center" enabled="NO" borderStyle="border" imageScaling="axesIndependently" inset="2" id="rlb-aa-0uh">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1995,7 +1995,7 @@
                                 </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UWG-pU-oa5">
-                                <rect key="frame" x="477" y="398" width="46" height="47"/>
+                                <rect key="frame" x="480" y="398" width="46" height="47"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="Neu" alternateTitle="Stop" bezelStyle="regularSquare" image="Taste_blue" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="axesIndependently" inset="2" id="w5n-Lh-VHs">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2054,7 +2054,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </progressIndicator>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g4I-Uw-NSh">
-                                <rect key="frame" x="308" y="398" width="167" height="47"/>
+                                <rect key="frame" x="313" y="398" width="167" height="47"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="Schnittdaten senden" alternateTitle="Stop" bezelStyle="regularSquare" image="Taste_green breit" imagePosition="overlaps" alignment="center" enabled="NO" borderStyle="border" imageScaling="axesIndependently" inset="2" id="1t1-hV-euq">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2129,7 +2129,7 @@
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zka-dN-hoS">
-                                <rect key="frame" x="480" y="443" width="44" height="25"/>
+                                <rect key="frame" x="478" y="441" width="48" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="squareTextured" title="Holm" bezelStyle="texturedSquare" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Zmc-Kn-tIH">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2939,7 +2939,7 @@ Element</string>
                                 </view>
                             </box>
                             <button tag="2" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3QI-MH-ewc">
-                                <rect key="frame" x="150" y="431" width="32" height="17"/>
+                                <rect key="frame" x="149" y="423" width="32" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="roundTextured" alternateTitle="Stop" bezelStyle="texturedRounded" image="pfeil_up_grau" imagePosition="overlaps" alignment="center" controlSize="small" continuous="YES" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="F7S-kO-TYY">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2950,7 +2950,7 @@ Element</string>
                                 </connections>
                             </button>
                             <button tag="4" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P7l-Rn-E65">
-                                <rect key="frame" x="149" y="409" width="32" height="17"/>
+                                <rect key="frame" x="149" y="401" width="32" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="roundTextured" alternateTitle="Stop" bezelStyle="texturedRounded" image="pfeil_down_grau" imagePosition="only" alignment="center" controlSize="small" continuous="YES" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="TZh-3C-dJH">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2960,6 +2960,16 @@ Element</string>
                                     <action selector="report_StiftDown:" target="3j8-Mp-cP5" id="KY6-gD-lRI"/>
                                 </connections>
                             </button>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Q6-iG-88r">
+                                <rect key="frame" x="186" y="397" width="25" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="pencilsenkrecht" id="rC0-Z8-eVD"/>
+                            </imageView>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3PL-d9-16O">
+                                <rect key="frame" x="279" y="463" width="48" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="pencil_senkrecht" id="1Ih-zt-qz3"/>
+                            </imageView>
                         </subviews>
                     </view>
                     <connections>
@@ -2998,6 +3008,7 @@ Element</string>
                         <outlet property="CNC_Sendtaste" destination="g4I-Uw-NSh" id="wp6-8K-oTy"/>
                         <outlet property="CNC_Starttaste" destination="n43-Kv-SFf" id="rwy-Rw-kYO"/>
                         <outlet property="CNC_StepsSegControl" destination="XSL-Tj-hAW" id="Sqk-qF-EQw"/>
+                        <outlet property="CNC_Stift" destination="3PL-d9-16O" id="y1j-hI-K8E"/>
                         <outlet property="CNC_Stoptaste" destination="Uuk-HH-4dU" id="zaH-zt-wpw"/>
                         <outlet property="CNC_Table" destination="jyL-T7-yst" id="9tv-Ed-XcO"/>
                         <outlet property="CNC_Uptaste" destination="gcT-aM-85D" id="HGk-cW-rfW"/>
@@ -3126,6 +3137,8 @@ Element</string>
         <image name="home" width="94.765937805175781" height="95.081825256347656"/>
         <image name="notok" width="225" height="225"/>
         <image name="notok_image" width="131" height="129"/>
+        <image name="pencil_senkrecht" width="1279" height="195"/>
+        <image name="pencilsenkrecht" width="1279" height="195"/>
         <image name="pfeil_down_grau" width="40" height="35"/>
         <image name="pfeil_down_mini" width="20" height="12"/>
         <image name="pfeil_links_grau" width="35" height="40"/>

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BD1388A72CE49A16002F14C5 /* pencil_senkrecht.gif in Resources */ = {isa = PBXBuildFile; fileRef = BD1388A62CE49A16002F14C5 /* pencil_senkrecht.gif */; };
 		BD1407412337F6DD00EDC163 /* rRobotarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1407402337F6DD00EDC163 /* rRobotarm.swift */; };
 		BD1C218D296ADA8A00EE1084 /* Taste_green breit.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BD1C218C296ADA8A00EE1084 /* Taste_green breit.jpg */; };
 		BD1C2195296C7D5700EE1084 /* spline.c in Sources */ = {isa = PBXBuildFile; fileRef = BD1C2194296C7D5700EE1084 /* spline.c */; };
@@ -73,6 +74,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BD1388A62CE49A16002F14C5 /* pencil_senkrecht.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = pencil_senkrecht.gif; path = Bilder/pencil_senkrecht.gif; sourceTree = "<group>"; };
 		BD1407402337F6DD00EDC163 /* rRobotarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rRobotarm.swift; sourceTree = "<group>"; };
 		BD1C218C296ADA8A00EE1084 /* Taste_green breit.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "Taste_green breit.jpg"; path = "Bilder/Taste_green breit.jpg"; sourceTree = "<group>"; };
 		BD1C2193296C7D5700EE1084 /* spline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spline.h; sourceTree = "<group>"; };
@@ -168,6 +170,7 @@
 		BD7369B322FE9A9800341443 /* Bilder */ = {
 			isa = PBXGroup;
 			children = (
+				BD1388A62CE49A16002F14C5 /* pencil_senkrecht.gif */,
 				CA71C82C2BA361EC00789D34 /* pfeil_links.png */,
 				CA71C8252BA3537D00789D34 /* pfeil_down_grau.png */,
 				CA71C8242BA3537D00789D34 /* pfeil_links_grau.png */,
@@ -374,6 +377,7 @@
 				BD9F399B25E661B6000D22C1 /* pfeil_down.jpg in Resources */,
 				BD9F399C25E661B6000D22C1 /* pfeil_rechts_mini.jpg in Resources */,
 				CA71C82A2BA3537D00789D34 /* pfeil_links_red.jpg in Resources */,
+				BD1388A72CE49A16002F14C5 /* pencil_senkrecht.gif in Resources */,
 				BD8702641A06852A00F2C77B /* Images.xcassets in Resources */,
 				BD9F399D25E661B6000D22C1 /* punkt_rot.jpg in Resources */,
 				BD9F39A925E661B6000D22C1 /* ok.png in Resources */,

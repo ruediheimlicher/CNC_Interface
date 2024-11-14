@@ -356,7 +356,8 @@ var outletdaten:[String:AnyObject] = [:]
    @IBOutlet weak var CNC_Righttaste: rPfeil_Feld!
    @IBOutlet weak var CNC_busySpinner: NSProgressIndicator!
     
-   
+   @IBOutlet weak var CNC_Stift: NSImageView!
+ 
 
    
    @IBOutlet weak var CNC_Seite1Check: NSButton!
@@ -4981,6 +4982,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        CNC_Table.gridStyleMask = .solidVerticalGridLineMask
        CNC_Table.usesAlternatingRowBackgroundColors = true
        
+      
        CNC_busy = 0
        // https://www.swiftbysundell.com/articles/formatting-numbers-in-swift/
        
@@ -5705,7 +5707,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
          {
   //          print("zeile: \(zeile)")
          }
-         print("0: \(plistData["0"])")
+         //print("0: \(plistData["0"])")
        }
       
       

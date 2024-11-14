@@ -641,56 +641,53 @@ int usb_present(void)
    // iterate 
    while ((device = IOIteratorNext(iter)))
    {
-      printf("\n--- Device Found ---\n");
-
-              // Retrieve the property dictionary for each device
-              CFDictionaryRef properties = NULL;
-              kr = IORegistryEntryCreateCFProperties(device, (CFMutableDictionaryRef *)&properties, kCFAllocatorDefault, 0);
-      if (kr == KERN_SUCCESS && properties) {
+      //printf("\n--- Device Found ---\n");
+      
+      // Retrieve the property dictionary for each device
+      CFDictionaryRef properties = NULL;
+      kr = IORegistryEntryCreateCFProperties(device, (CFMutableDictionaryRef *)&properties, kCFAllocatorDefault, 0);
+      if (kr == KERN_SUCCESS && properties) 
+      {
          // Print each property key-value pair
          CFIndex count = CFDictionaryGetCount(properties);
          const void* keys[count];
          const void* values[count];
          CFDictionaryGetKeysAndValues(properties, keys, values);
          
-         printf("Device Properties:\n");
-         for (CFIndex i = 0; i < count; i++) {
+         //printf("Device Properties:\n");
+         for (CFIndex i = 0; i < count; i++) 
+         {
             CFStringRef key = (CFStringRef)keys[i];
             CFTypeRef value = values[i];
             CFStringRef description = CFCopyDescription(values[i]);
             
-             
             // Print the key as a string
             char keyName[256];
             if (CFStringGetCString(key, keyName, sizeof(keyName), kCFStringEncodingUTF8))
             {
                //printf("keyName  %s: ", keyName);
             }
-            //char k[256];
-      
-            CFStringRef teensystring = CFSTR("Teensyduino");
+             CFStringRef teensystring = CFSTR("Teensyduino");
             
-           if(strcmp(keyName,"kUSBVendorString") == 0)
+            if(strcmp(keyName,"kUSBVendorString") == 0)
             {
-               printf("gefunden: %s value:\t",keyName);
-               printCFType(value);
-              // CFStringGetCString(description, k, 256, kCFStringEncodingUTF8);
+              // printf("gefunden: %s value:\t",keyName);
+               //printCFType(value);
+               // CFStringGetCString(description, k, 256, kCFStringEncodingUTF8);
                
                CFRange r = containsSubstring(description, teensystring);
-                if (r.length != 0)
-                {
-                   printf("teensy gefunden \n");
-                }
-               anzahl++;
+               if (r.length != 0)
+               {
+                  printf("teensy gefunden \n");
+                  anzahl++;
+               }
+               
             }
-           }
-         
-         CFRelease(properties);
-         
-        
+         }
       }
+      CFRelease(properties);
    }
-   
+   IOObjectRelease(device);
    // Done, release the iterator 
    IOObjectRelease(iter);
    return anzahl;

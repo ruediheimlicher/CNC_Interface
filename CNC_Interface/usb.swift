@@ -164,6 +164,11 @@ class rTimerInfo {
    {
       return get_hid_usbstatus()
    }
+    
+    open func usb_free()
+    {
+       free_all_hid();
+    }
    
    open func dev_present()->Int32
    {

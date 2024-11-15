@@ -31,6 +31,8 @@ static io_iterator_t          addedIterator;
 static io_iterator_t          removedIterator;
 
 
+int usbattachstatus;
+
 // a list of all opened HID devices, so the caller can
 // simply refer to them by number
 typedef struct hid_struct hid_t;
@@ -60,7 +62,7 @@ int rawhid_recv(int num, void *buf, int len, int timeout);
 
 static void add_hid(hid_t *);
 static hid_t * get_hid(int);
-static void free_all_hid(void);
+void free_all_hid(void);
 static void hid_close(hid_t *);
 static void attach_callback(void *, IOReturn, void *, IOHIDDeviceRef);
 static void detach_callback(void *, IOReturn, void *hid_mgr, IOHIDDeviceRef dev);
@@ -164,7 +166,7 @@ static hid_t * get_hid(int num)
 }
 
 
-static void free_all_hid(void)
+void free_all_hid(void)
 {
 	hid_t *p, *q;
    
@@ -356,6 +358,7 @@ int rawhid_open(int max, int vid, int pid, int usage_page, int usage)
          return 0;
       }
 	}
+   
 	if (vid > 0 || pid > 0 || usage_page > 0 || usage > 0) {
 		// Tell the HID Manager what type of devices we want
       dict = CFDictionaryCreateMutable(kCFAllocatorDefault, 0,
@@ -527,15 +530,18 @@ static void detach_callback(void *context, IOReturn r, void *hid_mgr, IOHIDDevic
 {
 	hid_t *p;
    
-   fprintf(stderr,"detach callback\n");
-   hid_usbstatus=0;
+   fprintf(stderr,"hid detach callback\n");
+   //hid_usbstatus=0;
+   
 	for (p = first_hid; p; p = p->next) {
 		if (p->ref == dev) 
       {
 			p->open = 0;
+         
+         usbattachstatus = 0;
 			CFRunLoopStop(CFRunLoopGetCurrent());
          NSNotificationCenter *nc=[NSNotificationCenter defaultCenter];
-         NSDictionary* NotDic = [NSDictionary  dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:USBREMOVED],@"attach", nil];
+         NSDictionary* NotDic = [NSDictionary  dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:USBREMOVED],@"attach",[NSNumber numberWithInt:usbattachstatus],@"usbattachstatus", nil];
          [nc postNotificationName:@"usb_attach" object:NULL userInfo:NotDic];
          fprintf(stderr,"detach notification\n");
 
@@ -549,7 +555,7 @@ static void attach_callback(void *context, IOReturn r, void *hid_mgr, IOHIDDevic
 {
    struct hid_struct *h;
    
-	fprintf(stderr,"hid attach callback\n");
+	fprintf(stderr,"*** hid attach_callback\n");
    //
 	if (IOHIDDeviceOpen(dev, kIOHIDOptionsTypeNone) != kIOReturnSuccess) 
    {
@@ -559,7 +565,7 @@ static void attach_callback(void *context, IOReturn r, void *hid_mgr, IOHIDDevic
 	h = (hid_t *)malloc(sizeof(hid_t));
 	if (!h) 
    {
-      fprintf(stderr,"hid attach callback not h\n");
+      fprintf(stderr,"hid attach_callback not h\n");
       return;
    }
 	memset(h, 0, sizeof(hid_t));
@@ -569,11 +575,12 @@ static void attach_callback(void *context, IOReturn r, void *hid_mgr, IOHIDDevic
    h->ref = dev;
 	h->open = 1;
 	add_hid(h);
-   hid_usbstatus=1;
-
-   /*
-    
-   r = rawhid_open(1, 0x16C0, 0x0486, 0xFFAB, 0x0200);
+   
+   //hid_usbstatus=1;
+   
+   
+    /*
+   r = rawhid_open(1, 0x16C0, 0x0480, 0xFFAB, 0x0200);
    if (r <= 0) 
    {
       fprintf(stderr,"no rawhid device found\n");
@@ -584,10 +591,12 @@ static void attach_callback(void *context, IOReturn r, void *hid_mgr, IOHIDDevic
       fprintf(stderr,"new rawhid device found\n");
    }
    */
+   
+   usbattachstatus = 1;
    NSNotificationCenter *nc=[NSNotificationCenter defaultCenter];
-   NSDictionary* NotDic = [NSDictionary  dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:USBATTACHED],@"attach", nil];
+   NSDictionary* NotDic = [NSDictionary  dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:USBATTACHED],@"attach",[NSNumber numberWithInt:usbattachstatus],@"usbattachstatus", nil];
    [nc postNotificationName:@"usb_attach" object:NULL userInfo:NotDic];
-   fprintf(stderr,"nach attach notification\n");
+   fprintf(stderr,"hid nach attach_callback notification\n");
 
 }
 
@@ -643,7 +652,7 @@ int check_usb_attach(void)
 
 int usb_present(void)
 {
-   printf("usb_present\n");
+   printf("hid usb_present\n");
    CFMutableDictionaryRef matchingDict;
    io_iterator_t iter;
    kern_return_t kr;

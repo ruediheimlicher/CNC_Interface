@@ -12,6 +12,115 @@
 
 import Cocoa
 
+class USBDeviceMonitor 
+{
+   private var notificationPort: IONotificationPortRef?
+   private var addedIterator: io_iterator_t = 0
+   private var removedIterator: io_iterator_t = 0
+   
+   init() 
+   {
+      startMonitoring()
+   }
+   
+   deinit 
+   {
+      stopMonitoring()
+   }
+   
+   func startMonitoring() 
+   {
+      // Set up notification port
+      notificationPort = IONotificationPortCreate(kIOMasterPortDefault)
+      guard let notificationPort = notificationPort else 
+      {
+         print("Failed to create notification port")
+         return
+      }
+      
+      // Register for device addition notifications
+      let matchingDict = IOServiceMatching(kIOUSBDeviceClassName)
+      let callback: IOServiceMatchingCallback = 
+      { 
+         (userData, iterator) in
+         let usbMonitor = Unmanaged<USBDeviceMonitor>.fromOpaque(userData!).takeUnretainedValue()
+         usbMonitor.deviceAdded(iterator)
+      }
+      
+      IOServiceAddMatchingNotification
+      (
+         notificationPort,
+         kIOMatchedNotification,
+         matchingDict,
+         callback,
+         Unmanaged.passUnretained(self).toOpaque(),&addedIterator)
+      
+      // Run the callback for any devices that are currently connected
+      deviceAdded(addedIterator)
+      
+      // Register for device removal notifications
+      let removalCallback: IOServiceMatchingCallback = 
+      { 
+         (userData, iterator) in
+         let usbMonitor = Unmanaged<USBDeviceMonitor>.fromOpaque(userData!).takeUnretainedValue()
+         usbMonitor.deviceRemoved(iterator)
+      }
+      
+      IOServiceAddMatchingNotification
+      (
+         notificationPort,
+         kIOTerminatedNotification,
+         matchingDict,
+         removalCallback,
+         Unmanaged.passUnretained(self).toOpaque(),
+         &removedIterator
+      )
+      
+      // Run the callback for any devices that are currently disconnected
+      deviceRemoved(removedIterator)
+   }
+   
+   func stopMonitoring() 
+   {
+      if addedIterator != 0 
+      {
+         IOObjectRelease(addedIterator)
+         addedIterator = 0
+      }
+      if removedIterator != 0 
+      {
+         IOObjectRelease(removedIterator)
+         removedIterator = 0
+      }
+      if let notificationPort = notificationPort 
+      {
+         IONotificationPortDestroy(notificationPort)
+         self.notificationPort = nil
+      }
+   }
+   
+   private func deviceAdded(_ iterator: io_iterator_t) 
+   {
+      var device: io_object_t = 0
+      while (device = IOIteratorNext(iterator), device != 0) 
+      {
+         print("USB Device Inserted")
+         // Here you can retrieve and print details about the device
+         IOObjectRelease(device)
+      }
+   }
+   
+   private func deviceRemoved(_ iterator: io_iterator_t) 
+   {
+      var device: io_object_t = 0
+      while (device = IOIteratorNext(iterator), device != 0) 
+      {
+         print("USB Device Removed")
+         // Here you can handle cleanup or other operations on removal
+         IOObjectRelease(device)
+      }
+   }
+}
 
  public var lastDataRead = Data.init(count:BUFFER_SIZE)
 
@@ -439,7 +548,7 @@ class rViewController: NSViewController, NSWindowDelegate
       
       print("VC viewDidAppear dev_present: \(teensypresent)")
      
-      if (teensypresent == 0)
+      if (teensypresent == 0) // Noch nichts eingesteckt
       {
          // USB_OK.stringValue = "-"
          USB_OK_Feld.image = notokimage
@@ -457,7 +566,7 @@ class rViewController: NSViewController, NSWindowDelegate
 
          
       }
-      else
+      else // teensy eingesteckt, init
       {
          let usb_erfolg = Attach_USB()
       }
@@ -2443,6 +2552,7 @@ class rViewController: NSViewController, NSWindowDelegate
             warnung.addButton(withTitle: titel)
          }
          warnung.addButton(withTitle: "cancel")
+         // Dialog Board
          let devicereturn:Int = warnung.runModal().rawValue
          boardindex = devicereturn-1000
          print("devicereturn: \(devicereturn)")
@@ -2452,6 +2562,7 @@ class rViewController: NSViewController, NSWindowDelegate
          }
          BoardPop.selectItem(at:boardindex)
          
+         // teensy init
          let teensycode = teensyboardarray[boardindex]
          let device = teensyboardarray[boardindex]
          let erfolg = teensy.USBOpen(code:teensycode,  board: boardindex)
@@ -2471,6 +2582,7 @@ class rViewController: NSViewController, NSWindowDelegate
 
             Start_Knopf.isEnabled = true
             Send_Knopf.isEnabled = true
+            
             userinformation = ["message":"usb", "usbstatus": 1, "boardindex" :boardindex] as [String : Any]
 
             usb_return = 2

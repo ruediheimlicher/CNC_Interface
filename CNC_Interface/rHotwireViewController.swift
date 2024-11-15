@@ -6026,6 +6026,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       print("Hotwire usbstatusAktion:\t \(status)")
       usbstatus = Int(status)
       boardindex = rawboardindex
+      DC_Taste.isEnabled = true
       
        
    }

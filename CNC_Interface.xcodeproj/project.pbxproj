@@ -75,6 +75,7 @@
 
 /* Begin PBXFileReference section */
 		BD1388A62CE49A16002F14C5 /* pencil_senkrecht.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = pencil_senkrecht.gif; path = Bilder/pencil_senkrecht.gif; sourceTree = "<group>"; };
+		BD1388AA2CE6415F002F14C5 /* USB_DeviceWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = USB_DeviceWatcher.swift; path = ../../../../Desktop/USB_DeviceWatcher.swift; sourceTree = "<group>"; };
 		BD1407402337F6DD00EDC163 /* rRobotarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rRobotarm.swift; sourceTree = "<group>"; };
 		BD1C218C296ADA8A00EE1084 /* Taste_green breit.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "Taste_green breit.jpg"; path = "Bilder/Taste_green breit.jpg"; sourceTree = "<group>"; };
 		BD1C2193296C7D5700EE1084 /* spline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spline.h; sourceTree = "<group>"; };
@@ -206,6 +207,7 @@
 		BD8702511A06852A00F2C77B = {
 			isa = PBXGroup;
 			children = (
+				BD1388AA2CE6415F002F14C5 /* USB_DeviceWatcher.swift */,
 				BD87025C1A06852A00F2C77B /* CNC_Interface */,
 				BD87025B1A06852A00F2C77B /* Products */,
 			);

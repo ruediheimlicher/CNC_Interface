@@ -27,7 +27,8 @@
 
 static IONotificationPortRef    gNotifyPort;
 static io_iterator_t             gAddedIter;
-
+static io_iterator_t          addedIterator;
+static io_iterator_t          removedIterator;
 
 
 // a list of all opened HID devices, so the caller can
@@ -298,6 +299,8 @@ int rawhid_send(int num, uint8_t *buf, int len, int timeout)
 //
 
 
+
+
 int rawhid_open(int max, int vid, int pid, int usage_page, int usage)
 {
    
@@ -305,7 +308,7 @@ int rawhid_open(int max, int vid, int pid, int usage_page, int usage)
    mach_port_t             masterPort;
    //CFMutableDictionaryRef  matchingDict = NULL;
    CFRunLoopSourceRef      runLoopSource;
-   fprintf(stderr,"fprintf rawhid_open vid: %d pid: %d\n",vid,pid);
+   fprintf(stderr,"rawhid_open vid: %d pid: %d\n",vid,pid);
    
    
    //Create a master port for communication with the I/O Kit
@@ -318,6 +321,7 @@ int rawhid_open(int max, int vid, int pid, int usage_page, int usage)
    //To set up asynchronous notifications, create a notification port and
    //add its run loop event source to the programs run loop
    gNotifyPort = IONotificationPortCreate(masterPort);
+   
    runLoopSource = IONotificationPortGetRunLoopSource(gNotifyPort);
    CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource,
                       kCFRunLoopDefaultMode);
@@ -611,7 +615,31 @@ CFRange containsSubstring(CFStringRef string, CFStringRef substring) {
     return CFStringFind(string, substring,  options);
 }
 
-
+int check_usb_attach(void)
+{
+   CFMutableDictionaryRef matchingDict;
+   io_iterator_t iter;
+   kern_return_t kr;
+   io_service_t device;
+   int anzahl=0;
+   
+   // set up a matching dictionary for the class 
+   matchingDict = IOServiceMatching("IOUSBDevice");
+   if (matchingDict == NULL)
+   {
+      fprintf(stderr, "Unable to create matching dictionary\n");
+      return -1; // fail
+   }
+   // Now we have a dictionary, get an iterator.
+   kr = IOServiceGetMatchingServices(kIOMasterPortDefault, matchingDict, &iter);
+   if (kr != KERN_SUCCESS)
+   {
+      fprintf(stderr, "IOServiceGetMatchingServices failed\n");
+      return -1;
+   }
+   
+   return 0;
+}
 
 int usb_present(void)
 {
@@ -629,6 +657,8 @@ int usb_present(void)
       fprintf(stderr, "Unable to create matching dictionary\n");
       return -1; // fail
    }
+   
+   
    
    // Now we have a dictionary, get an iterator.
    kr = IOServiceGetMatchingServices(kIOMasterPortDefault, matchingDict, &iter);

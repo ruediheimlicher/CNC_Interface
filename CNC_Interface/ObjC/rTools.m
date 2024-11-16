@@ -282,6 +282,12 @@
     }
    
    // home detektieren
+   int home = 0;
+   if ([derDatenDic objectForKey:@"home"])
+        {
+           home = [[derDatenDic objectForKey:@"home"]intValue];
+        }
+
    int code=0;
    if ([derDatenDic objectForKey:@"code"])
         {

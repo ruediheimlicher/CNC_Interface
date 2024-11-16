@@ -168,11 +168,16 @@ class rTimerInfo {
     open func usb_free()
     {
        free_all_hid();
+       //IOHIDManagerClose()
     }
    
    open func dev_present()->Int32
    {
-      return usb_present()
+      let vid = 0x16C0;
+      let anz = findHIDDevicesWithVendorID(UInt32(vid))
+      print("dev_present anzahl: \(anz)")
+      return anz;
+     // return usb_present()
    }
    
     open func timer_valid()->Bool

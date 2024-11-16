@@ -13932,13 +13932,13 @@ return returnInt;
    int zoomfaktor=1.0;
    int code=0;
    int i=0;
-   boardindex = [outletdaten[@"cnc_seite1check"]integerValue];
-   speed = [outletdaten[@"speed"]integerValue];
-   steps = [outletdaten[@"motorsteps"]integerValue];
-   int seite1check = [outletdaten[@"cnc_seite1check"]integerValue];
-   int seite2check = [outletdaten[@"cnc_seite2check"]integerValue];
+   boardindex = [outletdaten[@"cnc_seite1check"]intValue];
+   speed = [outletdaten[@"speed"]intValue];
+   steps = [outletdaten[@"motorsteps"]intValue];
+   int seite1check = [outletdaten[@"cnc_seite1check"]intValue];
+   int seite2check = [outletdaten[@"cnc_seite2check"]intValue];
    micro  = 1;//[outletdaten[@"micro"]integerValue];
-  int home = [outletdaten[@"home"]integerValue];
+  int home = [outletdaten[@"home"]intValue];
    
    
    NSMutableArray* AnfahrtArray = [[NSMutableArray alloc]initWithCapacity:0];
@@ -14016,6 +14016,7 @@ return returnInt;
    [tempDic setObject:[NSNumber numberWithInt:position] forKey:@"position"];
    [tempDic setObject:[NSNumber numberWithInt:speed] forKey:@"speed"];
    [tempDic setObject:[NSNumber numberWithInt:micro] forKey:@"micro"];
+   [tempDic setObject:[NSNumber numberWithInt:1] forKey:@"home"];
     
    NSDictionary* tempSteuerdatenDic=[self Tool_SteuerdatenVonDic:tempDic];
    //NSLog(@"AVR  reportHome tempSteuerdatenDic: %@",[tempSteuerdatenDic description]);

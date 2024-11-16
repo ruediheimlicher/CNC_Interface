@@ -6,6 +6,8 @@ extern void rawhid_close(int num);
 extern int rawhid_status(void);
 extern int get_hid_usbstatus(void);
 extern int usb_present(void);
+extern int findHIDDevicesWithVendorID(uint32_t vendorID);
+
 extern const char* get_manu(void);
 extern const char* get_prod(void);
 extern int getX(void);

@@ -14,6 +14,7 @@
 #include <IOKit/hid/IOHIDLib.h>
 #include <IOKit/usb/IOUSBLib.h>
 #include <IOKit/hid/IOHIDBase.h>
+#include <IOKit/hid/IOHIDManager.h>
 #include "hid.h"
 
 #include <CoreFoundation/CoreFoundation.h>
@@ -650,9 +651,82 @@ int check_usb_attach(void)
    return 0;
 }
 
+int findHIDDevicesWithVendorID(uint32_t vendorID) 
+{
+   int anzahl = 0;
+    IOHIDManagerRef hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
+    if (!hidManager) {
+        fprintf(stderr, "Failed to create HID Manager.\n");
+        return -1;
+    }
+
+    // Create a matching dictionary for devices with the specified Vendor ID
+    CFMutableDictionaryRef matchingDict = CFDictionaryCreateMutable(kCFAllocatorDefault,
+                                                                    0,
+                                                                    &kCFTypeDictionaryKeyCallBacks,
+                                                                    &kCFTypeDictionaryValueCallBacks);
+    if (!matchingDict) {
+        fprintf(stderr, "Failed to create matching dictionary.\n");
+        CFRelease(hidManager);
+        return -1;
+    }
+
+    CFNumberRef vendorIDRef = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &vendorID);
+    if (!vendorIDRef) {
+        fprintf(stderr, "Failed to create CFNumber for Vendor ID.\n");
+        CFRelease(matchingDict);
+        CFRelease(hidManager);
+        return -1;
+    }
+
+    CFDictionarySetValue(matchingDict, CFSTR(kIOHIDVendorIDKey), vendorIDRef);
+    IOHIDManagerSetDeviceMatching(hidManager, matchingDict);
+
+    // Get matching devices
+    CFSetRef deviceSet = IOHIDManagerCopyDevices(hidManager);
+    if (!deviceSet) {
+        printf("No devices found for Vendor ID: %u\n", vendorID);
+    } else {
+        CFIndex deviceCount = CFSetGetCount(deviceSet);
+        printf("Found %ld devices with Vendor ID: %u\n", deviceCount, vendorID);
+       anzahl++;
+       return anzahl;
+        IOHIDDeviceRef *deviceArray = malloc(deviceCount * sizeof(IOHIDDeviceRef));
+        CFSetGetValues(deviceSet, (const void **)deviceArray);
+
+        for (CFIndex i = 0; i < deviceCount; i++) {
+            IOHIDDeviceRef device = deviceArray[i];
+            printf("Device %ld:\n", i + 1);
+
+            // Get some device properties as an example
+            CFTypeRef productName = IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductKey));
+            if (productName && CFGetTypeID(productName) == CFStringGetTypeID()) {
+                char name[256];
+                CFStringGetCString(productName, name, sizeof(name), kCFStringEncodingUTF8);
+                printf("\tProduct Name: %s\n", name);
+            } else {
+                printf("\tProduct Name: Unknown\n");
+            }
+        }
+
+        free(deviceArray);
+        CFRelease(deviceSet);
+    }
+
+    CFRelease(vendorIDRef);
+    CFRelease(matchingDict);
+    CFRelease(hidManager);
+   return -1;
+}
+
+
 int usb_present(void)
 {
    printf("hid usb_present\n");
+   int vid = 0x16C0;
+   int pid = 0x486;
+   return findHIDDevicesWithVendorID(vid);
+   
    CFMutableDictionaryRef matchingDict;
    io_iterator_t iter;
    kern_return_t kr;
@@ -677,9 +751,78 @@ int usb_present(void)
       return -1;
    }
    
+   /*
+   // Define matching dictionary for your PID/VID
+       let matching: [String: Any] = [
+           kIOHIDVendorIDKey: 0x1234,  // Replace with your Vendor ID
+           kIOHIDProductIDKey: 0x5678  // Replace with your Product ID
+       ]
+    */
    // iterate 
+
+   
+  
+   
+  
    while ((device = IOIteratorNext(iter)))
    {
+      // Start VID
+      CFNumberRef cfVid = (CFNumberRef)IORegistryEntryCreateCFProperty(device, CFSTR(kIOHIDVendorIDKey), kCFAllocatorDefault, 0);
+      
+      if (cfVid) 
+      {
+         int deviceVID;
+           CFNumberGetValue(cfVid, kCFNumberIntType, &deviceVID);
+           CFRelease(cfVid);
+
+           // Compare with the desired PID
+           if (deviceVID == vid) 
+           {
+               // Get the product name
+               CFStringRef cfProductName = (CFStringRef)IORegistryEntryCreateCFProperty(device, CFSTR(kIOHIDProductKey), kCFAllocatorDefault, 0);
+               char productName[256];
+               if (cfProductName) {
+                   CFStringGetCString(cfProductName, productName, sizeof(productName), kCFStringEncodingUTF8);
+                   CFRelease(cfProductName);
+               } else {
+                   snprintf(productName, sizeof(productName), "Unknown");
+               }
+
+               printf("Found device: PID=0x%04x, Product=%s\n", deviceVID, productName);
+           }
+       }
+      
+      
+      // end VID
+      
+      //start PID
+      CFNumberRef cfPid = (CFNumberRef)IORegistryEntryCreateCFProperty(device, CFSTR(kIOHIDProductIDKey), kCFAllocatorDefault, 0);
+      
+      if (cfPid) 
+      {
+           int devicePID;
+           CFNumberGetValue(cfPid, kCFNumberIntType, &devicePID);
+           CFRelease(cfPid);
+
+           // Compare with the desired PID
+           if (devicePID == pid) {
+               // Get the product name
+               CFStringRef cfProductName = (CFStringRef)IORegistryEntryCreateCFProperty(device, CFSTR(kIOHIDProductKey), kCFAllocatorDefault, 0);
+               char productName[256];
+               if (cfProductName) {
+                   CFStringGetCString(cfProductName, productName, sizeof(productName), kCFStringEncodingUTF8);
+                   CFRelease(cfProductName);
+               } else {
+                   snprintf(productName, sizeof(productName), "Unknown");
+               }
+
+               printf("Found device: PID=0x%04x, Product=%s\n", devicePID, productName);
+           }
+       }
+      
+      
+      
+      // end PID
       //printf("\n--- Device Found ---\n");
       
       // Retrieve the property dictionary for each device
@@ -699,12 +842,14 @@ int usb_present(void)
             CFStringRef key = (CFStringRef)keys[i];
             CFTypeRef value = values[i];
             CFStringRef description = CFCopyDescription(values[i]);
+            char descString[256];
+            CFStringGetCString(description, descString, sizeof(descString), kCFStringEncodingUTF8);
             
             // Print the key as a string
             char keyName[256];
             if (CFStringGetCString(key, keyName, sizeof(keyName), kCFStringEncodingUTF8))
             {
-               //printf("keyName  %s: ", keyName);
+               printf("keyName  %s: description: %s\n", keyName,descString);
             }
              CFStringRef teensystring = CFSTR("Teensyduino");
             
@@ -725,8 +870,9 @@ int usb_present(void)
          }
       }
       CFRelease(properties);
+      IOObjectRelease(device);
    }
-   IOObjectRelease(device);
+   
    // Done, release the iterator 
    IOObjectRelease(iter);
    return anzahl;

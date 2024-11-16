@@ -1003,42 +1003,60 @@ class rViewController: NSViewController, NSWindowDelegate
    //MARK: usbattachAktion
     
     @objc func usbattachAktion(_ note:Notification) //von hid attach_callback
-     {
-        let info = note.userInfo
-        print("ViewController usbattachAktion info: \(info )")
-        let status = info?["attach"] as! Int
-        
-        var usbattachstatus = info?["usbattachstatus"] as! Int
-        
-        print("ViewController usbattachAktion status: \(status) globalusbstatus: \(globalusbstatus) usbattachstatus: \(usbattachstatus)");
-        
-        if (status == USBREMOVED)
-        {
-           USB_OK_Feld.image = notokimage
-           globalusbstatus = 0
-           usbstatus = 0
-           USBKontrolle.stringValue="USB OFF"
-           print("ViewController usbattachAktion USBREMOVED ")
-           teensy.usb_free()
-           
-        }
-       else if (status == USBATTACHED)
-        {
-          print("ViewController usbattachAktion USBATTACHED  globalusbstatus: \(globalusbstatus)")
-            //    self.Attach_USB()
-          
-          USB_OK_Feld.image = okimage
-          USBKontrolle.stringValue = "USB ON"
-          globalusbstatus = 1
-          usbstatus = 1
-          print("ViewController usbattachAktion USBATTACHED")
-          
-          
-          
-       }
-        
-        
-     }
+   {
+      let info = note.userInfo
+      print("ViewController usbattachAktion info: \(info )")
+      let status = info?["attach"] as! Int
+      
+      var usbattachstatus = info?["usbattachstatus"] as! Int
+      
+      print("ViewController usbattachAktion status: \(status) globalusbstatus: \(globalusbstatus) usbattachstatus: \(usbattachstatus)");
+      
+      if  (status == USBATTACHED)
+      {
+         //print("ViewController usbattachAktion USBATTACHED");
+         print("ViewController usbattachAktion USBATTACHED  globalusbstatus: \(globalusbstatus)")
+         //    self.Attach_USB()
+         
+         USB_OK_Feld.image = okimage
+         USBKontrolle.stringValue = "USB ON"
+         globalusbstatus = 1
+         usbstatus = 1
+         print("ViewController usbattachAktion USBATTACHED")
+         
+      }
+      
+      if (status == USBREMOVED)
+      {
+         USB_OK_Feld.image = notokimage
+         globalusbstatus = 0
+         usbstatus = 0
+         USBKontrolle.stringValue="USB OFF"
+         print("ViewController usbattachAktion USBREMOVED ")
+         teensy.usb_free()
+         
+         
+      }
+      /*
+      if  (status == USBATTACHED)
+      {
+         
+         
+         print("ViewController usbattachAktion USBATTACHED  globalusbstatus: \(globalusbstatus)")
+         //    self.Attach_USB()
+         
+         USB_OK_Feld.image = okimage
+         USBKontrolle.stringValue = "USB ON"
+         globalusbstatus = 1
+         usbstatus = 1
+         //print("ViewController usbattachAktion USBATTACHED")
+         
+         
+         
+      }
+      */
+      
+   }
 
 
     @objc func usbsendAktion(_ notification:Notification)
@@ -2416,14 +2434,15 @@ class rViewController: NSViewController, NSWindowDelegate
    @objc func Attach_USB() -> Int
    {
       var usb_return = 0
-      let present = teensy.dev_present()
+      var present = teensy.dev_present()
       var hidstatus = teensy.status()
       let nc = NotificationCenter.default
       var userinformation:[String : Any]
       print("Attatch_USB  usbstatus vor check: \(usbstatus) hidstatus: \(hidstatus) ")
       
+      present = 1;
       
-      //hidstatus = 0
+      hidstatus = 0
       if (hidstatus > 0) // already open
       //if (usbstatus > 0) //
       {
@@ -2437,7 +2456,7 @@ class rViewController: NSViewController, NSWindowDelegate
          usb_return = 2
          
       }
-      else if (present == 1)
+      else  if (present == 1)
                
       {
          let warnung = NSAlert.init()

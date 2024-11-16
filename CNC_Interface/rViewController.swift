@@ -1026,7 +1026,7 @@ class rViewController: NSViewController, NSWindowDelegate
          
       }
       
-      if (status == USBREMOVED)
+      else if (status == USBREMOVED)
       {
          USB_OK_Feld.image = notokimage
          globalusbstatus = 0
@@ -1037,24 +1037,7 @@ class rViewController: NSViewController, NSWindowDelegate
          
          
       }
-      /*
-      if  (status == USBATTACHED)
-      {
-         
-         
-         print("ViewController usbattachAktion USBATTACHED  globalusbstatus: \(globalusbstatus)")
-         //    self.Attach_USB()
-         
-         USB_OK_Feld.image = okimage
-         USBKontrolle.stringValue = "USB ON"
-         globalusbstatus = 1
-         usbstatus = 1
-         //print("ViewController usbattachAktion USBATTACHED")
-         
-         
-         
-      }
-      */
+  
       
    }
 
@@ -2440,6 +2423,7 @@ class rViewController: NSViewController, NSWindowDelegate
       var userinformation:[String : Any]
       print("Attatch_USB  usbstatus vor check: \(usbstatus) hidstatus: \(hidstatus) ")
       
+ 
       present = 1;
       
       hidstatus = 0

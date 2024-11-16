@@ -12,6 +12,8 @@ import Foundation
 import AVFoundation
 import Darwin
 
+import IOKit.hid
+
 let BUFFER_SIZE:Int   = Int(BufferSize())
 
 var new_Data:ObjCBool = false
@@ -184,15 +186,7 @@ class rTimerInfo {
     {
        return ((readtimer?.isValid) != nil)
     }
-   /*
-    func appendCRLFAndConvertToUTF8_1(_ s: String) -> Data {
-    let crlfString: NSString = s + "\r\n" as NSString
-    let buffer = crlfString.utf8String
-    let bufferLength = crlfString.lengthOfBytes(using: String.Encoding.utf8.rawValue)
-    let data = Data(bytes: UnsafePointer<UInt8>(buffer!), count: bufferLength)
-    return data;
-    }
-    */
+
    
     open func iscont()-> Int
     {
@@ -547,6 +541,53 @@ class rTimerInfo {
       print(dataRead as NSData);   
             
    }
+    
+    
+    func getHIDDevices(withVendorID vendorID: Int) -> [IOHIDDevice] 
+    {
+        var devices: [IOHIDDevice] = []
+
+        // Create a matching dictionary for HID devices
+        let matchingDict = IOServiceMatching(kIOHIDDeviceKey)
+        guard let hidService = matchingDict else {
+            print("Failed to create HID matching dictionary")
+            return devices
+        }
+        
+        // Create a mutable dictionary to add VendorID filter
+        let mutableDict = NSMutableDictionary(dictionary: hidService)
+       
+       mutableDict[kIOHIDVendorIDKey] = vendorID
+
+        // Get matching HID services
+        var iterator: io_iterator_t = 0
+        let result = IOServiceGetMatchingServices(kIOMasterPortDefault, mutableDict, &iterator)
+        if result != KERN_SUCCESS {
+            print("Error: Unable to get matching HID services (\(result))")
+            return devices
+        }
+
+        // Iterate through matching services
+        var service: io_object_t = IOIteratorNext(iterator)
+        while service != 0 
+       {
+           if let device = IOHIDDeviceCreate(kCFAllocatorDefault, service) 
+           {
+                devices.append(device)
+            }
+            IOObjectRelease(service)
+            service = IOIteratorNext(iterator)
+        }
+
+        // Release the iterator
+        IOObjectRelease(iterator)
+
+        return devices
+    }// 
+
+
+
+
    
 }
 

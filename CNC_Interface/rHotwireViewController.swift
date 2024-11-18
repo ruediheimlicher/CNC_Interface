@@ -4834,7 +4834,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
 
     @IBAction func report_Home(_ sender: NSButton)
     {
-        print("swift report_Home: \(sender.tag)")
+        print("swift report_Home: \(sender.tag) boardindex: \(boardindex)")
        CNC_Halttaste.state = NSControl.StateValue.on
        CNC_Halttaste.isEnabled = true
        
@@ -4848,6 +4848,8 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        outletdaten["home"] = 1 as AnyObject
        
        setOutletdaten()
+       
+       
        
         let nc = NotificationCenter.default
         var NotificationDic = [String:Int]()

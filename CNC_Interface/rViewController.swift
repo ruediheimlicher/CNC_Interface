@@ -2424,7 +2424,7 @@ class rViewController: NSViewController, NSWindowDelegate
       print("Attatch_USB  usbstatus vor check: \(usbstatus) hidstatus: \(hidstatus) ")
       
  
-      present = 1;
+      //present = 1;
       
       hidstatus = 0
       if (hidstatus > 0) // already open
@@ -2474,6 +2474,7 @@ class rViewController: NSViewController, NSWindowDelegate
          //   print("USBOpen erfolg: \(erfolg) usbstatus: \(usbstatus)")
         if erfolg == 1
          {
+           teensy.boardindex = device
             var timerdic:[String:Any] = [String:Any]()
             timerdic["home"] = 0
             

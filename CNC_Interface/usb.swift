@@ -69,7 +69,7 @@ class rTimerInfo {
        
        let PID:Int32 = Int32(code["PID"] as! Int32)//
        let VID:Int32 = Int32(code["VID"] as! Int32)//
-       print("func usb_teensy.USBOpen PID: \(PID) VID: \(VID)")
+       print("func usb_teensy.USBOpen board: \(board)  PID: \(PID) VID: \(VID)")
        
       // VID: 5824
       // PID: 1158 
@@ -500,6 +500,7 @@ class rTimerInfo {
       
      //    let senderfolg = rawhid_send(0,&write_byteArray, Int32(BUFFER_SIZE), 50)
       var senderfolg:Int32 = 0xFF
+      print("usb send_USB boardindex: \(boardindex)")
       if  boardindex == 0 // teensy++2
       {
          senderfolg = rawhid_send(0,&write_byteArray, 32, 50)

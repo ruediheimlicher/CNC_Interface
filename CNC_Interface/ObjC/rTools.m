@@ -275,6 +275,12 @@
         steps = [[derDatenDic objectForKey:@"steps"]intValue];
     }
 
+   int position = 1;
+   if ([derDatenDic objectForKey:@"position"])
+   {
+       position = [[derDatenDic objectForKey:@"position"]intValue];
+   }
+ 
 
     if ([derDatenDic count]==0)
     {

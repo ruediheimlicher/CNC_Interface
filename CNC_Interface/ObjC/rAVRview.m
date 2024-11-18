@@ -119,7 +119,7 @@ float det(float v0[],float v1[])
 - (void)setTitel:(NSString*)derTitel
 {
    NSRect Titelrect = [self frame];
-   NSFont* TitelFont=[NSFont fontWithName:@"Helvetica" size: 32];
+   NSFont* TitelFont=[NSFont fontWithName:@"Helvetica" size: 64];
 	
    titel = [NSString stringWithFormat:@"Profil: %@",derTitel];
 
@@ -4258,7 +4258,7 @@ return returnInt;
        NSDictionary* outletdaten = [rHotwireViewController cncoutletdaten];
        NSLog(@"ManRichtung outletdaten: %@",outletdaten);
        
-       boardindex = [outletdaten[@"cnc_seite1check"]integerValue];
+       boardindex = [outletdaten[@"boardindex"]integerValue];
        speed = [outletdaten[@"speed"]integerValue];
        steps = [outletdaten[@"motorsteps"]integerValue];
        int seite1check = [outletdaten[@"cnc_seite1check"]integerValue];
@@ -13932,7 +13932,7 @@ return returnInt;
    int zoomfaktor=1.0;
    int code=0;
    int i=0;
-   boardindex = [outletdaten[@"cnc_seite1check"]intValue];
+   boardindex = [outletdaten[@"boardindex"]intValue];
    speed = [outletdaten[@"speed"]intValue];
    steps = [outletdaten[@"motorsteps"]intValue];
    int seite1check = [outletdaten[@"cnc_seite1check"]intValue];
@@ -14013,6 +14013,7 @@ return returnInt;
    position |= (1<<FIRST_BIT);
    position |= (1<<LAST_BIT);
    
+   
    [tempDic setObject:[NSNumber numberWithInt:position] forKey:@"position"];
    [tempDic setObject:[NSNumber numberWithInt:speed] forKey:@"speed"];
    [tempDic setObject:[NSNumber numberWithInt:micro] forKey:@"micro"];
@@ -14035,6 +14036,7 @@ return returnInt;
    [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:3] forKey:@"richtung"];
+   
    NSLog(@"AVR  home_horizontal HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"art"]; //
 
@@ -14272,7 +14274,7 @@ return returnInt;
     NSDictionary* outletdaten = [rHotwireViewController cncoutletdaten];
     NSLog(@"homeSenkrechtSchicken outletdaten: %@",outletdaten);
     
-    boardindex = [outletdaten[@"cnc_seite1check"]integerValue];
+    boardindex = [outletdaten[@"boardindex"]integerValue];
     speed = [outletdaten[@"speed"]integerValue];
     steps = [outletdaten[@"motorsteps"]integerValue];
     int seite1check = [outletdaten[@"cnc_seite1check"]integerValue];
@@ -15145,7 +15147,7 @@ return returnInt;
    NSLog(@"SlaveResetAktion");
    
    char*      sendbuffer;
-   sendbuffer=malloc(32);
+   sendbuffer=malloc(64);
    int i;
    for (i=0;i<32;i++)
    {
@@ -15222,7 +15224,7 @@ return returnInt;
       else 
       {
          char*      sendbuffer;
-         sendbuffer=malloc(32);
+         sendbuffer=malloc(64);
          //
          int i;
          
@@ -15287,7 +15289,7 @@ return returnInt;
           
           
          
-         int senderfolg= rawhid_send(0, sendbuffer, 32, 50);
+         int senderfolg= rawhid_send(0, sendbuffer, 64, 50);
          
          
   //       NSLog(@"writeCNCAbschnitt  Stepperposition: %d senderfolg: %d",Stepperposition,senderfolg);

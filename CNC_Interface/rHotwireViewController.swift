@@ -2998,7 +2998,7 @@ var outletdaten:[String:AnyObject] = [:]
       
    }
 
-    @objc func USBReadAktion(_ notification:Notification)
+    @objc func USBReadAktion(_ notification:Notification) // Ergebnis Homeanschlag-stuff nicht verendet
    {
       
       let note = notification.userInfo as![String:Any]
@@ -3114,14 +3114,14 @@ var outletdaten:[String:AnyObject] = [:]
             warnung.addButton(withTitle: "OK")
             warnung.runModal()
             taskfertig = 0
-            
-            
+                     
          }
+         
+        /* 
       case 0xB5:
       
          print("HW B5 Anschlag A0 home first")
-         HomeAnschlagSet.insert(0xB5)
-         
+         HomeAnschlagSet.insert(0xB5)         
          //AVR?.homeSenkrechtSchicken()
       
          break;
@@ -3171,7 +3171,7 @@ var outletdaten:[String:AnyObject] = [:]
          AnschlagObenIndikator.layer?.backgroundColor = NSColor.blue.cgColor
          CNC_Downtaste.isEnabled = false
          break
-     
+     */
       case 0xF3:
          print("Stift UP")
          break
@@ -5474,11 +5474,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       
    }//viewDidLoad
     
-   // MARK: reportHome
- 
-    // TODO: *** *** *** *** *** *** reportHome
-   // @objc IBAction reportHome:(id)sender
-    
+      
    
    @IBAction func reportPWM_Slider(_ sender: NSSlider)
    {

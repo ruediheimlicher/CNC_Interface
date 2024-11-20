@@ -15597,7 +15597,7 @@ return returnInt;
     }
 
 
-- (void)USBReadAktion:(NSNotification*)note
+- (void)USBReadAktion:(NSNotification*)note // nicht verwendet
 {
    NSLog(@"AVR  USBReadAktion note: %@",[[note userInfo]description]);
    

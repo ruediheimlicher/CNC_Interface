@@ -215,8 +215,6 @@ class rViewController: NSViewController, NSWindowDelegate
    // var usbzugang:
    var usbstatus: Int = 0
    
-   var usbattachstatus = 0
-   
    var boardindex:Int = 0
     
     var viewdidloadcounter = 0
@@ -308,14 +306,6 @@ class rViewController: NSViewController, NSWindowDelegate
       formatter.maximumFractionDigits = 1
       formatter.minimumFractionDigits = 2
       formatter.minimumIntegerDigits = 1
-      
-      
-   
-      
-      
-      
-      // end register callback
-      
       //formatter.roundingMode = .down
       
       /*
@@ -445,19 +435,12 @@ class rViewController: NSViewController, NSWindowDelegate
          popindex += 1
       }
       
-      var teensypresent:Int32 = 0
-      teensypresent = teensy.dev_present()
+      var anzusb = Attach_USB()
+      print("viewDidAppear attachUSB anzusb: \(anzusb)")
       
-  //    print("VC viewDidAppear teensypresent vor attatch: \(teensypresent)")
-      var attachstatus = 0
+      let teensypresent = teensy.dev_present()
       
-      //attachstatus = Attach_USB()
-     
-     // let callbackreturn = teensy.USBInit(VID: 0x16C0)
-    //  print("VC viewDidAppear callbackreturn: \(callbackreturn)")
-      //let teensypresentnach = teensy.dev_present()
-      
-    //  print("VC viewDidAppear teensypresent nach attatch: \(teensypresent)")
+      print("VC viewDidAppear dev_present: \(teensypresent)")
      
       if (teensypresent == 0) // Noch nichts eingesteckt
       {
@@ -465,9 +448,9 @@ class rViewController: NSViewController, NSWindowDelegate
          USB_OK_Feld.image = notokimage
          let warnung = NSAlert.init()
          warnung.messageText = "USB"
-         warnung.messageText = "viewDidAppear: Kein USB-Device"
+         warnung.messageText = "check_USB: Kein USB-Device"
          warnung.addButton(withTitle: "OK")
-   //      warnung.runModal()
+         warnung.runModal()
 
          userinformation = ["message":"usb", "usbstatus": 0, "boardindex" :boardindex] as [String : Any]
 
@@ -479,9 +462,9 @@ class rViewController: NSViewController, NSWindowDelegate
       }
       else // teensy eingesteckt, init
       {
-         attachstatus = Attach_USB()
+         let usb_erfolg = Attach_USB()
       }
-      print("viewDidAppear nach attachUSB attachstatus: \(attachstatus)")
+      
       /*
       else
       {
@@ -970,17 +953,12 @@ class rViewController: NSViewController, NSWindowDelegate
         warnung.addButton(withTitle: "Zurück")
         
         var openerfolg = 0
-        
-        //let  devicereturn = warnung.runModal()
-        /*
+        let devicereturn = warnung.runModal()
         switch (devicereturn)
         {
         case NSApplication.ModalResponse.alertFirstButtonReturn: // Einschalten
-           self.Attach_USB()
-           
-          // let device = teensyboardarray[boardindex]
-           //openerfolg = Int(teensy.USBOpen(code: device, board: boardindex))
-          
+           let device = teensyboardarray[boardindex]
+           openerfolg = Int(teensy.USBOpen(code: device, board: boardindex))
            break
            
         case NSApplication.ModalResponse.alertSecondButtonReturn:
@@ -993,8 +971,6 @@ class rViewController: NSViewController, NSWindowDelegate
            return
            break
         }
-         */
-         
      }
      
      var timerdic:[String:Any] = [String:Any]()
@@ -1017,49 +993,37 @@ class rViewController: NSViewController, NSWindowDelegate
    //MARK: usbattachAktion
     
     @objc func usbattachAktion(_ note:Notification) //von hid attach_callback
-   {
-      let info = note.userInfo
-      print("ViewController usbattachAktion info: \(info )")
-      let status = info?["attach"] as! Int
-      
-      var usbattachstatus = info?["usbattachstatus"] as! Int
-      
-      print("ViewController usbattachAktion status: \(status) globalusbstatus: \(globalusbstatus) usbattachstatus: \(usbattachstatus)");
-      
-      if  (status == USBATTACHED)
-      {
-         //print("ViewController usbattachAktion USBATTACHED");
-         print("\nViewController usbattachAktion USBATTACHED  globalusbstatus: \(globalusbstatus)")
-         let anzahlusb = teensy.dev_present()
-         print("ViewController usbattachAktion anzahlusb: \(anzahlusb) usbattachstatus: \(usbattachstatus)")
-         
-         if ((anzahlusb == 1) && (usbattachstatus == 0))
-         {
-            print("ViewController usbattachAktion usbattachstatus==0")
-             //self.Attach_USB()
-         }
-         
-         USB_OK_Feld.image = okimage
-         USBKontrolle.stringValue = "USB ON"
-         globalusbstatus = 1
-         usbstatus = 1
-         print("ViewController usbattachAktion USBATTACHED")
-         
-      }
-      
-      else if (status == USBREMOVED)
-      {
-         USB_OK_Feld.image = notokimage
-         globalusbstatus = 0
-         usbstatus = 0
-         USBKontrolle.stringValue="USB OFF"
-         print("\nViewController usbattachAktion USBREMOVED ")
-         teensy.usb_free()
-         
-         
-      }
-  
-   }
+     {
+        let info = note.userInfo
+        print("ViewController usbattachAktion info: \(info )")
+        let status = info?["attach"] as! Int
+        print("ViewController usbattachAktion status: \(status) globalusbstatus: \(globalusbstatus)");
+        
+        if (status == USBREMOVED)
+        {
+           USB_OK_Feld.image = notokimage
+           globalusbstatus = 0
+           usbstatus = 0
+           USBKontrolle.stringValue="USB OFF"
+           print("ViewController usbattachAktion USBREMOVED ")
+        }
+       else if (status == USBATTACHED)
+        {
+          
+          self.Attach_USB()
+          
+          USB_OK_Feld.image = okimage
+          USBKontrolle.stringValue = "USB ON"
+          globalusbstatus = 1
+          usbstatus = 1
+          print("ViewController usbattachAktion USBATTACHED")
+          
+          
+          
+       }
+        
+        
+     }
 
 
     @objc func usbsendAktion(_ notification:Notification)
@@ -1263,14 +1227,14 @@ class rViewController: NSViewController, NSWindowDelegate
                 
                 //print("i: \(i) \(usbdata[i])")
              }
-             //print("usbdata: \(usbdata)\n") // d: [0, 9, 56, 0, 0,...
+             print("usbdata: \(usbdata)\n") // d: [0, 9, 56, 0, 0,...
              var NotificationDic = [String:Int]()
              
              let abschnittfertig:UInt8 =   usbdata[0] // code vom teensy
              // https://useyourloaf.com/blog/swift-string-cheat-sheet/
              let home = Int(usbdata[13])
              let anschlagcheck = Int(usbdata[9])
-             // print("VC newDataAktion abschnittfertig abschnittfertig: \(hex(abschnittfertig)) anschlagcheck: \(anschlagcheck)")
+              print("VC newDataAktion abschnittfertig abschnittfertig: \(hex(abschnittfertig)) anschlagcheck: \(anschlagcheck)")
              NotificationDic["abschnittfertig"] = Int(abschnittfertig)
              let pfeiltastenrichtung = Int(usbdata[29])
 
@@ -1289,7 +1253,7 @@ class rViewController: NSViewController, NSWindowDelegate
              
              if abschnittfertig >= 0x80 // Code fuer Fertig: AD
              {
-                //print("VC newDataAktion abschnittfertig > 80")
+                print("VC newDataAktion abschnittfertig > 80")
                 let Abschnittnummer = Int(usbdata[5])
                 NotificationDic["inposition"] = Int(Abschnittnummer)
                 let ladePosition = Int(usbdata[6])
@@ -1756,61 +1720,34 @@ class rViewController: NSViewController, NSWindowDelegate
                if AnschlagSet.contains(Int(abschnittfertig))
                 {
                   let abschnittfertighex = String(format:"%02X", abschnittfertig)
-                  print("VC AnschlagSet contains abschnittfertig: \(abschnittfertig)  \(abschnittfertighex)")
-                  //teensy.DC_pwm(0)
-                  //                AVR?.setBusy(0)
-                  //               teensy.read_OK = false
-               }
+                   print("VC AnschlagSet contains abschnittfertig: \(abschnittfertig)  \(abschnittfertighex)")
+                   //teensy.DC_pwm(0)
+   //                AVR?.setBusy(0)
+    //               teensy.read_OK = false
+                }
                 else
                 {
                    if HomeIndexSet.contains(Int(abschnittfertig))
                    {
                       print("HomeIndexSet contains abschnittfertig")
-                      if HomeAnschlagSet.contains(0xB5)
-                      {
-                         print("VC HomeAnschlagSet contains 0xB5")
-                      }
-                      if HomeAnschlagSet.contains(0xB6)
-                      {
-                         print("VC HomeAnschlagSet contains 0xB6")
-                      }
-                      
-                      if HomeAnschlagSet.contains(0xB7)
-                      {
-                         print("VC HomeAnschlagSet contains 0xB7")
-                      }
-                      
-                      if HomeAnschlagSet.contains(0xB8)
-                      {
-                         print("VC HomeAnschlagSet contains 0xB8")
-                      }
-                      
                       if HomeAnschlagSet.count == 1
                       {
-                         print("VC HomeAnschlagSet.count == 1")
+                         print("HomeAnschlagSet.count == 1")
                          HomeIndexCounter = 2
                       }
                       else if HomeAnschlagSet.count == 4
                       {
-                         print("VC HomeAnschlagSet.count == 4")
+                         print("HomeAnschlagSet.count == 4")
                          AVR?.setBusy(0)
                          AVR?.dc_(on: 0);
                          //DC_Aktion(pwm:0)
                          teensy.stop_timer()
-                         let warnung = NSAlert.init()
-                         warnung.messageText = "VC Home erreicht"
-                         warnung.addButton(withTitle: "OK")
-                         warnung.runModal()
-                         HomeAnschlagSet.removeAll()
-              
-                         
                          
                       }
                       else if HomeIndexCounter == 2
                       {
-                         print("VC home == 2")
+                         print("home == 2")
                          HomeIndexCounter = 3
-                         
                          AVR?.homeSenkrechtSchicken()
                       }
                    }
@@ -2286,7 +2223,7 @@ class rViewController: NSViewController, NSWindowDelegate
       {
           
          let warnung = NSAlert.init()
-         warnung.messageText = "USB start read"
+         warnung.messageText = "USB"
          warnung.messageText = "report_start_read_USB: Kein USB-Device"
          warnung.addButton(withTitle: "OK")
          warnung.runModal()
@@ -2464,16 +2401,13 @@ class rViewController: NSViewController, NSWindowDelegate
    @objc func Attach_USB() -> Int
    {
       var usb_return = 0
-      var present = teensy.dev_present()
+      let present = teensy.dev_present()
       var hidstatus = teensy.status()
       let nc = NotificationCenter.default
       var userinformation:[String : Any]
-      print("Attatch_USB  usbstatus vor check: \(usbstatus) hidstatus: \(hidstatus) present: \(present) ")
+      print("Attatch_USB  usbstatus vor check: \(usbstatus) hidstatus: \(hidstatus) present: \(present)")
       
- 
-      //present = 1;
-      
-      hidstatus = 0
+      //hidstatus = 0
       if (hidstatus > 0) // already open
       //if (usbstatus > 0) //
       {
@@ -2482,13 +2416,26 @@ class rViewController: NSViewController, NSWindowDelegate
          warnung.messageText = "USB"
          warnung.messageText = "USB-Device ist schon da"
          warnung.addButton(withTitle: "OK")
-         //     warnung.runModal()
-         //     USB_OK_Feld.image = okimage
-         usb_return = 2
+    //     warnung.runModal()
+    //     USB_OK_Feld.image = okimage
+        usb_return = 1
+         /*
+         print("teensyboardarray: \(teensyboardarray)")
+         if teensyboardarray.count > 0
+         {
+            let device = teensyboardarray[boardindex]
+            let erfolg = teensy.USBOpen(code:device,  board: boardindex)
+            usbstatus = Int(erfolg)
+            globalusbstatus = Int(erfolg)
+            //   print("USBOpen erfolg: \(erfolg) usbstatus: \(usbstatus)")
+
+         }
+          */
+            //return usb_return
          
       }
-      else  if (present > 0)
-               
+      else
+       
       {
          let warnung = NSAlert.init()
          warnung.messageText = "Welches Board?"
@@ -2511,17 +2458,13 @@ class rViewController: NSViewController, NSWindowDelegate
          
          // teensy init
          let teensycode = teensyboardarray[boardindex]
-         let device = boardindex
-         
+         let device = teensyboardarray[boardindex]
          let erfolg = teensy.USBOpen(code:teensycode,  board: boardindex)
          usbstatus = Int(erfolg)
          globalusbstatus = Int(erfolg)
-         hidstatus =  Int32(erfolg)
-         
          //   print("USBOpen erfolg: \(erfolg) usbstatus: \(usbstatus)")
-        if erfolg == 1
+         if usbstatus == 1
          {
-           teensy.boardindex = device
             var timerdic:[String:Any] = [String:Any]()
             timerdic["home"] = 0
             
@@ -2530,54 +2473,113 @@ class rViewController: NSViewController, NSWindowDelegate
             print("status 1")
             USB_OK_Feld.image = okimage
             print("USB-Device da")
-            
+
             Start_Knopf.isEnabled = true
             Send_Knopf.isEnabled = true
-            usb_return = 1
-            userinformation = ["message":"usb", "usbstatus": usb_return, "boardindex" :boardindex] as [String : Any]
             
-            nc.post(name:Notification.Name(rawValue:"usb_status"),
-                    object: nil,
-                    userInfo: userinformation)
-         
+            userinformation = ["message":"usb", "usbstatus": 1, "boardindex" :boardindex] as [String : Any]
+
+            usb_return = 2
             
             
          }
+         else
+         {
+            print("status 0")
+            // USB_OK.backgroundColor = NSColor.yellow
+            // USB_OK.stringValue = "-"
+            USB_OK_Feld.image = notokimage
+            let warnung = NSAlert.init()
+            warnung.messageText = "USB"
+            warnung.messageText = "check_USB: Kein USB-Device"
+            warnung.addButton(withTitle: "OK")
+            warnung.runModal()
+
+            userinformation = ["message":"usb", "usbstatus": 0, "boardindex" :boardindex] as [String : Any]
+
+            USB_OK_Feld.image = notokimage
+            globalusbstatus = 0
+            USBKontrolle.stringValue="USB OFF"
+            usb_return = -1
+         }
+         
+         nc.post(name:Notification.Name(rawValue:"usb_status"),
+                 object: nil,
+                 userInfo: userinformation)
+
       }
       
-      else
+ 
+      
+      
+      return usb_return;
+      
+      if (rawhid_status()==1) // anmeldung OK
       {
-         let    out = rawhid_open(1,  0, 0, 0xFFAB, 0x0200)
-         //let erfolg = teensy.USBOpen(code:0,  board: 0)
+         print("status 1")
+         USB_OK_Feld.image = okimage
+         print("USB-Device da")
+         /*
+          let warnung = NSAlert.init()
+          warnung.messageText = "USB"
+          warnung.messageText = "USB-Device ist da"
+          warnung.addButton(withTitle: "OK")
+          //warnung.runModal()
+          */
+         let manu = get_manu()
+         //println(manu) // ok, Zahl
+         //         var manustring = UnsafePointer<CUnsignedChar>(manu)
+         //println(manustring) // ok, Zahl
+         
+         let manufactorername = String(cString: UnsafePointer(manu!))
+         //  print("str: ", manufactorername)
+         manufactorer.stringValue = manufactorername
+         
+         //manufactorer.stringValue = "Manufactorer: " + teensy.manufactorer()!
+         Start_Knopf.isEnabled = true
+         Send_Knopf.isEnabled = true
+         
+         userinformation = ["message":"usb", "usbstatus": 1, "boardindex" :boardindex] as [String : Any]
+         
+      }
+      else
+      
+      {
          print("status 0")
          // USB_OK.backgroundColor = NSColor.yellow
          // USB_OK.stringValue = "-"
          USB_OK_Feld.image = notokimage
          let warnung = NSAlert.init()
          warnung.messageText = "USB"
-         warnung.messageText = "Attach_USB: Kein USB-Device"
+         warnung.messageText = "check_USB: Kein USB-Device"
          warnung.addButton(withTitle: "OK")
          warnung.runModal()
-         
-         
-         USB_OK_Feld.image = notokimage
-         globalusbstatus = 0
-         USBKontrolle.stringValue="USB OFF"
-         usb_return = -1
-         userinformation = ["message":"usb", "usbstatus": usb_return, "boardindex" :boardindex] as [String : Any]
+         userinformation = ["message":"usb", "usbstatus": 0, "boardindex" :boardindex] as [String : Any]
          nc.post(name:Notification.Name(rawValue:"usb_status"),
                  object: nil,
                  userInfo: userinformation)
          
+         /*
+          if let taste = USB_OK
+          {
+          //print("Taste USB_OK ist nicht nil")
+          taste.backgroundColor = NSColor.red
+          //USB_OK.backgroundColor = NSColor.redColor()
+          
+          }
+          else
+          {
+          print("Taste USB_OK ist nil")
+          }*/ 
+         Start_Knopf.isEnabled = false
+         Stop_Knopf.isEnabled = false
+         Send_Knopf.isEnabled = false
+         
+         //return
       }
-      
-        
-      return usb_return;
-      
-      
-      //nc.post(name:Notification.Name(rawValue:"usb_status"),
-      //       object: nil,
-      //      userInfo: userinformation)
+      nc.post(name:Notification.Name(rawValue:"usb_status"),
+              object: nil,
+              userInfo: userinformation)
       
       //print("antwort: \(teensy.status())")
    }

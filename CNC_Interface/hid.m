@@ -1038,8 +1038,8 @@ int usb_present(void)
    printf("hid usb_present\n");
    int vid = 0x16C0;
    int pid = 0x486;
-   //return findHIDDevicesWithVendorID(vid);
-   return findHIDDevicesWithVendorAndProductID(vid,pid);
+   return findHIDDevicesWithVendorID(vid);
+   //return findHIDDevicesWithVendorAndProductID(vid,pid);
    
    CFMutableDictionaryRef matchingDict;
    io_iterator_t iter;

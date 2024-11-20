@@ -2601,7 +2601,7 @@ var outletdaten:[String:AnyObject] = [:]
     }
     
  
-    @objc override func newDataAktion(_ notification:Notification) // entspricht readUSB
+    @objc override func newDataAktion(_ notification:Notification) // entspricht readUSB // Nicht verwendet
      {
         // Reaktion auf eingehende USB-Daten
         var lastData = teensy.getlastDataRead()
@@ -2885,15 +2885,16 @@ var outletdaten:[String:AnyObject] = [:]
                        print("HomeIndexSet contains abschnittfertig")
                        if HomeAnschlagSet.count == 1
                        {
-                          print("HomeAnschlagSet.count == 1")
+                          print("HW HomeAnschlagSet.count == 1")
                        }
                        else if HomeAnschlagSet.count == 4
                        {
-                          print("HomeAnschlagSet.count == 4")
+                          print("HW HomeAnschlagSet.count == 4")
+                          
                        }
                        else if home == 2
                        {
-                          print("home == 2")
+                          print("HW home == 2")
                        }
                     }
                     else
@@ -2902,7 +2903,7 @@ var outletdaten:[String:AnyObject] = [:]
                        if (usb_schnittdatenarray.count > 0) // nicht HALT
                        {
                           //if (Int(usbdata[10]) == 0)
-                          print("HomeAnschlagSet: \(HomeAnschlagSet)")
+                          print("HW HomeAnschlagSet: \(HomeAnschlagSet)")
                           
                           writeCNCAbschnitt()
                           
@@ -3001,11 +3002,17 @@ var outletdaten:[String:AnyObject] = [:]
    {
       
       let note = notification.userInfo as![String:Any]
+      
+      //print("HW USBReadAktion note: \n\(note)\n")
       let abschnittfertig = note["abschnittfertig"]  as! Int
       let outposition = note["outposition"] as! Int
       Stepperposition = note["stepperposition"] as! Int
       var pfeilrichtung = 0xFF
       var deleteindikator = 0
+      
+      var homanschlagstatus = 0
+      
+      
       if   let rawpfeilrichtung:Int = note["pfeilrichtung"] as? Int
       {
          print("pfeilrichtung OK: \(rawpfeilrichtung)")
@@ -3113,25 +3120,31 @@ var outletdaten:[String:AnyObject] = [:]
       case 0xB5:
       
          print("HW B5 Anschlag A0 home first")
-         AVR?.homeSenkrechtSchicken()
-      break;
+         HomeAnschlagSet.insert(0xB5)
+         
+         //AVR?.homeSenkrechtSchicken()
+      
+         break;
          
       case 0xB6:
       
          print("HW B6 Anschlag B0 home first")
-         AVR?.homeSenkrechtSchicken()
+         //AVR?.homeSenkrechtSchicken()
+         HomeAnschlagSet.insert(0xB6)
       break;
          
       case 0xB7:
       
          print("HW Anschlag C0 home first")
-         AVR?.homeSenkrechtSchicken()
+         HomeAnschlagSet.insert(0xB7)
+         //AVR?.homeSenkrechtSchicken()
       break;
          
       case 0xB8:
       
          print("HW Anschlag D0 home first")
-         AVR?.homeSenkrechtSchicken()
+         HomeAnschlagSet.insert(0xB8)
+         //AVR?.homeSenkrechtSchicken()
       break;
          
       case 0xA5:
@@ -3171,6 +3184,9 @@ var outletdaten:[String:AnyObject] = [:]
          break
          
       } // switch abschnittfertig
+      
+      print("HW USBReadAktion HomeAnschlagSet: \(HomeAnschlagSet)")
+      
       
    }
     
@@ -4835,6 +4851,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
     @IBAction func report_Home(_ sender: NSButton)
     {
         print("swift report_Home: \(sender.tag) boardindex: \(boardindex)")
+       
        CNC_Halttaste.state = NSControl.StateValue.on
        CNC_Halttaste.isEnabled = true
        
@@ -4847,35 +4864,53 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        
        outletdaten["home"] = 1 as AnyObject
        
-       setOutletdaten()
+       
+       
+       let nc = NotificationCenter.default
+       let NotificationDic = [String:Int]()
+       var AnfahrtArray = [[String:Double]]()
        
        
        
-        let nc = NotificationCenter.default
-        var NotificationDic = [String:Int]()
-
-        var AnfahrtArray = [[String:Double]]()
+       // Startpunkt ist aktuelle Position. Lage: 3
+       var PositionA:NSPoint = NSMakePoint(CGFloat(0), CGFloat(0))
+       var PositionB:NSPoint = NSMakePoint(CGFloat(0), CGFloat(0))
+       var index:Int = 0
+       let zeilendicA:[String:Double] = ["ax": PositionA.x, "ay":PositionA.y, "bx": PositionB.x, "by":PositionB.y, "index":Double(index), "lage":3]
+       AnfahrtArray.append(zeilendicA)
        
-        // Startpunkt ist aktuelle Position. Lage: 3
-        var PositionA:NSPoint = NSMakePoint(CGFloat(0), CGFloat(0))
-        var PositionB:NSPoint = NSMakePoint(CGFloat(0), CGFloat(0))
-        var index:Int = 0
-        let zeilendicA:[String:Double] = ["ax": PositionA.x, "ay":PositionA.y, "bx": PositionB.x, "by":PositionB.y, "index":Double(index), "lage":3]
-        AnfahrtArray.append(zeilendicA)
+      //Horizontal bis Anschlag
+       PositionA.x -= 1000
+       PositionB.x -= 1000
+       index += 1
+       let zeilendicB:[String:Double] = ["ax": PositionA.x, "ay":PositionA.y, "bx": PositionB.x, "by":PositionB.y, "index":Double(index), "lage":3]
+       AnfahrtArray.append(zeilendicB)
+       
+      // Vertikal ab bis Anschlag
+      PositionA.y -= 400;
+      PositionB.y -= 400;
+      
+      let zeilendicC:[String:Double] = ["ax": PositionA.x, "ay":PositionA.y, "bx": PositionB.x, "by":PositionB.y, "index":Double(index), "lage":3]
+      AnfahrtArray.append(zeilendicC)
+       
+       switch boardindex
+       {
+       case 0: //teensy2++
+          
+          break
+          
+       case 1: // teensy3,4
+          
+          break
+          
+       default:
+          break
+       }// switch
+       
+ 
         
-       //Horizontal bis Anschlag
-        PositionA.x -= 1000
-        PositionB.x -= 1000
-        index += 1
-        let zeilendicB:[String:Double] = ["ax": PositionA.x, "ay":PositionA.y, "bx": PositionB.x, "by":PositionB.y, "index":Double(index), "lage":3]
-        AnfahrtArray.append(zeilendicB)
-        
-       // Vertikal ab bis Anschlag
-       PositionA.y -= 400;
-       PositionB.y -= 400;
        
-       let zeilendicC:[String:Double] = ["ax": PositionA.x, "ay":PositionA.y, "bx": PositionB.x, "by":PositionB.y, "index":Double(index), "lage":3]
-       AnfahrtArray.append(zeilendicC)
+     
        //setOutletdaten()
        //AVR?.manFeldRichtung(3,mousestatus:Int32(1), pfeilstep:700)
        
@@ -6211,70 +6246,72 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
 
   
     @objc func PfeilFeldAktion(_ notification:Notification)
-    {
-        let info = notification.userInfo
-       cnc_seite1check = CNC_Seite1Check.state.rawValue as Int
-       cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
-       outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
-       outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
-       outletdaten["speed"] = SpeedFeld.integerValue   as AnyObject
-       outletdaten["micro"] = micro as AnyObject
-       outletdaten["boardindex"] = boardindex as AnyObject
-       outletdaten["pwm"] = DC_PWM.integerValue as AnyObject
-
-        //
-       //print(" PfeilFeldAktion: info: \(notification.userInfo) \(info)")
-        if (info?["richtung"] != nil)
-        {
-            quelle = info?["richtung"] as! Int
+   {
+      let info = notification.userInfo
+      cnc_seite1check = CNC_Seite1Check.state.rawValue as Int
+      cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
+      outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
+      outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
+      outletdaten["speed"] = SpeedFeld.integerValue   as AnyObject
+      outletdaten["micro"] = micro as AnyObject
+      outletdaten["boardindex"] = boardindex as AnyObject
+      outletdaten["pwm"] = DC_PWM.integerValue as AnyObject
+      
+      //
+      //print(" PfeilFeldAktion: info: \(notification.userInfo) \(info)")
+      if (info?["richtung"] != nil)
+      {
+         quelle = info?["richtung"] as! Int
+         
+         if info?["push"] != nil
+         {
+            mausistdown = info?["push"] as!Int
+         } // if push
+      }// if richtung
+      else
+      {
+         NSSound.beep()
+         quelle = 0
+         mausistdown = 0
+         return
+      }
+      if mausistdown > 0
+      {
+         switch quelle
+         {
+         case MANDOWN:
+            print("PfeilFeldAktion MANDOWN")
+            AnschlagObenIndikator.layer?.backgroundColor = NSColor.green.cgColor
+            CNC_Downtaste.isEnabled = true
+         case MANUP:
+            print("PfeilFeldAktion MANUP")
+            AnschlagUntenIndikator.layer?.backgroundColor = NSColor.green.cgColor
+            CNC_Downtaste.isEnabled = true
+         case MANLEFT:
+            print("PfeilFeldAktion MANLEFT")
+            AnschlagRechtsIndikator.layer?.backgroundColor = NSColor.green.cgColor
+            CNC_Righttaste.isEnabled = true
+         case MANRIGHT:
+            //print("PfeilFeldAktion MANRIGHT")
+            AnschlagLinksIndikator.layer?.backgroundColor = NSColor.green.cgColor
+            CNC_Lefttaste.isEnabled = true
             
-            if info?["push"] != nil
-            {
-                mausistdown = info?["push"] as!Int
-            } // if push
-        }// if richtung
-        else
-        {
-            NSSound.beep()
-            quelle = 0
-            mausistdown = 0
-            return
-        }
-        if mausistdown > 0
-        {
-            switch quelle
-            {
-            case MANDOWN:
-                print("PfeilFeldAktion MANDOWN")
-               AnschlagObenIndikator.layer?.backgroundColor = NSColor.green.cgColor
-               CNC_Downtaste.isEnabled = true
-            case MANUP:
-                print("PfeilFeldAktion MANUP")
-                AnschlagUntenIndikator.layer?.backgroundColor = NSColor.green.cgColor
-               CNC_Downtaste.isEnabled = true
-            case MANLEFT:
-                print("PfeilFeldAktion MANLEFT")
-               AnschlagRechtsIndikator.layer?.backgroundColor = NSColor.green.cgColor
-               CNC_Righttaste.isEnabled = true
-            case MANRIGHT:
-                //print("PfeilFeldAktion MANRIGHT")
-                AnschlagLinksIndikator.layer?.backgroundColor = NSColor.green.cgColor
-               CNC_Lefttaste.isEnabled = true
-                
-            default:
-                break
-            }// switch quelle
-            AVR?.manFeldRichtung(Int32(quelle), mousestatus:Int32(mausistdown), pfeilstep:700)
-        } // mausistdown > 0
-        else // Button released
-        {
-            //print("swift PfeilFeldAktion Button released quelle: \(quelle)")
-            AVR?.manFeldRichtung(Int32(quelle), mousestatus:Int32(mausistdown), pfeilstep:80)
-           
-           
-           
-        }
-    }
+         default:
+            break
+         }// switch quelle
+         AVR?.manFeldRichtung(Int32(quelle), mousestatus:Int32(mausistdown), pfeilstep:700)
+         
+      } // mausistdown > 0
+      else // Button released
+      {
+         
+         //print("swift PfeilFeldAktion Button released quelle: \(quelle)")
+         AVR?.manFeldRichtung(Int32(quelle), mousestatus:Int32(mausistdown), pfeilstep:80)
+         
+         
+         
+      }
+   }
  
 
     func numberOfRows(in tableView: NSTableView) -> Int {

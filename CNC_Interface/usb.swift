@@ -55,13 +55,26 @@ class rTimerInfo {
      var lastreadarray = [UInt8](repeating: 0x00, count: BUFFER_SIZE)
      var readarray = [UInt8](repeating: 0x00, count: BUFFER_SIZE)
      
-     
+    let VENDOR_ID:UInt32 = 0x16C0
      
    override init()
    {
       super.init()
+      
+     // let initreturn:Int = USBInit(VID:VENDOR_ID)
+     // print("usb init return: \(initreturn)") 
+      
    }
+    
+    
+    
+    open func USBInit(VID:UInt32)-> Int
+    {
+       return Int(rawhid_init(VID));
+       
+    }
    
+
     open func USBOpen(code:[String:Any] , board: Int)->Int32
     {
        boardindex = board
@@ -175,8 +188,14 @@ class rTimerInfo {
    
    open func dev_present()->Int32
    {
-      let vid = 0x16C0;
-      let anz = findHIDDevicesWithVendorID(UInt32(vid))
+      let vid:UInt32 = 0x16C0;
+      let pid:UInt32 = 0x486;
+      //let anz = findHIDDevicesWithVendorID(UInt32(vid))
+      
+      //let anz = findHIDDevicesWithVendorAndProductID(vid,pid);
+      
+      let anz = findHIDDeviceWithVendorID(vid);
+      
       print("dev_present anzahl: \(anz)")
       return anz;
      // return usb_present()

@@ -308,6 +308,14 @@ class rViewController: NSViewController, NSWindowDelegate
       formatter.maximumFractionDigits = 1
       formatter.minimumFractionDigits = 2
       formatter.minimumIntegerDigits = 1
+      
+      
+   
+      
+      
+      
+      // end register callback
+      
       //formatter.roundingMode = .down
       
       /*
@@ -437,17 +445,19 @@ class rViewController: NSViewController, NSWindowDelegate
          popindex += 1
       }
       
-      let teensypresent = teensy.dev_present()
+      var teensypresent:Int32 = 0
+      teensypresent = teensy.dev_present()
       
-      print("VC viewDidAppear teensypresent vor attatch: \(teensypresent)")
+  //    print("VC viewDidAppear teensypresent vor attatch: \(teensypresent)")
       var attachstatus = 0
       
-      attachstatus = Attach_USB()
+      //attachstatus = Attach_USB()
      
-      
+     // let callbackreturn = teensy.USBInit(VID: 0x16C0)
+    //  print("VC viewDidAppear callbackreturn: \(callbackreturn)")
       //let teensypresentnach = teensy.dev_present()
       
-      print("VC viewDidAppear teensypresent nach attatch: \(teensypresent)")
+    //  print("VC viewDidAppear teensypresent nach attatch: \(teensypresent)")
      
       if (teensypresent == 0) // Noch nichts eingesteckt
       {
@@ -469,7 +479,7 @@ class rViewController: NSViewController, NSWindowDelegate
       }
       else // teensy eingesteckt, init
       {
-         //attachstatus = Attach_USB()
+         attachstatus = Attach_USB()
       }
       print("viewDidAppear nach attachUSB attachstatus: \(attachstatus)")
       /*
@@ -960,7 +970,9 @@ class rViewController: NSViewController, NSWindowDelegate
         warnung.addButton(withTitle: "Zurück")
         
         var openerfolg = 0
-        let devicereturn = warnung.runModal()
+        
+        //let  devicereturn = warnung.runModal()
+        /*
         switch (devicereturn)
         {
         case NSApplication.ModalResponse.alertFirstButtonReturn: // Einschalten
@@ -981,6 +993,8 @@ class rViewController: NSViewController, NSWindowDelegate
            return
            break
         }
+         */
+         
      }
      
      var timerdic:[String:Any] = [String:Any]()
@@ -1015,8 +1029,15 @@ class rViewController: NSViewController, NSWindowDelegate
       if  (status == USBATTACHED)
       {
          //print("ViewController usbattachAktion USBATTACHED");
-         print("ViewController usbattachAktion USBATTACHED  globalusbstatus: \(globalusbstatus)")
-         //    self.Attach_USB()
+         print("\nViewController usbattachAktion USBATTACHED  globalusbstatus: \(globalusbstatus)")
+         let anzahlusb = teensy.dev_present()
+         print("ViewController usbattachAktion anzahlusb: \(anzahlusb) usbattachstatus: \(usbattachstatus)")
+         
+         if ((anzahlusb == 1) && (usbattachstatus == 0))
+         {
+            print("ViewController usbattachAktion usbattachstatus==0")
+             //self.Attach_USB()
+         }
          
          USB_OK_Feld.image = okimage
          USBKontrolle.stringValue = "USB ON"
@@ -1032,7 +1053,7 @@ class rViewController: NSViewController, NSWindowDelegate
          globalusbstatus = 0
          usbstatus = 0
          USBKontrolle.stringValue="USB OFF"
-         print("ViewController usbattachAktion USBREMOVED ")
+         print("\nViewController usbattachAktion USBREMOVED ")
          teensy.usb_free()
          
          
@@ -1243,14 +1264,14 @@ class rViewController: NSViewController, NSWindowDelegate
                 
                 //print("i: \(i) \(usbdata[i])")
              }
-             print("usbdata: \(usbdata)\n") // d: [0, 9, 56, 0, 0,...
+             //print("usbdata: \(usbdata)\n") // d: [0, 9, 56, 0, 0,...
              var NotificationDic = [String:Int]()
              
              let abschnittfertig:UInt8 =   usbdata[0] // code vom teensy
              // https://useyourloaf.com/blog/swift-string-cheat-sheet/
              let home = Int(usbdata[13])
              let anschlagcheck = Int(usbdata[9])
-              print("VC newDataAktion abschnittfertig abschnittfertig: \(hex(abschnittfertig)) anschlagcheck: \(anschlagcheck)")
+             // print("VC newDataAktion abschnittfertig abschnittfertig: \(hex(abschnittfertig)) anschlagcheck: \(anschlagcheck)")
              NotificationDic["abschnittfertig"] = Int(abschnittfertig)
              let pfeiltastenrichtung = Int(usbdata[29])
 
@@ -1269,7 +1290,7 @@ class rViewController: NSViewController, NSWindowDelegate
              
              if abschnittfertig >= 0x80 // Code fuer Fertig: AD
              {
-                print("VC newDataAktion abschnittfertig > 80")
+                //print("VC newDataAktion abschnittfertig > 80")
                 let Abschnittnummer = Int(usbdata[5])
                 NotificationDic["inposition"] = Int(Abschnittnummer)
                 let ladePosition = Int(usbdata[6])
@@ -1736,34 +1757,61 @@ class rViewController: NSViewController, NSWindowDelegate
                if AnschlagSet.contains(Int(abschnittfertig))
                 {
                   let abschnittfertighex = String(format:"%02X", abschnittfertig)
-                   print("VC AnschlagSet contains abschnittfertig: \(abschnittfertig)  \(abschnittfertighex)")
-                   //teensy.DC_pwm(0)
-   //                AVR?.setBusy(0)
-    //               teensy.read_OK = false
-                }
+                  print("VC AnschlagSet contains abschnittfertig: \(abschnittfertig)  \(abschnittfertighex)")
+                  //teensy.DC_pwm(0)
+                  //                AVR?.setBusy(0)
+                  //               teensy.read_OK = false
+               }
                 else
                 {
                    if HomeIndexSet.contains(Int(abschnittfertig))
                    {
                       print("HomeIndexSet contains abschnittfertig")
+                      if HomeAnschlagSet.contains(0xB5)
+                      {
+                         print("VC HomeAnschlagSet contains 0xB5")
+                      }
+                      if HomeAnschlagSet.contains(0xB6)
+                      {
+                         print("VC HomeAnschlagSet contains 0xB6")
+                      }
+                      
+                      if HomeAnschlagSet.contains(0xB7)
+                      {
+                         print("VC HomeAnschlagSet contains 0xB7")
+                      }
+                      
+                      if HomeAnschlagSet.contains(0xB8)
+                      {
+                         print("VC HomeAnschlagSet contains 0xB8")
+                      }
+                      
                       if HomeAnschlagSet.count == 1
                       {
-                         print("HomeAnschlagSet.count == 1")
+                         print("VC HomeAnschlagSet.count == 1")
                          HomeIndexCounter = 2
                       }
                       else if HomeAnschlagSet.count == 4
                       {
-                         print("HomeAnschlagSet.count == 4")
+                         print("VC HomeAnschlagSet.count == 4")
                          AVR?.setBusy(0)
                          AVR?.dc_(on: 0);
                          //DC_Aktion(pwm:0)
                          teensy.stop_timer()
+                         let warnung = NSAlert.init()
+                         warnung.messageText = "Home erreicht"
+                         warnung.addButton(withTitle: "OK")
+                         warnung.runModal()
+                         HomeAnschlagSet.removeAll()
+              
+                         
                          
                       }
                       else if HomeIndexCounter == 2
                       {
-                         print("home == 2")
+                         print("VC home == 2")
                          HomeIndexCounter = 3
+                         
                          AVR?.homeSenkrechtSchicken()
                       }
                    }

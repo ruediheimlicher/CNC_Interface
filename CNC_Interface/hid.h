@@ -7,12 +7,15 @@ extern int rawhid_status(void);
 extern int get_hid_usbstatus(void);
 extern int usb_present(void);
 extern int findHIDDevicesWithVendorID(uint32_t vendorID);
+extern int findHIDDevicesWithVendorAndProductID(uint32_t vendorID , uint32_t productID);
+extern int findHIDDeviceWithVendorID(uint32_t vendorID);
 
+extern void deviceAddedCallback(void *refCon, io_iterator_t iterator);
 extern const char* get_manu(void);
 extern const char* get_prod(void);
 extern int getX(void);
 extern void  free_all_hid(void);
-
+extern int rawhid_init(uint vendor_ID);
 extern const int BufferSize(void);
 
 

@@ -24,6 +24,9 @@
 
 #define BUFFER_SIZE 64
 
+#define PRODUCT_ID 0x486
+#define VENDOR_ID 0x16C0
+
 //#define printf(...) // comment this out to get lots of info printed
 
 static IONotificationPortRef    gNotifyPort;
@@ -56,6 +59,9 @@ struct buffer_struct {
 	uint8_t buf[BUFFER_SIZE];
 };
 
+uint product_ID = PRODUCT_ID;
+
+uint vendor_ID = VENDOR_ID;
 int hid_usbstatus=0;
 int rawhid_recv(int num, void *buf, int len, int timeout);
 
@@ -70,9 +76,146 @@ static void detach_callback(void *, IOReturn, void *hid_mgr, IOHIDDeviceRef dev)
 static void timeout_callback(CFRunLoopTimerRef, void *);
 static void input_callback(void *, IOReturn, void *, IOHIDReportType,uint32_t, uint8_t *, CFIndex);
 
+IOHIDManagerRef hidManager;
+
 const int BufferSize(void)
 {
    return BUFFER_SIZE;
+}
+
+int rawhid_init(uint vendor_ID)
+{
+   fprintf(stderr,"rawhid_init \n");
+   hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
+   if (hidManager == NULL) {
+      printf("Failed to create HID Manager\n");
+      return -1;
+   }
+   if (CFGetTypeID(hidManager) != IOHIDManagerGetTypeID()) {
+      printf("Failed to create HID Manager.\n");
+      return -2;
+   }
+   // Create a matching dictionary for Vendor ID (and optionally Product ID)
+   CFMutableDictionaryRef matchingDict = CFDictionaryCreateMutable(kCFAllocatorDefault,
+         0,
+         &kCFTypeDictionaryKeyCallBacks,
+         &kCFTypeDictionaryValueCallBacks);
+   if (!matchingDict) 
+   {
+      printf("Failed to create matching dictionary.\n");
+      return -3;
+   }
+   /*
+   CFNumberRef vendorIDRef = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &vendor_ID);
+   CFDictionarySetValue(matchingDict, CFSTR(kIOHIDVendorIDKey), vendorIDRef);
+   CFNumberRef productIDRef = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &product_ID);
+   CFDictionarySetValue(matchingDict, CFSTR(kIOHIDProductIDKey), productIDRef);
+
+   
+   IOHIDManagerSetDeviceMatching(hidManager, matchingDict);
+   
+   CFSetRef deviceSet = IOHIDManagerCopyDevices(hidManager);
+   if (deviceSet == NULL) 
+   {
+      printf("No HID devices found.\n");
+   } 
+   else
+   {
+      CFIndex deviceCount = CFSetGetCount(deviceSet);
+      printf("Found %ld HID devices.\n", deviceCount);
+      
+      IOHIDDeviceRef devices[deviceCount];
+      CFSetGetValues(deviceSet, (const void **)devices);
+      
+      for (CFIndex i = 0; i < deviceCount; i++) 
+      {
+         IOHIDDeviceRef device = devices[i];
+         printf("Device %ld:\n", i + 1);
+         
+         CFTypeRef vendorID = IOHIDDeviceGetProperty(device, CFSTR(kIOHIDVendorIDKey));
+         CFNumberRef numberRef = (CFNumberRef)vendorID;
+         int intValue;
+         
+         if (CFNumberGetValue((CFNumberRef)vendorID, kCFNumberIntType, &intValue))
+         {
+            // Successfully retrieved the integer value
+            printf("vendor ID Integer value: %d\n", intValue);
+         }
+         CFTypeRef productID = IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductIDKey));
+         numberRef = (CFNumberRef)productID;
+         if (CFNumberGetValue(((CFNumberRef)productID), kCFNumberIntType, &intValue))
+         {
+            // Successfully retrieved the integer value
+            printf("product ID Integer value: %d\n", intValue);
+         }
+         
+        }// for
+      
+      CFRelease(deviceSet);
+ 
+   }
+   // Cleanup
+   CFRelease(vendorIDRef);
+   CFRelease(productIDRef);
+   CFRelease(matchingDict);
+   //IOHIDManagerClose(hidManager, kIOHIDOptionsTypeNone);
+   //CFRelease(hidManager);
+
+   */
+   
+   
+   return 1;
+}
+
+int rawhid_startcallback(void)
+{
+   // register callback
+   // Create a matching dictionary for HID devices
+   CFMutableDictionaryRef matchingDict = IOServiceMatching(kIOHIDDeviceKey);
+    
+   if (!matchingDict) 
+   
+   {
+         fprintf(stderr, "Failed to create matching dictionary\n");
+         return EXIT_FAILURE;
+     }
+   // Set up a notification port
+    IONotificationPortRef notificationPort = IONotificationPortCreate(kIOMasterPortDefault);
+    if (!notificationPort) {
+        fprintf(stderr, "Failed to create notification port\n");
+        return EXIT_FAILURE;
+    }
+   // Run loop source for notifications
+    CFRunLoopSourceRef runLoopSource = IONotificationPortGetRunLoopSource(notificationPort);
+    CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, kCFRunLoopDefaultMode);
+
+   // Register for device matching notifications
+    io_iterator_t addedIter;
+    kern_return_t result = IOServiceAddMatchingNotification(
+        notificationPort,
+        kIOFirstMatchNotification,
+        matchingDict,
+        deviceAddedCallback,
+        NULL,
+        &addedIter
+    );
+
+   if (result != KERN_SUCCESS) {
+        fprintf(stderr, "Failed to register matching notification\n");
+        IONotificationPortDestroy(notificationPort);
+        return EXIT_FAILURE;
+    }
+
+   // Handle any devices already present
+    deviceAddedCallback(NULL, addedIter);
+
+   // Run the run loop to wait for device insertion
+    printf("Waiting for USB HID devices to be inserted...\n");
+    CFRunLoopRun();
+
+
+   
+   return 0;
 }
 
 
@@ -556,6 +699,7 @@ static void attach_callback(void *context, IOReturn r, void *hid_mgr, IOHIDDevic
 {
    struct hid_struct *h;
    
+   
 	fprintf(stderr,"*** hid attach_callback\n");
    //
 	if (IOHIDDeviceOpen(dev, kIOHIDOptionsTypeNone) != kIOReturnSuccess) 
@@ -563,6 +707,7 @@ static void attach_callback(void *context, IOReturn r, void *hid_mgr, IOHIDDevic
       fprintf(stderr,"hid attach callback not kIOReturnSuccess\n");
       return;
    }
+   
 	h = (hid_t *)malloc(sizeof(hid_t));
 	if (!h) 
    {
@@ -651,6 +796,8 @@ int check_usb_attach(void)
    return 0;
 }
 
+
+
 int findHIDDevicesWithVendorID(uint32_t vendorID) 
 {
    int anzahl = 0;
@@ -686,11 +833,16 @@ int findHIDDevicesWithVendorID(uint32_t vendorID)
    CFSetRef deviceSet = IOHIDManagerCopyDevices(hidManager);
    if (!deviceSet) {
       printf("No devices found for Vendor ID: %u\n", vendorID);
-   } else {
+   } 
+   else 
+   {
       CFIndex deviceCount = CFSetGetCount(deviceSet);
       printf("Found %ld devices with Vendor ID: %u\n", deviceCount, vendorID);
       anzahl++;
+      
       return anzahl;
+      
+      
       IOHIDDeviceRef *deviceArray = malloc(deviceCount * sizeof(IOHIDDeviceRef));
       CFSetGetValues(deviceSet, (const void **)deviceArray);
       
@@ -716,8 +868,169 @@ int findHIDDevicesWithVendorID(uint32_t vendorID)
    CFRelease(vendorIDRef);
    CFRelease(matchingDict);
    CFRelease(hidManager);
-   return -1;
+   return anzahl;
 }
+
+
+int findHIDDevicesWithVendorAndProductID(uint32_t vendorID , uint32_t productID) 
+{
+    // Create a matching dictionary for HID devices
+   int anzahl = 0;
+    CFMutableDictionaryRef matchingDict = IOServiceMatching(kIOHIDDeviceKey);
+    if (!matchingDict) {
+        fprintf(stderr, "Failed to create matching dictionary.\n");
+        return -1;
+    }
+
+    // Add VendorID to the dictionary
+    CFNumberRef vendorIDRef = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &vendorID);
+    CFDictionarySetValue(matchingDict, CFSTR(kIOHIDVendorIDKey), vendorIDRef);
+    CFRelease(vendorIDRef);
+
+    // Add ProductID to the dictionary
+    CFNumberRef productIDRef = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &productID);
+    CFDictionarySetValue(matchingDict, CFSTR(kIOHIDProductIDKey), productIDRef);
+    CFRelease(productIDRef);
+
+    // Get a list of devices that match the criteria
+    io_iterator_t iterator;
+    kern_return_t result = IOServiceGetMatchingServices(kIOMasterPortDefault, matchingDict, &iterator);
+
+    if (result != KERN_SUCCESS) {
+        fprintf(stderr, "Failed to get matching services: %x\n", result);
+        return -1;
+    }
+
+    // Iterate through matching devices
+    io_object_t device;
+   
+    while ((device = IOIteratorNext(iterator))) {
+        // Fetch device properties
+        CFStringRef productName = IORegistryEntryCreateCFProperty(device, CFSTR(kIOHIDProductKey), kCFAllocatorDefault, 0);
+        if (productName) 
+        {
+           anzahl++;
+            char name[256];
+            CFStringGetCString(productName, name, sizeof(name), kCFStringEncodingUTF8);
+            printf("Found Device: %s\n", name);
+            CFRelease(productName);
+        }
+
+        // Release the device
+        IOObjectRelease(device);
+    }
+
+    // Release the iterator
+    IOObjectRelease(iterator);
+   return anzahl;
+}
+
+int findHIDDeviceWithVendorID(uint32_t vendorID) 
+{
+   int productID = 0;
+    // Create a HID device manager
+    IOHIDManagerRef manager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
+    if (!manager) 
+    {
+        fprintf(stderr, "Failed to create HID Manager\n");
+        return -1;
+    }
+
+    // Create a matching dictionary for devices with the given vendor ID
+    CFMutableDictionaryRef matchingDict = CFDictionaryCreateMutable(
+        kCFAllocatorDefault,
+        0,
+        &kCFTypeDictionaryKeyCallBacks,
+        &kCFTypeDictionaryValueCallBacks
+    );
+
+    if (!matchingDict) {
+        fprintf(stderr, "Failed to create matching dictionary\n");
+        CFRelease(manager);
+        return -1;
+    }
+
+    // Add the vendor ID to the matching dictionary
+    CFNumberRef vendorIDRef = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &vendorID);
+    CFDictionarySetValue(matchingDict, CFSTR(kIOHIDVendorIDKey), vendorIDRef);
+    CFRelease(vendorIDRef);
+
+    // Set the HID Manager to search with the matching dictionary
+    IOHIDManagerSetDeviceMatching(manager, matchingDict);
+    CFRelease(matchingDict);
+
+    // Copy all matching devices
+    CFSetRef deviceSet = IOHIDManagerCopyDevices(manager);
+    if (!deviceSet) {
+        fprintf(stderr, "No devices found for vendor ID: %u\n", vendorID);
+        CFRelease(manager);
+        return -1;
+    }
+
+    // Iterate through the matching devices
+    CFIndex deviceCount = CFSetGetCount(deviceSet);
+    if (deviceCount == 0) {
+        fprintf(stderr, "No devices found for vendor ID: %u\n", vendorID);
+        CFRelease(deviceSet);
+        CFRelease(manager);
+        return -1;
+    }
+
+    printf("Devices found for vendor ID: %u\n", vendorID);
+  
+    IOHIDDeviceRef *devices = (IOHIDDeviceRef *)malloc(deviceCount * sizeof(IOHIDDeviceRef));
+    CFSetGetValues(deviceSet, (const void **)devices);
+   int anzahl = 0;
+    for (CFIndex i = 0; i < deviceCount; i++) {
+        IOHIDDeviceRef device = devices[i];
+       anzahl++;
+        // Get the product ID
+        CFTypeRef productIDRef = IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductIDKey));
+        if (productIDRef && CFGetTypeID(productIDRef) == CFNumberGetTypeID()) {
+            
+            CFNumberGetValue((CFNumberRef)productIDRef, kCFNumberIntType, &productID);
+            printf("Device %ld: Product ID = %d\n", i + 1, productID);
+        } 
+        else 
+        {
+            printf("Device %ld: Product ID not available\n", i + 1);
+        }
+    }
+
+    free(devices);
+    CFRelease(deviceSet);
+    CFRelease(manager);
+   return productID;
+}
+
+// Callback function when a matching device is detected
+void deviceAddedCallback(void *refCon, io_iterator_t iterator) 
+{
+    io_service_t device;
+    while ((device = IOIteratorNext(iterator))) {
+        printf("USB HID device inserted.\n");
+
+        // Fetch vendor and product IDs as an example
+        CFNumberRef vendorIDRef = (CFNumberRef)IORegistryEntryCreateCFProperty(device, CFSTR(kIOHIDVendorIDKey), kCFAllocatorDefault, 0);
+        CFNumberRef productIDRef = (CFNumberRef)IORegistryEntryCreateCFProperty(device, CFSTR(kIOHIDProductIDKey), kCFAllocatorDefault, 0);
+
+        if (vendorIDRef && productIDRef) {
+            int vendorID, productID;
+            CFNumberGetValue(vendorIDRef, kCFNumberIntType, &vendorID);
+            CFNumberGetValue(productIDRef, kCFNumberIntType, &productID);
+
+            printf("Detected device: Vendor ID = 0x%04x, Product ID = 0x%04x\n", vendorID, productID);
+        }
+
+        if (vendorIDRef) CFRelease(vendorIDRef);
+        if (productIDRef) CFRelease(productIDRef);
+
+        // Release the device object
+        IOObjectRelease(device);
+    }
+   
+}
+
 
 
 int usb_present(void)
@@ -725,7 +1038,8 @@ int usb_present(void)
    printf("hid usb_present\n");
    int vid = 0x16C0;
    int pid = 0x486;
-   return findHIDDevicesWithVendorID(vid);
+   //return findHIDDevicesWithVendorID(vid);
+   return findHIDDevicesWithVendorAndProductID(vid,pid);
    
    CFMutableDictionaryRef matchingDict;
    io_iterator_t iter;
@@ -865,3 +1179,5 @@ int usb_present(void)
    IOObjectRelease(iter);
    return anzahl;
 }
+
+

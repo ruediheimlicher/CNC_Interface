@@ -3298,7 +3298,7 @@ return returnInt;
           }
 
           float cosdegree = acosf(cos)/M_PI*180;
-          fprintf(stderr,"i: %d +++   +++   +++   \t cos: %.3f  arccos: %.3f cosdegree:\t %.2f\n",i,cos,acosf(cos),cosdegree);
+          //fprintf(stderr,"i: %d +++   +++   +++   \t cos: %.3f  arccos: %.3f cosdegree:\t %.2f\n",i,cos,acosf(cos),cosdegree);
 
           //if(fabs(cos) > 0.98)
           
@@ -3306,7 +3306,7 @@ return returnInt;
          if((cos < 0.2) )
 
           {
-             fprintf(stderr,"i: %d +++   +++   ***   ***   \t wendepunkt cos: %.3f  arccos: %.3f cosdegree:\t %.2f\n",i,cos,acosf(cos),cosdegree);
+             //fprintf(stderr,"i: %d +++   +++   ***   ***   \t wendepunkt cos: %.3f  arccos: %.3f cosdegree:\t %.2f\n",i,cos,acosf(cos),cosdegree);
              tempschnittdatenarray[i][35] = [NSNumber numberWithInt:1];
           }
   //        fprintf(stderr,"i: %d cos: %.3f  arccos: %.3f cosdegree:\t %.2f\n",i,cos,acosf(cos),cosdegree);
@@ -11204,7 +11204,7 @@ return returnInt;
    float einstichy = 4;
    float plattendicke = 50;
    
-   float profilrandy = 5; // sicherheitsschnitt am Profilrand
+   float profilrandy = 3; // sicherheitsschnitt am Profilrand
    
    
    float maxx=0,minx=MAXFLOAT; // Startwerte fuer Suche nach Rand
@@ -11555,7 +11555,7 @@ return returnInt;
    float einstichy = 4;
    float plattendicke = 50;
    
-   float profilrandy = 5; // sicherheitsschnitt am Profilrand
+   float profilrandy = 3; // sicherheitsschnitt am Profilrand
    
    
    float maxx=0,minx=MAXFLOAT; // Startwerte fuer Suche nach Rand
@@ -13928,7 +13928,7 @@ return returnInt;
 {
    // von ManFeldRichtung left
    NSDictionary* outletdaten = [rHotwireViewController cncoutletdaten];
-   NSLog(@"home_Horizontal outletdaten: %@",outletdaten);
+   //NSLog(@"home_Horizontal outletdaten: %@",outletdaten);
    int zoomfaktor=1.0;
    int code=0;
    int i=0;
@@ -13961,8 +13961,8 @@ return returnInt;
    // von reportOberkanteAnfahren
    
    NSMutableArray* HomeSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
-   int lastSpeed = [CNC speed];
-   [CNC setredpwm:[red_pwmFeld floatValue]];
+
+  // [CNC setredpwm:[red_pwmFeld floatValue]];
    int homecode=0xF0;
    
    NSPoint tempStartPunktA= NSMakePoint([[[AnfahrtArray objectAtIndex:i]objectForKey:@"ax"]floatValue]*zoomfaktor,[[[AnfahrtArray objectAtIndex:i]objectForKey:@"ay"]floatValue]*zoomfaktor);
@@ -14011,6 +14011,7 @@ return returnInt;
 
    int position=0;
    position |= (1<<FIRST_BIT);
+   
    position |= (1<<LAST_BIT);
    
    
@@ -14024,7 +14025,7 @@ return returnInt;
    
    [HomeSchnittdatenArray addObject:[self Tool_SchnittdatenVonDic:tempSteuerdatenDic]];
 
-   NSLog(@"AVR  reportHome HomeSchnittdatenArray: %@",[HomeSchnittdatenArray[0] description]);
+   //NSLog(@"AVR  reportHome HomeSchnittdatenArray: %@",[HomeSchnittdatenArray[0] description]);
    
    HomeSchnittdatenArray[i][24] = [NSNumber numberWithInt:homecode];
    HomeSchnittdatenArray[i][26] = [NSNumber numberWithInt:micro]; // home
@@ -14037,7 +14038,7 @@ return returnInt;
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:3] forKey:@"richtung"];
    
-   NSLog(@"AVR  home_horizontal HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
+   //NSLog(@"AVR  home_horizontal HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"art"]; //
 
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -14272,7 +14273,7 @@ return returnInt;
 {
    NSLog(@"\n\n*****************  AVR  homeSenkrechtSchicken");
     NSDictionary* outletdaten = [rHotwireViewController cncoutletdaten];
-    NSLog(@"homeSenkrechtSchicken outletdaten: %@",outletdaten);
+    //NSLog(@"homeSenkrechtSchicken outletdaten: %@",outletdaten);
     
     boardindex = [outletdaten[@"boardindex"]integerValue];
     speed = [outletdaten[@"speed"]integerValue];

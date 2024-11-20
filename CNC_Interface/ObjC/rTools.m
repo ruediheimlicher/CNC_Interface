@@ -428,7 +428,7 @@
    [tempDatenDic setObject:[NSNumber numberWithFloat:(float)SchritteAX] forKey: @"schritteax"];
    [tempDatenDic setObject:[NSNumber numberWithFloat:(float)SchritteBX] forKey: @"schrittebx"];
 
-    NSLog(@"SchritteX raw %d",SchritteX);
+    //NSLog(@"SchritteX raw %d",SchritteX);
     
     int SchritteY=steps*DistanzY;    //    Schritte in Y-Richtung
     int SchritteAY=steps*DistanzAY;    //    Schritte in Y-Richtung A
@@ -445,7 +445,7 @@
     [tempDatenDic setObject:[NSNumber numberWithFloat:(float)SchritteBY] forKey: @"schritteby"];
    
     
-   NSLog(@"SchritteY raw %d",SchritteY);
+   //NSLog(@"SchritteY raw %d",SchritteY);
     
     if (SchritteX < 0) // negative Zahl
     {

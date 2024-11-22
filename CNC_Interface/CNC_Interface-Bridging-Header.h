@@ -23,3 +23,5 @@
 #include <IOKit/IOKitLib.h>
 #include <IOKit/usb/IOUSBLib.h>
 #include <IOKit/hid/IOHIDKeys.h>
+
+#import <IOKit/hid/IOHIDManager.h>

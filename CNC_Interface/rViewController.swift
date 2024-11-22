@@ -310,7 +310,7 @@ class rViewController: NSViewController, NSWindowDelegate
       formatter.minimumIntegerDigits = 1
       
       
-   
+  
       
       
       
@@ -445,6 +445,11 @@ class rViewController: NSViewController, NSWindowDelegate
          popindex += 1
       }
       
+ //     let callbackreturn = teensy.USBInit(VID: 0x16C0)
+ //       print("VC viewDidAppear callbackreturn: \(callbackreturn)")
+      
+      startHIDManager()
+      
       var teensypresent:Int32 = 0
       teensypresent = teensy.dev_present()
       
@@ -453,13 +458,11 @@ class rViewController: NSViewController, NSWindowDelegate
       
       //attachstatus = Attach_USB()
      
-     // let callbackreturn = teensy.USBInit(VID: 0x16C0)
-    //  print("VC viewDidAppear callbackreturn: \(callbackreturn)")
-      //let teensypresentnach = teensy.dev_present()
+        //let teensypresentnach = teensy.dev_present()
       
     //  print("VC viewDidAppear teensypresent nach attatch: \(teensypresent)")
      
-      if (teensypresent == 0) // Noch nichts eingesteckt
+      if (teensypresent == -1) // Noch nichts eingesteckt
       {
          // USB_OK.stringValue = "-"
          USB_OK_Feld.image = notokimage
@@ -467,7 +470,7 @@ class rViewController: NSViewController, NSWindowDelegate
          warnung.messageText = "USB"
          warnung.messageText = "viewDidAppear: Kein USB-Device"
          warnung.addButton(withTitle: "OK")
-   //      warnung.runModal()
+         warnung.runModal()
 
          userinformation = ["message":"usb", "usbstatus": 0, "boardindex" :boardindex] as [String : Any]
 
@@ -479,7 +482,7 @@ class rViewController: NSViewController, NSWindowDelegate
       }
       else // teensy eingesteckt, init
       {
-         attachstatus = Attach_USB()
+        // attachstatus = Attach_USB()
       }
       print("viewDidAppear nach attachUSB attachstatus: \(attachstatus)")
       /*
@@ -2464,11 +2467,12 @@ class rViewController: NSViewController, NSWindowDelegate
    @objc func Attach_USB() -> Int
    {
       var usb_return = 0
-      var present = teensy.dev_present()
+      //var present = teensy.dev_present()
       var hidstatus = teensy.status()
       let nc = NotificationCenter.default
       var userinformation:[String : Any]
-      print("Attatch_USB  usbstatus vor check: \(usbstatus) hidstatus: \(hidstatus) present: \(present) ")
+      print("Attatch_USB  usbstatus vor check: \(usbstatus) hidstatus: \(hidstatus) ")
+      
       
  
       //present = 1;
@@ -2487,7 +2491,7 @@ class rViewController: NSViewController, NSWindowDelegate
          usb_return = 2
          
       }
-      else  if (present > 0)
+      else  //if (present > 0)
                
       {
          let warnung = NSAlert.init()
@@ -2545,6 +2549,7 @@ class rViewController: NSViewController, NSWindowDelegate
          }
       }
       
+      /*
       else
       {
          let    out = rawhid_open(1,  0, 0, 0xFFAB, 0x0200)
@@ -2570,7 +2575,7 @@ class rViewController: NSViewController, NSWindowDelegate
                  userInfo: userinformation)
          
       }
-      
+      */
         
       return usb_return;
       

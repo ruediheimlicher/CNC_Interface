@@ -169,6 +169,7 @@ int rawhid_init(uint vendor_ID)
 
 int rawhid_startcallback(void)
 {
+   printf("rawhid_startcallback\n");
    // register callback
    // Create a matching dictionary for HID devices
    CFMutableDictionaryRef matchingDict = IOServiceMatching(kIOHIDDeviceKey);

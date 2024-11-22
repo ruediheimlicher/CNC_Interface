@@ -18,11 +18,136 @@ let BUFFER_SIZE:Int   = Int(BufferSize())
 
 var new_Data:ObjCBool = false
 
-class rTimerInfo {
-    var count = 0
+let VID:Int = 0x16C0
+
+// Create a global variable for the HID Manager
+var hidManager: IOHIDManager?
+
+
+// Start listening to HID devices
+func startHIDManager() 
+{
+    // Create an IOHIDManager instance
+    hidManager = IOHIDManagerCreate(kCFAllocatorDefault, IOOptionBits(kIOHIDOptionsTypeNone))
+    guard let manager = hidManager else {
+        print("Failed to create IOHIDManager.")
+        return
+    }
+
+    // Match all HID devices (you can filter by vendor/product ID)
+    let matchingDict: [String: Any] = [:] // Empty matches all devices
+    IOHIDManagerSetDeviceMatching(manager, matchingDict as CFDictionary)
+
+    // Register a callback for detecting input reports
+    IOHIDManagerRegisterInputValueCallback(manager, inputReportCallback, nil)
+
+    // Register a callback for device connection events
+    IOHIDManagerRegisterDeviceMatchingCallback(manager, deviceConnectedCallback, nil)
+
+    // Register a callback for device disconnection events
+    IOHIDManagerRegisterDeviceRemovalCallback(manager, deviceDisconnectedCallback, nil)
+
+    // Schedule the HID manager on the main run loop
+    IOHIDManagerScheduleWithRunLoop(manager, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue)
+
+    // Open the HID manager
+//    let result = IOHIDManagerOpen(manager, IOOptionBits(kIOHIDOptionsTypeNone))
+ //   if result != kIOReturnSuccess 
+//   {
+//        print("Failed to open IOHIDManager: \(result)")
+ //       return
+ //   }
+
+    print("HID Manager started. Listening for devices...")
+
+    // Run the main loop to keep the program alive
+   // CFRunLoopRun() 
+   return
+}
+
+func getVendorID(device: IOHIDDevice) -> Int? {
+    // Get the property as CFTypeRef
+    if let vendorIDRef = IOHIDDeviceGetProperty(device, kIOHIDVendorIDKey as CFString) 
+   {
+        // Convert to Int if it is a CFNumber
+        var vendorID: Int32 = 0
+        if CFGetTypeID(vendorIDRef) == CFNumberGetTypeID(),
+           CFNumberGetValue((vendorIDRef as! CFNumber), .sInt32Type, &vendorID) 
+       {
+            return Int(vendorID)
+        }
+    }
+    return nil
+}
+
+func getProductID(device: IOHIDDevice) -> Int? {
+    // Get the property as CFTypeRef
+    if let productIDRef = IOHIDDeviceGetProperty(device, kIOHIDProductIDKey as CFString) 
+   {
+        // Convert to Int if it is a CFNumber
+        var productID: Int32 = 0
+        if CFGetTypeID(productIDRef) == CFNumberGetTypeID(),
+           CFNumberGetValue((productIDRef as! CFNumber), .sInt32Type, &productID) 
+       {
+            return Int(productID)
+        }
+    }
+    return nil
 }
 
 
+// Callback: Called when a device is connected
+func deviceConnectedCallback(context: UnsafeMutableRawPointer?, result: IOReturn, sender: UnsafeMutableRawPointer?, device: IOHIDDevice)
+{
+   if let vendorID = getVendorID(device: device),
+       let productID = getProductID(device: device)
+  
+   {
+      // print("Vendor ID: \(vendorID)")       
+       if vendorID   == VID
+      {
+          print("deviceConnectedCallback Vendor ID : \(vendorID) productID: \(productID)")
+          if let productName = IOHIDDeviceGetProperty(device, kIOHIDProductKey as CFString) as? String 
+          {
+             print("Product Name: \(productName)")
+          }
+          let openerfolg = rawhid_open(1, Int32(vendorID) , Int32(productID), 0xFFAB, 0x0200)
+          print("deviceConnectedCallback openerfolg: \(openerfolg)")
+          
+          
+       }
+    }
+}
+
+// Callback: Called when a device is disconnected
+func deviceDisconnectedCallback(context: UnsafeMutableRawPointer?, result: IOReturn, sender: UnsafeMutableRawPointer?, device: IOHIDDevice) {
+    print("deviceConnectedCallback Device disconnected: \(device)")
+}
+
+// Callback: Called when an input report is received
+func inputReportCallback(context: UnsafeMutableRawPointer?, result: IOReturn, sender: UnsafeMutableRawPointer?, value: IOHIDValue) {
+   // Get the device associated with this report
+   //guard let device = IOHIDValueGetDevice(value) else { return }
+   
+   // Get the element (control/input field) generating the report
+   let element = IOHIDValueGetElement(value)
+   
+   // Get the value from the report
+   let intValue = IOHIDValueGetIntegerValue(value)
+   print("Input  Element \(String(describing: element)), Value \(intValue)")
+
+   //print("Input from device \(device): Element \(String(describing: element)), Value \(intValue)")
+   
+}
+
+
+
+// HID
+
+class rTimerInfo 
+{
+    var count = 0
+}
 
 
  @objc class usb_teensy: NSObject
@@ -65,6 +190,7 @@ class rTimerInfo {
      // print("usb init return: \(initreturn)") 
       
    }
+    
     
     
     
@@ -160,6 +286,7 @@ class rTimerInfo {
        return out;
     } // end USBOpen
    
+    
    open func manufactorer()->String?
    {
       return manustring
@@ -194,10 +321,10 @@ class rTimerInfo {
       
       //let anz = findHIDDevicesWithVendorAndProductID(vid,pid);
       
-      let anz = findHIDDeviceWithVendorID(vid);
+      let productID = findHIDDeviceWithVendorID(vid);
       
-      print("dev_present anzahl: \(anz)")
-      return anz;
+      print("dev_present productID: \(productID)")
+      return productID;
      // return usb_present()
    }
    

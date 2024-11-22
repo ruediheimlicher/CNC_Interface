@@ -30,5 +30,7 @@
 	<string>Main</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSInputMonitoringUsageDescription</key>
+	<string>Need to access HID devices for input reports.</string>
 </dict>
 </plist>

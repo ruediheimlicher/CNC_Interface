@@ -4976,6 +4976,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
    }
 
    
+   
    override func viewDidAppear()
    {
       print ("Hotwire viewDidAppear new")
@@ -5068,8 +5069,9 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
 
        NotificationCenter.default.addObserver(self, selector:#selector(usbstatusAktion(_:)),name:NSNotification.Name(rawValue: "usb_status"),object:nil)
 
-  //     NotificationCenter.default.addObserver(self, selector:#selector(PfeilAktion(_:)),name:NSNotification.Name(rawValue: "pfeil"),object:nil)
-
+ 
+ 
+      
        NotificationCenter.default.addObserver(self, selector:#selector(PfeilFeldAktion(_:)),name:NSNotification.Name(rawValue: "pfeilfeld"),object:nil)
 
        NotificationCenter.default.addObserver(self, selector:#selector(MausKlickAktion(_:)),name:NSNotification.Name(rawValue: "mausklick"),object:nil)
@@ -5474,7 +5476,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       
    }//viewDidLoad
     
-      
+
    
    @IBAction func reportPWM_Slider(_ sender: NSSlider)
    {

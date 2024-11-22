@@ -340,7 +340,9 @@ class rViewController: NSViewController, NSWindowDelegate
       
       loadcounter += 1
       
-      
+      NotificationCenter.default.addObserver(self, selector:#selector(HIDInputReportReceivedAktion(_:)),name:NSNotification.Name(rawValue: "HIDInputReportReceived"),object:nil)
+
+       
       NotificationCenter.default.addObserver(self, selector:#selector(joystickAktion(_:)),name:NSNotification.Name(rawValue: "joystick"),object:nil)
       
       NotificationCenter.default.addObserver(self, selector:#selector(tabviewAktion(_:)),name:NSNotification.Name(rawValue: "tabview"),object:nil)
@@ -429,38 +431,15 @@ class rViewController: NSViewController, NSWindowDelegate
     override func viewDidAppear() 
    {
       USB_OK_Feld.image = notokimage
-      let nc = NotificationCenter.default
-      var userinformation:[String : Any]
+      
       teensyboardarray.append(["titel":TEENSY2_TITLE,"PID":TEENSY2_PID,"VID":TEENSY2_VID])
       teensyboardarray.append(["titel":TEENSY3_TITLE,"PID":TEENSY3_PID,"VID":TEENSY3_VID])
-      
-      print("teensyboardarray: \(teensyboardarray)")
-      
-      BoardPop.removeAllItems()
-      var popindex = 0
-      for boarditem in teensyboardarray
-      {
-         let temptitel = teensyboardarray[popindex]["titel"] as! String
-         BoardPop.addItem(withTitle: teensyboardarray[popindex]["titel"] as! String)
-         popindex += 1
-      }
-      
- //     let callbackreturn = teensy.USBInit(VID: 0x16C0)
- //       print("VC viewDidAppear callbackreturn: \(callbackreturn)")
       
       startHIDManager()
       
       var teensypresent:Int32 = 0
       teensypresent = teensy.dev_present()
       
-  //    print("VC viewDidAppear teensypresent vor attatch: \(teensypresent)")
-      var attachstatus = 0
-      
-      //attachstatus = Attach_USB()
-     
-        //let teensypresentnach = teensy.dev_present()
-      
-    //  print("VC viewDidAppear teensypresent nach attatch: \(teensypresent)")
      
       if (teensypresent == -1) // Noch nichts eingesteckt
       {
@@ -472,89 +451,17 @@ class rViewController: NSViewController, NSWindowDelegate
          warnung.addButton(withTitle: "OK")
          warnung.runModal()
 
-         userinformation = ["message":"usb", "usbstatus": 0, "boardindex" :boardindex] as [String : Any]
-
+    
          USB_OK_Feld.image = notokimage
          globalusbstatus = 0
          USBKontrolle.stringValue="USB OFF"
 
          
       }
-      else // teensy eingesteckt, init
-      {
-        // attachstatus = Attach_USB()
-      }
-      print("viewDidAppear nach attachUSB attachstatus: \(attachstatus)")
-      /*
-      else
-      {
-         let warnung = NSAlert.init()
-         warnung.messageText = "USB"
-         warnung.messageText = "Start: Kein USB-Device"
-         warnung.addButton(withTitle: "OK")
-         warnung.runModal()
- 
-      }
-       */
-      self.view.window?.delegate = self //as? NSWindowDelegate 
-      
-      //let boardarray:NSArray = BoardPop.itemTitles as NSArray
-      /*
-      let warnung = NSAlert.init()
-      warnung.messageText = "Welches Board?"
-      let boardarray = BoardPop.itemTitles
-      for titel in boardarray
-      {
-         //let buttonstring = titel
-         warnung.addButton(withTitle: titel)
-      }
-      warnung.addButton(withTitle: "cancel")
-      let devicereturn  = warnung.runModal().rawValue
-      boardindex = devicereturn-1000
-      
-      print("boardindex: \(boardindex) devicereturn: \(devicereturn)")
-      */
-      
+        self.view.window?.delegate = self //as? NSWindowDelegate 
+       
       self.view.window?.makeKey()
-      
-      /*
-      if boardindex < teensyboardarray.count
-      {
-         BoardPop.selectItem(at:devicereturn-1000)
-         
-         let teensycode = teensyboardarray[boardindex]
-         
-         let erfolg = teensy.USBOpen(code:teensycode, board: boardindex)
-         usbstatus = Int(Int(erfolg))
-         globalusbstatus = Int(erfolg)
-         print("viewDidAppear erfolg: \(erfolg) usbstatus: \(usbstatus) rawhid_status: \(rawhid_status())")
-         if usbstatus == 1
-         {
-            var timerdic:[String:Any] = [String:Any]()
-            timerdic["home"] = 0
-            
-            let result = teensy.start_read_USB(true, dic:timerdic)
-            print("teensy.read_OK ist \(result)")
-            
-            
-         }
-         else
-         {
-            USB_OK_Feld.image = notokimage
-            globalusbstatus = 0
-            USBKontrolle.stringValue="USB OFF"
-         }
-         
-      }
-      
-      var userinformation:[String : Int]
-      userinformation = [ "usbstatus": usbstatus, "boardindex":boardindex] as [String : Int]
-      print("viewDidAppear userinformation: \(userinformation)")
-      let nc = NotificationCenter.default
-      nc.post(name:Notification.Name(rawValue:"usb_status"),
-              object: nil,
-              userInfo: userinformation)
-      */
+ 
    }
     
    @IBAction func reportKonvexLine(_ sender: NSButton)
@@ -562,6 +469,32 @@ class rViewController: NSViewController, NSWindowDelegate
       print("VCreportKonvexLine")
       
    }
+   
+   
+   @objc func HIDInputReportReceivedAktion(_ notification:Notification)
+   {
+      print("VC HIDInputReportReceivedAktion: \(notification)")
+      let produkt = notification.userInfo?["product"] as! Int
+      let produktInt = Int32(produkt)
+      switch (produktInt)
+      {
+      case TEENSY2_PID:
+         print("HW HIDInputReportReceivedAktion Teensy2")
+         BoardFeld.stringValue = "Teensy2"
+         break
+      case TEENSY3_PID:
+         print("HW HIDInputReportReceivedAktion Teensy3")
+         BoardFeld.stringValue = "Teensy3"
+         break
+      case 0:
+         print("HW HIDInputReportReceivedAktion disconnected")
+         BoardFeld.stringValue = "--"
+      default:
+         BoardFeld.stringValue = "--"
+         break
+      }
+   }
+
     
     @objc func stepsAktion(_ notification:Notification)
         {
@@ -579,7 +512,7 @@ class rViewController: NSViewController, NSWindowDelegate
            micro_Feld.integerValue = micro
         }
 
-    
+     
    func openFile() -> URL? 
    { 
       let myFileDialog = NSOpenPanel() 
@@ -1057,7 +990,7 @@ class rViewController: NSViewController, NSWindowDelegate
          usbstatus = 0
          USBKontrolle.stringValue="USB OFF"
          print("\nViewController usbattachAktion USBREMOVED ")
-         teensy.usb_free()
+  //       teensy.usb_free()
          
          
       }
@@ -2335,6 +2268,7 @@ class rViewController: NSViewController, NSWindowDelegate
       {
          let warnung = NSAlert.init()
          warnung.messageText = "Welches Board?"
+         
          let boardarray = BoardPop.itemTitles 
          for titel in boardarray
          {
@@ -2792,6 +2726,8 @@ class rViewController: NSViewController, NSWindowDelegate
    
    @IBOutlet weak var check_USB_Knopf: NSButton!
    @IBOutlet weak var BoardPop:NSPopUpButton!
+   
+   @IBOutlet weak var BoardFeld: NSTextField!
    
    //@IBOutlet weak var start_read_USB_Knopf: NSButtonCell!
    

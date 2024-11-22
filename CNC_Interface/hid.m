@@ -225,48 +225,48 @@ int rawhid_recv(int num, void *buf, int len, int timeout)
    //fprintf(stderr,"rawhid_recv start len: %d\n",len);
    //fprintf(stderr,"rawhid_recv start \n");
    hid_t *hid;
-	buffer_t *b;
-	CFRunLoopTimerRef timer=NULL;
-	CFRunLoopTimerContext context;
-	int ret=0, timeout_occurred=0;
+   buffer_t *b;
+   CFRunLoopTimerRef timer=NULL;
+   CFRunLoopTimerContext context;
+   int ret=0, timeout_occurred=0;
    
-	if (len < 1) return 0;
-	hid = get_hid(num);
-	if (!hid || !hid->open) return -1;
-	if ((b = hid->first_buffer) != NULL)
+   if (len < 1) return 0;
+   hid = get_hid(num);
+   if (!hid || !hid->open) return -1;
+   if ((b = hid->first_buffer) != NULL)
    {
-		if (len > b->len) len = b->len;
-		memcpy(buf, b->buf, len);
-		hid->first_buffer = b->next;
-		free(b);
-     // fprintf(stderr,"rawhid_recv A len: %d\n\n",len);
-		return len;
-	}
-	memset(&context, 0, sizeof(context));
-	context.info = &timeout_occurred;
-	timer = CFRunLoopTimerCreate(NULL, CFAbsoluteTimeGetCurrent() +(double)timeout / 1000.0, 0, 0, 0, timeout_callback, &context);
-	CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, kCFRunLoopDefaultMode);
-	while (1) {
-		CFRunLoopRun();
-		if ((b = hid->first_buffer) != NULL) {
-			if (len > b->len) len = b->len;
-			memcpy(buf, b->buf, len);
-			hid->first_buffer = b->next;
-			free(b);
-			ret = len;
-			break;
-		}
-		if (!hid->open) {
-			//printf("rawhid_recv, device not open\n");
-			ret = -1;
-			break;
-		}
-		if (timeout_occurred) break;
-	}
-	CFRunLoopTimerInvalidate(timer);
-	CFRelease(timer);
+      if (len > b->len) len = b->len;
+      memcpy(buf, b->buf, len);
+      hid->first_buffer = b->next;
+      free(b);
+      // fprintf(stderr,"rawhid_recv A len: %d\n\n",len);
+      return len;
+   }
+   memset(&context, 0, sizeof(context));
+   context.info = &timeout_occurred;
+   timer = CFRunLoopTimerCreate(NULL, CFAbsoluteTimeGetCurrent() +(double)timeout / 1000.0, 0, 0, 0, timeout_callback, &context);
+   CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, kCFRunLoopDefaultMode);
+   while (1) {
+      CFRunLoopRun();
+      if ((b = hid->first_buffer) != NULL) {
+         if (len > b->len) len = b->len;
+         memcpy(buf, b->buf, len);
+         hid->first_buffer = b->next;
+         free(b);
+         ret = len;
+         break;
+      }
+      if (!hid->open) {
+         //printf("rawhid_recv, device not open\n");
+         ret = -1;
+         break;
+      }
+      if (timeout_occurred) break;
+   }
+   CFRunLoopTimerInvalidate(timer);
+   CFRelease(timer);
    //fprintf(stderr,"rawhid_recv ret: %d\n",ret);
-	return ret;
+   return ret;
    
 }
 
@@ -281,10 +281,7 @@ static void add_hid(hid_t *h)
    //IOHIDDeviceRef* r= &h->ref;
    
    CFTypeRef prod = IOHIDDeviceGetProperty(h->ref, CFSTR(kIOHIDProductKey));
- //  const char* prodstr = CFStringGetCStringPtr(prod, kCFStringEncodingMacRoman);
-//   fprintf(stderr,"prodstr: %s\n",prodstr);
    
-  
    CFTypeRef prop= IOHIDDeviceGetProperty(h->ref,CFSTR(kIOHIDManufacturerKey));
    //CFStringRef manu = (CFStringRef)prop;
 //   const char* manustr = CFStringGetCStringPtr(prop, kCFStringEncodingMacRoman);

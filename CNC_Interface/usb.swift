@@ -29,7 +29,8 @@ func startHIDManager()
 {
     // Create an IOHIDManager instance
     hidManager = IOHIDManagerCreate(kCFAllocatorDefault, IOOptionBits(kIOHIDOptionsTypeNone))
-    guard let manager = hidManager else {
+    guard let manager = hidManager else 
+   {
         print("Failed to create IOHIDManager.")
         return
     }
@@ -50,18 +51,9 @@ func startHIDManager()
     // Schedule the HID manager on the main run loop
     IOHIDManagerScheduleWithRunLoop(manager, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue)
 
-    // Open the HID manager
-//    let result = IOHIDManagerOpen(manager, IOOptionBits(kIOHIDOptionsTypeNone))
- //   if result != kIOReturnSuccess 
-//   {
-//        print("Failed to open IOHIDManager: \(result)")
- //       return
- //   }
-
+ 
     print("HID Manager started. Listening for devices...")
-
-    // Run the main loop to keep the program alive
-   // CFRunLoopRun() 
+   // CFRunLoopRun()  // nicht verwendet
    return
 }
 
@@ -114,14 +106,36 @@ func deviceConnectedCallback(context: UnsafeMutableRawPointer?, result: IOReturn
           let openerfolg = rawhid_open(1, Int32(vendorID) , Int32(productID), 0xFFAB, 0x0200)
           print("deviceConnectedCallback openerfolg: \(openerfolg)")
           
+          let userInfo: [String: Any] = [
+                 
+                 "vendor": vendorID,
+                 "product": productID
+             ]
+          NotificationCenter.default.post(name: Notification.Name("HIDInputReportReceived"), object: nil, userInfo: userInfo)
+
+         
+         // handleInputReport(value: productID as! IOHIDValue)
           
        }
     }
 }
 
 // Callback: Called when a device is disconnected
-func deviceDisconnectedCallback(context: UnsafeMutableRawPointer?, result: IOReturn, sender: UnsafeMutableRawPointer?, device: IOHIDDevice) {
+func deviceDisconnectedCallback(context: UnsafeMutableRawPointer?, result: IOReturn, sender: UnsafeMutableRawPointer?, device: IOHIDDevice)
+{
     print("deviceConnectedCallback Device disconnected: \(device)")
+   if let vendorID = getVendorID(device: device)
+   {
+      if vendorID   == VID
+      {
+         let userInfo: [String: Any] = [
+            
+            "vendor": vendorID,
+            "product": 0
+         ]
+         NotificationCenter.default.post(name: Notification.Name("HIDInputReportReceived"), object: nil, userInfo: userInfo)
+      }
+   }
 }
 
 // Callback: Called when an input report is received
@@ -134,6 +148,7 @@ func inputReportCallback(context: UnsafeMutableRawPointer?, result: IOReturn, se
    
    // Get the value from the report
    let intValue = IOHIDValueGetIntegerValue(value)
+   
    print("Input  Element \(String(describing: element)), Value \(intValue)")
 
    //print("Input from device \(device): Element \(String(describing: element)), Value \(intValue)")

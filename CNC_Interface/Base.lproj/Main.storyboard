@@ -489,24 +489,6 @@
                                     <action selector="send_USB:" target="XfG-lQ-9wD" id="Ldk-BE-b17"/>
                                 </connections>
                             </button>
-                            <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ixH-wO-axf">
-                                <rect key="frame" x="301" y="752" width="174" height="25"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <popUpButtonCell key="cell" type="push" title="Teensy 2++" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="1000" imageScaling="proportionallyDown" inset="2" selectedItem="XsL-MT-mcd" id="X49-PM-zcg">
-                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="menu"/>
-                                    <menu key="menu" id="hTY-2y-rSZ">
-                                        <items>
-                                            <menuItem title="Teensy 2++" state="on" tag="1000" id="XsL-MT-mcd"/>
-                                            <menuItem title="Teensy 3.2" tag="1001" id="Y0p-fd-51i"/>
-                                            <menuItem title="Teensy3.6" tag="1002" id="Z0u-fx-UgX"/>
-                                        </items>
-                                    </menu>
-                                </popUpButtonCell>
-                                <connections>
-                                    <action selector="report_BoardPop:" target="XfG-lQ-9wD" id="huy-tB-Rls"/>
-                                </connections>
-                            </popUpButton>
                             <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DfH-dN-Eg6">
                                 <rect key="frame" x="1017" y="749" width="99" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -566,11 +548,20 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="q7i-9h-5aF">
+                                <rect key="frame" x="304" y="749" width="167" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" alignment="center" id="Vyi-Gp-I5N">
+                                    <font key="font" metaFont="system" size="24"/>
+                                    <color key="textColor" name="systemOrangeColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <accessibility identifier="cview"/>
                     </view>
                     <connections>
-                        <outlet property="BoardPop" destination="ixH-wO-axf" id="GHM-VY-RdZ"/>
+                        <outlet property="BoardFeld" destination="q7i-9h-5aF" id="9ic-Gl-Io1"/>
                         <outlet property="Send_Knopf" destination="Hvc-L4-qh8" id="KRw-Wp-JhX"/>
                         <outlet property="Start_Knopf" destination="O4T-a4-F7z" id="URB-J7-Wgd"/>
                         <outlet property="Start_Read_Knopf" destination="O4T-a4-F7z" id="xsK-XU-XfD"/>
@@ -2129,7 +2120,7 @@
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zka-dN-hoS">
-                                <rect key="frame" x="477" y="440" width="50" height="31"/>
+                                <rect key="frame" x="476" y="439" width="52" height="33"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="squareTextured" title="Holm" bezelStyle="texturedSquare" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Zmc-Kn-tIH">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>

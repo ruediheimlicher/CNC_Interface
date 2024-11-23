@@ -3230,7 +3230,7 @@ return returnInt;
        
        if (i==0 || i==[koordinatentabelle count]-1)
        {
-          NSLog(@"reportStop anfang/Ende i: %d \ntempSteuerdatenDic: %@",i,[tempSteuerdatenDic description]);
+          //NSLog(@"reportStop anfang/Ende i: %d \ntempSteuerdatenDic: %@",i,[tempSteuerdatenDic description]);
        }
        
        
@@ -3499,7 +3499,7 @@ return returnInt;
    
    [DCDic setObject:[NSNumber numberWithInt:pwmwert] forKey:@"pwm"]; // DC ein/aus, nur fuer AVRController
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-   [nc postNotificationName:@"dc_pwm" object:self userInfo:DCDic];
+  // [nc postNotificationName:@"dc_pwm" object:self userInfo:DCDic];
    
 }
 - (int)pwm
@@ -15150,7 +15150,7 @@ return returnInt;
    char*      sendbuffer;
    sendbuffer=malloc(64);
    int i;
-   for (i=0;i<32;i++)
+   for (i=0;i<64;i++)
    {
       sendbuffer[i] = 0;
    }

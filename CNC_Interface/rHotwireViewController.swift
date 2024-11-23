@@ -1431,6 +1431,7 @@ var outletdaten:[String:AnyObject] = [:]
     @objc func DC_Funktion(pwm:UInt8 )
      {
         usb_schnittdatenarray.removeAll()
+        //boardindex = teensy.getboardindex()
         //print("DC_Funktion: \(notification)")
          print("HW DC_Funktion  pwm: \(pwm)")
         Stepperposition = 0;
@@ -1446,7 +1447,7 @@ var outletdaten:[String:AnyObject] = [:]
         wertarray[20]=pwm; // pwm
         
         usb_schnittdatenarray.append(wertarray)
-         print("HW DC_Funktion writeCNCAbschnitt")
+         print("HW DC_Funktion writeCNCAbschnitt boardindex: \(boardindex) boardnumber: \(boardnumber)")
         writeCNCAbschnitt()
         teensy.clear_data()
 
@@ -1561,7 +1562,7 @@ var outletdaten:[String:AnyObject] = [:]
             tempDic["by"] = MausPunkt.y + offsety
             tempDic["index"] = Double(KoordinatenTabelle.count)
             tempDic["pwm"] = oldpwm
-            print("tempDic: \(tempDic)")
+            //print("tempDic: \(tempDic)")
             /*
              NSDictionary* tempDic = [NSDictionary dictionaryWithObjectsAndKeys:
              [NSNumber numberWithFloat:MausPunkt.x], @"ax",
@@ -1584,7 +1585,7 @@ var outletdaten:[String:AnyObject] = [:]
                 break;
                 
             default:
-                print("tempDic 2: \(tempDic)")
+                //print("tempDic 2: \(tempDic)")
                 KoordinatenTabelle.remove(at: 0)
                 KoordinatenTabelle.insert(tempDic, at:0)
                 //KoordinatenTabelle.replaceSubrange(0 ... 0, with: tempDic)
@@ -1607,7 +1608,7 @@ var outletdaten:[String:AnyObject] = [:]
             tempDic["index"] = Double(KoordinatenTabelle.count)
             tempDic["pwm"] = oldpwm
             
-            print("if CNC_Stoptaste state > 0 tempDic: \(tempDic)")
+            //print("if CNC_Stoptaste state > 0 tempDic: \(tempDic)")
             /*
              NSDictionary* tempDic = [NSDictionary dictionaryWithObjectsAndKeys:
              [NSNumber numberWithFloat:MausPunkt.x], @"ax",
@@ -1688,7 +1689,7 @@ var outletdaten:[String:AnyObject] = [:]
              NULL];
              */
             
-            print("if CNC_Stoptaste state == 0 tempDic: \(tempDic)")
+            //print("if CNC_Stoptaste state == 0 tempDic: \(tempDic)")
             IndexFeld.integerValue = KoordinatenTabelle.count
             IndexStepper.integerValue = KoordinatenTabelle.count
             IndexStepper.maxValue = Double(KoordinatenTabelle.count)
@@ -1725,7 +1726,7 @@ var outletdaten:[String:AnyObject] = [:]
         ProfilFeld.setNeedsDisplay(ProfilFeld.frame)
         //[Profilfeld setNeedsDisplay:YES];
         
-        print("Mausgraphaktion end KoordinatenTabelle: \(KoordinatenTabelle) ")
+        //print("Mausgraphaktion end KoordinatenTabelle: \(KoordinatenTabelle) ")
 
         CNC_Table.reloadData()
         
@@ -2169,6 +2170,8 @@ var outletdaten:[String:AnyObject] = [:]
     
    @objc  func setOutletdaten()
    {
+      boardindex = teensy.getboardindex()
+      print("swift setOutletdaten boardindex: \(boardindex) boardnumber: \(boardnumber)")
       let stepsindex = CNC_StepsSegControl.selectedSegment
       motorsteps = CNC_StepsSegControl.tag(forSegment:stepsindex)
       outletdaten["motorsteps"] = CNC_StepsSegControl.tag(forSegment:stepsindex)  as AnyObject
@@ -2182,7 +2185,8 @@ var outletdaten:[String:AnyObject] = [:]
       outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
       outletdaten["speed"] = speed as AnyObject
       outletdaten["micro"] = micro as AnyObject
-      outletdaten["boardindex"] = boardindex as AnyObject
+      
+      outletdaten["boardindex"] = teensy.getboardindex as AnyObject
       outletdaten["pwm"] = pwm as AnyObject
       outletdaten["redpwm"] = red_pwmFeld.doubleValue as AnyObject
       let zoomfaktor = ProfilTiefeFeldA.doubleValue / 1000
@@ -2213,6 +2217,7 @@ var outletdaten:[String:AnyObject] = [:]
         outletdaten["speed"] = speed as AnyObject
         outletdaten["micro"] = micro as AnyObject
         outletdaten["boardindex"] = boardindex as AnyObject
+       outletdaten["boardindex"] = boardnumber as AnyObject
         outletdaten["pwm"] = pwm as AnyObject
         let zoomfaktor = ProfilTiefeFeldA.doubleValue / 1000
         outletdaten["zoom"] = zoomfaktor as AnyObject
@@ -3102,6 +3107,7 @@ var outletdaten:[String:AnyObject] = [:]
       //   print("Tastatur Tastaturwert: \(TastenwertFeld.integerValue)")
          
       case 0xBD: // Abschnitt fertig
+         print("HW USBReadAktion 0xBD boardindex: \(boardindex)")
          PositionFeld.integerValue = Stepperposition
          ProfilFeld.stepperposition = Stepperposition
          ProfilFeld.needsDisplay = true
@@ -5690,7 +5696,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
             print("DCAktion: kein pwm")
             return
         }
-        print("DCAktion  pwmraw: \(pwmraw)")
+        //print("DCAktion  pwmraw: \(pwmraw) boardnumber: \(boardnumber)")
        let pwm = abs(pwmraw as! Int)
        outletdaten["pwm"] = pwm as AnyObject
         Stepperposition = 0;
@@ -5702,7 +5708,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        wertarray[20]=UInt8(pwm) //as! UInt8; // pwm
         
         usb_schnittdatenarray.append(wertarray)
-        print("DCAktion writeCNCAbschnitt")
+        print("DCAktion writeCNCAbschnitt boardindex: \(boardindex) boardnumber: \(boardnumber)")
         writeCNCAbschnitt()
         teensy.clear_data()
         

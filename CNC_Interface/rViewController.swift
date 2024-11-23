@@ -15,6 +15,9 @@ import Cocoa
 
  public var lastDataRead = Data.init(count:BUFFER_SIZE)
 
+public var boardnumber = 0
+public var boardindex = 0
+
 var loadcounter = 0
 
 var globalusbstatus = 0
@@ -217,7 +220,7 @@ class rViewController: NSViewController, NSWindowDelegate
    
    var usbattachstatus = 0
    
-   var boardindex:Int = 0
+   //var boardindex:Int = 0
     
     var viewdidloadcounter = 0
    
@@ -481,10 +484,18 @@ class rViewController: NSViewController, NSWindowDelegate
       case TEENSY2_PID:
          print("HW HIDInputReportReceivedAktion Teensy2")
          BoardFeld.stringValue = "Teensy2"
+         boardindex = 0
+         boardnumber = 0;
+         teensy.setboardindex(board: boardindex)
+         outletdaten["boardindex"] = boardindex as AnyObject
          break
       case TEENSY3_PID:
          print("HW HIDInputReportReceivedAktion Teensy3")
          BoardFeld.stringValue = "Teensy3"
+         boardindex = 1
+         boardnumber = 1;
+         teensy.setboardindex(board: boardindex)
+         outletdaten["boardindex"] = boardindex as AnyObject
          break
       case 0:
          print("HW HIDInputReportReceivedAktion disconnected")
@@ -584,9 +595,9 @@ class rViewController: NSViewController, NSWindowDelegate
              schnittdatenstring.append(string)
              schnittdatenstring.append("\n")
              
-              //print("writeCNCAbschnitt")
+              print("writeCNCAbschnitt boardindex: \(boardindex) boadnumber: \(boardnumber)")
 
-             //print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
+             print("writeCNCAbschnitt write_byteArray count: \(teensy.write_byteArray.count)")
              if (globalusbstatus > 0)
              {
                 let senderfolg = teensy.send_USB()
@@ -642,7 +653,7 @@ class rViewController: NSViewController, NSWindowDelegate
     @objc func DCAktion(_ notification:Notification)
      {
         usb_schnittdatenarray.removeAll()
-        //print("DCAktion: \(notification)")
+        print("DCAktion: \(notification) boardindex: \(boardindex)")
         let info = notification.userInfo
         
         guard let pwm = notification.userInfo?["pwm"] else
@@ -660,7 +671,8 @@ class rViewController: NSViewController, NSWindowDelegate
         wertarray[20]=pwm as! UInt8; // pwm
         
         usb_schnittdatenarray.append(wertarray)
-         print("VC DC_Funktion writeCNCAbschnitt")
+         print("VC DC_Funktion writeCNCAbschnitt ")
+        
         writeCNCAbschnitt()
         teensy.clear_data()
 

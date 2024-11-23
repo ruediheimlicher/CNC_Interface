@@ -218,7 +218,8 @@ class rTimerInfo
 
     open func USBOpen(code:[String:Any] , board: Int)->Int32
     {
-       boardindex = board
+       //boardindex = board
+       
        var r:Int32 = 0
        
        let PID:Int32 = Int32(code["PID"] as! Int32)//
@@ -321,6 +322,11 @@ class rTimerInfo
    {
       return get_hid_usbstatus()
    }
+    open func getboardindex()->Int
+    {
+       return boardindex
+    }
+
     
     open func usb_free()
     {
@@ -661,12 +667,12 @@ class rTimerInfo
       
      //    let senderfolg = rawhid_send(0,&write_byteArray, Int32(BUFFER_SIZE), 50)
       var senderfolg:Int32 = 0xFF
-      print("usb send_USB boardindex: \(boardindex)")
-      if  boardindex == 0 // teensy++2
+      print("usb send_USB boardindex: \(boardindex) boardnumber: \(boardnumber)")
+      if  boardnumber == 0 // teensy++2
       {
          senderfolg = rawhid_send(0,&write_byteArray, 32, 50)
       }
-      else if boardindex == 1 // teensy3.xx
+      else if boardnumber == 1 // teensy3.xx
       {
          senderfolg = rawhid_send(0,&write_byteArray, 64, 50)
       }
@@ -691,7 +697,7 @@ class rTimerInfo
    open func rep_read_USB(_ inTimer: Timer)
    {
       var result:Int32  = 0;
-      var reportSize:Int = 32;   
+      var reportSize:Int = 64;   
       var buffer = [UInt8]();
       result = rawhid_recv(0, &buffer, Int32(BUFFER_SIZE), 50);
       

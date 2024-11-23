@@ -1431,9 +1431,7 @@ var outletdaten:[String:AnyObject] = [:]
     @objc func DC_Funktion(pwm:UInt8 )
      {
         usb_schnittdatenarray.removeAll()
-        //boardindex = teensy.getboardindex()
-        //print("DC_Funktion: \(notification)")
-         print("HW DC_Funktion  pwm: \(pwm)")
+          print("HW DC_Funktion  pwm: \(pwm)")
         Stepperposition = 0;
         if(pwm == 0)
         {
@@ -1447,7 +1445,6 @@ var outletdaten:[String:AnyObject] = [:]
         wertarray[20]=pwm; // pwm
         
         usb_schnittdatenarray.append(wertarray)
-         print("HW DC_Funktion writeCNCAbschnitt boardindex: \(boardindex) ")
         writeCNCAbschnitt()
         teensy.clear_data()
 
@@ -2170,8 +2167,6 @@ var outletdaten:[String:AnyObject] = [:]
     
    @objc  func setOutletdaten()
    {
-      //boardindex = teensy.getboardindex()
-      print("swift setOutletdaten boardindex: \(boardindex) ")
       let stepsindex = CNC_StepsSegControl.selectedSegment
       motorsteps = CNC_StepsSegControl.tag(forSegment:stepsindex)
       outletdaten["motorsteps"] = CNC_StepsSegControl.tag(forSegment:stepsindex)  as AnyObject
@@ -2186,7 +2181,6 @@ var outletdaten:[String:AnyObject] = [:]
       outletdaten["speed"] = speed as AnyObject
       outletdaten["micro"] = micro as AnyObject
       
-      //outletdaten["boardindex"] = teensy.getboardindex as AnyObject
       outletdaten["pwm"] = pwm as AnyObject
       outletdaten["redpwm"] = red_pwmFeld.doubleValue as AnyObject
       let zoomfaktor = ProfilTiefeFeldA.doubleValue / 1000
@@ -2216,8 +2210,6 @@ var outletdaten:[String:AnyObject] = [:]
         outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
         outletdaten["speed"] = speed as AnyObject
         outletdaten["micro"] = micro as AnyObject
-      //  outletdaten["boardindex"] = boardindex as AnyObject
-      // outletdaten["boardindex"] = boardnumber as AnyObject
         outletdaten["pwm"] = pwm as AnyObject
         let zoomfaktor = ProfilTiefeFeldA.doubleValue / 1000
         outletdaten["zoom"] = zoomfaktor as AnyObject
@@ -2378,7 +2370,6 @@ var outletdaten:[String:AnyObject] = [:]
         outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
         outletdaten["speed"] = speed as AnyObject
         outletdaten["micro"] = micro as AnyObject
-       // outletdaten["boardindex"] = boardindex as AnyObject
         outletdaten["pwm"] = pwm as AnyObject
         let zoomfaktor = ProfilTiefeFeldA.doubleValue / 1000
         outletdaten["zoom"] = zoomfaktor as AnyObject
@@ -3107,7 +3098,6 @@ var outletdaten:[String:AnyObject] = [:]
       //   print("Tastatur Tastaturwert: \(TastenwertFeld.integerValue)")
          
       case 0xBD: // Abschnitt fertig
-         print("HW USBReadAktion 0xBD boardindex: \(boardindex)")
          PositionFeld.integerValue = Stepperposition
          ProfilFeld.stepperposition = Stepperposition
          ProfilFeld.needsDisplay = true
@@ -3120,6 +3110,7 @@ var outletdaten:[String:AnyObject] = [:]
             warnung.addButton(withTitle: "OK")
             warnung.runModal()
             taskfertig = 0
+            self.StiftUpFunktion()
                      
          }
          
@@ -4165,7 +4156,6 @@ var outletdaten:[String:AnyObject] = [:]
       outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
       outletdaten["speed"] = SpeedFeld.integerValue as AnyObject
       outletdaten["micro"] = micro as AnyObject
-     // outletdaten["boardindex"] = boardindex as AnyObject
       
       outletdaten["home"] = 0 as AnyObject
       
@@ -4176,7 +4166,6 @@ var outletdaten:[String:AnyObject] = [:]
       pfeildaten["speed"] = SpeedFeld.integerValue
       pfeildaten["micro"] = micro
       pfeildaten["motorsteps"] = motorsteps
-      //pfeildaten["boardindex"] = boardindex
       print("pfeildaten: \(pfeildaten)")
       setOutletdaten()
       AVR?.manRichtung(1, mousestatus:1, pfeilstep:100)
@@ -4856,7 +4845,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
 
     @IBAction func report_Home(_ sender: NSButton)
     {
-        print("swift report_Home: \(sender.tag) boardindex: \(boardindex)")
+        print("swift report_Home: \(sender.tag) ")
        
        CNC_Halttaste.state = NSControl.StateValue.on
        CNC_Halttaste.isEnabled = true
@@ -6047,8 +6036,6 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
     
    @objc func usbstatusAktion(_ notification:Notification)
    {
-       //        userinformation = ["message":"usbstart", "usbstatus": usbstatus, "boardindex":boardindex] as [String : Any]
-       
        let info = notification.userInfo
        print(" usbstatusAktion: info: \(notification.userInfo) \(info)")
       guard let status = info?["usbstatus"] as? Int else
@@ -6258,7 +6245,6 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
       outletdaten["speed"] = SpeedFeld.integerValue   as AnyObject
       outletdaten["micro"] = micro as AnyObject
-     // outletdaten["boardindex"] = boardindex as AnyObject
       outletdaten["pwm"] = DC_PWM.integerValue as AnyObject
       
       //

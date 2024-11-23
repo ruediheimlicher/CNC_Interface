@@ -15,7 +15,7 @@ import Cocoa
 
  public var lastDataRead = Data.init(count:BUFFER_SIZE)
 
-public var boardnumber = 0
+//public var boardnumber = 0
 public var boardindex = 0
 
 var loadcounter = 0
@@ -485,17 +485,17 @@ class rViewController: NSViewController, NSWindowDelegate
          print("HW HIDInputReportReceivedAktion Teensy2")
          BoardFeld.stringValue = "Teensy2"
          boardindex = 0
-         boardnumber = 0;
-         teensy.setboardindex(board: boardindex)
-         outletdaten["boardindex"] = boardindex as AnyObject
+         //boardnumber = 0;
+    //     teensy.setboardindex(board: boardindex)
+    //     outletdaten["boardindex"] = boardindex as AnyObject
          break
       case TEENSY3_PID:
          print("HW HIDInputReportReceivedAktion Teensy3")
          BoardFeld.stringValue = "Teensy3"
          boardindex = 1
-         boardnumber = 1;
-         teensy.setboardindex(board: boardindex)
-         outletdaten["boardindex"] = boardindex as AnyObject
+         //boardnumber = 1;
+      //   teensy.setboardindex(board: boardindex)
+    //     outletdaten["boardindex"] = boardindex as AnyObject
          break
       case 0:
          print("HW HIDInputReportReceivedAktion disconnected")
@@ -595,7 +595,7 @@ class rViewController: NSViewController, NSWindowDelegate
              schnittdatenstring.append(string)
              schnittdatenstring.append("\n")
              
-              print("writeCNCAbschnitt boardindex: \(boardindex) boadnumber: \(boardnumber)")
+              print("writeCNCAbschnitt boardindex: \(boardindex)")
 
              print("writeCNCAbschnitt write_byteArray count: \(teensy.write_byteArray.count)")
              if (globalusbstatus > 0)
@@ -2289,19 +2289,19 @@ class rViewController: NSViewController, NSWindowDelegate
          }
          warnung.addButton(withTitle: "cancel")
          let devicereturn:Int = warnung.runModal().rawValue
-         boardindex = devicereturn-1000
+         //boardindex = devicereturn-1000
          print("boardindex: \(boardindex)")
-         if boardindex >= teensyboardarray.count
+         if (devicereturn-1000) >= teensyboardarray.count
          {
             return;
          }
          
          // rev start
          
-         if boardindex < teensyboardarray.count
+         if (devicereturn-1000) < teensyboardarray.count
          {
             BoardPop.selectItem(at:devicereturn-1000)
-            
+            boardindex = devicereturn-1000
             let teensycode = teensyboardarray[boardindex]
             
             let erfolg = teensy.USBOpen(code:teensycode, board: boardindex)
@@ -2471,7 +2471,7 @@ class rViewController: NSViewController, NSWindowDelegate
          //   print("USBOpen erfolg: \(erfolg) usbstatus: \(usbstatus)")
         if erfolg == 1
          {
-           teensy.boardindex = device
+           //teensy.boardindex = device
             var timerdic:[String:Any] = [String:Any]()
             timerdic["home"] = 0
             

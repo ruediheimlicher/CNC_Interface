@@ -1447,7 +1447,7 @@ var outletdaten:[String:AnyObject] = [:]
         wertarray[20]=pwm; // pwm
         
         usb_schnittdatenarray.append(wertarray)
-         print("HW DC_Funktion writeCNCAbschnitt boardindex: \(boardindex) boardnumber: \(boardnumber)")
+         print("HW DC_Funktion writeCNCAbschnitt boardindex: \(boardindex) ")
         writeCNCAbschnitt()
         teensy.clear_data()
 
@@ -2170,8 +2170,8 @@ var outletdaten:[String:AnyObject] = [:]
     
    @objc  func setOutletdaten()
    {
-      boardindex = teensy.getboardindex()
-      print("swift setOutletdaten boardindex: \(boardindex) boardnumber: \(boardnumber)")
+      //boardindex = teensy.getboardindex()
+      print("swift setOutletdaten boardindex: \(boardindex) ")
       let stepsindex = CNC_StepsSegControl.selectedSegment
       motorsteps = CNC_StepsSegControl.tag(forSegment:stepsindex)
       outletdaten["motorsteps"] = CNC_StepsSegControl.tag(forSegment:stepsindex)  as AnyObject
@@ -2186,7 +2186,7 @@ var outletdaten:[String:AnyObject] = [:]
       outletdaten["speed"] = speed as AnyObject
       outletdaten["micro"] = micro as AnyObject
       
-      outletdaten["boardindex"] = teensy.getboardindex as AnyObject
+      //outletdaten["boardindex"] = teensy.getboardindex as AnyObject
       outletdaten["pwm"] = pwm as AnyObject
       outletdaten["redpwm"] = red_pwmFeld.doubleValue as AnyObject
       let zoomfaktor = ProfilTiefeFeldA.doubleValue / 1000
@@ -2216,8 +2216,8 @@ var outletdaten:[String:AnyObject] = [:]
         outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
         outletdaten["speed"] = speed as AnyObject
         outletdaten["micro"] = micro as AnyObject
-        outletdaten["boardindex"] = boardindex as AnyObject
-       outletdaten["boardindex"] = boardnumber as AnyObject
+      //  outletdaten["boardindex"] = boardindex as AnyObject
+      // outletdaten["boardindex"] = boardnumber as AnyObject
         outletdaten["pwm"] = pwm as AnyObject
         let zoomfaktor = ProfilTiefeFeldA.doubleValue / 1000
         outletdaten["zoom"] = zoomfaktor as AnyObject
@@ -2378,7 +2378,7 @@ var outletdaten:[String:AnyObject] = [:]
         outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
         outletdaten["speed"] = speed as AnyObject
         outletdaten["micro"] = micro as AnyObject
-        outletdaten["boardindex"] = boardindex as AnyObject
+       // outletdaten["boardindex"] = boardindex as AnyObject
         outletdaten["pwm"] = pwm as AnyObject
         let zoomfaktor = ProfilTiefeFeldA.doubleValue / 1000
         outletdaten["zoom"] = zoomfaktor as AnyObject
@@ -2986,7 +2986,7 @@ var outletdaten:[String:AnyObject] = [:]
       
       usb_schnittdatenarray.removeAll()
       usb_schnittdatenarray.append(joystick_write_byteArray)
-      teensy.setboardindex(board: 1)
+     // teensy.setboardindex(board: 1)
       writeCNCAbschnitt()
       teensy.clear_data()
    }
@@ -4165,7 +4165,7 @@ var outletdaten:[String:AnyObject] = [:]
       outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
       outletdaten["speed"] = SpeedFeld.integerValue as AnyObject
       outletdaten["micro"] = micro as AnyObject
-      outletdaten["boardindex"] = boardindex as AnyObject
+     // outletdaten["boardindex"] = boardindex as AnyObject
       
       outletdaten["home"] = 0 as AnyObject
       
@@ -4176,7 +4176,7 @@ var outletdaten:[String:AnyObject] = [:]
       pfeildaten["speed"] = SpeedFeld.integerValue
       pfeildaten["micro"] = micro
       pfeildaten["motorsteps"] = motorsteps
-      pfeildaten["boardindex"] = boardindex
+      //pfeildaten["boardindex"] = boardindex
       print("pfeildaten: \(pfeildaten)")
       setOutletdaten()
       AVR?.manRichtung(1, mousestatus:1, pfeilstep:100)
@@ -5708,7 +5708,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        wertarray[20]=UInt8(pwm) //as! UInt8; // pwm
         
         usb_schnittdatenarray.append(wertarray)
-        print("DCAktion writeCNCAbschnitt boardindex: \(boardindex) boardnumber: \(boardnumber)")
+        print("DCAktion writeCNCAbschnitt boardindex: \(boardindex) )")
         writeCNCAbschnitt()
         teensy.clear_data()
         
@@ -6066,7 +6066,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
 
       print("Hotwire usbstatusAktion:\t \(status)")
       usbstatus = Int(status)
-      boardindex = rawboardindex
+      //boardindex = rawboardindex
       DC_Taste.isEnabled = true
       
        
@@ -6258,7 +6258,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
       outletdaten["speed"] = SpeedFeld.integerValue   as AnyObject
       outletdaten["micro"] = micro as AnyObject
-      outletdaten["boardindex"] = boardindex as AnyObject
+     // outletdaten["boardindex"] = boardindex as AnyObject
       outletdaten["pwm"] = DC_PWM.integerValue as AnyObject
       
       //

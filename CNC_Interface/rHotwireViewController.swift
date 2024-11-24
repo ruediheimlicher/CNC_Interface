@@ -2302,6 +2302,9 @@ var outletdaten:[String:AnyObject] = [:]
              }
               
              punktdaten["ramp"] = Double(ramp)
+             punktdaten["timerintervall"] = TimerIntervallFeld.doubleValue 
+             punktdaten["rampfaktor"] = RampFaktorFeld.doubleValue
+
              punktdaten["steigung"] = laststeigung
              //print("index: \(index)\tax: \t\(ax)\tay: \t\(ay) \tlastax: \t\(lastax)\tlastay: \t\(lastay)\tlaststeigung: \(laststeigung)")
              
@@ -2810,7 +2813,8 @@ var outletdaten:[String:AnyObject] = [:]
                     
                  case 0xF1:
                     
-                    print("F1 home ")
+                    print("HW F1 home ")
+                    
                     
                     break;
                  case 0xF2:
@@ -2994,7 +2998,7 @@ var outletdaten:[String:AnyObject] = [:]
       
    }
 
-    @objc func USBReadAktion(_ notification:Notification) // Ergebnis Homeanschlag-stuff nicht verendet
+    @objc func USBReadAktion(_ notification:Notification) // Ergebnis Homeanschlag-stuff nicht verwendet
    {
       
       let note = notification.userInfo as![String:Any]
@@ -3114,61 +3118,7 @@ var outletdaten:[String:AnyObject] = [:]
                      
          }
          
-        /* 
-      case 0xB5:
-      
-         print("HW B5 Anschlag A0 home first")
-         HomeAnschlagSet.insert(0xB5)         
-         //AVR?.homeSenkrechtSchicken()
-      
-         break;
-         
-      case 0xB6:
-      
-         print("HW B6 Anschlag B0 home first")
-         //AVR?.homeSenkrechtSchicken()
-         HomeAnschlagSet.insert(0xB6)
-      break;
-         
-      case 0xB7:
-      
-         print("HW Anschlag C0 home first")
-         HomeAnschlagSet.insert(0xB7)
-         //AVR?.homeSenkrechtSchicken()
-      break;
-         
-      case 0xB8:
-      
-         print("HW Anschlag D0 home first")
-         HomeAnschlagSet.insert(0xB8)
-         //AVR?.homeSenkrechtSchicken()
-      break;
-         
-      case 0xA5:
-         print("HW Anschlag A0")
-         AnschlagLinksIndikator.isTransparent = false
-         AnschlagLinksIndikator.layer?.backgroundColor = NSColor.blue.cgColor
-         CNC_Lefttaste.isEnabled = false
-         break
-      case 0xA6:
-         print("HW Anschlag B0")
-         AnschlagUntenIndikator.isTransparent = false
-         AnschlagUntenIndikator.layer?.backgroundColor = NSColor.blue.cgColor
-         CNC_Downtaste.isEnabled = false
-         break
-      case 0xA7:
-         print("AVR Anschlag C0")
-         AnschlagRechtsIndikator.isTransparent = false
-         AnschlagRechtsIndikator.layer?.backgroundColor = NSColor.blue.cgColor
-         CNC_Lefttaste.isEnabled = false
-         break
-      case 0xA8:
-         print("AVR Anschlag D0")
-         AnschlagObenIndikator.isTransparent = false
-         AnschlagObenIndikator.layer?.backgroundColor = NSColor.blue.cgColor
-         CNC_Downtaste.isEnabled = false
-         break
-     */
+ 
       case 0xF3:
          print("Stift UP")
          break

@@ -195,6 +195,7 @@ class rViewController: NSViewController, NSWindowDelegate
    let notokimage :NSImage = NSImage(named:NSImage.Name(rawValue: "notok_image"))!
    let okimage :NSImage = NSImage(named:NSImage.Name(rawValue: "ok_image"))!
     
+   let HOMESCHRITT = 11
     
    
     var AVR = rAVRview()
@@ -1136,7 +1137,7 @@ class rViewController: NSViewController, NSWindowDelegate
        print("\nVC newDataAktion start");
        let lastData = teensy.getlastDataRead()
        let lastDataArray = [UInt8](lastData)
-       //print("VC newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")
+       print("VC newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")
        
  /*
        var ii = 0
@@ -1413,8 +1414,20 @@ class rViewController: NSViewController, NSWindowDelegate
                 
                    
                 case 0xF1:
-                   
-                      print("F1 home ")
+                   let homecode = usbdata[9]
+                      print("VC F1 home homecode: \(homecode)")
+                   if homecode == (2 * HOMESCHRITT)
+                   {
+                      AVR?.setBusy(0)
+                      AVR?.dc_(on: 0);
+                      //DC_Aktion(pwm:0)
+                      teensy.stop_timer()
+                      let warnung = NSAlert.init()
+                      warnung.messageText = "VC Home erreicht"
+                      warnung.addButton(withTitle: "OK")
+                      warnung.runModal()
+
+                   }
                    
                    break;
                 case 0xF2:

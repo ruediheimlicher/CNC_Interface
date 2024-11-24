@@ -83,7 +83,7 @@ const int BufferSize(void)
    return BUFFER_SIZE;
 }
 
-int rawhid_init(uint vendor_ID)
+int rawhid_init(uint vendor_ID) // nicht verwendet
 {
    fprintf(stderr,"rawhid_init \n");
    hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);

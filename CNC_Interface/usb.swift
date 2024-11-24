@@ -209,14 +209,14 @@ class rTimerInfo
     
     
     
-    open func USBInit(VID:UInt32)-> Int
+    open func USBInit(VID:UInt32)-> Int // nicht verwendet
     {
        return Int(rawhid_init(VID));
        
     }
    
 
-    open func USBOpen(code:[String:Any] , board: Int)->Int32
+    open func USBOpen(code:[String:Any] , board: Int)->Int32 // nicht verwendet
     {
        //boardindex = board
        

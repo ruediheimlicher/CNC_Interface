@@ -210,6 +210,10 @@
       steigungh |= 0x80;
       
    }
+   
+   [tempArray replaceObjectAtIndex:22 withObject:[NSNumber numberWithInt:77]];
+ 
+   
    //NSLog(@"steigungint: %d steigungfloat: %.3f steigungl: %d steigungh: %d",steigungint,[[derDatenDic objectForKey:@"steigung"]floatValue],steigungl, steigungh);
    [tempArray replaceObjectAtIndex:33 withObject:[NSNumber numberWithInt:steigungl]];
    [tempArray replaceObjectAtIndex:34 withObject:[NSNumber numberWithInt:steigungh]];

@@ -2120,7 +2120,7 @@
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zka-dN-hoS">
-                                <rect key="frame" x="475" y="438" width="54" height="35"/>
+                                <rect key="frame" x="474" y="437" width="56" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="squareTextured" title="Holm" bezelStyle="texturedSquare" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Zmc-Kn-tIH">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2839,7 +2839,7 @@ Element</string>
                                 </view>
                             </box>
                             <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eDu-46-r99" customClass="rProfilfeldView" customModule="CNC_Interface" customModuleProvider="target">
-                                <rect key="frame" x="23" y="15" width="1206" height="363"/>
+                                <rect key="frame" x="21" y="33" width="1206" height="363"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </customView>
                             <imageView identifier="arrowleft" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" tag="3" translatesAutoresizingMaskIntoConstraints="NO" id="gBg-hH-Y0N" customClass="rPfeil_Feld" customModule="CNC_Interface" customModuleProvider="target">
@@ -2951,15 +2951,15 @@ Element</string>
                                     <action selector="report_StiftDown:" target="3j8-Mp-cP5" id="KY6-gD-lRI"/>
                                 </connections>
                             </button>
-                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Q6-iG-88r">
-                                <rect key="frame" x="186" y="397" width="25" height="48"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="pencilsenkrecht" id="rC0-Z8-eVD"/>
-                            </imageView>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3PL-d9-16O">
-                                <rect key="frame" x="279" y="463" width="48" height="48"/>
+                                <rect key="frame" x="186" y="404" width="20" height="48"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="pencil_senkrecht" id="1Ih-zt-qz3"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="pencil90" id="1Ih-zt-qz3"/>
+                            </imageView>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="STQ-mb-kOl">
+                                <rect key="frame" x="179" y="398" width="35" height="6"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="Boden" id="pX0-iK-698"/>
                             </imageView>
                         </subviews>
                     </view>
@@ -3119,6 +3119,7 @@ Element</string>
         </scene>
     </scenes>
     <resources>
+        <image name="Boden" width="175" height="25"/>
         <image name="Halt" width="538" height="530"/>
         <image name="Halt_alt" width="538" height="530"/>
         <image name="Taste_blue" width="60" height="60"/>
@@ -3128,8 +3129,7 @@ Element</string>
         <image name="home" width="94.765937805175781" height="95.081825256347656"/>
         <image name="notok" width="225" height="225"/>
         <image name="notok_image" width="131" height="129"/>
-        <image name="pencil_senkrecht" width="1279" height="195"/>
-        <image name="pencilsenkrecht" width="1279" height="195"/>
+        <image name="pencil90" width="195" height="1279"/>
         <image name="pfeil_down_grau" width="40" height="35"/>
         <image name="pfeil_down_mini" width="20" height="12"/>
         <image name="pfeil_links_grau" width="35" height="40"/>

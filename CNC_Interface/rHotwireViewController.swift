@@ -560,7 +560,7 @@ var outletdaten:[String:AnyObject] = [:]
    
    @objc func StiftDownFunktion()
    {
-      print("StiftDownFunktion")
+      print("HW StiftDownFunktion")
       usb_schnittdatenarray.removeAll()
       var wertarray = [UInt8](repeating: 0, count: Int(BufferSize()))
       wertarray[16] = 0xF4
@@ -574,7 +574,7 @@ var outletdaten:[String:AnyObject] = [:]
    }
    @IBAction func report_StiftDown(_ sender:NSButton)
    {
-      print("report_StiftDown")
+      print("HW report_StiftDown")
       self.StiftDownFunktion()
    }
    
@@ -3003,7 +3003,7 @@ var outletdaten:[String:AnyObject] = [:]
       
       let note = notification.userInfo as![String:Any]
       
-      //print("HW USBReadAktion note: \n\(note)\n")
+      print("HW USBReadAktion note: \n\(note)\n")
       let abschnittfertig = note["abschnittfertig"]  as! Int
       let outposition = note["outposition"] as! Int
       Stepperposition = note["stepperposition"] as! Int
@@ -3121,9 +3121,11 @@ var outletdaten:[String:AnyObject] = [:]
  
       case 0xF3:
          print("Stift UP")
+         let servopos = 1
          break
       case 0xF4:
          print("Stift DOWN")
+         
          break
         
          

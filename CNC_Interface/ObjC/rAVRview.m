@@ -13938,7 +13938,7 @@ return returnInt;
    int seite1check = [outletdaten[@"cnc_seite1check"]intValue];
    int seite2check = [outletdaten[@"cnc_seite2check"]intValue];
    micro  = 1;//[outletdaten[@"micro"]integerValue];
-  int home = [outletdaten[@"home"]intValue];
+   int home = [outletdaten[@"home"]intValue];
    
    
    NSMutableArray* AnfahrtArray = [[NSMutableArray alloc]initWithCapacity:0];
@@ -14019,6 +14019,7 @@ return returnInt;
    [tempDic setObject:[NSNumber numberWithInt:speed] forKey:@"speed"];
    [tempDic setObject:[NSNumber numberWithInt:micro] forKey:@"micro"];
    [tempDic setObject:[NSNumber numberWithInt:1] forKey:@"home"];
+   [tempDic setObject:[NSNumber numberWithInt:1] forKey:@"ramp"];
     
    NSDictionary* tempSteuerdatenDic=[self Tool_SteuerdatenVonDic:tempDic];
    //NSLog(@"AVR  reportHome tempSteuerdatenDic: %@",[tempSteuerdatenDic description]);

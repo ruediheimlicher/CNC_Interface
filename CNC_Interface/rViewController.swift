@@ -196,6 +196,9 @@ class rViewController: NSViewController, NSWindowDelegate
    let okimage :NSImage = NSImage(named:NSImage.Name(rawValue: "ok_image"))!
     
    let HOMESCHRITT = 11
+   
+   let STIFTUP = 0
+   let STIFTDOWN = 1
     
    
     var AVR = rAVRview()
@@ -462,6 +465,8 @@ class rViewController: NSViewController, NSWindowDelegate
          
       }
         self.view.window?.delegate = self //as? NSWindowDelegate 
+      
+      
        
       self.view.window?.makeKey()
  
@@ -491,6 +496,13 @@ class rViewController: NSViewController, NSWindowDelegate
          print("HW HIDInputReportReceivedAktion Teensy3")
          BoardFeld.stringValue = "Teensy3"
          boardindex = 1
+         if (teensy.read_OK.boolValue == false)
+         {
+            print("teensy.read_OK ist false")
+           // let result = teensy.start_read_USB(true, dic:timerdic)
+            // print("teensy.read_OK status ist: \(result)")
+         }
+
           break
       case 0:
          print("HW HIDInputReportReceivedAktion disconnected")
@@ -499,6 +511,11 @@ class rViewController: NSViewController, NSWindowDelegate
          BoardFeld.stringValue = "--"
          break
       }
+      var timerdic:[String:Any] = [String:Any]()
+      timerdic["home"] = 0
+
+      let result = teensy.start_read_USB(true, dic:timerdic)
+      print("teensy.read_OK status ist: \(result)")
    }
 
     
@@ -1189,7 +1206,7 @@ class rViewController: NSViewController, NSWindowDelegate
              // https://useyourloaf.com/blog/swift-string-cheat-sheet/
              let home = Int(usbdata[13])
              let anschlagcheck = Int(usbdata[9])
-             // print("VC newDataAktion abschnittfertig abschnittfertig: \(hex(abschnittfertig)) anschlagcheck: \(anschlagcheck)")
+             print("VC newDataAktion abschnittfertig abschnittfertig: \(hex(abschnittfertig)) anschlagcheck: \(anschlagcheck)")
              NotificationDic["abschnittfertig"] = Int(abschnittfertig)
              let pfeiltastenrichtung = Int(usbdata[29])
 

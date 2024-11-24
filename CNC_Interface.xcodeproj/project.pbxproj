@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		BD1388A72CE49A16002F14C5 /* pencil_senkrecht.gif in Resources */ = {isa = PBXBuildFile; fileRef = BD1388A62CE49A16002F14C5 /* pencil_senkrecht.gif */; };
+		BD1388E12CF38E42002F14C5 /* pencil90.gif in Resources */ = {isa = PBXBuildFile; fileRef = BD1388E02CF38E42002F14C5 /* pencil90.gif */; };
+		BD1388E32CF3A03A002F14C5 /* Boden.png in Resources */ = {isa = PBXBuildFile; fileRef = BD1388E22CF3A03A002F14C5 /* Boden.png */; };
 		BD1407412337F6DD00EDC163 /* rRobotarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1407402337F6DD00EDC163 /* rRobotarm.swift */; };
 		BD1C218D296ADA8A00EE1084 /* Taste_green breit.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BD1C218C296ADA8A00EE1084 /* Taste_green breit.jpg */; };
 		BD1C2195296C7D5700EE1084 /* spline.c in Sources */ = {isa = PBXBuildFile; fileRef = BD1C2194296C7D5700EE1084 /* spline.c */; };
@@ -77,6 +79,8 @@
 		BD1388A62CE49A16002F14C5 /* pencil_senkrecht.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = pencil_senkrecht.gif; path = Bilder/pencil_senkrecht.gif; sourceTree = "<group>"; };
 		BD1388AA2CE6415F002F14C5 /* USB_DeviceWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = USB_DeviceWatcher.swift; path = ../../../../Desktop/USB_DeviceWatcher.swift; sourceTree = "<group>"; };
 		BD1388CA2CEBA49D002F14C5 /* chatchpt_C.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = chatchpt_C.c; path = ../chatchpt_C.c; sourceTree = "<group>"; };
+		BD1388E02CF38E42002F14C5 /* pencil90.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = pencil90.gif; path = Bilder/pencil90.gif; sourceTree = "<group>"; };
+		BD1388E22CF3A03A002F14C5 /* Boden.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Boden.png; path = Bilder/Boden.png; sourceTree = "<group>"; };
 		BD1407402337F6DD00EDC163 /* rRobotarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rRobotarm.swift; sourceTree = "<group>"; };
 		BD1C218C296ADA8A00EE1084 /* Taste_green breit.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "Taste_green breit.jpg"; path = "Bilder/Taste_green breit.jpg"; sourceTree = "<group>"; };
 		BD1C2193296C7D5700EE1084 /* spline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spline.h; sourceTree = "<group>"; };
@@ -172,6 +176,8 @@
 		BD7369B322FE9A9800341443 /* Bilder */ = {
 			isa = PBXGroup;
 			children = (
+				BD1388E22CF3A03A002F14C5 /* Boden.png */,
+				BD1388E02CF38E42002F14C5 /* pencil90.gif */,
 				BD1388A62CE49A16002F14C5 /* pencil_senkrecht.gif */,
 				CA71C82C2BA361EC00789D34 /* pfeil_links.png */,
 				CA71C8252BA3537D00789D34 /* pfeil_down_grau.png */,
@@ -369,6 +375,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD1388E32CF3A03A002F14C5 /* Boden.png in Resources */,
 				BD9F39A825E661B6000D22C1 /* pfeil_up_mini.jpg in Resources */,
 				BD9F39A025E661B6000D22C1 /* pfeil_down_mini.jpg in Resources */,
 				BDDB38962937E4FF00B4F355 /* Taste_green.jpg in Resources */,
@@ -388,6 +395,7 @@
 				BD8702671A06852A00F2C77B /* Main.storyboard in Resources */,
 				BD9F39A425E661B6000D22C1 /* Punkt.jpg in Resources */,
 				CA71C8282BA3537D00789D34 /* pfeil_links_grau.png in Resources */,
+				BD1388E12CF38E42002F14C5 /* pencil90.gif in Resources */,
 				BD9F39A225E661B6000D22C1 /* Pfeildown.ico in Resources */,
 				CA71C82D2BA361EC00789D34 /* pfeil_links.png in Resources */,
 				BD9F39AD25E661B6000D22C1 /* Halt_alt.jpg in Resources */,

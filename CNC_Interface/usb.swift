@@ -498,6 +498,11 @@ class rTimerInfo
             
             //print("\n+++ cont_read_USB new read_byteArray in Timer. code: \(read_byteArray[0])")
             
+            if (read_byteArray[0] == 0xF3)
+            {
+               print("usb code F3")
+            }
+
             
             if (read_byteArray[0] == 0xBD)
             {

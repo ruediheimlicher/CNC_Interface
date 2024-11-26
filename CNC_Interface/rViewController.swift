@@ -513,6 +513,7 @@ class rViewController: NSViewController, NSWindowDelegate
       }
       var timerdic:[String:Any] = [String:Any]()
       timerdic["home"] = 0
+      
 
       let result = teensy.start_read_USB(true, dic:timerdic)
       print("teensy.read_OK status ist: \(result)")
@@ -610,6 +611,8 @@ class rViewController: NSViewController, NSWindowDelegate
               //print("writeCNCAbschnitt boardindex: \(boardindex)")
 
              print("writeCNCAbschnitt write_byteArray count: \(teensy.write_byteArray.count)")
+             print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
+
              if (globalusbstatus > 0)
              {
                 let senderfolg = teensy.send_USB()
@@ -938,9 +941,9 @@ class rViewController: NSViewController, NSWindowDelegate
      
      if (teensy.read_OK.boolValue == false)
      {
-        print("teensy.read_OK ist false")
+        print("usbschnittdatenaktion teensy.read_OK ist false")
         let result = teensy.start_read_USB(true, dic:timerdic)
-         print("teensy.read_OK status ist: \(result)")
+         print("usbschnittdatenaktion teensy.read_OK status ist: \(result)")
      }
      else
      {

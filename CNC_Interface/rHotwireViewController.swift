@@ -187,6 +187,8 @@ var outletdaten:[String:AnyObject] = [:]
    //var ProfilTable: NSTableView!
    //var ProfilDaten: NSMutableArray!
    
+   var CNC_Stift_frame : NSRect  = NSZeroRect
+   
     var motorsteps = 47
     var speed = 6
     var quelle:Int = 0
@@ -536,6 +538,19 @@ var outletdaten:[String:AnyObject] = [:]
    //       micro_Feld.integerValue = micro
        }
 */
+   @objc func StiftMove(dx:Int , dy:Int )
+   {
+      print("StiftMove dx: \(dx) dy: \(dy)")
+     //let stiftframe = CNC_Stift.frame
+      print("StiftMove stiftframe x: \(CNC_Stift_frame.origin.x) dy: \(CNC_Stift_frame.origin.y)")
+      
+      
+     
+      let neuepos = NSPoint(x: Int(CNC_Stift_frame.origin.x) + dx, y:  Int(CNC_Stift_frame.origin.y) + dy)
+      NSAnimationContext.runAnimationGroup { _ in
+                  CNC_Stift.animator().setFrameOrigin(neuepos) // Smooth animation
+              }
+   }
    @objc func StiftUpFunktion()
    {
       print("StiftUpFunktion")
@@ -555,8 +570,16 @@ var outletdaten:[String:AnyObject] = [:]
    @IBAction func report_StiftUp(_ sender:NSButton)
    {
       print("report_StiftUp")
-      self.StiftUpFunktion()
+      let neuepos = NSPoint(x: Int(CNC_Stift_frame.origin.x), y:  Int(CNC_Stift_frame.origin.y))
+      
+      NSAnimationContext.runAnimationGroup { _ in
+                  CNC_Stift.animator().setFrameOrigin(neuepos) // Smooth animation
+              }
+
+         self.StiftUpFunktion()
      }
+
+
    
    @objc func StiftDownFunktion()
    {
@@ -575,6 +598,13 @@ var outletdaten:[String:AnyObject] = [:]
    @IBAction func report_StiftDown(_ sender:NSButton)
    {
       print("HW report_StiftDown")
+      let neuepos = NSPoint(x: Int(CNC_Stift_frame.origin.x), y:  Int(CNC_Stift_frame.origin.y - 20))
+  
+      NSAnimationContext.runAnimationGroup 
+      { _ in
+         CNC_Stift.animator().setFrameOrigin(neuepos) // Smooth animation
+      }
+
       self.StiftDownFunktion()
    }
    
@@ -2465,15 +2495,26 @@ var outletdaten:[String:AnyObject] = [:]
       var delayok = 0
       if usbstatus > 0 || globalusbstatus > 0
       {
-         if (SchnittdatenArray[0][1] <= 0x7F) || (SchnittdatenArray[0][9] <= 0x7F)
+         if (SchnittdatenArray[0][1] <= 0x7F) || (SchnittdatenArray[0][9] <= 0x7F) // schritte ax, bx negativ. Bewegung nach rechts auf Draw
          {
-            AnschlagLinksIndikator.fillColor = NSColor.green
+            //AnschlagLinksIndikator.fillColor = NSColor.clear // keine Wirkung
+            AnschlagLinksIndikator.layer?.backgroundColor = NSColor.clear.cgColor
+            AnschlagLinksIndikator.isTransparent = true
+         }
+         else if (SchnittdatenArray[0][1] > 0x7F) || (SchnittdatenArray[0][9] > 0x7F) // schritte ax, bx 
+         {
+            //AnschlagRechtsIndikator.fillColor = NSColor.clear // keine Wirkung
+            AnschlagRechtsIndikator.layer?.backgroundColor = NSColor.clear.cgColor
+            AnschlagRechtsIndikator.isTransparent = true
+ 
          }
          
          
-         if (SchnittdatenArray[0][3] <= 0x7F) || (SchnittdatenArray[0][11] <= 0x7F)
+         if (SchnittdatenArray[0][3] <= 0x7F) || (SchnittdatenArray[0][11] <= 0x7F) // schritte ay, by negativ. Bewegung nach unden auf Draw
          {
-            AnschlagUntenIndikator.fillColor = NSColor.green
+            AnschlagUntenIndikator.fillColor = NSColor.clear
+            AnschlagUntenIndikator.isTransparent = true
+            
          }
          
          var a:NSApplication.ModalResponse
@@ -3070,30 +3111,66 @@ var outletdaten:[String:AnyObject] = [:]
       
       switch abschnittfertig
       {
+      case 0xA5:
+         print("HW USBReadAktion 0xA5 A0")
+         AnschlagLinksIndikator.isTransparent = false
+         AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.red.cgColor
+         CNC_busySpinner.stopAnimation(nil)
+         break
+      case 0xA6:
+         print("HW USBReadAktion 0xA6 C0")
+         AnschlagRechtsIndikator.isTransparent = false
+         AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.red.cgColor
+         CNC_busySpinner.stopAnimation(nil)
+         break
+      case 0xA7:
+         print("HW USBReadAktion 0xA7 B0")
+         AnschlagObenIndikator.isTransparent = false
+         AnschlagObenIndikator?.layer?.backgroundColor = NSColor.red.cgColor
+         CNC_busySpinner.stopAnimation(nil)
+         break
+      case 0xA8:
+         print("HW USBReadAktion 0xA8 D0")
+         AnschlagUntenIndikator.isTransparent = false
+         AnschlagUntenIndikator?.layer?.backgroundColor = NSColor.red.cgColor
+         CNC_busySpinner.stopAnimation(nil)
+         break
+         
+         
+         
+         
       case 0x81: //Pfeil RIGHT    
          print("HW USBReadAktion 0x81")
-         AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+         AnschlagLinksIndikator.isTransparent = true
+        // AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.clear.cgColor
          CNC_Lefttaste.isEnabled = true;
+         CNC_busySpinner.stopAnimation(nil)
          break
 
       case 0x82: //Pfeil UP    
          print("HW USBReadAktion 0x82")
-         AnschlagUntenIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+         AnschlagUntenIndikator.isTransparent = true
+         //AnschlagUntenIndikator?.layer?.backgroundColor = NSColor.green.cgColor
          CNC_Downtaste.isEnabled = true;
+         CNC_busySpinner.stopAnimation(nil)
          break
          
          
          
-      case 0x83: //Pfeil RIGHT    
+      case 0x83: //Pfeil LEFT    
          print("HW USBReadAktion 0x83")
-         AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+         AnschlagRechtsIndikator.isTransparent = true
+         //AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.green.cgColor
          CNC_Righttaste.isEnabled = true;
+         CNC_busySpinner.stopAnimation(nil)
          break
  
       case 0x84: //Pfeil DOWN    
          print("HW USBReadAktion 0x84")
-         AnschlagObenIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+         AnschlagObenIndikator.isTransparent = true
+         //AnschlagObenIndikator?.layer?.backgroundColor = NSColor.green.cgColor
          CNC_Uptaste.isEnabled = true;
+         CNC_busySpinner.stopAnimation(nil)
          break
 
          
@@ -4096,11 +4173,12 @@ var outletdaten:[String:AnyObject] = [:]
         
     }
     
-   @IBAction func reportManRight(_ sender: rPfeil_Taste)
+   @IBAction func reportManRight(_ sender: rPfeil_Taste) // nicht verwendet
    {
       print("swift reportManRight: \(sender.tag)")
       CNC_Lefttaste.isEnabled = true
-      AnschlagLinksIndikator.layer?.backgroundColor = NSColor.green.cgColor
+      AnschlagLinksIndikator.isTransparent = true
+      AnschlagLinksIndikator.layer?.backgroundColor = NSColor.clear.cgColor
       
       cnc_seite1check = CNC_Seite1Check.state.rawValue as Int
       cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
@@ -4123,7 +4201,7 @@ var outletdaten:[String:AnyObject] = [:]
       AVR?.manRichtung(1, mousestatus:1, pfeilstep:100)
    }
     
-    @IBAction func reportManUp(_ sender: rPfeil_Taste)
+    @IBAction func reportManUp(_ sender: rPfeil_Taste)// nicht verwendet
     {
        print("swift reportManUp: \(sender.tag)")
        CNC_Downtaste.isEnabled = true
@@ -4138,7 +4216,7 @@ var outletdaten:[String:AnyObject] = [:]
         AVR?.manRichtung(2, mousestatus:1, pfeilstep:100)
     }
 
-    @IBAction func reportManLeft(_ sender: rPfeil_Taste)
+    @IBAction func reportManLeft(_ sender: rPfeil_Taste)// nicht verwendet
     {
        print("swift reportManLeft: \(sender.tag)")
        CNC_Righttaste.isEnabled = true
@@ -4154,7 +4232,7 @@ var outletdaten:[String:AnyObject] = [:]
         AVR?.manRichtung(3, mousestatus:1, pfeilstep:100)
     }
 
-    @IBAction func reportManDown(_ sender: rPfeil_Taste)
+    @IBAction func reportManDown(_ sender: rPfeil_Taste)// nicht verwendet
    {
       print("swift reportManDown: \(sender.tag)")
       cnc_seite1check = CNC_Seite1Check.state.rawValue as Int
@@ -4950,15 +5028,43 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       
       self.view.layer?.backgroundColor = hintergrundfarbe.cgColor
       
+      
+      // Anschlag links
        AnschlagLinksIndikator.wantsLayer = true
-       AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+       AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.clear.cgColor
+      
+      AnschlagLinksIndikator.isTransparent = true
+      AnschlagLinksIndikator.fillColor = .clear
+      AnschlagLinksIndikator.borderColor = .clear
+      AnschlagLinksIndikator.borderWidth = 0
+      
+      // Anschlag rechts
       AnschlagRechtsIndikator.wantsLayer = true
-      AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+      AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.clear.cgColor
  
+      AnschlagRechtsIndikator.isTransparent = true
+      AnschlagRechtsIndikator.fillColor = .clear
+      AnschlagRechtsIndikator.borderColor = .clear
+      AnschlagRechtsIndikator.borderWidth = 0
+      
+      
+      // Anschlag unten
        AnschlagUntenIndikator.wantsLayer = true
-       AnschlagUntenIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+       AnschlagUntenIndikator?.layer?.backgroundColor = NSColor.clear.cgColor
+      
+      AnschlagUntenIndikator.isTransparent = true
+      AnschlagUntenIndikator.fillColor = .clear
+      AnschlagUntenIndikator.borderColor = .clear
+      AnschlagUntenIndikator.borderWidth = 0
+
+      // Anschlag oben
       AnschlagObenIndikator.wantsLayer = true
-      AnschlagObenIndikator?.layer?.backgroundColor = NSColor.green.cgColor
+      AnschlagObenIndikator?.layer?.backgroundColor = NSColor.clear.cgColor
+
+      AnschlagObenIndikator.isTransparent = true
+      AnschlagObenIndikator.fillColor = .clear
+      AnschlagObenIndikator.borderColor = .clear
+      AnschlagObenIndikator.borderWidth = 0
 
        // CNC_Table
        CNC_Table.dataSource = self
@@ -4971,6 +5077,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        CNC_busy = 0
        // https://www.swiftbysundell.com/articles/formatting-numbers-in-swift/
        
+      CNC_Stift_frame = CNC_Stift.frame
        //          let cx = formater.string(from: NSNumber(value: Double(zeilendaten[1])))// /INTEGERFAKTOR))
         // von CNC_Mill
        //         let cx = formater.string(from: NSNumber(value: Double(zeilendaten[1])))// /INTEGERFAKTOR))
@@ -6205,6 +6312,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       {
          quelle = info?["richtung"] as! Int
          
+         
          if info?["push"] != nil
          {
             mausistdown = info?["push"] as!Int
@@ -6223,19 +6331,23 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
          {
          case MANDOWN:
             print("PfeilFeldAktion MANDOWN")
-            AnschlagObenIndikator.layer?.backgroundColor = NSColor.green.cgColor
+            AnschlagObenIndikator.layer?.backgroundColor = NSColor.clear.cgColor
+            AnschlagObenIndikator.isTransparent = true
             CNC_Downtaste.isEnabled = true
          case MANUP:
             print("PfeilFeldAktion MANUP")
-            AnschlagUntenIndikator.layer?.backgroundColor = NSColor.green.cgColor
+            AnschlagUntenIndikator.layer?.backgroundColor = NSColor.clear.cgColor
+            AnschlagUntenIndikator.isTransparent = true
             CNC_Downtaste.isEnabled = true
          case MANLEFT:
             print("PfeilFeldAktion MANLEFT")
-            AnschlagRechtsIndikator.layer?.backgroundColor = NSColor.green.cgColor
+            AnschlagRechtsIndikator.layer?.backgroundColor = NSColor.clear.cgColor
+            AnschlagRechtsIndikator.isTransparent = true
             CNC_Righttaste.isEnabled = true
          case MANRIGHT:
-            //print("PfeilFeldAktion MANRIGHT")
-            AnschlagLinksIndikator.layer?.backgroundColor = NSColor.green.cgColor
+            print("PfeilFeldAktion MANRIGHT")
+            AnschlagLinksIndikator.layer?.backgroundColor = NSColor.clear.cgColor
+            AnschlagLinksIndikator.isTransparent = true
             CNC_Lefttaste.isEnabled = true
             
          default:

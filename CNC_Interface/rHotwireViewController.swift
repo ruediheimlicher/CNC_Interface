@@ -6305,7 +6305,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       outletdaten["speed"] = SpeedFeld.integerValue   as AnyObject
       outletdaten["micro"] = micro as AnyObject
       outletdaten["pwm"] = DC_PWM.integerValue as AnyObject
-      
+      outletdaten["boardindex"] = boardindex as AnyObject
       //
       //print(" PfeilFeldAktion: info: \(notification.userInfo) \(info)")
       if (info?["richtung"] != nil)

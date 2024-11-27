@@ -2823,10 +2823,10 @@ Element</string>
                                 </textFieldCell>
                             </textField>
                             <box autoresizesSubviews="NO" focusRingType="none" fixedFrame="YES" boxType="custom" borderType="line" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="Ok9-2I-eVV">
-                                <rect key="frame" x="23" y="5" width="1202" height="5"/>
+                                <rect key="frame" x="23" y="5" width="1202" height="8"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="2AL-7P-MH2">
-                                    <rect key="frame" x="1" y="1" width="1200" height="3"/>
+                                    <rect key="frame" x="1" y="1" width="1200" height="6"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
                             </box>
@@ -2905,10 +2905,10 @@ Element</string>
                                 </textFieldCell>
                             </textField>
                             <box autoresizesSubviews="NO" focusRingType="none" fixedFrame="YES" boxType="custom" borderType="line" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="wvW-2R-4Vh">
-                                <rect key="frame" x="1234" y="18" width="5" height="362"/>
+                                <rect key="frame" x="1234" y="18" width="11" height="362"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="qtN-PJ-IFp">
-                                    <rect key="frame" x="1" y="1" width="3" height="360"/>
+                                    <rect key="frame" x="1" y="1" width="9" height="360"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
                             </box>

@@ -68,7 +68,11 @@
     20   pwm (pos 20)
     21   motorstatus (pos 21)
     22   steps // 48, 200
-    23   micro // microsteps, 1,2 4    */
+    23   micro // microsteps, 1,2 4    
+    
+    
+    
+    */
    
    if ([[derDatenDic objectForKey:@"indexl"]intValue] < 3)
    {
@@ -220,10 +224,13 @@
    
    [tempArray replaceObjectAtIndex:31 withObject:[NSNumber numberWithInt:17]];
    
+   
    if ([derDatenDic objectForKey:@"micro"])
    {
       [tempArray replaceObjectAtIndex:26 withObject:[derDatenDic objectForKey:@"micro"]];
    }
+   
+   
    [tempArray replaceObjectAtIndex:32 withObject:[NSNumber numberWithInt:3]];
    
    if([derDatenDic objectForKey:@"ramp"])

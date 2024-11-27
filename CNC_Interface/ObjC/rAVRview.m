@@ -14050,8 +14050,10 @@ return returnInt;
 - (void)ManFeldRichtung:(int)richtung mousestatus:(int)status pfeilstep:(int)step
 {
    //NSLog(@"\n\n*****************  AVR  ManFeldRichtung richtung: %d",richtung);
+   // outletdaten holen
    NSDictionary* outletdaten = [rHotwireViewController cncoutletdaten];
    NSLog(@"AVR ManFeldRichtung outletdaten: %@",outletdaten);
+   NSLog(@"AVR ManFeldRichtung boardindex: %d",boardindex);
    int zoomfaktor=1.0;
    int code=0;
    int i=0;
@@ -14124,8 +14126,9 @@ return returnInt;
          
    }
    
-   if (boardindex == 1)
+   if (boardindex == 1) // teensy3,4
    {
+      NSLog(@"teensy3,4: status: %d",status);
       if (status) // mousedown
       {
          code=0xC0;
@@ -14137,10 +14140,11 @@ return returnInt;
    }
    else // Fuer teensy++2: andere Rueckgabe: status 1: default
    {
+      NSLog(@"teensy++2: status: %d",status);
       if (status)
       {
          code=0xC0;
-         NSLog(@"teensy++2: status: %d",status);
+         
       }
       else
       {
@@ -14216,6 +14220,8 @@ return returnInt;
    [tempDic setObject:[NSNumber numberWithFloat:zoomfaktor] forKey:@"zoomfaktor"];
    
    [tempDic setObject:[NSNumber numberWithInt:code] forKey:@"code"];
+      
+   [tempDic setObject:[NSNumber numberWithInt:boardindex] forKey:@"boardindex"];
    
    
    // [tempDic setObject:[NSNumber numberWithInt:code] forKey:@"codea"];

@@ -27,6 +27,11 @@ func printhex(wert:UInt8)
    print(String(wert, radix:16, uppercase:true))
 }
 
+func int2hex(wert:UInt8)-> String
+{
+   return String(wert, radix:16, uppercase:true)
+}
+
 func hex(_ wert:UInt8)->String
 {
    return String(wert, radix:16, uppercase:true) 
@@ -401,7 +406,7 @@ class rViewController: NSViewController, NSWindowDelegate
       
       
       var preferences = Preferences(webserviceURL: "https://api.twitter.com", itemsPerPage: 12, backupEnabled: false,robot1_offset: 300)
-      print("preferences: \(preferences)")
+      //print("preferences: \(preferences)")
       preferences.robot1_offset = 400
       
       
@@ -530,9 +535,9 @@ class rViewController: NSViewController, NSWindowDelegate
 
         @objc func microAktion(_ notification:Notification)
         {
-           print("VC microAktion: \(notification)")
+           //print("VC microAktion: \(notification)")
            micro = notification.userInfo?["micro"] as! Int
-           print("Aktion micro: \(micro)")
+           //print("Aktion micro: \(micro)")
            micro_Feld.integerValue = micro
         }
 
@@ -549,7 +554,7 @@ class rViewController: NSViewController, NSWindowDelegate
         cncwritecounter += 1
         //print("swift rViewController writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray) cncwritecounter: \(cncwritecounter)")
        let count = usb_schnittdatenarray.count
-       print("VC writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
+       //print("VC writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
        
        if(Stepperposition < count)
        {
@@ -610,13 +615,13 @@ class rViewController: NSViewController, NSWindowDelegate
              
               //print("writeCNCAbschnitt boardindex: \(boardindex)")
 
-             print("writeCNCAbschnitt write_byteArray count: \(teensy.write_byteArray.count)")
-             print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
+             //print("writeCNCAbschnitt write_byteArray count: \(teensy.write_byteArray.count)")
+             //print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
 
              if (globalusbstatus > 0)
              {
                 let senderfolg = teensy.send_USB()
-                print("VC writeCNCAbschnitt senderfolg: \(senderfolg)")
+                //print("VC writeCNCAbschnitt senderfolg: \(senderfolg)")
              }
              // print("Stepperposition: \(Stepperposition) \n\(schnittdatenstring)");
              var ausschlussindex:[UInt8] = [0xE2]
@@ -630,7 +635,7 @@ class rViewController: NSViewController, NSWindowDelegate
        }
        else
        {
-          print("writeCNCAbschnitt Fertig ")
+          //print("VC writeCNCAbschnitt Fertig ")
       //    teensy.stop_read_USB()
           return
           
@@ -724,7 +729,9 @@ class rViewController: NSViewController, NSWindowDelegate
     @objc  func contDataAktion(_ notification:Notification)
     {
        let lastData = teensy.getlastDataRead()
-      print("contDataAktion notification: \n\(notification)\n lastData:\n \(lastData) ")
+       print("VC contDataAktion")
+
+      //print("VC contDataAktion notification: \n\(notification)\n lastData:\n \(lastData) ")
       var ii = 0
        while ii < 10
        {
@@ -890,14 +897,14 @@ class rViewController: NSViewController, NSWindowDelegate
         if let richtungraw = info?["richtung"] as?Int 
         {
            richtung = richtungraw
-           print("usbschnittdatenaktion Richtung: \(richtung)")
+           print("VC usbschnittdatenaktion Richtung: \(richtung)")
         }
         else
         {
            print("zeilenindex: \(zeilenindex) zeile: \(zeile) usbschnittdatenaktion keine Richtung")
         }
          
-        print("usbschnittdatenaktion micro: \(micro)")
+        //print("usbschnittdatenaktion micro: \(micro)")
         wertarray[25] = UInt8(steps)
         
         wertarray[26] = UInt8(micro)
@@ -941,15 +948,15 @@ class rViewController: NSViewController, NSWindowDelegate
      
      if (teensy.read_OK.boolValue == false)
      {
-        print("usbschnittdatenaktion teensy.read_OK ist false")
+        //print("usbschnittdatenaktion teensy.read_OK ist false")
         let result = teensy.start_read_USB(true, dic:timerdic)
-         print("usbschnittdatenaktion teensy.read_OK status ist: \(result)")
+         //print("usbschnittdatenaktion teensy.read_OK status ist: \(result)")
      }
      else
      {
         //print("teensy.read_OK ist true")
      }
-      print("readOK vor writeCNCAbschnitt: \(teensy.read_OK.boolValue)\n usb_schnittdatenarray: \(usb_schnittdatenarray)")
+      //print("readOK vor writeCNCAbschnitt: \(teensy.read_OK.boolValue)\n usb_schnittdatenarray: \(usb_schnittdatenarray)")
       writeCNCAbschnitt()
     }
    
@@ -1025,7 +1032,7 @@ class rViewController: NSViewController, NSWindowDelegate
    {
       let info = notification.userInfo
       let ident:String = info?["ident"] as! String  // 
-      print("ViewController tabviewAktion:\t \(ident) usbstatus: \(usbstatus) globalusbstatus: \(globalusbstatus)")
+      //print("ViewController tabviewAktion:\t \(ident) usbstatus: \(usbstatus) globalusbstatus: \(globalusbstatus)")
       selectedDevice = ident
       usbstatus = Int(globalusbstatus)
       
@@ -1154,10 +1161,10 @@ class rViewController: NSViewController, NSWindowDelegate
    @objc func newDataAktion(_ notification:Notification) // entspricht readUSB in USB_Stepper
     {
        // Reaktion auf eingehende USB-Daten
-       print("\nVC newDataAktion start");
+       //print("\nVC newDataAktion start");
        let lastData = teensy.getlastDataRead()
        let lastDataArray = [UInt8](lastData)
-       print("VC newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")
+       //print("VC newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")
        
  /*
        var ii = 0
@@ -1209,7 +1216,7 @@ class rViewController: NSViewController, NSWindowDelegate
              // https://useyourloaf.com/blog/swift-string-cheat-sheet/
              let home = Int(usbdata[13])
              let anschlagcheck = Int(usbdata[9])
-             print("VC newDataAktion abschnittfertig abschnittfertig: \(hex(abschnittfertig)) anschlagcheck: \(anschlagcheck)")
+             print("VC newDataAktion abschnittfertig: \(hex(abschnittfertig)) anschlagcheck: \(anschlagcheck)")
              NotificationDic["abschnittfertig"] = Int(abschnittfertig)
              let pfeiltastenrichtung = Int(usbdata[29])
 
@@ -1221,7 +1228,7 @@ class rViewController: NSViewController, NSWindowDelegate
              
              let Tastaturwert = usbdata[57]
              let Taste = usbdata[58]
-             //print("VC newDataAktion Tastaturwert: \(Tastaturwert) Taste: \(Taste)")
+             print("VC newDataAktion Tastaturwert: \(Tastaturwert) Taste: \(Taste)")
              NotificationDic["tastaturwert"] = Int(Tastaturwert)
              NotificationDic["taste"] = Int(Taste)
   
@@ -1262,7 +1269,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    NotificationDic["deleteindikator"] = Int(deleteindikator)
                    NotificationDic["pfeilrichtung"] = Int(pfeilrichtung)
                    
-                   print("VC newDataAktion newDataAktion 83 pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator) *** randomnummer: \(randomnummer)")
+                   print("VC newDataAktion newDataAktion 0x83 pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator) *** randomnummer: \(randomnummer)")
                    //AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.green.cgColor
                    break
                 case 0x81: //Pfeil RIGHT    
@@ -1273,7 +1280,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    NotificationDic["deleteindikator"] = Int(deleteindikator)
                    NotificationDic["pfeilrichtung"] = Int(pfeilrichtung)
 
-                   print("VC newDataAktion newDataAktion 81 pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator) *** randomnummer: \(randomnummer)")
+                   print("VC newDataAktion newDataAktion 0x81 pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator) *** randomnummer: \(randomnummer)")
                     
                    break
  
@@ -1285,7 +1292,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    NotificationDic["deleteindikator"] = Int(deleteindikator)
                    NotificationDic["pfeilrichtung"] = Int(pfeilrichtung)
 
-                   print("VC newDataAktion newDataAktion 82 pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator) *** randomnummer: \(randomnummer)")
+                   print("VC newDataAktion newDataAktion 0x82 pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator) *** randomnummer: \(randomnummer)")
                     
                    break
 
@@ -1297,7 +1304,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    NotificationDic["deleteindikator"] = Int(deleteindikator)
                    NotificationDic["pfeilrichtung"] = Int(pfeilrichtung)
 
-                   print("VC newDataAktion newDataAktion 84 pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator) *** randomnummer: \(randomnummer)")
+                   print("VC newDataAktion newDataAktion 0x84 pfeilrichtung: \(pfeilrichtung) deleteindikator: \(deleteindikator) *** randomnummer: \(randomnummer)")
                     
                    break
 
@@ -1337,7 +1344,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    
                 // Anschlag first
                 case 0xA5:
-                   print("VC newDataAktion A5:  Anschlag A0  A5")
+                   print("\n****  ****  ****  VC newDataAktion A5:  Anschlag A0  A5")
                    AnschlagSet.insert(0xA5) 
                    /*
                    AnschlagSet.insert(0) // schritteax lb
@@ -1348,7 +1355,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    break;
                    
                 case 0xA6:
-                   print("VC newDataAktion A6:   Anschlag B0  A6")
+                   print("\n****  ****  ****  VC newDataAktion A6:   Anschlag B0  A6")
                    AnschlagSet.insert(0xA6) 
                    /*
                    AnschlagSet.insert(2) // schritteax lb
@@ -1359,7 +1366,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    break;
                    
                 case 0xA7:
-                   print("VC newDataAktion  Anschlag C0  A7")
+                   print("\n****  ****  ****  VC newDataAktion  Anschlag C0  A7")
                    AnschlagSet.insert(0xA7) 
                    /*
                    AnschlagSet.insert(8) // schrittebx lb
@@ -1370,7 +1377,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    break;
                    
                 case 0xA8:
-                   print("VC newDataAktion  Anschlag D0  A8")
+                   print("\n****  ****  ****  VC newDataAktion  Anschlag D0  A8")
                    AnschlagSet.insert(0xA8) 
                    //AnschlagSet.insert(IndexSet.Element(abschnittfertig)) 
                    /*

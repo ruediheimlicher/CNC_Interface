@@ -91,7 +91,7 @@ var outletdaten:[String:AnyObject] = [:]
         feldklickcounter -= 1
         
         let pfeiltag:Int = self.tag
-       print("swift Pfeil_Feld mouseUp pfeiltag: \(pfeiltag) feldklickcounter: \(feldklickcounter)")
+       //print("swift Pfeil_Feld mouseUp pfeiltag: \(pfeiltag) feldklickcounter: \(feldklickcounter)")
         self.image = releasediconarray[self.tag-1]
         var userinformation:[String : Any]
         userinformation = ["richtung":pfeiltag,  "push": 0 , ] as [String : Any]
@@ -1988,7 +1988,7 @@ var outletdaten:[String:AnyObject] = [:]
 
     @objc class func cncoutletdaten() -> NSDictionary
     {
-       print("cncoutletdaten: outletdaten: \(outletdaten)")
+       //print("cncoutletdaten: outletdaten: \(outletdaten)")
         return outletdaten as NSDictionary
     }
     
@@ -2646,7 +2646,7 @@ var outletdaten:[String:AnyObject] = [:]
         // Reaktion auf eingehende USB-Daten
         var lastData = teensy.getlastDataRead()
         let lastDataArray = [UInt8](lastData)
-        print("HW newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")
+        //print("HW newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")
         
    //     print("newDataAktion start")
   /*
@@ -3044,8 +3044,11 @@ var outletdaten:[String:AnyObject] = [:]
       
       let note = notification.userInfo as![String:Any]
       
-      print("HW USBReadAktion note: \n\(note)\n")
+      //print("HW USBReadAktion note: \n\(note)\n")
       let abschnittfertig = note["abschnittfertig"]  as! Int
+      //print("HW USBReadAktion note: \n\(note) abschnittfertig: \(abschnittfertig)\n")
+      print("\n\t HW USBReadAktion abschnittfertig: \(int2hex(wert: UInt8(abschnittfertig)))")
+      //printhex(wert: UInt8(abschnittfertig))
       let outposition = note["outposition"] as! Int
       Stepperposition = note["stepperposition"] as! Int
       var pfeilrichtung = 0xFF
@@ -3112,25 +3115,25 @@ var outletdaten:[String:AnyObject] = [:]
       switch abschnittfertig
       {
       case 0xA5:
-         print("HW USBReadAktion 0xA5 A0")
+         print("\n\t++++ ++++ ++++ HW USBReadAktion 0xA5 A0")
          AnschlagLinksIndikator.isTransparent = false
          AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.red.cgColor
          CNC_busySpinner.stopAnimation(nil)
          break
       case 0xA6:
-         print("HW USBReadAktion 0xA6 C0")
+         print("\n\t++++ ++++ ++++HW USBReadAktion 0xA6 C0")
          AnschlagRechtsIndikator.isTransparent = false
          AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.red.cgColor
          CNC_busySpinner.stopAnimation(nil)
          break
       case 0xA7:
-         print("HW USBReadAktion 0xA7 B0")
+         print("\n\t++++ ++++ ++++HW USBReadAktion 0xA7 B0")
          AnschlagObenIndikator.isTransparent = false
          AnschlagObenIndikator?.layer?.backgroundColor = NSColor.red.cgColor
          CNC_busySpinner.stopAnimation(nil)
          break
       case 0xA8:
-         print("HW USBReadAktion 0xA8 D0")
+         print("\n\t++++ ++++ ++++HW USBReadAktion 0xA8 D0")
          AnschlagUntenIndikator.isTransparent = false
          AnschlagUntenIndikator?.layer?.backgroundColor = NSColor.red.cgColor
          CNC_busySpinner.stopAnimation(nil)
@@ -3140,7 +3143,7 @@ var outletdaten:[String:AnyObject] = [:]
          
          
       case 0x81: //Pfeil RIGHT    
-         print("HW USBReadAktion 0x81")
+         print("HW USBReadAktion 0x81 \tPfeil DOWN")
          AnschlagLinksIndikator.isTransparent = true
         // AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.clear.cgColor
          CNC_Lefttaste.isEnabled = true;
@@ -3148,7 +3151,7 @@ var outletdaten:[String:AnyObject] = [:]
          break
 
       case 0x82: //Pfeil UP    
-         print("HW USBReadAktion 0x82")
+         print("HW USBReadAktion 0x82 \tPfeil UP")
          AnschlagUntenIndikator.isTransparent = true
          //AnschlagUntenIndikator?.layer?.backgroundColor = NSColor.green.cgColor
          CNC_Downtaste.isEnabled = true;
@@ -3158,7 +3161,7 @@ var outletdaten:[String:AnyObject] = [:]
          
          
       case 0x83: //Pfeil LEFT    
-         print("HW USBReadAktion 0x83")
+         print("HW USBReadAktion 0x83 \tPfeil LEFT")
          AnschlagRechtsIndikator.isTransparent = true
          //AnschlagRechtsIndikator?.layer?.backgroundColor = NSColor.green.cgColor
          CNC_Righttaste.isEnabled = true;
@@ -3166,7 +3169,7 @@ var outletdaten:[String:AnyObject] = [:]
          break
  
       case 0x84: //Pfeil DOWN    
-         print("HW USBReadAktion 0x84")
+         print("HW USBReadAktion 0x84 \tPfeil RIGHT")
          AnschlagObenIndikator.isTransparent = true
          //AnschlagObenIndikator?.layer?.backgroundColor = NSColor.green.cgColor
          CNC_Uptaste.isEnabled = true;
@@ -5004,11 +5007,11 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
    
    override func viewDidAppear()
    {
-      print ("Hotwire viewDidAppear new")
+      //rint ("Hotwire viewDidAppear new")
       // AndereSeiteTaste.target = self
       // AndereSeiteTaste.action = #selector(AVR?.reportAndereSeiteAnfahren(_ :))
       micro = CNC_microPop.selectedItem?.tag ?? 1
-      print("HW micro: \(micro)");
+      //print("HW micro: \(micro)");
       CNC_microPop.selectItem(withTag: 2)
      }
     

@@ -664,7 +664,7 @@ class rTimerInfo
       
      //    let senderfolg = rawhid_send(0,&write_byteArray, Int32(BUFFER_SIZE), 50)
       var senderfolg:Int32 = 0xFF
-      print("usb send_USB boardindex: \(boardindex)")
+      // print("usb send_USB boardindex: \(boardindex)")
       if  boardindex == 0 // teensy++2
       {
          senderfolg = rawhid_send(0,&write_byteArray, 32, 50)

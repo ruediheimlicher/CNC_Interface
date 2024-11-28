@@ -43,7 +43,7 @@ class rJoystickView: NSView
       }
       else
       {
-         Swift.print("JoystickView no ident")
+         //Swift.print("JoystickView no ident")
       }
       
    }

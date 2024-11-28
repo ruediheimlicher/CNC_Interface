@@ -20,6 +20,7 @@ float det(float v0[],float v1[]);
    float red_pwm;
    int full_pwm;
    float schalendicke;
+   int ueberschneiden;
 
 }
 - (int)steps;

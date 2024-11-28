@@ -2483,7 +2483,7 @@ return returnInt;
    
     if ((self = [super init]))
     {
-       NSLog(@"AVR init");
+       //NSLog(@"AVR init");
        return self;
     }
     return self;
@@ -2500,7 +2500,7 @@ return returnInt;
    NSString*  ProfilLibPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@%@",@"/Documents",@"/CNCDaten",@"/ProfilLib"];
    //NSURL* LibURL=[NSURL fileURLWithPath:LibPfad];
    LibOK= ([Filemanager fileExistsAtPath:ProfilLibPfad isDirectory:&istOrdner]&&istOrdner);
-   NSLog(@"readProfilLib:    LibPfad: %@ LibOK: %d",ProfilLibPfad, LibOK );
+   //NSLog(@"readProfilLib:    LibPfad: %@ LibOK: %d",ProfilLibPfad, LibOK );
     
    //NSLog(@"LibPfad: %@",LibPfad);
    if (LibOK)
@@ -4398,7 +4398,7 @@ return returnInt;
             if (status)
             {
                code=0xC0;
-               NSLog(@"teensy++2: status: %d",status);
+               //NSLog(@"teensy++2: status: %d",status);
             }
             else 
             {
@@ -9863,7 +9863,11 @@ return returnInt;
     NSMutableDictionary* LibProfilDic=[[NSMutableDictionary alloc]initWithCapacity:0];
     [LibProfilDic setObject: LibKoordinatenTabelle forKey:@"libkoordinatentabelle"];
    // [nc postNotificationName:@"eingabedaten" object:self userInfo:LibProfilDic];
-    
+   //NSLog(@"LibProfileingabeAktion LibKoordinatenTabelle: %@",LibKoordinatenTabelle);
+   for(int i=0;i<LibKoordinatenTabelle.count;i++)
+   {
+      NSLog(@"%d\t%2.2F\t%2.2F",i,[[[LibKoordinatenTabelle objectAtIndex:i]valueForKey:@"ax" ]floatValue],[[[LibKoordinatenTabelle objectAtIndex:i]valueForKey:@"ay" ]floatValue]);
+   }
        return LibKoordinatenTabelle;
 }
 
@@ -11204,7 +11208,6 @@ return returnInt;
    float einstichy = 4;
    float plattendicke = 50;
    
-   float profilrandy = 3; // sicherheitsschnitt am Profilrand
    
    
    float maxx=0,minx=MAXFLOAT; // Startwerte fuer Suche nach Rand
@@ -11283,7 +11286,7 @@ return returnInt;
       
       float dicke = [[eingabeDic objectForKey:@"dicke"]floatValue];
       
-      float blockoberkante = [[eingabeDic objectForKey:@"blockoberkante"]floatValue];
+     // float blockoberkante = [[eingabeDic objectForKey:@"blockoberkante"]floatValue];
       //blockoberkante = plattendicke-5;
       
       if ((maxy + fabs(miny))>dicke)
@@ -11294,7 +11297,7 @@ return returnInt;
       // Rahmen
       if ([[eingabeDic objectForKey:@"mitoberseite"]floatValue] && [[eingabeDic objectForKey:@"mitunterseite"]floatValue]) // kein ein/auslauf
       {
-         dicke = (abstandoben+abstandunten)+zugabeoben +zugabeoben;
+         dicke = (abstandoben+abstandunten)+zugabeoben +zugabeunten;
          rand = 5;
       }
       else
@@ -11430,8 +11433,8 @@ return returnInt;
       float deltaAX = einlaufAX - PositionA.x;
       deltaAY = einlaufAY - PositionA.y;
       
-      PositionA.x +=deltaAX;
-      PositionA.y +=deltaAY;
+      PositionA.x += deltaAX;
+      PositionA.y += deltaAY;
       
       
       float deltaBX =   einlaufBX - PositionB.x;
@@ -11447,7 +11450,8 @@ return returnInt;
       [blockkoordinatentabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:full_pwm],@"pwm",nil]];
       index++;
       
-      //NSLog(@"blockkoordinatentabelle Einlauf: %@",[blockkoordinatentabelle description]);
+      
+      NSLog(@"blockkoordinatentabelle Einlauf: %@",[blockkoordinatentabelle description]);
       //NSLog(@"reportBlockkonfigurieren nach Schneiden zum Einlauf EckeRechtsOben x: %2.2f  y: %2.2f",EckeRechtsOben.x,EckeRechtsOben.y);
       
       // Hier profil einseten: LibProfileingabefunktion
@@ -14052,8 +14056,8 @@ return returnInt;
    //NSLog(@"\n\n*****************  AVR  ManFeldRichtung richtung: %d",richtung);
    // outletdaten holen
    NSDictionary* outletdaten = [rHotwireViewController cncoutletdaten];
-   NSLog(@"AVR ManFeldRichtung outletdaten: %@",outletdaten);
-   NSLog(@"AVR ManFeldRichtung boardindex: %d",boardindex);
+   //NSLog(@"AVR ManFeldRichtung outletdaten: %@",outletdaten);
+   //NSLog(@"AVR ManFeldRichtung boardindex: %d",boardindex);
    int zoomfaktor=1.0;
    int code=0;
    int i=0;
@@ -14066,7 +14070,7 @@ return returnInt;
    
    int home = [outletdaten[@"home"]intValue];
    
-   NSLog(@"AVR  ManFeldRichtung richtung: %d speed: %d  mousestatus: %d seite1check: %d seite2check: %d home: %d",richtung, speed, status,seite1check,seite2check,home);
+   //NSLog(@"AVR  ManFeldRichtung richtung: %d speed: %d  mousestatus: %d seite1check: %d seite2check: %d home: %d",richtung, speed, status,seite1check,seite2check,home);
    
    if ((cncstatus)|| !(outletdaten[@"cnc_seite1check"] || (outletdaten[@"cnc_seite2check"])))
    {
@@ -14098,7 +14102,7 @@ return returnInt;
       }break;
       case MANUP:
       {
-         NSLog(@"ManFeldRichtung MANUP");
+         NSLog(@"ManFeldRichtung MANUP 2");
          PositionA.y  =200;
          PositionB.y  =200;
          
@@ -14108,7 +14112,7 @@ return returnInt;
       }break;
       case MANLEFT:
       {
-         NSLog(@"ManFeldRichtung MANLEFT");
+         NSLog(@"ManFeldRichtung MANLEFT 3");
          PositionA.x -=200;
          PositionB.x -=200;
          
@@ -14116,7 +14120,7 @@ return returnInt;
       case MANRIGHT:
       {
          //printf("G/n");
-         NSLog(@"ManFeldRichtung MANRIGHT");
+         NSLog(@"ManFeldRichtung MANRIGHT 1");
          PositionA.x =200;
          PositionB.x =200;
          
@@ -14128,7 +14132,7 @@ return returnInt;
    
    if (boardindex == 1) // teensy3,4
    {
-      NSLog(@"teensy3,4: status: %d",status);
+      //NSLog(@"teensy3,4: status: %d",status);
       if (status) // mousedown
       {
          code=0xC0;
@@ -14140,7 +14144,7 @@ return returnInt;
    }
    else // Fuer teensy++2: andere Rueckgabe: status 1: default
    {
-      NSLog(@"teensy++2: status: %d",status);
+      //NSLog(@"teensy++2: status: %d",status);
       if (status)
       {
          code=0xC0;
@@ -14156,7 +14160,7 @@ return returnInt;
    
    
    
-   NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f code: %2X",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y,code);
+   //NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f code: %2X",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y,code);
    index++;
    [AnfahrtArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:3],@"lage",nil]];
    
@@ -14241,7 +14245,7 @@ return returnInt;
    [tempDic setObject:[NSNumber numberWithInt:position] forKey:@"position"];
    [tempDic setObject:[NSNumber numberWithInt:speed] forKey:@"speed"];
    
-   NSLog(@"ManFeldRichtung tempDic code: %d %X",[[tempDic objectForKey:@"code"]intValue],[[tempDic objectForKey:@"code"]intValue]) ;
+   //NSLog(@"ManFeldRichtung tempDic code: %d %X",[[tempDic objectForKey:@"code"]intValue],[[tempDic objectForKey:@"code"]intValue]) ;
    
    NSDictionary* tempSteuerdatenDic=[self Tool_SteuerdatenVonDic:tempDic];
    
@@ -14249,8 +14253,10 @@ return returnInt;
    
    
    
-   MausSchnittdatenArray[i][24] = [NSNumber numberWithInt:homecode];
+   //MausSchnittdatenArray[i][24] = [NSNumber numberWithInt:homecode];
    MausSchnittdatenArray[i][26] = [NSNumber numberWithInt:home]; // home
+      
+   MausSchnittdatenArray[i][30] = [NSNumber numberWithInt:boardindex]; // home
    
    
    //[CNC setSpeed:lastSpeed];

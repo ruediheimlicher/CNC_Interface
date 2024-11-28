@@ -67,8 +67,22 @@
     19   indexl
     20   pwm (pos 20)
     21   motorstatus (pos 21)
-    22   steps // 48, 200
-    23   micro // microsteps, 1,2 4    
+    
+    23   steps // 48, 200
+    24   micro // microsteps, 1,2 4    
+    25
+    26
+    27
+    28   servo lb
+    29   servo hb
+    30   boardindex
+    31   check
+    32
+    33   steigungl
+    34   steigungh
+    35
+    36
+    
     
     
     

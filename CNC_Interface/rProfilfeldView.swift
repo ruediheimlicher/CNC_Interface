@@ -38,7 +38,8 @@ class rProfilfeldView: NSView
  
     func setDatenArray(derDatenArray:NSArray) 
     {
-        DatenArray=derDatenArray
+        DatenArray=derDatenArray 
+       //setNeedsDisplay(YES)
     }
     func setRahmenArray(derRahmenArray:NSArray)
     {

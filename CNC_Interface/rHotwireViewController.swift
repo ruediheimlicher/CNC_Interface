@@ -578,6 +578,21 @@ var outletdaten:[String:AnyObject] = [:]
 
          self.StiftUpFunktion()
      }
+   
+   @objc func goStiftUp()
+   {
+      print("StiftUp")
+      let neuepos = NSPoint(x: Int(CNC_Stift_frame.origin.x), y:  Int(CNC_Stift_frame.origin.y))
+      
+      NSAnimationContext.runAnimationGroup 
+      { _ in
+                  CNC_Stift.animator().setFrameOrigin(neuepos) // Smooth animation
+      }
+
+        // self.StiftUpFunktion()
+     
+
+   }
 
 
    
@@ -595,6 +610,19 @@ var outletdaten:[String:AnyObject] = [:]
       teensy.clear_data()
 
    }
+
+@objc func goStiftDown()
+{
+   print("HW StiftDown")
+   let neuepos = NSPoint(x: Int(CNC_Stift_frame.origin.x), y:  Int(CNC_Stift_frame.origin.y - 20))
+
+   NSAnimationContext.runAnimationGroup 
+   { _ in
+      CNC_Stift.animator().setFrameOrigin(neuepos) // Smooth animation
+   }
+
+}
+
    @IBAction func report_StiftDown(_ sender:NSButton)
    {
       print("HW report_StiftDown")
@@ -747,6 +775,7 @@ var outletdaten:[String:AnyObject] = [:]
       CNC_Table.reloadData()
       CNC_Table.scrollRowToVisible(KoordinatenTabelle.count - 1)
       ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
+      ProfilFeld.clearWeg()
       ProfilFeld.needsDisplay = true
       CNC_Stoptaste.isEnabled = true
       
@@ -864,6 +893,7 @@ var outletdaten:[String:AnyObject] = [:]
         CNC_Table.reloadData()
         CNC_Table.scrollRowToVisible(KoordinatenTabelle.count - 1)
         ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
+       ProfilFeld.clearWeg()
         ProfilFeld.needsDisplay = true
         CNC_Stoptaste.isEnabled = true
     } // LibElementeingabeAktion
@@ -985,6 +1015,7 @@ var outletdaten:[String:AnyObject] = [:]
         
         ProfilFeld.setScale(derScalefaktor:CGFloat(scalefaktor))
         ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
+       ProfilFeld.clearWeg()
         ProfilFeld.needsDisplay = true
        CNC_Table.reloadData()
        CNC_Table.selectRowIndexes(.init(integer: 0), byExtendingSelection: false) 
@@ -1002,6 +1033,7 @@ var outletdaten:[String:AnyObject] = [:]
  //return
 
        CNC_Stoptaste.isEnabled = true
+       
         
     }// LibProfileingabeAktion
     
@@ -1125,6 +1157,7 @@ var outletdaten:[String:AnyObject] = [:]
         CNC_Table.reloadData()
         CNC_Table.scrollRowToVisible(KoordinatenTabelle.count - 1)
         ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
+       ProfilFeld.clearWeg()
         ProfilFeld.needsDisplay = true
         CNC_Stoptaste.isEnabled = true
 
@@ -3044,7 +3077,7 @@ var outletdaten:[String:AnyObject] = [:]
       
       let note = notification.userInfo as![String:Any]
       
-      //print("HW USBReadAktion note: \n\(note)\n")
+      print("HW USBReadAktion note: \n\(note)\n")
       let abschnittfertig = note["abschnittfertig"]  as! Int
       //print("HW USBReadAktion note: \n\(note) abschnittfertig: \(abschnittfertig)\n")
       print("\n\t HW USBReadAktion abschnittfertig: \(int2hex(wert: UInt8(abschnittfertig)))")
@@ -3053,6 +3086,9 @@ var outletdaten:[String:AnyObject] = [:]
       Stepperposition = note["stepperposition"] as! Int
       var pfeilrichtung = 0xFF
       var deleteindikator = 0
+      var stiftposition = 0
+      
+      stiftposition = note["stiftposition"] as! Int
       
       var homanschlagstatus = 0
       
@@ -3200,8 +3236,17 @@ var outletdaten:[String:AnyObject] = [:]
          
  
       case 0xF3:
-         print("Stift UP")
-         let servopos = 1
+         print("Stift stiftposition: \(stiftposition) ")
+         if stiftposition == 1 // down
+         {
+            goStiftDown()
+         }
+         else if stiftposition == 2 // down
+         {
+            goStiftUp()
+         }
+         
+         //let servopos = 1
          break
       case 0xF4:
          print("Stift DOWN")
@@ -3900,6 +3945,7 @@ var outletdaten:[String:AnyObject] = [:]
         //let r = rahmenarray as NSArray
         ProfilFeld.setRahmenArray(derRahmenArray: rahmenarray as NSArray)
         ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
+       ProfilFeld.clearWeg()
         ProfilFeld.needsDisplay = true
 
         CNC_Stoptaste.isEnabled = true
@@ -4079,6 +4125,7 @@ var outletdaten:[String:AnyObject] = [:]
         CNC_Table.reloadData()
         ProfilFeld.setRahmenArray(derRahmenArray: rahmenarray as NSArray)
         ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
+       ProfilFeld.clearWeg()
         ProfilFeld.needsDisplay = true
 
         CNC_Stoptaste.isEnabled = true

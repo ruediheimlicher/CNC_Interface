@@ -1219,7 +1219,7 @@ class rViewController: NSViewController, NSWindowDelegate
              print("VC newDataAktion abschnittfertig: \(hex(abschnittfertig)) anschlagcheck: \(anschlagcheck)")
              NotificationDic["abschnittfertig"] = Int(abschnittfertig)
              let pfeiltastenrichtung = Int(usbdata[29])
-
+             NotificationDic["stiftposition"] = Int(usbdata[10])
              let abschnittnummer:Int = Int((usbdata[5] << 8) | usbdata[6])
              let ladeposition = usbdata[8]
              

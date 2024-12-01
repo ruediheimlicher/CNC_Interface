@@ -14030,7 +14030,7 @@ return returnInt;
    
    [HomeSchnittdatenArray addObject:[self Tool_SchnittdatenVonDic:tempSteuerdatenDic]];
 
-   //NSLog(@"AVR  reportHome HomeSchnittdatenArray: %@",[HomeSchnittdatenArray[0] description]);
+   NSLog(@"AVR  reportHome HomeSchnittdatenArray: %@",[HomeSchnittdatenArray[0] description]);
    
    HomeSchnittdatenArray[i][24] = [NSNumber numberWithInt:homecode];
    HomeSchnittdatenArray[i][26] = [NSNumber numberWithInt:micro]; // home

@@ -14236,7 +14236,7 @@
             startingLineNumber = "815"
             endingLineNumber = "815"
             landmarkName = "LibElementeingabeAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -14540,7 +14540,7 @@
             startingLineNumber = "6121"
             endingLineNumber = "6121"
             landmarkName = "CNC_JoystickAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -14556,7 +14556,7 @@
             startingLineNumber = "6128"
             endingLineNumber = "6128"
             landmarkName = "CNC_JoystickAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -14572,7 +14572,7 @@
             startingLineNumber = "5894"
             endingLineNumber = "5894"
             landmarkName = "setStartRumpfteilDic()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -14588,7 +14588,7 @@
             startingLineNumber = "3064"
             endingLineNumber = "3064"
             landmarkName = "report_JoystickClear(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -14716,7 +14716,7 @@
             startingLineNumber = "671"
             endingLineNumber = "671"
             landmarkName = "FigElementeingabeAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -14732,7 +14732,7 @@
             startingLineNumber = "6075"
             endingLineNumber = "6075"
             landmarkName = "CNC_JoystickAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -14748,7 +14748,7 @@
             startingLineNumber = "6077"
             endingLineNumber = "6077"
             landmarkName = "CNC_JoystickAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -14764,7 +14764,7 @@
             startingLineNumber = "6080"
             endingLineNumber = "6080"
             landmarkName = "CNC_JoystickAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -14796,7 +14796,7 @@
             startingLineNumber = "5776"
             endingLineNumber = "5776"
             landmarkName = "reportLinkeRechteSeite(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -14812,7 +14812,7 @@
             startingLineNumber = "5770"
             endingLineNumber = "5770"
             landmarkName = "reportLinkeRechteSeite(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -14828,7 +14828,7 @@
             startingLineNumber = "2581"
             endingLineNumber = "2581"
             landmarkName = "reportUSB_sendArray(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -14860,7 +14860,7 @@
             startingLineNumber = "2641"
             endingLineNumber = "2641"
             landmarkName = "reportUSB_sendArray(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -14908,7 +14908,7 @@
             startingLineNumber = "2578"
             endingLineNumber = "2578"
             landmarkName = "reportUSB_sendArray(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -14924,7 +14924,7 @@
             startingLineNumber = "2624"
             endingLineNumber = "2624"
             landmarkName = "reportUSB_sendArray(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -14940,7 +14940,7 @@
             startingLineNumber = "3765"
             endingLineNumber = "3765"
             landmarkName = "readSVG()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15004,7 +15004,7 @@
             startingLineNumber = "3722"
             endingLineNumber = "3722"
             landmarkName = "readSVG()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15020,7 +15020,7 @@
             startingLineNumber = "3736"
             endingLineNumber = "3736"
             landmarkName = "readSVG()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15035,8 +15035,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3768"
             endingLineNumber = "3768"
-            landmarkName = "*** *** *** reportProfilOberseiteTask"
-            landmarkType = "19">
+            landmarkName = "rHotwireViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15052,7 +15052,7 @@
             startingLineNumber = "3906"
             endingLineNumber = "3906"
             landmarkName = "reportProfilOberseiteTask(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15068,7 +15068,7 @@
             startingLineNumber = "3845"
             endingLineNumber = "3845"
             landmarkName = "reportProfilOberseiteTask(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15260,7 +15260,7 @@
             startingLineNumber = "2999"
             endingLineNumber = "2999"
             landmarkName = "newDataAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15276,7 +15276,7 @@
             startingLineNumber = "3123"
             endingLineNumber = "3123"
             landmarkName = "USBReadAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15292,7 +15292,7 @@
             startingLineNumber = "3122"
             endingLineNumber = "3122"
             landmarkName = "USBReadAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15324,7 +15324,7 @@
             startingLineNumber = "2700"
             endingLineNumber = "2700"
             landmarkName = "newDataAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15372,7 +15372,7 @@
             startingLineNumber = "4959"
             endingLineNumber = "4959"
             landmarkName = "report_Home(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15547,8 +15547,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1405"
             endingLineNumber = "1405"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            landmarkName = "rHotwireViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15724,7 +15724,7 @@
             startingLineNumber = "6116"
             endingLineNumber = "6116"
             landmarkName = "CNC_JoystickAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15756,7 +15756,7 @@
             startingLineNumber = "5759"
             endingLineNumber = "5759"
             landmarkName = "reportLinkeRechteSeite(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15868,7 +15868,7 @@
             startingLineNumber = "4213"
             endingLineNumber = "4213"
             landmarkName = "reportNeuesElement(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15884,7 +15884,7 @@
             startingLineNumber = "4197"
             endingLineNumber = "4197"
             landmarkName = "reportNeuesElement(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15900,7 +15900,7 @@
             startingLineNumber = "4199"
             endingLineNumber = "4199"
             landmarkName = "reportNeuesElement(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15932,7 +15932,7 @@
             startingLineNumber = "6241"
             endingLineNumber = "6241"
             landmarkName = "reportSeiteVertauschen(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15948,7 +15948,7 @@
             startingLineNumber = "5427"
             endingLineNumber = "5427"
             landmarkName = "viewDidLoad()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15964,7 +15964,7 @@
             startingLineNumber = "5801"
             endingLineNumber = "5801"
             landmarkName = "DCAktion(datadic:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -15980,7 +15980,7 @@
             startingLineNumber = "5816"
             endingLineNumber = "5816"
             landmarkName = "readHotwire_PList()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -16124,7 +16124,7 @@
             startingLineNumber = "4935"
             endingLineNumber = "4935"
             landmarkName = "report_Home(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -16156,7 +16156,7 @@
             startingLineNumber = "752"
             endingLineNumber = "752"
             landmarkName = "FigElementeingabeAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -16300,7 +16300,7 @@
             startingLineNumber = "5505"
             endingLineNumber = "5505"
             landmarkName = "viewDidLoad()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -16492,7 +16492,7 @@
             startingLineNumber = "962"
             endingLineNumber = "962"
             landmarkName = "LibProfileingabeAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17116,7 +17116,7 @@
             startingLineNumber = "991"
             endingLineNumber = "991"
             landmarkName = "LibProfileingabeAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17243,8 +17243,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "4429"
             endingLineNumber = "4429"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            landmarkName = "reportWertAXStepper(_:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17260,7 +17260,7 @@
             startingLineNumber = "4396"
             endingLineNumber = "4396"
             landmarkName = "reportWertAXStepper(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17308,7 +17308,7 @@
             startingLineNumber = "2138"
             endingLineNumber = "2138"
             landmarkName = "reportNeuTaste(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17404,7 +17404,7 @@
             startingLineNumber = "2122"
             endingLineNumber = "2122"
             landmarkName = "reportNeuTaste(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17420,7 +17420,7 @@
             startingLineNumber = "2209"
             endingLineNumber = "2209"
             landmarkName = "NeuTastefunktion()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17436,7 +17436,7 @@
             startingLineNumber = "2123"
             endingLineNumber = "2123"
             landmarkName = "reportNeuTaste(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17500,7 +17500,7 @@
             startingLineNumber = "2120"
             endingLineNumber = "2120"
             landmarkName = "reportNeuTaste(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17532,7 +17532,7 @@
             startingLineNumber = "4875"
             endingLineNumber = "4875"
             landmarkName = "report_Shift(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17596,7 +17596,7 @@
             startingLineNumber = "4937"
             endingLineNumber = "4937"
             landmarkName = "report_Home(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17644,7 +17644,7 @@
             startingLineNumber = "2258"
             endingLineNumber = "2258"
             landmarkName = "reportStopTaste(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17660,7 +17660,7 @@
             startingLineNumber = "2310"
             endingLineNumber = "2310"
             landmarkName = "reportStopTaste(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17676,7 +17676,7 @@
             startingLineNumber = "2393"
             endingLineNumber = "2393"
             landmarkName = "reportStopTaste(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17692,7 +17692,7 @@
             startingLineNumber = "2386"
             endingLineNumber = "2386"
             landmarkName = "reportStopTaste(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17724,7 +17724,7 @@
             startingLineNumber = "3112"
             endingLineNumber = "3112"
             landmarkName = "USBReadAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17740,7 +17740,7 @@
             startingLineNumber = "2545"
             endingLineNumber = "2545"
             landmarkName = "reportUSB_sendArray(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17756,7 +17756,7 @@
             startingLineNumber = "2553"
             endingLineNumber = "2553"
             landmarkName = "reportUSB_sendArray(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17820,7 +17820,7 @@
             startingLineNumber = "4177"
             endingLineNumber = "4177"
             landmarkName = "reportNeuesElement(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17836,7 +17836,7 @@
             startingLineNumber = "6334"
             endingLineNumber = "6334"
             landmarkName = "hotwirebeendenAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17852,7 +17852,7 @@
             startingLineNumber = "6342"
             endingLineNumber = "6342"
             landmarkName = "hotwirebeendenAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17868,7 +17868,7 @@
             startingLineNumber = "2730"
             endingLineNumber = "2730"
             landmarkName = "newDataAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17900,7 +17900,7 @@
             startingLineNumber = "3095"
             endingLineNumber = "3095"
             landmarkName = "USBReadAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17916,7 +17916,7 @@
             startingLineNumber = "3111"
             endingLineNumber = "3111"
             landmarkName = "USBReadAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17932,7 +17932,7 @@
             startingLineNumber = "2685"
             endingLineNumber = "2685"
             landmarkName = "newDataAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17964,7 +17964,7 @@
             startingLineNumber = "3193"
             endingLineNumber = "3193"
             landmarkName = "USBReadAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -17980,7 +17980,7 @@
             startingLineNumber = "3211"
             endingLineNumber = "3211"
             landmarkName = "USBReadAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -18011,8 +18011,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1490"
             endingLineNumber = "1490"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            landmarkName = "rHotwireViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -18156,7 +18156,7 @@
             startingLineNumber = "4184"
             endingLineNumber = "4184"
             landmarkName = "reportNeuesElement(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -18172,7 +18172,7 @@
             startingLineNumber = "6303"
             endingLineNumber = "6303"
             landmarkName = "saveHotwire_PList()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -18220,7 +18220,7 @@
             startingLineNumber = "4888"
             endingLineNumber = "4888"
             landmarkName = "report_Shift(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -18236,7 +18236,7 @@
             startingLineNumber = "2252"
             endingLineNumber = "2252"
             landmarkName = "setOutletdaten()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -18604,7 +18604,7 @@
             startingLineNumber = "5609"
             endingLineNumber = "5609"
             landmarkName = "reportPWM_Stepper(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -18700,7 +18700,7 @@
             startingLineNumber = "4088"
             endingLineNumber = "4088"
             landmarkName = "reportProfilUnterseiteTask(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -18716,7 +18716,7 @@
             startingLineNumber = "5622"
             endingLineNumber = "5622"
             landmarkName = "reportPWM_Stepper(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -18732,7 +18732,7 @@
             startingLineNumber = "3629"
             endingLineNumber = "3629"
             landmarkName = "readSVG()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -18876,7 +18876,7 @@
             startingLineNumber = "3572"
             endingLineNumber = "3572"
             landmarkName = "punktarrayvonSGV(sgvarray:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -18988,7 +18988,7 @@
             startingLineNumber = "4198"
             endingLineNumber = "4198"
             landmarkName = "reportNeuesElement(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -19164,7 +19164,7 @@
             startingLineNumber = "2396"
             endingLineNumber = "2396"
             landmarkName = "reportStopTaste(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -19180,7 +19180,7 @@
             startingLineNumber = "2476"
             endingLineNumber = "2476"
             landmarkName = "StopTastefunktion()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -19308,7 +19308,7 @@
             startingLineNumber = "2281"
             endingLineNumber = "2281"
             landmarkName = "reportStopTaste(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -19356,7 +19356,7 @@
             startingLineNumber = "2387"
             endingLineNumber = "2387"
             landmarkName = "reportStopTaste(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -19372,7 +19372,7 @@
             startingLineNumber = "2432"
             endingLineNumber = "2432"
             landmarkName = "StopTastefunktion()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -19388,7 +19388,7 @@
             startingLineNumber = "5177"
             endingLineNumber = "5177"
             landmarkName = "viewDidLoad()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -19404,7 +19404,7 @@
             startingLineNumber = "2266"
             endingLineNumber = "2266"
             landmarkName = "reportStopTaste(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -19468,7 +19468,7 @@
             startingLineNumber = "2251"
             endingLineNumber = "2251"
             landmarkName = "setOutletdaten()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -19484,7 +19484,7 @@
             startingLineNumber = "4940"
             endingLineNumber = "4940"
             landmarkName = "report_Home(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -19500,7 +19500,7 @@
             startingLineNumber = "2025"
             endingLineNumber = "2025"
             landmarkName = "cncoutletdaten()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -19516,7 +19516,7 @@
             startingLineNumber = "4896"
             endingLineNumber = "4896"
             landmarkName = "report_Shift(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -19619,7 +19619,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "5E39C874-912A-48CA-B94C-E8AD4815157E"
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CNC_Interface/ObjC/rAVRview.m"
@@ -19644,7 +19644,7 @@
             startingLineNumber = "2623"
             endingLineNumber = "2623"
             landmarkName = "reportUSB_sendArray(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20028,7 +20028,7 @@
             startingLineNumber = "6097"
             endingLineNumber = "6097"
             landmarkName = "CNC_JoystickAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20172,7 +20172,7 @@
             startingLineNumber = "1503"
             endingLineNumber = "1503"
             landmarkName = "DC_Funktion(pwm:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20236,7 +20236,7 @@
             startingLineNumber = "6358"
             endingLineNumber = "6358"
             landmarkName = "PfeilFeldAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20252,7 +20252,7 @@
             startingLineNumber = "2282"
             endingLineNumber = "2282"
             landmarkName = "reportStopTaste(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20284,7 +20284,7 @@
             startingLineNumber = "1016"
             endingLineNumber = "1016"
             landmarkName = "LibProfileingabeAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20620,7 +20620,7 @@
             startingLineNumber = "2247"
             endingLineNumber = "2247"
             landmarkName = "setOutletdaten()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20636,7 +20636,7 @@
             startingLineNumber = "3224"
             endingLineNumber = "3224"
             landmarkName = "USBReadAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20652,7 +20652,7 @@
             startingLineNumber = "2442"
             endingLineNumber = "2442"
             landmarkName = "StopTastefunktion()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20668,7 +20668,7 @@
             startingLineNumber = "1497"
             endingLineNumber = "1497"
             landmarkName = "DC_Funktion(pwm:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20700,7 +20700,7 @@
             startingLineNumber = "1511"
             endingLineNumber = "1511"
             landmarkName = "DC_Funktion(pwm:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20748,7 +20748,7 @@
             startingLineNumber = "3081"
             endingLineNumber = "3081"
             landmarkName = "USBReadAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20844,7 +20844,7 @@
             startingLineNumber = "3155"
             endingLineNumber = "3155"
             landmarkName = "USBReadAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20860,7 +20860,7 @@
             startingLineNumber = "3167"
             endingLineNumber = "3167"
             landmarkName = "USBReadAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20876,7 +20876,7 @@
             startingLineNumber = "6400"
             endingLineNumber = "6400"
             landmarkName = "PfeilFeldAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20892,7 +20892,7 @@
             startingLineNumber = "2533"
             endingLineNumber = "2533"
             landmarkName = "reportUSB_sendArray(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20908,7 +20908,7 @@
             startingLineNumber = "4228"
             endingLineNumber = "4228"
             landmarkName = "reportManRight(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20924,7 +20924,7 @@
             startingLineNumber = "2548"
             endingLineNumber = "2548"
             landmarkName = "reportUSB_sendArray(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20940,7 +20940,7 @@
             startingLineNumber = "6357"
             endingLineNumber = "6357"
             landmarkName = "PfeilFeldAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -20956,7 +20956,7 @@
             startingLineNumber = "6406"
             endingLineNumber = "6406"
             landmarkName = "PfeilFeldAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -21004,7 +21004,7 @@
             startingLineNumber = "3007"
             endingLineNumber = "3007"
             landmarkName = "newDataAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -21068,7 +21068,7 @@
             startingLineNumber = "2681"
             endingLineNumber = "2681"
             landmarkName = "newDataAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -21084,7 +21084,39 @@
             startingLineNumber = "3080"
             endingLineNumber = "3080"
             landmarkName = "USBReadAktion(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "11181453-3DD7-45BB-96F0-20B2F1663306"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/rViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "644"
+            endingLineNumber = "644"
+            landmarkName = "writeCNCAbschnitt()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F277E5A3-67C5-4E63-B569-9D3DFE08379F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CNC_Interface/ObjC/rAVRview.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "14047"
+            endingLineNumber = "14047"
+            landmarkName = "-home_Horizontal"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

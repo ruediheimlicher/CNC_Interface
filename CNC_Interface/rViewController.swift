@@ -641,7 +641,7 @@ class rViewController: NSViewController, NSWindowDelegate
           
        }
        
-       //print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
+       print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
     }
     
    

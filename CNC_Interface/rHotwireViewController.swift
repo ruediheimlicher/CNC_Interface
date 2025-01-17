@@ -64,7 +64,7 @@ var outletdaten:[String:AnyObject] = [:]
     override func mouseDown(with theEvent: NSEvent)
     {
         super.mouseDown(with: theEvent)
-        let startPoint = theEvent.locationInWindow
+        //let startPoint = theEvent.locationInWindow
             //print(startPoint) //for top left it prints (0, 900)
         feldklickcounter += 1
        let pfeiltag:Int = self.tag
@@ -86,7 +86,7 @@ var outletdaten:[String:AnyObject] = [:]
     override func mouseUp(with theEvent: NSEvent)
     {
         super.mouseUp(with: theEvent)
-        let startPoint = theEvent.locationInWindow
+       // let startPoint = theEvent.locationInWindow
          //print(startPoint) //for top left it prints (0, 900)
         feldklickcounter -= 1
         
@@ -544,7 +544,7 @@ var outletdaten:[String:AnyObject] = [:]
      //let stiftframe = CNC_Stift.frame
       print("StiftMove stiftframe x: \(CNC_Stift_frame.origin.x) dy: \(CNC_Stift_frame.origin.y)")
       
-      
+      StiftUp
      
       let neuepos = NSPoint(x: Int(CNC_Stift_frame.origin.x) + dx, y:  Int(CNC_Stift_frame.origin.y) + dy)
       NSAnimationContext.runAnimationGroup { _ in
@@ -670,7 +670,7 @@ var outletdaten:[String:AnyObject] = [:]
    {
       let info = notification.userInfo
       print("swift FigElementeingabeAktion: \(info)")
-      var infoDic = notification.userInfo as? [String:Any]
+      let infoDic = notification.userInfo as? [String:Any]
       
       
       print("FigElementeingabeAktion KoordinatenTabelle Start: \(KoordinatenTabelle)")
@@ -900,142 +900,152 @@ var outletdaten:[String:AnyObject] = [:]
     
     
     @objc func LibProfileingabeAktion(_ notification:Notification)
-    {
-       setOutletdaten()
+   {
+      var mitHolm = 1
+      if (mitHolm > 0)
+      {
+         outletdaten["mitholm"] = 1 as AnyObject
+      }
+      else
+      {
+         outletdaten["mitholm"] = 0 as AnyObject
+      }
+      
+      setOutletdaten()
+      
+      let info = notification.userInfo
+      print("LibProfileingabeAktion: \(info)")
+      var infodic = notification.userInfo as? [String:Any]
+      
+      
+      
+      // chat
+      /*
+       if let userInfo = notification.userInfo as? [String: Any] {
+       var arrayOfDictionaries: [[String: Any]] = []
        
-        let info = notification.userInfo
-       // print("LibProfileingabeAktion: \(info)")
-        var infodic = notification.userInfo as? [String:Any]
-        
-        
-        
-        // chat
-        /*
-        if let userInfo = notification.userInfo as? [String: Any] {
-            var arrayOfDictionaries: [[String: Any]] = []
-
-            for (_, value) in userInfo {
-                if let dictionary = value as? [String: Any] {
-                    arrayOfDictionaries.append(dictionary)
-                }
-            }
-
-            print("arrayOfDictionaries: \(arrayOfDictionaries)")
-            // Now arrayOfDictionaries contains your converted data
-        }
-         */
-        // chat
-        
-        print("LibProfileingabeAktion KoordinatenTabelle Start: \(KoordinatenTabelle)")
-        if KoordinatenTabelle.count == 1
-        {
-            let firstzeile = KoordinatenTabelle.first
-            if firstzeile?["ax"] == 0 && firstzeile?["ay"] == 0 && firstzeile?["bx"] == 0 && firstzeile!["by"] == 0
-            {
-                KoordinatenTabelle.removeAll()
-            }
-            
-        }
-        infodic!["koordinatentabelle"] = KoordinatenTabelle
-        infodic!["offsetx"] = ProfilBOffsetXFeld.doubleValue
-        infodic!["offsety"] = ProfilBOffsetYFeld.doubleValue
-        infodic!["profiltiefea"] = ProfilTiefeFeldA.doubleValue
-        infodic!["profiltiefeb"] = ProfilTiefeFeldB.doubleValue
-        infodic!["spannweite"] = Spannweite.doubleValue
-        infodic!["portalabstand"] = Portalabstand.integerValue
-        infodic!["basisabstand"] = Basisabstand.integerValue
-        
-        infodic!["profilwrench"] = ProfilWrenchFeld.doubleValue
-        
-        let r = ProfilWrenchEinheitRadio.selectedRow
-        infodic!["wrenchradio"] = ProfilWrenchEinheitRadio.selectedRow
-
-        infodic!["minimaldistanz"] = MinimaldistanzFeld.floatValue
-
-        
-
-        
-        infodic!["wertax"] = 35
-        infodic!["wertay"] = 25
-        let temppwm = DC_PWM.integerValue
+       for (_, value) in userInfo {
+       if let dictionary = value as? [String: Any] {
+       arrayOfDictionaries.append(dictionary)
+       }
+       }
        
-        infodic!["pwm"] = DC_PWM.integerValue
-        
-       infodic!["abbrand"] = AbbrandFeld.floatValue
-        
-        if AbbrandCheckbox.state == NSControl.StateValue.on
-        {
-            infodic!["mitabbrand"] = 1
-        }
-        else
-        {
-            infodic!["mitabbrand"] = 0
-        }
-
-        infodic!["offsetx"] = ProfilBOffsetXFeld.doubleValue
-        infodic!["offsety"] = ProfilBOffsetYFeld.doubleValue
-
-        infodic!["minimaldistanz"] = MinimaldistanzFeld.floatValue
-        
-        let popindex:Int = ScalePop.indexOfSelectedItem
-        let a = ScalePop.selectedTag()
-        let popitem:NSMenuItem = ScalePop.item(at: popindex)!
-        let scalefaktor = popitem.tag
-        infodic!["scale"] = scalefaktor
-        
-        
-        
-   //     let eingabedic = info! as NSDictionary
-         //print("LibProfilEG infodic: \(infodic)")
-        
-        KoordinatenTabelle = AVR?.libProfileingabeFunktion(infodic) as! [[String : Double]]
-        
-        /*
-          Werte fuer "teil":
-          10:  Endleisteneinlauf
-          20:  Oberseite
-          30:  Unterseite, rueckwaerts eingesetzt
-          40:  Nasenleisteauslauf
-          50: Sicherheitsschnitt nach oben
-          */
-           
-        if WertAXFeld.doubleValue == 0
-        {
-            WertAXFeld.doubleValue = 35.0
-            WertBXFeld.doubleValue = 35.0
-        }
-        
-        if WertAYFeld.doubleValue == 0
-        {
-            WertAYFeld.doubleValue = 55.0
-            WertBYFeld.doubleValue = 55.0
-        }
-                  
- 
-        
-        ProfilFeld.setScale(derScalefaktor:CGFloat(scalefaktor))
-        ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
-       ProfilFeld.clearWeg()
-        ProfilFeld.needsDisplay = true
-       CNC_Table.reloadData()
-       CNC_Table.selectRowIndexes(.init(integer: 0), byExtendingSelection: false) 
-        
-        let startindexoffset = KoordinatenTabelle.count - 1
-        print("LibProfileingabeAktion startindexoffset: \(startindexoffset)")
-        var von:Int = 0
-        var bis:Int = KoordinatenTabelle.count
-        var ProfilNameA = ""
-        var ProfilNameB = ""
-
-
-        var origpwm:Double = DC_PWM.doubleValue
-        
- //return
-
-       CNC_Stoptaste.isEnabled = true
-       
-        
-    }// LibProfileingabeAktion
+       print("arrayOfDictionaries: \(arrayOfDictionaries)")
+       // Now arrayOfDictionaries contains your converted data
+       }
+       */
+      // chat
+      
+      print("LibProfileingabeAktion KoordinatenTabelle Start: \(KoordinatenTabelle)")
+      if KoordinatenTabelle.count == 1
+      {
+         let firstzeile = KoordinatenTabelle.first
+         if firstzeile?["ax"] == 0 && firstzeile?["ay"] == 0 && firstzeile?["bx"] == 0 && firstzeile!["by"] == 0
+         {
+            KoordinatenTabelle.removeAll()
+         }
+         
+      }
+      infodic!["koordinatentabelle"] = KoordinatenTabelle
+      infodic!["offsetx"] = ProfilBOffsetXFeld.doubleValue
+      infodic!["offsety"] = ProfilBOffsetYFeld.doubleValue
+      infodic!["profiltiefea"] = ProfilTiefeFeldA.doubleValue
+      infodic!["profiltiefeb"] = ProfilTiefeFeldB.doubleValue
+      infodic!["spannweite"] = Spannweite.doubleValue
+      infodic!["portalabstand"] = Portalabstand.integerValue
+      infodic!["basisabstand"] = Basisabstand.integerValue
+      
+      infodic!["profilwrench"] = ProfilWrenchFeld.doubleValue
+      
+      let r = ProfilWrenchEinheitRadio.selectedRow
+      infodic!["wrenchradio"] = ProfilWrenchEinheitRadio.selectedRow
+      
+      infodic!["minimaldistanz"] = MinimaldistanzFeld.floatValue
+      
+      
+      
+      
+      infodic!["wertax"] = 35
+      infodic!["wertay"] = 25
+      let temppwm = DC_PWM.integerValue
+      
+      infodic!["pwm"] = DC_PWM.integerValue
+      
+      infodic!["abbrand"] = AbbrandFeld.floatValue
+      
+      if AbbrandCheckbox.state == NSControl.StateValue.on
+      {
+         infodic!["mitabbrand"] = 1
+      }
+      else
+      {
+         infodic!["mitabbrand"] = 0
+      }
+      
+      infodic!["offsetx"] = ProfilBOffsetXFeld.doubleValue
+      infodic!["offsety"] = ProfilBOffsetYFeld.doubleValue
+      
+      infodic!["minimaldistanz"] = MinimaldistanzFeld.floatValue
+      
+      let popindex:Int = ScalePop.indexOfSelectedItem
+      let a = ScalePop.selectedTag()
+      let popitem:NSMenuItem = ScalePop.item(at: popindex)!
+      let scalefaktor = popitem.tag
+      infodic!["scale"] = scalefaktor
+      
+      
+      
+      //     let eingabedic = info! as NSDictionary
+      //print("LibProfilEG infodic: \(infodic)")
+      
+      KoordinatenTabelle = AVR?.libProfileingabeFunktion(infodic) as! [[String : Double]]
+      
+      /*
+       Werte fuer "teil":
+       10:  Endleisteneinlauf
+       20:  Oberseite
+       30:  Unterseite, rueckwaerts eingesetzt
+       40:  Nasenleisteauslauf
+       50: Sicherheitsschnitt nach oben
+       */
+      
+      if WertAXFeld.doubleValue == 0
+      {
+         WertAXFeld.doubleValue = 35.0
+         WertBXFeld.doubleValue = 35.0
+      }
+      
+      if WertAYFeld.doubleValue == 0
+      {
+         WertAYFeld.doubleValue = 55.0
+         WertBYFeld.doubleValue = 55.0
+      }
+      
+      
+      
+      ProfilFeld.setScale(derScalefaktor:CGFloat(scalefaktor))
+      ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
+      ProfilFeld.clearWeg()
+      ProfilFeld.needsDisplay = true
+      CNC_Table.reloadData()
+      CNC_Table.selectRowIndexes(.init(integer: 0), byExtendingSelection: false) 
+      
+      let startindexoffset = KoordinatenTabelle.count - 1
+      print("LibProfileingabeAktion startindexoffset: \(startindexoffset)")
+      var von:Int = 0
+      var bis:Int = KoordinatenTabelle.count
+      var ProfilNameA = ""
+      var ProfilNameB = ""
+      
+      
+      var origpwm:Double = DC_PWM.doubleValue
+      
+      //return
+      
+      CNC_Stoptaste.isEnabled = true
+      
+      
+   }// LibProfileingabeAktion
     
     
     @objc func FormeingabeAktion(_ notification:Notification)
@@ -2249,7 +2259,7 @@ var outletdaten:[String:AnyObject] = [:]
       let zoomfaktor = ProfilTiefeFeldA.doubleValue / 1000
       outletdaten["zoom"] = zoomfaktor as AnyObject
       outletdaten["micro"] = CNC_microPop.selectedItem?.tag as AnyObject
-    // outletdaten["home"] = home as AnyObject
+      outletdaten["abbrand"] = AbbrandCheckbox.state as AnyObject
 
    }
     
@@ -3618,6 +3628,7 @@ var outletdaten:[String:AnyObject] = [:]
       //print("punktarray: \n\(punktarray)")
       return punktarray
    }
+   
    @objc func readSVG()->[[Double]]
    {
       print("HW readSVG")
@@ -3671,7 +3682,6 @@ var outletdaten:[String:AnyObject] = [:]
          guard let  fileURL = URL.init(string:urlstring) else {return punktarray}
          
          //guard 
-         //let  fileURL = URL(fileURLWithPath: "/Users/ruediheimlicher/Desktop/CNC_SVG/ATest0.svg" )// else {return }
          
          print("readSVG URL: \(fileURL)")
          dateisuffix = urlstring.components(separatedBy: ".").last ?? "-"         

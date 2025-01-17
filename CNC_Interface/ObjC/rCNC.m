@@ -3698,6 +3698,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
 
 
 
+
 - (NSMutableArray*)addAbbrandVonKoordinaten:(NSArray*)Koordinatentabelle mitAbbrandA:(float)abbrandmassa  mitAbbrandB:(float)abbrandmassb aufSeite:(int)seite von:(int)von bis:(int)bis
 {
    /*

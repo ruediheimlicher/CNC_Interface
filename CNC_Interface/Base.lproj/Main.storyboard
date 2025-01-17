@@ -778,7 +778,7 @@
                                 </textFieldCell>
                             </textField>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2ZM-yG-Izq">
-                                <rect key="frame" x="186" y="534.5" width="58" height="15"/>
+                                <rect key="frame" x="186" y="534" width="58" height="15"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Auslauf" bezelStyle="regularSquare" imagePosition="right" alignment="left" controlSize="small" state="on" inset="2" id="SsD-BC-87V">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -786,7 +786,7 @@
                                 </buttonCell>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nvA-Iq-1qa">
-                                <rect key="frame" x="263" y="534.5" width="54" height="15"/>
+                                <rect key="frame" x="263" y="534" width="54" height="15"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Einlauf" bezelStyle="regularSquare" imagePosition="right" alignment="left" controlSize="small" state="on" inset="2" id="KfZ-3B-hzU">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -812,7 +812,7 @@
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AVD-KX-yAS">
-                                <rect key="frame" x="186" y="512.5" width="58" height="16"/>
+                                <rect key="frame" x="186" y="512" width="58" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Seite 1" bezelStyle="regularSquare" imagePosition="right" controlSize="small" state="on" inset="2" id="y73-RR-REW">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -820,7 +820,7 @@
                                 </buttonCell>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uiY-2p-xZf">
-                                <rect key="frame" x="260" y="512.5" width="59" height="15"/>
+                                <rect key="frame" x="260" y="512" width="59" height="15"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Seite 2" bezelStyle="regularSquare" imagePosition="right" controlSize="small" state="on" inset="2" id="Dcs-v5-D6y">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -863,9 +863,6 @@
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
-                                <connections>
-                                    <action selector="reportLinkeRechteSeiteOffset:" target="cif-Bn-lJY" id="mWW-Gb-YCR"/>
-                                </connections>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CJb-6A-qKv">
                                 <rect key="frame" x="205" y="596" width="108" height="19"/>
@@ -947,9 +944,6 @@
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
-                                <connections>
-                                    <action selector="reportVertikalSpiegeln:" target="cif-Bn-lJY" id="weF-YY-nUa"/>
-                                </connections>
                             </button>
                             <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OZH-ce-nfq">
                                 <rect key="frame" x="417" y="648" width="24" height="18"/>
@@ -982,9 +976,6 @@
                                 <rect key="frame" x="587" y="645" width="19" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <stepperCell key="cell" continuous="YES" alignment="left" maxValue="200" id="6Ac-ha-k8a"/>
-                                <connections>
-                                    <action selector="reportKotenstepper:" target="cif-Bn-lJY" id="MpU-mm-zqY"/>
-                                </connections>
                             </stepper>
                             <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AYC-ri-azn">
                                 <rect key="frame" x="344" y="650" width="67" height="14"/>
@@ -1008,11 +999,7 @@
                                     <font key="font" metaFont="smallSystem"/>
                                     <menu key="menu" id="nbA-sM-S9C">
                                         <items>
-                                            <menuItem title="Item 1" state="on" id="0ey-nR-1GB">
-                                                <connections>
-                                                    <action selector="reportProfil1Pop:" target="cif-Bn-lJY" id="zU3-Cv-HbJ"/>
-                                                </connections>
-                                            </menuItem>
+                                            <menuItem title="Item 1" state="on" id="0ey-nR-1GB"/>
                                             <menuItem title="Item 2" id="Ztp-QJ-Who"/>
                                             <menuItem title="Item 3" id="Ikd-Zf-MwX"/>
                                         </items>
@@ -1026,9 +1013,6 @@
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
-                                <connections>
-                                    <action selector="reportOberkanteAnfahren:" target="cif-Bn-lJY" id="pRm-NG-AfI"/>
-                                </connections>
                             </button>
                             <box fixedFrame="YES" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="4If-e3-3c3">
                                 <rect key="frame" x="332" y="474" width="480" height="168"/>
@@ -1233,9 +1217,6 @@
                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                 </buttonCell>
-                                                                <connections>
-                                                                    <action selector="reportBlockkonfigurieren:" target="cif-Bn-lJY" id="Lqj-Fd-k6G"/>
-                                                                </connections>
                                                             </button>
                                                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dfb-FX-Mzv">
                                                                 <rect key="frame" x="327" y="83" width="96" height="19"/>
@@ -1244,9 +1225,6 @@
                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                 </buttonCell>
-                                                                <connections>
-                                                                    <action selector="reportBlockanfuegen:" target="cif-Bn-lJY" id="i5a-CB-IiC"/>
-                                                                </connections>
                                                             </button>
                                                             <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sI6-v4-RbS">
                                                                 <rect key="frame" x="5" y="49" width="69" height="14"/>
@@ -1642,9 +1620,6 @@
                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                 </buttonCell>
-                                                                <connections>
-                                                                    <action selector="reportRumpfkern:" target="cif-Bn-lJY" id="XcT-NR-gtO"/>
-                                                                </connections>
                                                             </button>
                                                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T8V-3e-NmR">
                                                                 <rect key="frame" x="62" y="14" width="38" height="19"/>
@@ -1653,9 +1628,6 @@
                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                 </buttonCell>
-                                                                <connections>
-                                                                    <action selector="reportRumpfrohrkonfigurieren:" target="cif-Bn-lJY" id="KVS-D8-jNt"/>
-                                                                </connections>
                                                             </button>
                                                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eOZ-Cf-33T">
                                                                 <rect key="frame" x="380" y="15" width="46" height="30"/>
@@ -1962,9 +1934,6 @@
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                     <font key="font" metaFont="system" size="16"/>
                                 </buttonCell>
-                                <connections>
-                                    <action selector="reportStartKnopf:" target="cif-Bn-lJY" id="nxV-kV-mch"/>
-                                </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Uuk-HH-4dU">
                                 <rect key="frame" x="261" y="401" width="50" height="47"/>
@@ -2062,9 +2031,6 @@
                                         </items>
                                     </menu>
                                 </popUpButtonCell>
-                                <connections>
-                                    <action selector="reportScalePop:" target="cif-Bn-lJY" id="Fan-aN-LFF"/>
-                                </connections>
                             </popUpButton>
                             <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZNt-Cq-wO5">
                                 <rect key="frame" x="7" y="432" width="45" height="14"/>
@@ -2111,17 +2077,6 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zka-dN-hoS">
-                                <rect key="frame" x="470" y="436" width="64" height="45"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="squareTextured" title="Holm" bezelStyle="texturedSquare" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Zmc-Kn-tIH">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="smallSystem"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="reportHolm:" target="cif-Bn-lJY" id="AMD-nP-puN"/>
-                                </connections>
-                            </button>
                             <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kX6-qR-YAO">
                                 <rect key="frame" x="428" y="448" width="29" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -2506,9 +2461,6 @@
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
-                                            <connections>
-                                                <action selector="reportNeueZeile:" target="cif-Bn-lJY" id="F5j-Fq-HaL"/>
-                                            </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dqB-of-Oy4">
                                             <rect key="frame" x="24" y="72" width="46" height="19"/>
@@ -2517,9 +2469,6 @@
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="smallSystem"/>
                                             </buttonCell>
-                                            <connections>
-                                                <action selector="reportClearProfilTabelle:" target="cif-Bn-lJY" id="VWP-8R-Lrn"/>
-                                            </connections>
                                         </button>
                                         <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m4g-yS-Bmk">
                                             <rect key="frame" x="48" y="136" width="72" height="19"/>
@@ -2756,9 +2705,6 @@ Element</string>
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
-                                <connections>
-                                    <action selector="reportPrint:" target="cif-Bn-lJY" id="cbo-in-RHk"/>
-                                </connections>
                             </button>
                             <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wHl-dQ-5qy">
                                 <rect key="frame" x="875" y="399" width="42" height="22"/>
@@ -2852,9 +2798,6 @@ Element</string>
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
-                                <connections>
-                                    <action selector="reportHaltTaste:" target="cif-Bn-lJY" id="FH9-7K-9U8"/>
-                                </connections>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lAD-dZ-emb">
                                 <rect key="frame" x="195" y="613" width="111" height="32"/>
@@ -2883,9 +2826,6 @@ Element</string>
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
-                                <connections>
-                                    <action selector="reportRandlinks:" target="cif-Bn-lJY" id="K4g-ft-0YD"/>
-                                </connections>
                             </button>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MvM-Op-nZn">
                                 <rect key="frame" x="9" y="629" width="51" height="17"/>
@@ -3093,19 +3033,6 @@ Element</string>
                 <customObject id="r05-Ee-MTF" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="331.5" y="312"/>
-        </scene>
-        <!--AVR-->
-        <scene sceneID="3QU-bn-lTl">
-            <objects>
-                <viewController title="AVR" id="cif-Bn-lJY" customClass="rAVRview" sceneMemberID="viewController">
-                    <view key="view" id="htK-p9-mOR">
-                        <rect key="frame" x="0.0" y="0.0" width="1242" height="669"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </view>
-                </viewController>
-                <customObject id="2AH-e2-TvY" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1747" y="1276"/>
         </scene>
         <!--AAA-->
         <scene sceneID="LT2-gE-ryD">

@@ -10126,7 +10126,7 @@ return returnInt;
       bis++;
    }
    
-   
+   fprintf(stderr,"LibKoordinatenTabelle\n");
    for (int i=0;i<LibKoordinatenTabelle.count;i++)
    {
       NSMutableDictionary* tempPrevDic=[[LibKoordinatenTabelle objectAtIndex:i]mutableCopy];
@@ -10135,8 +10135,14 @@ return returnInt;
       float ay = [[tempPrevDic objectForKey:@"ay"]floatValue];
       float bx = [[tempPrevDic objectForKey:@"bx"]floatValue];
       float by = [[tempPrevDic objectForKey:@"by"]floatValue];
-      //fprintf(stderr,"%d \t%2.2f \t%2.2f \t%2.2f \t%2.2f\n",i,ax,ay,bx,by);
+
+      int index = [[tempPrevDic objectForKey:@"index"]intValue];
+      fprintf(stderr,"%d \t %d \t%2.2f \t%2.2f \t%2.2f \t%2.2f\n",i,index,ax,ay,bx,by);
+      [[LibKoordinatenTabelle  objectAtIndex:i]setObject:[NSNumber numberWithInt:i] forKey:@"index"];
    }
+   fprintf(stderr,"LibKoordinatenTabelle end\n");
+
+   
    NSMutableDictionary* rahmeneingabeDic = [NSMutableDictionary dictionaryWithObject:LibKoordinatenTabelle forKey:@"libkoordinatentabelle"];
    NSDictionary* RahmenDic = [self RahmenDicFunktion:(rahmeneingabeDic)];
    float maxX = [[RahmenDic objectForKey:@"maxx"]floatValue];

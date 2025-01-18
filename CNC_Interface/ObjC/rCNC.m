@@ -4277,11 +4277,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
             }
          }
          
-         
-         
-         
-         
-         
+           
          
          if (i==von) // erster Punkt, Abbrandvektor soll senkrecht stehen
          {
@@ -4392,17 +4388,17 @@ PortA=vs[n & 3]; warte10ms(); n++;
          else
          {
             //printf("ax: %2.2f \t  abray: %2.2f \t ay: %2.2f \t  abray: %2.2f \n",ax,abbranda[0],ay,abbranda[1]);
-         
+            
             [tempDic setObject:[NSNumber numberWithFloat:ax+abbranda[0]] forKey:@"abrax"];
-         [tempDic setObject:[NSNumber numberWithFloat:ay+abbranda[1]] forKey:@"abray"];
-         [tempDic setObject:[NSNumber numberWithFloat:bx+abbrandb[0]] forKey:@"abrbx"];
-         [tempDic setObject:[NSNumber numberWithFloat:by+abbrandb[1]] forKey:@"abrby"];
+            [tempDic setObject:[NSNumber numberWithFloat:ay+abbranda[1]] forKey:@"abray"];
+            [tempDic setObject:[NSNumber numberWithFloat:bx+abbrandb[0]] forKey:@"abrbx"];
+            [tempDic setObject:[NSNumber numberWithFloat:by+abbrandb[1]] forKey:@"abrby"];
             /*
-            [tempDic setObject:[NSNumber numberWithFloat:ax-abbranda[0]] forKey:@"abrax"];
-            [tempDic setObject:[NSNumber numberWithFloat:ay-abbranda[1]] forKey:@"abray"];
-            [tempDic setObject:[NSNumber numberWithFloat:bx-abbrandb[0]] forKey:@"abrbx"];
-            [tempDic setObject:[NSNumber numberWithFloat:by-abbrandb[1]] forKey:@"abrby"];
-              */
+             [tempDic setObject:[NSNumber numberWithFloat:ax-abbranda[0]] forKey:@"abrax"];
+             [tempDic setObject:[NSNumber numberWithFloat:ay-abbranda[1]] forKey:@"abray"];
+             [tempDic setObject:[NSNumber numberWithFloat:bx-abbrandb[0]] forKey:@"abrbx"];
+             [tempDic setObject:[NSNumber numberWithFloat:by-abbrandb[1]] forKey:@"abrby"];
+             */
          }
   //       float hypa = hypotf(ax, ay);
   //       float hypb = hypotf(bx, by);

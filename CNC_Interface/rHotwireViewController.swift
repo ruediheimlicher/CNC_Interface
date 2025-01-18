@@ -481,6 +481,10 @@ var outletdaten:[String:AnyObject] = [:]
  
     @IBOutlet weak var  RumpfteilTaste:  NSSegmentedControl!
    
+   @IBOutlet weak var  mitHolmCheck: NSButton!
+   @IBOutlet weak var  mitEinstichCheck: NSButton!
+   
+   
    @IBOutlet weak var TastenwertFeld:  NSTextField!
    @IBOutlet weak var TasteFeld:  NSTextField!
     

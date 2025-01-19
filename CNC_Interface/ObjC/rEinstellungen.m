@@ -4068,6 +4068,9 @@
       
       [ProfilDic setObject:[NSNumber numberWithInt:[EinlaufCheck state]] forKey:@"einlauf"];
       [ProfilDic setObject:[NSNumber numberWithInt:[AuslaufCheck state]] forKey:@"auslauf"];
+
+      [ProfilDic setObject:[NSNumber numberWithInt:[EinstichCheck state]] forKey:@"einstich"];
+      [ProfilDic setObject:[NSNumber numberWithInt:[HolmCheck state]] forKey:@"holm"];
       
       //float einlauflaenge = [Einlauflaenge floatValue];
  //     [ProfilDic setObject:[NSNumber numberWithFloat:[Einlauflaenge floatValue]] forKey:@"einlauflaenge"];

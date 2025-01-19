@@ -520,6 +520,7 @@ var outletdaten:[String:AnyObject] = [:]
    @IBOutlet weak var StiftDown:  NSButton!
    
    
+    
 
 /*
     @objc func stepsAktion(_ notification:Notification)
@@ -901,6 +902,7 @@ var outletdaten:[String:AnyObject] = [:]
     
     @objc func LibProfileingabeAktion(_ notification:Notification)
    {
+      
       var mitHolm = 1
       if (mitHolm > 0)
       {
@@ -911,13 +913,15 @@ var outletdaten:[String:AnyObject] = [:]
          outletdaten["mitholm"] = 0 as AnyObject
       }
       
+      
+      
+      
       setOutletdaten()
       
       let info = notification.userInfo
-      print("LibProfileingabeAktion: \(info)")
+      print("HW LibProfileingabeAktion: \(info)")
       var infodic = notification.userInfo as? [String:Any]
-      
-      
+       
       
       // chat
       /*
@@ -946,6 +950,7 @@ var outletdaten:[String:AnyObject] = [:]
          }
          
       }
+      
       infodic!["koordinatentabelle"] = KoordinatenTabelle
       infodic!["offsetx"] = ProfilBOffsetXFeld.doubleValue
       infodic!["offsety"] = ProfilBOffsetYFeld.doubleValue
@@ -962,8 +967,8 @@ var outletdaten:[String:AnyObject] = [:]
       
       infodic!["minimaldistanz"] = MinimaldistanzFeld.floatValue
       
-      
-      
+      print("HW LibProfilEingabeAktion holm: \(infodic!["holm"])")
+      print("HW LibProfilEingabeAktion einstich: \(infodic!["einstich"])")
       
       infodic!["wertax"] = 35
       infodic!["wertay"] = 25
@@ -982,6 +987,8 @@ var outletdaten:[String:AnyObject] = [:]
          infodic!["mitabbrand"] = 0
       }
       
+      
+      
       infodic!["offsetx"] = ProfilBOffsetXFeld.doubleValue
       infodic!["offsety"] = ProfilBOffsetYFeld.doubleValue
       
@@ -992,6 +999,7 @@ var outletdaten:[String:AnyObject] = [:]
       let popitem:NSMenuItem = ScalePop.item(at: popindex)!
       let scalefaktor = popitem.tag
       infodic!["scale"] = scalefaktor
+      
       
       
       
@@ -4173,7 +4181,7 @@ var outletdaten:[String:AnyObject] = [:]
         datenDic["mitoberseite"] = 1
         datenDic["mitunterseite"] = 1
        datenDic["home"] = 0
-        
+         
         OberseiteCheckbox.state = NSControl.StateValue.on
         UnterseiteCheckbox.state = NSControl.StateValue.on
         
@@ -5129,7 +5137,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        // CNC_Table
        CNC_Table.dataSource = self
        CNC_Table.delegate = self
-       CNC_Table.rowHeight = 13
+       CNC_Table.rowHeight = 16
        CNC_Table.gridStyleMask = .solidVerticalGridLineMask
        CNC_Table.usesAlternatingRowBackgroundColors = true
        
@@ -5707,7 +5715,10 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         datenDic["abbrand"] = AbbrandFeld.doubleValue
         datenDic["mitoberseite"] = 1
         datenDic["mitunterseite"] = 1
-        datenDic["profilwrench"] = ProfilWrenchFeld.doubleValue
+       
+ 
+       
+       datenDic["profilwrench"] = ProfilWrenchFeld.doubleValue
         
         if Profil1Pop.indexOfSelectedItem > 0
         {

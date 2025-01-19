@@ -199,6 +199,10 @@
    IBOutlet id          UnterseiteCheck;
    IBOutlet id          EinlaufCheck;
    IBOutlet id          AuslaufCheck;
+   
+   IBOutlet id          EinstichCheck;
+   IBOutlet id          HolmCheck;
+
 
    IBOutlet id          Auslauflaenge;
    IBOutlet id          Auslauftiefe;

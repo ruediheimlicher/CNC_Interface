@@ -269,7 +269,7 @@ class rProfilfeldView: NSView
             
         }
         HorizontaleLinie.lineWidth = 0.3
-        NSColor.yellow.set()
+        NSColor.blue.set()
         HorizontaleLinie.stroke()
         
         // senkrechte Linien
@@ -288,7 +288,7 @@ class rProfilfeldView: NSView
             
         }
         VertikaleLinie.lineWidth = 0.3
-        NSColor.yellow.set()
+        NSColor.blue.set()
         VertikaleLinie.stroke()
         
  

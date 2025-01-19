@@ -23,6 +23,7 @@
                 <outlet property="Einlaufrand" destination="1252" id="1265"/>
                 <outlet property="Einlauftiefe" destination="1238" id="1266"/>
                 <outlet property="EinstellungenTab" destination="66" id="hxA-vW-8He"/>
+                <outlet property="EinstichCheck" destination="dLc-jn-XcG" id="wJd-7M-WXW"/>
                 <outlet property="Element" destination="254" id="334"/>
                 <outlet property="EndpunktX" destination="244" id="335"/>
                 <outlet property="EndpunktXSlider" destination="273" id="336"/>
@@ -36,6 +37,7 @@
                 <outlet property="Form1Pop" destination="1063" id="1112"/>
                 <outlet property="Form2Pop" destination="1077" id="1113"/>
                 <outlet property="Graph" destination="277" id="341"/>
+                <outlet property="HolmCheck" destination="pwC-Vv-E1r" id="Rke-Xu-Jqc"/>
                 <outlet property="Laenge" destination="239" id="342"/>
                 <outlet property="LaengeSlider" destination="267" id="343"/>
                 <outlet property="LaengeStepper" destination="263" id="344"/>
@@ -86,7 +88,7 @@
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="601" height="517"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1512" height="944"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
             <view key="contentView" wantsLayer="YES" id="2">
                 <rect key="frame" x="0.0" y="0.0" width="601" height="517"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -1338,7 +1340,7 @@
                                             </view>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="1267">
-                                            <rect key="frame" x="106" y="170" width="293" height="35"/>
+                                            <rect key="frame" x="197" y="170" width="293" height="35"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="aBU-tb-GbW">
                                                 <rect key="frame" x="4" y="5" width="285" height="27"/>
@@ -1383,6 +1385,22 @@
                                                 </subviews>
                                             </view>
                                         </box>
+                                        <button imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dLc-jn-XcG">
+                                            <rect key="frame" x="21" y="191" width="82" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" title="mit Einstich" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="yoc-bN-olt">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="smallSystem"/>
+                                            </buttonCell>
+                                        </button>
+                                        <button imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pwC-Vv-E1r">
+                                            <rect key="frame" x="21" y="169" width="82" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" title="mit Holm" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="Ltz-Fn-Pds">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="smallSystem"/>
+                                            </buttonCell>
+                                        </button>
                                     </subviews>
                                 </view>
                             </tabViewItem>

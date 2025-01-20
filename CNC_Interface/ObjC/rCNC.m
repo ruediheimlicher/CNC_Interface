@@ -3721,7 +3721,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    
    int prevseitenkorrektura=1;
    int prevseitenkorrekturb=1;
-
+   
    float prevhypoa = 0;
    float nexthypoa= 0;
    
@@ -3748,20 +3748,20 @@ PortA=vs[n & 3]; warte10ms(); n++;
    fprintf(stderr, "i \t ax\t ay\tpreva x \tpreva y \tnexta x \t nexay \n");
    for (i=0; i<[Koordinatentabelle count];i++)
    {
-     
+      
       int seitenkorrektura = 1;
       int seitenkorrekturb = 1;
       NSMutableDictionary* tempDic=[NSMutableDictionary dictionaryWithDictionary:[Koordinatentabelle objectAtIndex:i]];
-       float ax = [[[Koordinatentabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
-       float ay = [[[Koordinatentabelle objectAtIndex:i]objectForKey:@"ay"]floatValue];
-       float bx = [[[Koordinatentabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
-       float by = [[[Koordinatentabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
-
-       
-       
-       if (i>von-1 && i<bis) // Abbrandbereich, von ist 1-basiert
+      float ax = [[[Koordinatentabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
+      float ay = [[[Koordinatentabelle objectAtIndex:i]objectForKey:@"ay"]floatValue];
+      float bx = [[[Koordinatentabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
+      float by = [[[Koordinatentabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
+      
+      
+      
+      if (i>von-1 && i<bis) // Abbrandbereich, von ist 1-basiert
       {
-          
+         
          float nextax = 0;
          float nextay = 0;
          float nextbx = 0;
@@ -3800,23 +3800,23 @@ PortA=vs[n & 3]; warte10ms(); n++;
          {
             fprintf(stderr, "%d \t %2.4f\t %2.4f\t%2.4f  \t%2.4f  \t%2.4f  \t %2.4f \n",i,ax,ay,prevax, prevay, nextax, nextay);
          }
-          
+         
          if ((i<bis-1) && (i>von)) // Punkt im Abbrandbereich
          {
-             // Kruemmungen berechnen
+            // Kruemmungen berechnen
             if (i<bis && i>von+1)
             {
                float diffvor[2] = {ax-prevax, ay-prevay};   // dx,dy
                float diffnach[2] = {nextax-ax, nextay-ay};
-         //      fprintf(stderr,"Kruemmungen \t%d\tdiffvor %2.8f\tdiffnach %2.8f\n",i,diffvor[2],diffnach[2]);
-
+               //      fprintf(stderr,"Kruemmungen \t%d\tdiffvor %2.8f\tdiffnach %2.8f\n",i,diffvor[2],diffnach[2]);
+               
                
                float mittevor[2] = {(ax+prevax)/2,(prevay+ay)/2};
                float mittenach[2] = {(ax+nextax)/2,(nextay+ay)/2};
-          //     fprintf(stderr,"Kruemmungen \t%d\tmittevor %2.8f\tmittenach %2.8f\n",i,mittevor[2],mittenach[2]);
-
+               //     fprintf(stderr,"Kruemmungen \t%d\tmittevor %2.8f\tmittenach %2.8f\n",i,mittevor[2],mittenach[2]);
+               
                //fprintf(stderr,"mittelpunkt \t%d\t%2.8f\t%2.8f\t%2.8f\t%2.8f\t%2.8f\n",i,mittevor[0],mittevor[1],mittenach[0],mittenach[1],1);
-
+               
                // senkrechte:
                float steigungvor = 0;
                float steigungnach = 0;
@@ -3828,13 +3828,13 @@ PortA=vs[n & 3]; warte10ms(); n++;
                if (diffvor[0]!=0) // nicht senkrecht
                {
                   steigungvor = diffvor[1]/diffvor[0]; // dy/dx
-                 
+                  
                }
                if (diffvor[1]!=0)
                {
                   senkrechtvor = -diffvor[0]/diffvor[1]; // -dy/dx
                }
-
+               
                // nach
                if (diffnach[0]!=0) // nicht waagrecht
                {
@@ -3845,7 +3845,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
                {
                   senkrechtnach = -diffnach[0]/diffnach[1];
                }
-
+               
                //fprintf(stderr,"kruemmung   \t%d\t%2.8f\t%2.8f\t%2.8f\t%2.8f\t%d\n",i,steigungvor,steigungnach,senkrechtvor,senkrechtnach,1);
                
                
@@ -3911,18 +3911,18 @@ PortA=vs[n & 3]; warte10ms(); n++;
             // ********
             
             // Vektoren vorher, nachher
-             
+            
             float deltapreva[2] = {ax-prevax,ay-prevay};
             float deltanexta[2] = {nextax-ax,nextay-ay};
             //NSLog(@"i: %d  deltapreva[0]: %2.4f deltapreva[1]: %2.4f deltanexta[0]: %1.4f deltanexta[1]: %2.4f",i,deltapreva[0],deltapreva[1],deltanexta[0],deltanexta[1]);
             
             /*
-            float prevhypoa=hypot(deltapreva[0],deltapreva[1]); // Laenge des vorherigen Weges
-            float nexthypoa=hypot(deltanexta[0],deltanexta[1]); // Laenge des naechsten Weges
-            
-            float prevnorma[2]= {(deltapreva[0])/prevhypoa,(deltapreva[1])/prevhypoa}; // vorheriger Normalenvektor
-            float nextnorma[2]= {(deltanexta[0])/nexthypoa,(deltanexta[1])/nexthypoa}; // naechster Normalenvektor
-            */
+             float prevhypoa=hypot(deltapreva[0],deltapreva[1]); // Laenge des vorherigen Weges
+             float nexthypoa=hypot(deltanexta[0],deltanexta[1]); // Laenge des naechsten Weges
+             
+             float prevnorma[2]= {(deltapreva[0])/prevhypoa,(deltapreva[1])/prevhypoa}; // vorheriger Normalenvektor
+             float nextnorma[2]= {(deltanexta[0])/nexthypoa,(deltanexta[1])/nexthypoa}; // naechster Normalenvektor
+             */
             
             
             
@@ -3981,9 +3981,9 @@ PortA=vs[n & 3]; warte10ms(); n++;
              
              if (abs(detvorzeichen)<4)
              {
-             fprintf(stderr,"determinanten   %d\t%2.8f\t%2.8f\t%2.8f\t%2.8f\t%d\n",i,det0,det1,det2,det3,detvorzeichen);
+             //fprintf(stderr,"determinanten   %d\t%2.8f\t%2.8f\t%2.8f\t%2.8f\t%d\n",i,det0,det1,det2,det3,detvorzeichen);
              }
-
+             
              
              */
             
@@ -4008,7 +4008,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
             {
                NSLog(@"%d  kein nexthypoa",i);
             }
-
+            
             
             //NSLog(@"i: %d  prevhypoa: %2.4f nexthypoa: %2.4f",i,prevhypoa,nexthypoa);
             
@@ -4035,8 +4035,8 @@ PortA=vs[n & 3]; warte10ms(); n++;
             {
                NSLog(@"%d kein nextnorma",i);
             }
-           
-
+            
+            
             
             
             // Cosinus-Satz Winkel aus Skalarprodukt der Einheitsvektoren
@@ -4081,11 +4081,11 @@ PortA=vs[n & 3]; warte10ms(); n++;
             
             
             
-           
+            
             
             //            NSLog(@"i: %d  prevhypoa: %2.4f nexthypoa: %2.4f cosphia: %1.8f",i,prevhypoa,nexthypoa,cosphia);
             
-     //       cosphi2a=sqrtf((1-cosphia)/2);                       // cosinus des halben Zwischenwinkels
+            //       cosphi2a=sqrtf((1-cosphia)/2);                       // cosinus des halben Zwischenwinkels
             //NSLog(@"i: %d cosphia: %2.4f",i,cosphia*1000);
             
             if (cosphia <0)
@@ -4095,7 +4095,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
             
             // Winkelhalbierende
             
-          
+            
             wha[0] = prevnorma[0]+ nextnorma[0];                // Winkelhalbierende als Vektorsumme der Normalenvektoren
             wha[1] = prevnorma[1]+ nextnorma[1];
             
@@ -4141,12 +4141,12 @@ PortA=vs[n & 3]; warte10ms(); n++;
             float nextb[2]= {nextbx-bx,nextby-by};
             
             /*
-            float prevhypob=hypotf(prevb[0],prevb[1]);
-            float nexthypob=hypotf(nextb[0],nextb[1]);
-            
-            float prevnormb[2]= {prevb[0]/prevhypob,prevb[1]/prevhypob};
-            float nextnormb[2]= {nextb[0]/nexthypob,nextb[1]/nexthypob};
-            */
+             float prevhypob=hypotf(prevb[0],prevb[1]);
+             float nexthypob=hypotf(nextb[0],nextb[1]);
+             
+             float prevnormb[2]= {prevb[0]/prevhypob,prevb[1]/prevhypob};
+             float nextnormb[2]= {nextb[0]/nexthypob,nextb[1]/nexthypob};
+             */
             
             float prevhypob = 0;
             
@@ -4178,7 +4178,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
                nextnormb[0]= -(nextb[1])/nexthypob;
                nextnormb[1] = (nextb[0])/nexthypob; // vorheriger Normalenvektor
             }
-
+            
             // Winkel aus Skalarprodukt der Einheitsvektoren
             float cosphib=prevnormb[0]*nextnormb[0]+ prevnormb[1]*nextnormb[1];
             
@@ -4213,7 +4213,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
                
             }
             
-
+            
             
             
             // Halbwinkelsatz: cos(phi/2)=sqrt((1+cos(phi))/2)
@@ -4250,10 +4250,10 @@ PortA=vs[n & 3]; warte10ms(); n++;
             // cosinussatz
             float cospsia = (wha[0]*lastwha[0]+wha[1]*lastwha[1])/(lasthypoa*currhypoa);
             
-         if (i>[Koordinatentabelle count]-20)
-         {
-          //  fprintf(stderr,"%d\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.6f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.6f\n",i, ax,ay,deltapreva[0],deltapreva[1],deltanexta[0],deltanexta[1],wha[0],wha[1], prevnorma[0],prevnorma[1],nextnorma[0],nextnorma[1],cosphia,lastwha[0],lastwha[1],prevhypoa,nexthypoa,cospsia);
-         }
+            if (i>[Koordinatentabelle count]-20)
+            {
+               //  fprintf(stderr,"%d\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.6f\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t%1.6f\n",i, ax,ay,deltapreva[0],deltapreva[1],deltanexta[0],deltanexta[1],wha[0],wha[1], prevnorma[0],prevnorma[1],nextnorma[0],nextnorma[1],cosphia,lastwha[0],lastwha[1],prevhypoa,nexthypoa,cospsia);
+            }
             //            NSLog(@"i: %d  lasthypoa: %2.4f currhypoa: %2.4f cospsia: %1.8f",i,lasthypoa,currhypoa,cospsia);
             
             if (cospsia < 0) // Winkel ist > 90°
@@ -4366,7 +4366,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
          // ++++++++++++++++++++++++++++++++++
          
          float whahypo = hypotenuse(wha[0],wha[1]);
-          //fprintf(stderr,"i:\t %d \tprevhypoa \t%2.2f\t nexthypoa \t%2.2f \twhahypo: \t%2.4f \tcosphia: \t%2.4f\tcosphi2a: \t%2.4f\n",i,prevhypoa,nexthypoa,whahypo,cosphia,cosphi2a);
+         //fprintf(stderr,"i:\t %d \tprevhypoa \t%2.2f\t nexthypoa \t%2.2f \twhahypo: \t%2.4f \tcosphia: \t%2.4f\tcosphi2a: \t%2.4f\n",i,prevhypoa,nexthypoa,whahypo,cosphia,cosphi2a);
          
          float abbranda[2]={wha[0]*seitenkorrektura/whahypo*abbrandmassa/cosphi2a,wha[1]*seitenkorrektura/whahypo*abbrandmassa/cosphi2a};
          
@@ -4383,8 +4383,8 @@ PortA=vs[n & 3]; warte10ms(); n++;
          //NSLog(@"whbhypo: %2.4f",whbhypo);
          float abbrandb[2]= {whb[0]*seitenkorrekturb/whbhypo*profilabbrandbmass/cosphi2b,whb[1]*seitenkorrekturb/whbhypo*profilabbrandbmass/cosphi2b};
          
- //        NSLog(@"i %d orig ax %2.2f ay %2.2f bx %2.2f by %2.2f",i,ax,ay,bx,by);
- //        NSLog(@"i %d abbranda[0] %2.4f abbranda[1] %2.4f ",i,abbranda[0], abbranda[1]);
+         //        NSLog(@"i %d orig ax %2.2f ay %2.2f bx %2.2f by %2.2f",i,ax,ay,bx,by);
+         //        NSLog(@"i %d abbranda[0] %2.4f abbranda[1] %2.4f ",i,abbranda[0], abbranda[1]);
          if (isnan(abbrandb[0]) || isnan(abbrandb[1]))
          {
             NSLog(@"i %d abbranda[0] , abbranda[1] ist nan ",i);
@@ -4392,22 +4392,22 @@ PortA=vs[n & 3]; warte10ms(); n++;
          else
          {
             //printf("ax: %2.2f \t  abray: %2.2f \t ay: %2.2f \t  abray: %2.2f \n",ax,abbranda[0],ay,abbranda[1]);
-         
+            
             [tempDic setObject:[NSNumber numberWithFloat:ax+abbranda[0]] forKey:@"abrax"];
-         [tempDic setObject:[NSNumber numberWithFloat:ay+abbranda[1]] forKey:@"abray"];
-         [tempDic setObject:[NSNumber numberWithFloat:bx+abbrandb[0]] forKey:@"abrbx"];
-         [tempDic setObject:[NSNumber numberWithFloat:by+abbrandb[1]] forKey:@"abrby"];
+            [tempDic setObject:[NSNumber numberWithFloat:ay+abbranda[1]] forKey:@"abray"];
+            [tempDic setObject:[NSNumber numberWithFloat:bx+abbrandb[0]] forKey:@"abrbx"];
+            [tempDic setObject:[NSNumber numberWithFloat:by+abbrandb[1]] forKey:@"abrby"];
             /*
-            [tempDic setObject:[NSNumber numberWithFloat:ax-abbranda[0]] forKey:@"abrax"];
-            [tempDic setObject:[NSNumber numberWithFloat:ay-abbranda[1]] forKey:@"abray"];
-            [tempDic setObject:[NSNumber numberWithFloat:bx-abbrandb[0]] forKey:@"abrbx"];
-            [tempDic setObject:[NSNumber numberWithFloat:by-abbrandb[1]] forKey:@"abrby"];
-              */
+             [tempDic setObject:[NSNumber numberWithFloat:ax-abbranda[0]] forKey:@"abrax"];
+             [tempDic setObject:[NSNumber numberWithFloat:ay-abbranda[1]] forKey:@"abray"];
+             [tempDic setObject:[NSNumber numberWithFloat:bx-abbrandb[0]] forKey:@"abrbx"];
+             [tempDic setObject:[NSNumber numberWithFloat:by-abbrandb[1]] forKey:@"abrby"];
+             */
          }
-  //       float hypa = hypotf(ax, ay);
-  //       float hypb = hypotf(bx, by);
-  //       float abrhypa = hypotf(ax+abbranda[0], ay+abbranda[1]);
-  //       float abrhypb = hypotf(bx+abbrandb[0], by+abbrandb[1]);
+         //       float hypa = hypotf(ax, ay);
+         //       float hypb = hypotf(bx, by);
+         //       float abrhypa = hypotf(ax+abbranda[0], ay+abbranda[1]);
+         //       float abrhypb = hypotf(bx+abbrandb[0], by+abbrandb[1]);
          
          if (i<25)
          {
@@ -4422,16 +4422,15 @@ PortA=vs[n & 3]; warte10ms(); n++;
             
          }
       } // i im Bereich
-       else
-       {
-           [tempDic setObject:[NSNumber numberWithFloat:ax] forKey:@"abrax"];
-           [tempDic setObject:[NSNumber numberWithFloat:ay] forKey:@"abray"];
-           [tempDic setObject:[NSNumber numberWithFloat:bx] forKey:@"abrbx"];
-           [tempDic setObject:[NSNumber numberWithFloat:by] forKey:@"abrby"];
-
-       }
-
-     // printf("%d\t %2.2f \t %2.2f \t %2.2f \t %2.2f \n",i,ax,ay,[[tempDic objectForKey:@"abrax"]floatValue],[[tempDic objectForKey:@"abray"]floatValue]);
+      else
+      {
+         [tempDic setObject:[NSNumber numberWithFloat:ax] forKey:@"abrax"];
+         [tempDic setObject:[NSNumber numberWithFloat:ay] forKey:@"abray"];
+         [tempDic setObject:[NSNumber numberWithFloat:bx] forKey:@"abrbx"];
+         [tempDic setObject:[NSNumber numberWithFloat:by] forKey:@"abrby"];
+      }
+      
+      // printf("%d\t %2.2f \t %2.2f \t %2.2f \t %2.2f \n",i,ax,ay,[[tempDic objectForKey:@"abrax"]floatValue],[[tempDic objectForKey:@"abray"]floatValue]);
       
       [AbbrandArray addObject:tempDic];
       

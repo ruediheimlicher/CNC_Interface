@@ -1364,37 +1364,9 @@ var outletdaten:[String:AnyObject] = [:]
         // Write the XML string to the file
         var saveURL = NSURL.fileURL(withPath: LibPfad + "/" + "Rumpf.plist")
         
-        /*
-        do {
-            try xmlString.write(to: saveURL, atomically: true, encoding: .utf8)
-            print("Array saved as XML at: \(saveURL)")
-        } catch {
-            print("Error saving array as XML: \(error)")
-        }
-
-        
-        var aaa:[String:AnyObject] = [:]
-        aaa["rumpfteildic"] = self.rumpfteilDic() as AnyObject
-        */
-  //      var error: NSError?
+   //      var error: NSError?
      //   var saveURL = NSURL.fileURL(withPath: LibPfad + "/" + "Element.plist")
-        /*
-        do
-        {
-            let data = try JSONSerialization.data(withJSONObject: saveElementArray, options: JSONSerialization.WritingOptions.prettyPrinted )
-            print("data: \(data)")
-            guard let jsonString = String(data: data, encoding: .utf8) else {
-                 print("Something is wrong while converting JSON data to JSON string.")
-                
-                 return false
-              }
-           
-            try data.write(to:saveURL)
-            print("nach write data")
-        } catch {
-            fatalError("Failed to write array data to disk: \(error)")
-        }
-*/
+
 
         do {
            
@@ -1416,100 +1388,7 @@ var outletdaten:[String:AnyObject] = [:]
 
     }
     
-    /*
-    @objc override func writeCNCAbschnitt()
-    {
-        cncwritecounter += 1
-        print("HW swift override writeCNCAbschnitt usb_schnittdatenarray: \(usb_schnittdatenarray) cncwritecounter: \(cncwritecounter)")
-       let count = usb_schnittdatenarray.count
-       //print("writeCNCAbschnitt  count: \(count) Stepperposition: \t",Stepperposition)
-       
-       if(Stepperposition < count)
-       {
-          //print("schnittdatenarray:\n",usb_schnittdatenarray[Stepperposition])
-       }
-       //print("writeCNCAbschnitt code: \(usb_schnittdatenarray[0][16]) Stepperposition: \(Stepperposition) count: \(count) ")
-       
-       if Stepperposition < count
-       {
-          //let motorstatus = usb_schnittdatenarray[Stepperposition][21]
-          //print("motorstatus: \(motorstatus)")
-       }
-  
-       
-       if Stepperposition == 0
-       {
-          schnittdatenstring = ""
-         // print("writeCNCAbschnitt 19")
-          
-       }
-       teensy.write_byteArray.removeAll()
-       
-       if Stepperposition < usb_schnittdatenarray.count
-       {
-          //print("Stepperposition < usb_schnittdatenarray.count")
-          if halt > 0
-          {
-             /*
-             if readtimer?.isValid ?? false
-             {
-                print("writeCNCAbschnitt HALT readTimer inval")
-                readtimer?.invalidate()
-             }
-             */
-          }
-          else
-          {
-             
-             let aktuellezeile:[UInt8] = usb_schnittdatenarray[Stepperposition]
-             print("HW Stepperposition: \(Stepperposition) aktuellezeile: \(aktuellezeile) ")
-             let writecode = aktuellezeile[16]
-             var string:String = ""
-             var index=0
-             //print("aktuellezeile:")
-             for wert in aktuellezeile
-             {
-                teensy.write_byteArray.append(wert)
-                if index < 24
-                {
-                   string.append(String(wert))
-                   string.append("\t")
-                }
-                index += 1
-             }
-             //print("\(string) code: \(aktuellezeile[16]) pos: \(aktuellezeile[17]) index: \(aktuellezeile[19])");
-             schnittdatenstring.append(string)
-             schnittdatenstring.append("\n")
-             
-             //print("write_byteArray: \(teensy.write_byteArray)")
-             if (globalusbstatus > 0)
-             {
-                let senderfolg = teensy.send_USB()
-                print("writeCNCAbschnitt senderfolg: \(senderfolg)")
-             }
-             // print("Stepperposition: \(Stepperposition) \n\(schnittdatenstring)");
-             var ausschlussindex:[UInt8] = [0xE2]
-             if !(ausschlussindex.contains(writecode))
-             {
-                
-                Stepperposition += 1
-             }
-             
-          }// ! halt
-       }
-       else
-       {
-          print("writeCNCAbschnitt Fertig ")
-      //    teensy.stop_read_USB()
-          return
-          
-       }
-       
-       //print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
-    }
-     
-    */
-    @objc func DC_Funktion(pwm:UInt8 )
+     @objc func DC_Funktion(pwm:UInt8 )
      {
         usb_schnittdatenarray.removeAll()
           print("HW DC_Funktion  pwm: \(pwm)")
@@ -2272,167 +2151,170 @@ var outletdaten:[String:AnyObject] = [:]
    }
     
     @objc  @IBAction func reportStopTaste(_ sender: NSButton)
-    {
-        print("swift reportStopTaste")
-        if CNC_Starttaste.state == NSControl.StateValue.on
-        {
-            CNC_Starttaste.state = NSControl.StateValue.off
-        }
-        let stepsindex = CNC_StepsSegControl.selectedSegment
-        motorsteps = CNC_StepsSegControl.tag(forSegment:stepsindex)
-        outletdaten["motorsteps"] = CNC_StepsSegControl.tag(forSegment:stepsindex)  as AnyObject
-        micro = CNC_microPop.selectedItem?.tag ?? 1
-        speed = SpeedFeld.integerValue
-        pwm = DC_PWM.integerValue
-        CNC_busySpinner.stopAnimation(nil)
-        cnc_seite1check = CNC_Seite1Check.state.rawValue as Int
-        cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
-        outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
-        outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
-        outletdaten["speed"] = speed as AnyObject
-        outletdaten["micro"] = micro as AnyObject
-        outletdaten["pwm"] = pwm as AnyObject
-        let zoomfaktor = ProfilTiefeFeldA.doubleValue / 1000
-        outletdaten["zoom"] = zoomfaktor as AnyObject
-       
-       outletdaten["home"] = 0 as AnyObject
-       var ramp = 0
-       if RampCheckbox.state == NSControl.StateValue.on
-       {
-          ramp = 1
-       }
-       outletdaten["ramp"] = ramp as AnyObject
-       
-       outletdaten["timerintervall"] = TimerIntervallFeld.intValue as AnyObject
-       outletdaten["rampfaktor"] = RampFaktorFeld.doubleValue as AnyObject
-       
-        // Daten leeren
-        CNC_DatenArray.removeAll()
-        SchnittdatenArray.removeAll()
-        HomeTaste.state = NSControl.StateValue.off
-        DC_Taste.state = NSControl.StateValue.off
-        cncposition = 0
-        
-        
-        
-        if KoordinatenTabelle.count <= 1
-        {
-            let warnung = NSAlert.init()
-            warnung.messageText = "Zuwenig Elemente in KoordinatenTabelle"
-            warnung.addButton(withTitle: "OK")
-            let antwort = warnung.runModal()
-            CNC_Stoptaste.state = NSControl.StateValue.off
-        }
-        ProfilFeld.setgraphstatus(status: 1)
-        
+   {
+      print("swift reportStopTaste")
+      if CNC_Starttaste.state == NSControl.StateValue.on
+      {
+         CNC_Starttaste.state = NSControl.StateValue.off
+      }
+      let stepsindex = CNC_StepsSegControl.selectedSegment
+      motorsteps = CNC_StepsSegControl.tag(forSegment:stepsindex)
+      outletdaten["motorsteps"] = CNC_StepsSegControl.tag(forSegment:stepsindex)  as AnyObject
+      micro = CNC_microPop.selectedItem?.tag ?? 1
+      speed = SpeedFeld.integerValue
+      pwm = DC_PWM.integerValue
+      CNC_busySpinner.stopAnimation(nil)
+      cnc_seite1check = CNC_Seite1Check.state.rawValue as Int
+      cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
+      outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
+      outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
+      outletdaten["speed"] = speed as AnyObject
+      outletdaten["micro"] = micro as AnyObject
+      outletdaten["pwm"] = pwm as AnyObject
+      let zoomfaktor = ProfilTiefeFeldA.doubleValue / 1000
+      outletdaten["zoom"] = zoomfaktor as AnyObject
+      outletdaten["mitabbrand"] = AbbrandCheckbox.state.rawValue as Int as AnyObject
+      outletdaten["abbrand"] = AbbrandFeld.integerValue as AnyObject
+      
+      
+      outletdaten["home"] = 0 as AnyObject
+      var ramp = 0
+      if RampCheckbox.state == NSControl.StateValue.on
+      {
+         ramp = 1
+      }
+      outletdaten["ramp"] = ramp as AnyObject
+      
+      outletdaten["timerintervall"] = TimerIntervallFeld.intValue as AnyObject
+      outletdaten["rampfaktor"] = RampFaktorFeld.doubleValue as AnyObject
+      
+      // Daten leeren
+      CNC_DatenArray.removeAll()
+      SchnittdatenArray.removeAll()
+      HomeTaste.state = NSControl.StateValue.off
+      DC_Taste.state = NSControl.StateValue.off
+      cncposition = 0
+      
+      
+      
+      if KoordinatenTabelle.count <= 1
+      {
+         let warnung = NSAlert.init()
+         warnung.messageText = "Zuwenig Elemente in KoordinatenTabelle"
+         warnung.addButton(withTitle: "OK")
+         let antwort = warnung.runModal()
+         CNC_Stoptaste.state = NSControl.StateValue.off
+      }
+      ProfilFeld.setgraphstatus(status: 1)
+      
       // print("KoordinatenTabelle: \(KoordinatenTabelle)")
-       // Steigungen berechnen
-       //var i:Int = 0
-       var tempkoordinatentabelle = [[String:Double]]()
-       //var ramp = 0.0;
+      // Steigungen berechnen
+      //var i:Int = 0
+      var tempkoordinatentabelle = [[String:Double]]()
+      //var ramp = 0.0;
       // print("index: \tax: \tay: \tlastax: \tlastay: \tnextax: \tnextay: \t\tskalarprod: \tbetragvor:  \tbetragnext:  \tcosphi: ")
-       var schrittex = 0
-       var schrittey = 0;
-       for i in 0..<KoordinatenTabelle.count
-       {
-          var punktdaten = KoordinatenTabelle[i]
-          punktdaten["ramp"] = Double(ramp)
-          let index:Int = Int(punktdaten["index"] ?? Double(i))
-          let ax = punktdaten["ax"] ?? 0
-          let ay = punktdaten["ay"] ?? 0.0
-          
-          print("index: \(index)\tax: \t\(ax)\tay: \t\(ay)")
-          if ((i > 0) && (i < Int(KoordinatenTabelle.count - 1)))
+      var schrittex = 0
+      var schrittey = 0;
+      for i in 0..<KoordinatenTabelle.count
+      {
+         var punktdaten = KoordinatenTabelle[i]
+         punktdaten["ramp"] = Double(ramp)
+         let index:Int = Int(punktdaten["index"] ?? Double(i))
+         let ax = punktdaten["ax"] ?? 0
+         let ay = punktdaten["ay"] ?? 0.0
+         
+         print("index: \(index)\tax: \t\(ax)\tay: \t\(ay)")
+         if ((i > 0) && (i < Int(KoordinatenTabelle.count - 1)))
                
-          {
-             let lastpunktdaten = KoordinatenTabelle[i-1]
-             let lastax = lastpunktdaten["ax"] ?? 0.0
-             let lastay = lastpunktdaten["ay"] ?? 0.0
-             let nextpunktdaten = KoordinatenTabelle[i+1]
-             let nextax = nextpunktdaten["ax"] ?? 0.0
-             let nextay = nextpunktdaten["ay"] ?? 0.0
-             
-             
-             //print("index: \(index)\tax: \t\(ax)\tay: \t\(ay) \tlastax: \t\(lastax)\tlastay: \t\(lastay)")
-             let lastdeltax = ax - lastax
-             let lastdeltay = ay - lastay
-             var laststeigung = 0.0
-             if abs(lastdeltay) > 0
-             {
-                laststeigung = lastdeltax/lastdeltay
-             }
-             
-             let nextdeltax = nextax - ax
-             let nextdeltay = nextay - ay
-             
-             // winkel vor-nach
-             let skalarprod = lastdeltax * nextdeltax + lastdeltay * nextdeltay
-             
-             let betragvor = hypot(lastdeltax, lastdeltay)
-
-             let betragnext = hypot(nextdeltax, nextdeltay)
-             
-             let cosphi = skalarprod / (betragvor * betragnext)
-             
-             print("\(index)\t\(ax)\t\(ay)\t\(lastax)\t\(lastay)\t\(nextax)\t\(nextay)\t\t\(skalarprod) \t\(betragvor)\t \(betragnext) \t\(cosphi)")
-             
-             if cosphi < 0.2
-             {
-                ramp = 1
-                print("*** ramp bei \(i)")
-             }
-              
-             punktdaten["ramp"] = Double(ramp)
-             punktdaten["timerintervall"] = TimerIntervallFeld.doubleValue 
-             punktdaten["rampfaktor"] = RampFaktorFeld.doubleValue
-
-             punktdaten["steigung"] = laststeigung
-             //print("index: \(index)\tax: \t\(ax)\tay: \t\(ay) \tlastax: \t\(lastax)\tlastay: \t\(lastay)\tlaststeigung: \(laststeigung)")
-             
-             
-          }
-                        
-          
+         {
+            let lastpunktdaten = KoordinatenTabelle[i-1]
+            let lastax = lastpunktdaten["ax"] ?? 0.0
+            let lastay = lastpunktdaten["ay"] ?? 0.0
+            let nextpunktdaten = KoordinatenTabelle[i+1]
+            let nextax = nextpunktdaten["ax"] ?? 0.0
+            let nextay = nextpunktdaten["ay"] ?? 0.0
+            
+            
+            //print("index: \(index)\tax: \t\(ax)\tay: \t\(ay) \tlastax: \t\(lastax)\tlastay: \t\(lastay)")
+            let lastdeltax = ax - lastax
+            let lastdeltay = ay - lastay
+            var laststeigung = 0.0
+            if abs(lastdeltay) > 0
+            {
+               laststeigung = lastdeltax/lastdeltay
+            }
+            
+            let nextdeltax = nextax - ax
+            let nextdeltay = nextay - ay
+            
+            // winkel vor-nach
+            let skalarprod = lastdeltax * nextdeltax + lastdeltay * nextdeltay
+            
+            let betragvor = hypot(lastdeltax, lastdeltay)
+            
+            let betragnext = hypot(nextdeltax, nextdeltay)
+            
+            let cosphi = skalarprod / (betragvor * betragnext)
+            
+            //print("\(index)\t\(ax)\t\(ay)\t\(lastax)\t\(lastay)\t\(nextax)\t\(nextay)\t\t\(skalarprod) \t\(betragvor)\t \(betragnext) \t\(cosphi)")
+            
+            if cosphi < 0.2
+            {
+               ramp = 1
+               print("*** ramp bei \(i)")
+            }
+            
+            punktdaten["ramp"] = Double(ramp)
+            punktdaten["timerintervall"] = TimerIntervallFeld.doubleValue 
+            punktdaten["rampfaktor"] = RampFaktorFeld.doubleValue
+            
+            punktdaten["steigung"] = laststeigung
+            //print("index: \(index)\tax: \t\(ax)\tay: \t\(ay) \tlastax: \t\(lastax)\tlastay: \t\(lastay)\tlaststeigung: \(laststeigung)")
+            
+            
+         }
+         
+         
          tempkoordinatentabelle.append(punktdaten)
-        
-       }
-       
-       print("tempkoordinatentabelle: \n")
-       for zeile in tempkoordinatentabelle
-       {
+         
+      } // for i
+      
+      //print("tempkoordinatentabelle: \n")
+      for zeile in tempkoordinatentabelle
+      {
          // print(zeile)
-          print("\(zeile["index"])\t\(zeile["ax"])\t\(zeile["ay"])")
-       }
-       
-       
-       
-       
-       let tempSchnittdatenArray = AVR?.stopFunktion(tempkoordinatentabelle, outletdaten: outletdaten)
-        
-        //print("tempSchnittdatenArray: \(tempSchnittdatenArray)")
-        
-        for i in 0..<tempSchnittdatenArray!.count
-        {
-            let temparray = tempSchnittdatenArray![i] as! [Int]
-            //print("i: \(i) temparray: \(temparray)")
-          SchnittdatenArray.append(temparray)
-        }
-       //print("reportStopTaste SchnittdatenArray: \(SchnittdatenArray)")
-        // code am Anfang und Schluss einfuegen
-        var lastposition:Int = 0
-        lastposition |= (1<<LAST_BIT)
-        let anzdaten = SchnittdatenArray.count
-        SchnittdatenArray[anzdaten-1][17] = lastposition
-        
-        AnzahlFeld.integerValue = SchnittdatenArray.count
-        PositionFeld.integerValue = 0
-        
-        IndexFeld.integerValue = anzdaten
-        IndexStepper.integerValue = anzdaten
-        
-        CNC_Sendtaste.isEnabled = true
-        DC_Taste.state = NSControl.StateValue.off
-    }
+         //print("\(zeile["index"])\t\(zeile["ax"])\t\(zeile["ay"])")
+      }
+      
+      
+      
+      
+      let tempSchnittdatenArray = AVR?.stopFunktion(tempkoordinatentabelle, outletdaten: outletdaten)
+      
+      //print("tempSchnittdatenArray: \(tempSchnittdatenArray)")
+      
+      for i in 0..<tempSchnittdatenArray!.count
+      {
+         let temparray = tempSchnittdatenArray![i] as! [Int]
+         //print("i: \(i) temparray: \(temparray)")
+         SchnittdatenArray.append(temparray)
+      }
+      //print("reportStopTaste SchnittdatenArray: \(SchnittdatenArray)")
+      // code am Anfang und Schluss einfuegen
+      var lastposition:Int = 0
+      lastposition |= (1<<LAST_BIT)
+      let anzdaten = SchnittdatenArray.count
+      SchnittdatenArray[anzdaten-1][17] = lastposition
+      
+      AnzahlFeld.integerValue = SchnittdatenArray.count
+      PositionFeld.integerValue = 0
+      
+      IndexFeld.integerValue = anzdaten
+      IndexStepper.integerValue = anzdaten
+      
+      CNC_Sendtaste.isEnabled = true
+      DC_Taste.state = NSControl.StateValue.off
+   }
     
     @objc func StopTastefunktion()
     {
@@ -3095,10 +2977,10 @@ var outletdaten:[String:AnyObject] = [:]
       
       let note = notification.userInfo as![String:Any]
       
-      print("HW USBReadAktion note: \n\(note)\n")
+      //print("HW USBReadAktion note: \n\(note)\n")
       let abschnittfertig = note["abschnittfertig"]  as! Int
       //print("HW USBReadAktion note: \n\(note) abschnittfertig: \(abschnittfertig)\n")
-      print("\n\t HW USBReadAktion abschnittfertig: \(int2hex(wert: UInt8(abschnittfertig)))")
+      //print("\n\t HW USBReadAktion abschnittfertig: \(int2hex(wert: UInt8(abschnittfertig)))")
       //printhex(wert: UInt8(abschnittfertig))
       let outposition = note["outposition"] as! Int
       Stepperposition = note["stepperposition"] as! Int
@@ -3116,15 +2998,15 @@ var outletdaten:[String:AnyObject] = [:]
          print("pfeilrichtung OK: \(rawpfeilrichtung)")
          pfeilrichtung = rawpfeilrichtung
       }
-    if let rawdeleteindikator = note["deleteindikator"] as? Int
+      if let rawdeleteindikator = note["deleteindikator"] as? Int
       {
          print("deleteindikator OK: \(rawdeleteindikator)")
          deleteindikator = rawdeleteindikator
-       
+         
       }
       
       CNCPositionFeld.integerValue = Stepperposition
-//      print("USBReadAktion abschnittfertig: \(abschnittfertig) pfeilrichtung: \(pfeilrichtung)")
+      //      print("USBReadAktion abschnittfertig: \(abschnittfertig) pfeilrichtung: \(pfeilrichtung)")
       let anzsteps = SchnittdatenArray.count
       
       if let Tastaturwert = note["tastaturwert"]
@@ -3199,11 +3081,11 @@ var outletdaten:[String:AnyObject] = [:]
       case 0x81: //Pfeil RIGHT    
          print("HW USBReadAktion 0x81 \tPfeil DOWN")
          AnschlagLinksIndikator.isTransparent = true
-        // AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.clear.cgColor
+         // AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.clear.cgColor
          CNC_Lefttaste.isEnabled = true;
          CNC_busySpinner.stopAnimation(nil)
          break
-
+         
       case 0x82: //Pfeil UP    
          print("HW USBReadAktion 0x82 \tPfeil UP")
          AnschlagUntenIndikator.isTransparent = true
@@ -3221,7 +3103,7 @@ var outletdaten:[String:AnyObject] = [:]
          CNC_Righttaste.isEnabled = true;
          CNC_busySpinner.stopAnimation(nil)
          break
- 
+         
       case 0x84: //Pfeil DOWN    
          print("HW USBReadAktion 0x84 \tPfeil RIGHT")
          AnschlagObenIndikator.isTransparent = true
@@ -3229,11 +3111,11 @@ var outletdaten:[String:AnyObject] = [:]
          CNC_Uptaste.isEnabled = true;
          CNC_busySpinner.stopAnimation(nil)
          break
-
          
          
-      //case 0xB8: // Tastaturwert
-      //   print("Tastatur Tastaturwert: \(TastenwertFeld.integerValue)")
+         
+         //case 0xB8: // Tastaturwert
+         //   print("Tastatur Tastaturwert: \(TastenwertFeld.integerValue)")
          
       case 0xBD: // Abschnitt fertig
          PositionFeld.integerValue = Stepperposition
@@ -3249,10 +3131,10 @@ var outletdaten:[String:AnyObject] = [:]
             warnung.runModal()
             taskfertig = 0
             self.StiftUpFunktion()
-                     
+            
          }
          
- 
+         
       case 0xF3:
          print("Stift stiftposition: \(stiftposition) ")
          if stiftposition == 1 // down
@@ -3270,7 +3152,7 @@ var outletdaten:[String:AnyObject] = [:]
          print("Stift DOWN")
          
          break
-        
+         
          
       default:
          break
@@ -3791,7 +3673,7 @@ var outletdaten:[String:AnyObject] = [:]
         var eingabeDic = [String:Any]()
         if KoordinatenTabelle.count == 0
         {
-            var zeilenDic = ["index": 0, "ax":  25, "ay": 35, "bx": 25, "by": 35, "pwm": 0.8]
+            var zeilenDic = ["index": 0, "ax":  25, "ay": 35, "bx": 25, "by": 35, "abrax":  25, "abray": 35, "abrbx": 25, "abrby": 35, "pwm": 0.8]
             KoordinatenTabelle.append(zeilenDic)
            
            
@@ -3826,7 +3708,9 @@ var outletdaten:[String:AnyObject] = [:]
         datenDic["auslauflaenge"] = Auslauflaenge.integerValue
         datenDic["auslauftiefe"] = Auslauftiefe.integerValue
         
-        datenDic["abbrand"] = AbbrandFeld.doubleValue
+       let abbrandwert = AbbrandFeld.doubleValue
+        datenDic["abbrand"] = 4
+       datenDic["mitabbrand"] = AbbrandCheckbox.state.rawValue
         
         datenDic["mitoberseite"] = 1
         datenDic["mitunterseite"] = 0
@@ -3873,6 +3757,7 @@ var outletdaten:[String:AnyObject] = [:]
         for i in 0..<KoordinatenTabelle.count
         {
             let zeile = KoordinatenTabelle[i]
+           print("i: \(i) zeile: \(zeile)")
             let ax = zeile["ax"] ?? 0
             let ay = zeile["ay"] ?? 0
             let bx = zeile["bx"] ?? 0
@@ -3887,6 +3772,7 @@ var outletdaten:[String:AnyObject] = [:]
         CNC_Eingabe.setDaten(datenDic)
         
         print("reportProfilOberseiteTask datenDic: \(datenDic)")
+       
         CNC_Eingabe.profilPopTask(datenDic);
         
         //print("HotWire reportProfilOberseiteTask NACH profilPopTask: KoordinatenTabelle")
@@ -3959,11 +3845,13 @@ var outletdaten:[String:AnyObject] = [:]
         
         let rahmenarray = [NSMakePoint(minX, maxY) ,NSMakePoint(maxX,maxY),NSMakePoint(maxX,minY),NSMakePoint(minX,minY)]
         //BlockrahmenArray = rahmenarray
+       
         CNC_Table.reloadData()
+       CNC_Table.scrollRowToVisible(0)
         //let r = rahmenarray as NSArray
         ProfilFeld.setRahmenArray(derRahmenArray: rahmenarray as NSArray)
         ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
-       ProfilFeld.clearWeg()
+         ProfilFeld.clearWeg()
         ProfilFeld.needsDisplay = true
 
         CNC_Stoptaste.isEnabled = true
@@ -4116,7 +4004,7 @@ var outletdaten:[String:AnyObject] = [:]
         maxY = max(maxY,maxabrY) + offsety
         
         
-        print("minX: \(minX) minY: \(minY) maxX: \(maxX) maxY: \(maxY)")
+       // print("minX: \(minX) minY: \(minY) maxX: \(maxX) maxY: \(maxY)")
         
         
         for i in 0..<KoordinatenTabelle.count
@@ -4931,8 +4819,6 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
             ProfilFeld.setRahmenArray(derRahmenArray: BlockrahmenArray as NSArray)
         }// if BlockrahmenArray.count > 0
         
-
-        
         CNC_Table.reloadData()
         ProfilFeld.needsDisplay = true
         
@@ -4956,8 +4842,6 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        outletdaten["micro"] = 1 as AnyObject
        
        outletdaten["home"] = 1 as AnyObject
-       
-       
        
        let nc = NotificationCenter.default
        let NotificationDic = [String:Int]()
@@ -5000,12 +4884,6 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
           break
        }// switch
        
- 
-        
-       
-     
-       //setOutletdaten()
-       //AVR?.manFeldRichtung(3,mousestatus:Int32(1), pfeilstep:700)
        
        AVR?.home_Horizontal()
        

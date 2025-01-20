@@ -1498,7 +1498,7 @@
    
    if ([daten objectForKey:@"abbrand"])
    {
-      //NSLog(@"abbranda: %2.2f",[[daten objectForKey:@"abbrand"]floatValue]);
+      NSLog(@"abbranda: %2.2f",[[daten objectForKey:@"abbrand"]floatValue]);
       if ([AbbrandmassA  floatValue] != [[daten objectForKey:@"abbrand"]floatValue])
       {
   
@@ -3128,6 +3128,8 @@
       [ProfilDic setObject:[NSNumber numberWithInt:reverse] forKey:@"reverse"];
       [ProfilDic setObject:[eingabeDic objectForKey:@"einlaufrand"] forKey:@"einlaufrand"];
       [ProfilDic setObject:[eingabeDic objectForKey:@"auslaufrand"] forKey:@"auslaufrand"];
+      [ProfilDic setObject:[eingabeDic objectForKey:@"mitabbrand"] forKey:@"mitabbrand"];
+      [ProfilDic setObject:[eingabeDic objectForKey:@"abbrand"] forKey:@"abbrand"];
 
       
       [[self window]orderOut:NULL];

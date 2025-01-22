@@ -2013,8 +2013,6 @@ var outletdaten:[String:AnyObject] = [:]
         tempDic["position"] = 3
         tempDic["cncposition"] = 0
         tempDic["home"] = 0
-     //   var tempSteuerdatenDic = [String:Any]()
-      // tempSteuerdatenDic = AVR?.tool_SteuerdatenVonDic(tempDic) as! [String : Double]
        let newArray:[[Int]] = ((AVR?.tool_CNC_SchnittdatenArrayVonSteuerdaten(tempDic))) as! [[Int]]
        
         var tempSchnittdatenArray = [[Int]]()

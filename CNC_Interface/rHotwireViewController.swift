@@ -590,7 +590,7 @@ var outletdaten:[String:AnyObject] = [:]
                   CNC_Stift.animator().setFrameOrigin(neuepos) // Smooth animation
       }
 
-        // self.StiftUpFunktion()
+         self.StiftUpFunktion()
      
 
    }
@@ -621,6 +621,7 @@ var outletdaten:[String:AnyObject] = [:]
    { _ in
       CNC_Stift.animator().setFrameOrigin(neuepos) // Smooth animation
    }
+   self.StiftDownFunktion()
 
 }
 
@@ -2031,9 +2032,9 @@ var outletdaten:[String:AnyObject] = [:]
         nc.post(name:Notification.Name(rawValue:"usbschnittdaten"),
         object: nil,
         userInfo: NotificationDic)
-
+       
         print("swift reportNeuTaste")
- 
+       goStiftUp()
         
         
         //       KoordinatenTabelle.append(AVR?.schnittdatenVonDic(tempSteuerdatenDic) as! [String : Double]  )
@@ -2474,6 +2475,7 @@ var outletdaten:[String:AnyObject] = [:]
                self.DC_Funktion(pwm: dc_pwm)
                DC_Taste.isEnabled = true
                delayok = 1
+               goStiftDown()
             case .alertSecondButtonReturn:
                print("second Button")
                // pwm entfernen
@@ -2481,12 +2483,15 @@ var outletdaten:[String:AnyObject] = [:]
                {
                   SchnittdatenArray[i][20] = 0
                }
+               goStiftDown()
+               
             case .alertThirdButtonReturn:
                print("third")
                return
             default:
                break
             }
+            
             
          }
       }// if usbstatus
@@ -3130,8 +3135,8 @@ var outletdaten:[String:AnyObject] = [:]
             warnung.addButton(withTitle: "OK")
             warnung.runModal()
             taskfertig = 0
-            self.StiftUpFunktion()
-            
+            //self.StiftUpFunktion()
+            goStiftUp()
          }
          
          
@@ -4830,7 +4835,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
     @IBAction func report_Home(_ sender: NSButton)
     {
         print("swift report_Home: \(sender.tag) ")
-       
+       goStiftUp()
        CNC_Halttaste.state = NSControl.StateValue.on
        CNC_Halttaste.isEnabled = true
        

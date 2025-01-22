@@ -3709,6 +3709,9 @@ PortA=vs[n & 3]; warte10ms(); n++;
    int i=0;
    NSMutableArray* AbbrandArray = [[NSMutableArray alloc]initWithCapacity:0];
    
+   float lastabbrandA[2] = {};
+   float lastabbrandB[2] = {};
+   
    float lastwha[2] = {}; // WH des letzten berechneten Punktes. Wird fuer Check gebraucht, ob die Kruemmung gewechselt hat
    float lastwhb[2] = {}; // WH des letzten berechneten Punktes. Wird fuer Check gebraucht, ob die Kruemmung gewechselt hat
    
@@ -3745,7 +3748,18 @@ PortA=vs[n & 3]; warte10ms(); n++;
    {
       bis = [Koordinatentabelle count] - 1;
    }
-   fprintf(stderr, "i \t ax\t ay\tpreva x \tpreva y \tnexta x \t nexay \n");
+   //fprintf(stderr, "i \t ax\t ay\tpreva x \tpreva y \tnexta x \t nexay \n");
+   
+   float nextax = 0;
+   float nextay = 0;
+   float nextbx = 0;
+   float nextby = 0;
+   
+   float prevax = 0;
+   float prevay = 0;
+   float prevbx = 0;
+   float prevby = 0;
+
    for (i=0; i<[Koordinatentabelle count];i++)
    {
       
@@ -3758,20 +3772,10 @@ PortA=vs[n & 3]; warte10ms(); n++;
       float by = [[[Koordinatentabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
       
       
-      
-      if (i>von-1 && i<bis) // Abbrandbereich, von ist 1-basiert
+      if (i>von-1 && i<bis-1) // Abbrandbereich, von ist 1-basiert
       {
          
-         float nextax = 0;
-         float nextay = 0;
-         float nextbx = 0;
-         float nextby = 0;
-         
-         float prevax = 0;
-         float prevay = 0;
-         float prevbx = 0;
-         float prevby = 0;
-         
+           
          float cosphia = 0; // cos des halben Winkels
          float cosphib = 0; // cos des halben Winkels
          float cosphi2a = 0; // cos des halben Winkels
@@ -3798,7 +3802,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
          
          if((i > 40) && (i<80))
          {
-            fprintf(stderr, "%d \t %2.4f\t %2.4f\t%2.4f  \t%2.4f  \t%2.4f  \t %2.4f \n",i,ax,ay,prevax, prevay, nextax, nextay);
+            //fprintf(stderr, "%d \t %2.4f\t %2.4f\t%2.4f  \t%2.4f  \t%2.4f  \t %2.4f \n",i,ax,ay,prevax, prevay, nextax, nextay);
          }
          
          if ((i<bis-1) && (i>von)) // Punkt im Abbrandbereich
@@ -4285,7 +4289,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
          
          if (i==von) // erster Punkt, Abbrandvektor soll senkrecht stehen
          {
-            NSLog(@"i=von: %d",i);
+            //NSLog(@"i=von: %d",i);
             float deltaax=nextax-ax;
             float deltaay=nextay-ay;
             float normalenhypoa = hypotenuse(deltaax, deltaay);
@@ -4320,9 +4324,9 @@ PortA=vs[n & 3]; warte10ms(); n++;
             
          }
          
-         if (i==bis-1) // letzter Punkt, Abbrandvektor soll senkrecht stehen
+         if (i==bis) // letzter Punkt, Abbrandvektor soll senkrecht stehen
          {
-            //NSLog(@"i=bis-1");
+            //NSLog(@"i=bis");
             float deltaax=prevax-ax;
             float deltaay=prevay-ay;
             float normalenhypoa = hypotenuse(deltaax, deltaay);
@@ -4382,7 +4386,6 @@ PortA=vs[n & 3]; warte10ms(); n++;
          float whbhypo = hypotf(whb[0],whb[1]);
          //NSLog(@"whbhypo: %2.4f",whbhypo);
          float abbrandb[2]= {whb[0]*seitenkorrekturb/whbhypo*profilabbrandbmass/cosphi2b,whb[1]*seitenkorrekturb/whbhypo*profilabbrandbmass/cosphi2b};
-         
          //        NSLog(@"i %d orig ax %2.2f ay %2.2f bx %2.2f by %2.2f",i,ax,ay,bx,by);
          //        NSLog(@"i %d abbranda[0] %2.4f abbranda[1] %2.4f ",i,abbranda[0], abbranda[1]);
          if (isnan(abbrandb[0]) || isnan(abbrandb[1]))
@@ -4421,7 +4424,22 @@ PortA=vs[n & 3]; warte10ms(); n++;
             // fprintf(stderr,"i %d  \t%2.2f \t%2.2f \t%2.2f \t%2.2f\n",i,hypa,abrhypa,hypb,abrhypb);
             
          }
+         lastabbrandA[0] = abbranda[0];
+         lastabbrandA[1] = abbranda[1];
+         lastabbrandB[0] = abbrandb[0];
+         lastabbrandB[0] = abbrandb[1];
       } // i im Bereich
+      else if (i==bis-1)
+      {
+         printf("i ist  bis-1");
+         
+         [tempDic setObject:[NSNumber numberWithFloat:(ax )] forKey:@"abrax"];
+         [tempDic setObject:[NSNumber numberWithFloat:(prevay + lastabbrandA[1])] forKey:@"abray"];
+         [tempDic setObject:[NSNumber numberWithFloat:(bx)] forKey:@"abrbx"];
+         [tempDic setObject:[NSNumber numberWithFloat:(prevby + lastabbrandB[1])] forKey:@"abrby"];
+
+         
+      }
       else
       {
          [tempDic setObject:[NSNumber numberWithFloat:ax] forKey:@"abrax"];
@@ -4430,13 +4448,16 @@ PortA=vs[n & 3]; warte10ms(); n++;
          [tempDic setObject:[NSNumber numberWithFloat:by] forKey:@"abrby"];
       }
       
-      // printf("%d\t %2.2f \t %2.2f \t %2.2f \t %2.2f \n",i,ax,ay,[[tempDic objectForKey:@"abrax"]floatValue],[[tempDic objectForKey:@"abray"]floatValue]);
+       printf("%d\t %2.2f \t %2.2f \t %2.2f \t %2.2f \n",i,ax,ay,[[tempDic objectForKey:@"abrax"]floatValue],[[tempDic objectForKey:@"abray"]floatValue]);
       
       [AbbrandArray addObject:tempDic];
       
    } // for i
+   
    //NSLog(@"addAbbrandVonKoordinaten end: %@",[AbbrandArray  description]);
-   //NSLog(@"addAbbrandVonKoordinaten end: %@",[[AbbrandArray  objectAtIndex:0] description]);
+   NSLog(@"addAbbrandVonKoordinaten end: %@",[[AbbrandArray  objectAtIndex:0] description]);
+   NSLog(@"addAbbrandVonKoordinaten end: %@",[[AbbrandArray  lastObject] description]);
+
    return AbbrandArray;
    
 }

@@ -9135,6 +9135,8 @@ return returnInt;
    
    Profil1UnterseiteArray=[ProfilDic objectForKey:@"unterseitearrayA"];
    
+   
+   
    Profil1OberseiteArray=(NSMutableArray*)[self vertikalspiegelnVonProfil:[ProfilDic objectForKey:@"oberseitearrayA"]];
    
    
@@ -9197,12 +9199,12 @@ return returnInt;
    
    // Einlauf-Schnittlinie
    
-   //NSLog(@"profil1array: ");
+  // NSLog(@"profil1array: ");
    for (int i=0;i<[[ProfilDic objectForKey:@"profil1array"] count ];i++)
    {
-      /*
-       fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[[ProfilDic objectForKey:@"profil1array"] objectAtIndex:i]objectForKey:@"x"] floatValue],[[[[ProfilDic objectForKey:@"profil1array"] objectAtIndex:i]objectForKey:@"y"] floatValue]);
-       */
+      
+       //fprintf(stderr, "%d\t%2.6f\t%2.6f\n",i,[[[[ProfilDic objectForKey:@"profil1array"] objectAtIndex:i]objectForKey:@"x"] floatValue],[[[[ProfilDic objectForKey:@"profil1array"] objectAtIndex:i]objectForKey:@"y"] floatValue]);
+       
    }
    
    //NSLog(@"profil2array: ");
@@ -10124,22 +10126,68 @@ return returnInt;
       {
          // MARK: HOLM
          // Holm
-         float holmx = 1;
-         float holmy = -3;
+         NSLog(@"maxxA: %2.2f nasenindexA: %d von: %d bis: %d",maxxA,nasenindexA,von,bis);
+         int holmindex = 0;//(bis - von)/3*2;
+         float startX = [[[LibKoordinatenTabelle objectAtIndex:von]objectForKey:@"ax"]floatValue];
+         float nasenX = [[[LibKoordinatenTabelle objectAtIndex:nasenindexA]objectForKey:@"ax"]floatValue];
+         float holmabstandX = (nasenX - startX) / 3 * 2; //Abstand von Endleiste
+         float holmuaX = 0; // ax unten bei holmX
+         float holmuaY = 100; // ay unten bei holmX
+         float holmoaX = 0; // ax oben bei holmX
+         float holmoaY = 100; // ay oben bei holmX
+
+         float holmubX = 0; // ax unten bei holmX
+         float holmubY = 100; // ay unten bei holmX
+         float holmobX = 0; // ax oben bei holmX
+         float holmobY = 100; // ay oben bei holmX
          
-         int holmindex = 90;
+         // index von nasenx suchen
+         for(int i = (LibKoordinatenTabelle.count - 1);i > nasenindexA; i--) // Tabelle rueckwarts absuchen
+         {
+            float tempax = [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
+            //fprintf(stderr,"i: %d\ttempax: \t%2.2f\n",i,tempax);
+            if([[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue] > (holmabstandX + startX))
+            {
+               holmindex =  i;
+               holmuaX = [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
+               holmuaY = [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ay"]floatValue];
+               holmubX = [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
+               holmubY = [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
+               
+               fprintf(stderr,"i: %d\t *** holmuaX passt: %2.2f\t holmuaY: \t%2.2f\n",i,holmuaX,holmuaY);
+               // Oberen Wert fuer ay suchen
+               for(int k = von; k < nasenindexA;k++)
+               {
+                  float tempax = [[[LibKoordinatenTabelle objectAtIndex:k]objectForKey:@"ax"]floatValue];
+                  float tempay = [[[LibKoordinatenTabelle objectAtIndex:k]objectForKey:@"ay"]floatValue];
+                  
+                  //fprintf(stderr,"k: %d\t tempax: %2.2f\t tempay: \t%2.2f\n",k,tempax,tempay);
+                  if(tempax > [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue]) // groesser als ax unten, 
+                  {
+                     fprintf(stderr,"k: %d\t holmoaY: \t%2.2f\n",k,holmoaY);
+                     holmoaY = [[[LibKoordinatenTabelle objectAtIndex:k]objectForKey:@"ay"]floatValue]; // wert ueber holm-punkt
+                     holmobY = [[[LibKoordinatenTabelle objectAtIndex:k]objectForKey:@"by"]floatValue]; // wert ueber holm-punkt
+
+                     fprintf(stderr,"k: %d\t holmoaY passt: \t%2.2f\n",k,holmoaY);
+                     break;
+                  }
+               }
+               break;
+            }
+         }
+          
+         fprintf(stderr,"holm startx: \t%2.2f\t nasenx %2.2f holmabstandX: %2.2f holmindex:  %d\n",startX,nasenX,holmabstandX,holmindex);
          
          
          
-         
-         
-         float radiusA = 3.8;
-         float radiusB = 3.8;
+         float radiusA = 3.5;
+         float radiusB = 3.5;
          float Winkel = 360;
          int anzahlPunkte = 8;
          
-         float holmtiefeA = (maxyA - minyA)/2 -  radiusA;
-         float holmtiefeB = (maxyB - minyB)/2 -  radiusB;
+         //float holmtiefeA = (maxyA - minyA)/2 -  radiusA;
+         float holmtiefeA = (holmoaY  - holmuaY)/2 -  radiusA;
+         float holmtiefeB = (holmobY  - holmubY)/2 -  radiusB;
          
          fprintf(stderr,"holmtiefeA: \t%2.2f\tholmtiefeB %2.2f\n",holmtiefeA,holmtiefeB);
                  
@@ -10193,6 +10241,7 @@ return returnInt;
       
          // einheitsvektor auf laenge holmabstand stellen
          float einstichfaktorA = holmtiefeA / einheitsvektor;
+         
          float einstichfaktorB = holmtiefeB / einheitsvektor;
          NSLog(@"LibProfileingabeFunktion holm diffvektorvor: %2.2f diffvektornach: %2.2f einheitsvektor: %2.6f einstichfaktorA: %2.6f  einstichfaktorB: %2.6f  profiltiefefaktor: %2.6f",diffvektorvor,diffvektornach,einheitsvektor,einstichfaktorA,einstichfaktorB,profiltiefefaktor);
          
@@ -10201,7 +10250,10 @@ return returnInt;
          //winkelhalbierende[1] *= einstichfaktorA ;
          
          float einstichxA = winkelhalbierende[0] * einstichfaktorA;
+         //float einstichyA = winkelhalbierende[1] * einstichfaktorA;
+         
          float einstichyA = winkelhalbierende[1] * einstichfaktorA;
+         
          
          float einstichxB = winkelhalbierende[0] * einstichfaktorB;
          float einstichyB = winkelhalbierende[1] * einstichfaktorB;
@@ -10215,14 +10267,14 @@ return returnInt;
          
  
          [holmDicStart setObject:[NSNumber numberWithFloat:holmax + einstichxA] forKey:@"ax"];
-         [holmDicStart setObject:[NSNumber numberWithFloat:holmay + einstichyA] forKey:@"ay"];
-         
-         
-         
+         [holmDicStart setObject:[NSNumber numberWithFloat:holmay + holmtiefeA] forKey:@"ay"];
+         //[holmDicStart setObject:[NSNumber numberWithFloat:holmay +5] forKey:@"ay"];
+
+
          [holmDicStart setObject:[NSNumber numberWithFloat:holmax + einstichxA] forKey:@"abrax"];
-         
-         [holmDicStart setObject:[NSNumber numberWithFloat:holmay + einstichyA] forKey:@"abray"];
-   
+        // [holmDicStart setObject:[NSNumber numberWithFloat:holmay + einstichyA] forKey:@"abray"];
+         [holmDicStart setObject:[NSNumber numberWithFloat:holmay + holmtiefeA] forKey:@"abray"];
+
          
          //     [holmDicStart setObject:[NSNumber numberWithFloat:holmax + winkelhalbierende[0]] forKey:@"abrax"];
          //     [holmDicStart setObject:[NSNumber numberWithFloat:holmay + winkelhalbierende[1]] forKey:@"abray"];
@@ -10232,7 +10284,9 @@ return returnInt;
          
          
          [holmDicStart setObject:[NSNumber numberWithFloat: holmbx + einstichxB] forKey:@"bx"];
-         [holmDicStart setObject:[NSNumber numberWithFloat: holmby + einstichyB] forKey:@"by"];
+         //[holmDicStart setObject:[NSNumber numberWithFloat: holmby + einstichyB] forKey:@"by"];
+         [holmDicStart setObject:[NSNumber numberWithFloat: holmby + holmtiefeB] forKey:@"by"];
+
          
          [holmDicStart setObject:[NSNumber numberWithFloat: holmbx + einstichxB] forKey:@"abrbx"];
          [holmDicStart setObject:[NSNumber numberWithFloat: holmby + einstichyB] forKey:@"abrby"];

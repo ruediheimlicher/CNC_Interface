@@ -8942,7 +8942,7 @@ return returnInt;
    int ProfilTiefeB = [[eingabeDic objectForKey:@"profiltiefeb"]integerValue ];
    
    float profiltiefefaktor = [[eingabeDic objectForKey:@"profiltiefeb"]floatValue ]/[[eingabeDic objectForKey:@"profiltiefea"]floatValue ];
-   
+   float startX = 0;
    
    /*
     Werte fuer "teil":
@@ -9828,7 +9828,7 @@ return returnInt;
       
       NSMutableDictionary* firstDic=[[LibKoordinatenTabelle objectAtIndex:0]mutableCopy];
       
-      float firstax = [[firstDic objectForKey:@"ax"]floatValue];
+      float firstax = [[firstDic objectForKey:@"ax"]floatValue]-5;
       float firstay = [[firstDic objectForKey:@"ay"]floatValue];
       float firstbx = [[firstDic objectForKey:@"bx"]floatValue];
       float firstby = [[firstDic objectForKey:@"by"]floatValue];
@@ -9836,7 +9836,7 @@ return returnInt;
       [firstDic setObject:[firstDic objectForKey:@"by"]forKey:@"abrby"];
       
       
-      float deltax = 5;
+      float deltax = 0;
       float deltay = firstay - minyA + wasserunterkiel + abbranda;
       von++;
       // 10 pkt nach links
@@ -9901,13 +9901,14 @@ return returnInt;
       fprintf(stderr,"LibKoordinatenTabelle nach end: \n");
       
       // MARK: EINSTICH
-   
+      
       if(mitEinstrich)
       {
          float einstichtiefe = 5;
          // Nasenpunkt fuer Einstich suchen
          maxxA = 0;
          maxxB = 0;
+         
          nasenindexA = 0;
          nasenindexB = 0;
 
@@ -9938,6 +9939,8 @@ return returnInt;
          float einstichxA1 = startxA + 6*oberseiteabschnittA;
          float einstichxA2 = startxA + 9*oberseiteabschnittA;
          float einstichxA3 = startxA + 11*oberseiteabschnittA;
+         
+         
  
          int einstichxArray[ANZAHLEINSTICHE] = {einstichxA0,einstichxA1,einstichxA2,einstichxA3}; // fuer holmindex 90
 
@@ -10056,10 +10059,10 @@ return returnInt;
              
             [LibKoordinatenTabelle insertObject:einstichDicStart atIndex:einstich];
             //nasenindexA++;
-            bis++;
+            //bis++;
             [LibKoordinatenTabelle insertObject:einstichDicEnd atIndex:einstich];
             //nasenindexA++;
-            bis++;
+            //bis++;
          } // ANZAHLEINSTICHE
       } // mit einstich
       
@@ -10516,7 +10519,18 @@ return returnInt;
       
    }
    fprintf(stderr,"LibKoordinatenTabelle end\n");
+   int anz = LibKoordinatenTabelle.count;
    
+   //Auslauf rechtwinklig
+   [[LibKoordinatenTabelle  objectAtIndex:(anz-2)]setObject:[NSNumber numberWithFloat:30] forKey:@"ax"];
+   [[LibKoordinatenTabelle  objectAtIndex:(anz-2)]setObject:[NSNumber numberWithFloat:30] forKey:@"abrax"];
+   
+   [[LibKoordinatenTabelle  objectAtIndex:(anz-1)]setObject:[NSNumber numberWithFloat:30] forKey:@"ax"];
+   [[LibKoordinatenTabelle  objectAtIndex:(anz-1)]setObject:[NSNumber numberWithFloat:30] forKey:@"abrax"];
+ 
+   
+  
+  // [tempLastDic setObject:[NSNumber numberWithFloat:10.0] forKey:@"ax"];
    
    NSMutableDictionary* rahmeneingabeDic = [NSMutableDictionary dictionaryWithObject:LibKoordinatenTabelle forKey:@"libkoordinatentabelle"];
    NSDictionary* RahmenDic = [self RahmenDicFunktion:(rahmeneingabeDic)];

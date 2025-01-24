@@ -3920,16 +3920,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
             float deltanexta[2] = {nextax-ax,nextay-ay};
             //NSLog(@"i: %d  deltapreva[0]: %2.4f deltapreva[1]: %2.4f deltanexta[0]: %1.4f deltanexta[1]: %2.4f",i,deltapreva[0],deltapreva[1],deltanexta[0],deltanexta[1]);
             
-            /*
-             float prevhypoa=hypot(deltapreva[0],deltapreva[1]); // Laenge des vorherigen Weges
-             float nexthypoa=hypot(deltanexta[0],deltanexta[1]); // Laenge des naechsten Weges
-             
-             float prevnorma[2]= {(deltapreva[0])/prevhypoa,(deltapreva[1])/prevhypoa}; // vorheriger Normalenvektor
-             float nextnorma[2]= {(deltanexta[0])/nexthypoa,(deltanexta[1])/nexthypoa}; // naechster Normalenvektor
-             */
-            
-            
-            
+              
             /*
              
              

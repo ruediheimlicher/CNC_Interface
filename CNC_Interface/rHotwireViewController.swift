@@ -197,6 +197,7 @@ var outletdaten:[String:AnyObject] = [:]
     let  LAST_BIT = 1 // in 'position' von reportStopKnopf: Abschnitt ist last
 
    
+   
    let MAX_SPEED = 24
    var  oldMauspunkt :  NSPoint  = NSZeroPoint
    /*

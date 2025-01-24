@@ -38,6 +38,9 @@ extern int usbstatus;
 #define STEPEND_C          0x20
 #define STEPEND_D          0x30
 
+
+#define ANZAHLEINSTICHE  4
+
 //#define DATUM "16.03.2013"
 
 #define FIRST_BIT       0 // in 'position' von reportStopKnopf: Abschnitt ist first
@@ -9896,28 +9899,152 @@ return returnInt;
          
       }
       fprintf(stderr,"LibKoordinatenTabelle nach end: \n");
-      maxxA = 0;
-      maxxB = 0;
-      nasenindexA = 0;
-      nasenindexB = 0;
-      
+  
          
       
       // MARK: EINSTICH
+      
+      
       if(mitEinstrich)
       {
-         float einstichtiefe = 4;
-         
-         int einstichindex[3] = {22,35,53};
-         
-         for (int i = 0;i < 3; i++)
+         float einstichtiefe = 5;
+         // Nasenpunkt fuer Einstich suchen
+         maxxA = 0;
+         maxxB = 0;
+         nasenindexA = 0;
+         nasenindexB = 0;
+
+         float startxA = [[[LibKoordinatenTabelle objectAtIndex:von]objectForKey:@"ax"]floatValue];
+         float nasenxA = [[[LibKoordinatenTabelle objectAtIndex:nasenindexA]objectForKey:@"ax"]floatValue];
+
+         NSLog(@"Nasenpunkt fuer Einstich");
+         for (int i=0;i<LibKoordinatenTabelle.count;i++)
          {
+            if([[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue] > maxxA)
+            {
+               maxxA = [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
+               nasenindexA = i;
+            }
+            if([[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"bx"]floatValue] > maxxB)
+            {
+               maxxB = [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
+               nasenindexB = i;
+            }
             
-            // Einstich
-            float ax = [[[LibKoordinatenTabelle objectAtIndex:einstichindex[i]]objectForKey:@"ax"]floatValue];
-            float ay = [[[LibKoordinatenTabelle objectAtIndex:einstichindex[i]]objectForKey:@"ay"]floatValue];
-            float bx = [[[LibKoordinatenTabelle objectAtIndex:einstichindex[i]]objectForKey:@"bx"]floatValue];
-            float by = [[[LibKoordinatenTabelle objectAtIndex:einstichindex[i]]objectForKey:@"by"]floatValue];
+         }
+         
+         NSLog(@"startxA: %2.2f maxxA: %2.2f nasenindexA: %d",startxA,maxxA,nasenindexA);
+         
+         float oberseitebereichA = maxxA - startxA;
+         float oberseiteabschnittA = oberseitebereichA / 6;
+         
+         float einstichxA0 = startxA + 2*oberseiteabschnittA; 
+         float einstichxA1 = startxA + 3*oberseiteabschnittA;
+         float einstichxA2 = startxA + 4*oberseiteabschnittA;
+         float einstichxA3 = startxA + 5*oberseiteabschnittA;
+ 
+         //float einstichxA0 = startxA + oberseitebereichA / 3; 
+         
+       //  float oberseiteeinstichbereichA = oberseitebereichA - einstichxA0; // von Einstich 0 bis Nase
+       //  float einstichxA1 = einstichxA0 + oberseiteeinstichbereichA / 4;
+       //  float einstichxA2 = einstichxA0 + oberseiteeinstichbereichA / 4 * 3;
+         
+          
+         NSLog(@"oberseitebereichA: %2.2f einstichxA0: %2.2f einstichxA1: %2.2f einstichxA2: %2.2f",oberseitebereichA,einstichxA0,einstichxA1,einstichxA2);
+         
+         int einstich0index = 0;
+         int einstich1index = 0;
+         int einstich2index = 0;
+         int einstich3index = 0;
+         
+         // Indices fuer Einstiche
+         for (int i=0;i<LibKoordinatenTabelle.count;i++)
+         {
+            NSLog(@"i: %d ax: %2.2f",i,[[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue]);
+            if(([[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue] > einstichxA0) && ([[[LibKoordinatenTabelle objectAtIndex:i-1]objectForKey:@"ax"]floatValue] < einstichxA0))
+            {
+               NSLog(@"einstich0index passt: %d ax: %2.2f",i,[[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue]);
+               einstich0index = i;
+            }
+
+            if(([[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue] > einstichxA1) && ([[[LibKoordinatenTabelle objectAtIndex:i-1]objectForKey:@"ax"]floatValue] < einstichxA1))
+            {
+               NSLog(@"einstich1index passt: %d  ax: %2.2f",i,[[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue]);
+               einstich1index = i;
+            }
+ 
+            if(([[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue] > einstichxA2) && ([[[LibKoordinatenTabelle objectAtIndex:i-1]objectForKey:@"ax"]floatValue] < einstichxA2))
+            {
+               NSLog(@"einstich2index passt: %d ax: %2.2f",i,[[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue]);
+               einstich2index = i;
+            }
+
+            if(([[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue] > einstichxA3) && ([[[LibKoordinatenTabelle objectAtIndex:i-1]objectForKey:@"ax"]floatValue] < einstichxA3))
+            {
+               NSLog(@"einstich3index passt: %d ax: %2.2f",i,[[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue]);
+               einstich3index = i;
+            }
+
+            
+            
+         }// for i
+         
+         
+         
+         NSLog(@"einstich0index: %d einstich1index: %d einstich2index: %d einstich3index: %d",einstich0index,einstich1index,einstich2index,einstich3index);
+         
+         
+         NSLog(@"maxxB: %2.2f nasenindexB: %d",maxxB,nasenindexB);
+         
+         
+         fprintf(stderr,"einstich0index: %d, objectAtIndex:einstich0index: %2.2f\n",einstich0index,[[[LibKoordinatenTabelle objectAtIndex:einstich0index]objectForKey:@"ax"]floatValue]);
+  
+         fprintf(stderr,"einstich1index: %d, objectAtIndex:einstich1index: %2.2f\n",einstich1index,[[[LibKoordinatenTabelle objectAtIndex:einstich1index]objectForKey:@"ax"]floatValue]);
+
+         fprintf(stderr,"einstich2index: %d, objectAtIndex:einstich2index: %2.2f\n",einstich2index,[[[LibKoordinatenTabelle objectAtIndex:einstich2index]objectForKey:@"ax"]floatValue]);
+
+         fprintf(stderr,"einstich3index: %d, objectAtIndex:einstich3index: %2.2f\n",einstich3index,[[[LibKoordinatenTabelle objectAtIndex:einstich3index]objectForKey:@"ax"]floatValue]);
+
+        
+         
+         
+         
+         
+         
+         //int einstichindex[3] = {einstich0index,einstich1index,einstich2index}; // fuer holmindex 90
+         int einstichindex[ANZAHLEINSTICHE] = {einstich0index,einstich1index,einstich2index,einstich3index}; // fuer holmindex 90
+
+         
+         NSDictionary* zeilendic0 = [LibKoordinatenTabelle objectAtIndex:einstichindex[0]];
+         NSLog(@"zeile einstich0index: %@",zeilendic0);
+         NSDictionary* zeilendic1 = [LibKoordinatenTabelle objectAtIndex:einstichindex[1]];
+         NSLog(@"zeile einstich1index: %@",zeilendic1);
+         NSDictionary* zeilendic2 = [LibKoordinatenTabelle objectAtIndex:einstichindex[2]];
+         NSLog(@"zeile einstich2index: %@",zeilendic2);
+
+         for (int i=0;i<LibKoordinatenTabelle.count;i++)
+         {
+            //NSLog(@"i: %d ax: %2.2f",i,[[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue]);
+         }
+         
+         for (int i = 0;i < ANZAHLEINSTICHE; i++)
+         {
+            NSLog(@"22 ax: %2.2f",[[[LibKoordinatenTabelle objectAtIndex:22]objectForKey:@"ax"]floatValue]);
+            NSLog(@"31 ax: %2.2f",[[[LibKoordinatenTabelle objectAtIndex:31]objectForKey:@"ax"]floatValue]);
+        
+           // Einstich
+            NSLog(@"i: %d einstichindex: %d",i,einstichindex[i]);
+            int einstich = einstichindex[i] ;
+            NSDictionary* zeilendic = [LibKoordinatenTabelle objectAtIndex:einstich];
+            NSLog(@"zeile: %@",zeilendic);
+            fprintf(stderr,"raw einstich: %d \t ax: %2.2f\tay: %2.2f\tbx: %2.2f\tby: %2.2f\n",einstich,[[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"ax"]floatValue],[[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"ay"]floatValue],[[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"bx"]floatValue],[[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"by"]floatValue]);
+
+            float ax = [[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"ax"]floatValue];
+            float ay = [[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"ay"]floatValue];
+            float bx = [[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"bx"]floatValue];
+            float by = [[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"by"]floatValue];
+            fprintf(stderr,"ax: %2.2f\tay: %2.2f\tbx: %2.2f\tby: %2.2f\n",ax,ay,bx,by);
+
             
             float nextax = 0;
             float nextay = 0;
@@ -9930,16 +10057,17 @@ return returnInt;
             float prevby = 0;
             
             
-            nextax = [[[LibKoordinatenTabelle objectAtIndex:einstichindex[i]+1]objectForKey:@"ax"]floatValue];
-            nextay = [[[LibKoordinatenTabelle objectAtIndex:einstichindex[i]+1]objectForKey:@"ay"]floatValue];
-            nextbx = [[[LibKoordinatenTabelle objectAtIndex:einstichindex[i]+1]objectForKey:@"bx"]floatValue];
-            nextby = [[[LibKoordinatenTabelle objectAtIndex:einstichindex[i]+1]objectForKey:@"by"]floatValue];
+            nextax = [[[LibKoordinatenTabelle objectAtIndex:(einstichindex[i]+1)]objectForKey:@"ax"]floatValue];
+            nextay = [[[LibKoordinatenTabelle objectAtIndex:(einstichindex[i]+1)]objectForKey:@"ay"]floatValue];
+            nextbx = [[[LibKoordinatenTabelle objectAtIndex:(einstichindex[i]+1)]objectForKey:@"bx"]floatValue];
+            nextby = [[[LibKoordinatenTabelle objectAtIndex:(einstichindex[i]+1)]objectForKey:@"by"]floatValue];
             
-            prevax = [[[LibKoordinatenTabelle objectAtIndex:einstichindex[i]-1]objectForKey:@"ax"]floatValue];
-            prevay = [[[LibKoordinatenTabelle objectAtIndex:einstichindex[i]-1]objectForKey:@"ay"]floatValue];
-            prevbx = [[[LibKoordinatenTabelle objectAtIndex:einstichindex[i]-1]objectForKey:@"bx"]floatValue];
-            prevby = [[[LibKoordinatenTabelle objectAtIndex:einstichindex[i]-1]objectForKey:@"by"]floatValue];
-            
+            prevax = [[[LibKoordinatenTabelle objectAtIndex:einstich-1]objectForKey:@"ax"]floatValue];
+            prevay = [[[LibKoordinatenTabelle objectAtIndex:einstich-1]objectForKey:@"ay"]floatValue];
+            prevbx = [[[LibKoordinatenTabelle objectAtIndex:einstich-1]objectForKey:@"bx"]floatValue];
+            prevby = [[[LibKoordinatenTabelle objectAtIndex:einstich-1]objectForKey:@"by"]floatValue];
+            fprintf(stderr,"revax: %2.2f\tprevay: %2.2f\tprevbx: %2.2f\tprevby: %2.2f\n",prevax,prevay,prevbx,prevby);
+
             // Winkelhalbierende berechnen
             float diffvor[2] = {prevax-ax, prevay - ay};   // dx,dy
             float diffnach[2] = {nextax-ax, nextay-ay};
@@ -9959,13 +10087,35 @@ return returnInt;
             
             float einheitsvektor = sqrt(winkelhalbierende[0]*winkelhalbierende[0] + winkelhalbierende[1]*winkelhalbierende[1]);
             
-            float einstichfaktor = einstichtiefe / einheitsvektor;
-            winkelhalbierende[0] *= einstichfaktor;
-            winkelhalbierende[1] *= einstichfaktor;
+            float einstichfaktor = 0;
             
+            if(einheitsvektor > 0.02) // noch nicht in line
+            {
+               NSLog(@"einheitsvektor > 0.02 index: %d",i);
+               einstichfaktor = einstichtiefe / einheitsvektor;
+               winkelhalbierende[0] *= einstichfaktor;
+               winkelhalbierende[1] *= einstichfaktor;
+               NSLog(@"diffvektorvor: %2.2f diffvektornach: %2.2f einheitsvektor: %2.6f einstichfaktor: %2.6f",diffvektorvor,diffvektornach,einheitsvektor,einstichfaktor);
+    
+               
+            }
+            else // fast in line -> senkrechte zu prevax,y zu ax,y suchen
+            {
+               NSLog(@"einheitsvektor < 0.02 i: %d einstichindex: %d",i,einstich );
+               fprintf(stderr,"index: \t%d\t%2.4f\t%2.4f\t%2.4f\t%2.4f\n",einstich,ax,ay,prevax, prevay );
+               winkelhalbierende[0] =   (ay - prevay);
+               winkelhalbierende[1] = - (ax - prevax);
+               float vektorbetrag = sqrt(winkelhalbierende[0]*winkelhalbierende[0] + winkelhalbierende[1]*winkelhalbierende[1]);
+               einstichfaktor = einstichtiefe / vektorbetrag;
+               winkelhalbierende[0] *= einstichfaktor;
+               winkelhalbierende[1] *= einstichfaktor;
+               fprintf(stderr,"%2.4f\t%2.4f\t%2.4f\t%2.4f\n",winkelhalbierende[0],winkelhalbierende[1],vektorbetrag, einstichfaktor );
+
+            }
             
-            NSLog(@"diffvektorvor: %2.2f diffvektornach: %2.2f einheitsvektor: %2.6f einstichfaktor: %2.6f",diffvektorvor,diffvektornach,einheitsvektor,einstichfaktor);
+             
             
+              
             
             NSMutableDictionary* einstichDicStart=[[LibKoordinatenTabelle objectAtIndex:einstichindex[i]]mutableCopy];
             NSMutableDictionary* einstichDicEnd=[[LibKoordinatenTabelle objectAtIndex:einstichindex[i]]mutableCopy];
@@ -9985,14 +10135,14 @@ return returnInt;
               
             
             
-            [LibKoordinatenTabelle insertObject:einstichDicStart atIndex:einstichindex[i]];
+            [LibKoordinatenTabelle insertObject:einstichDicStart atIndex:einstich];
             //nasenindexA++;
             bis++;
-            [LibKoordinatenTabelle insertObject:einstichDicEnd atIndex:einstichindex[i]];
+            [LibKoordinatenTabelle insertObject:einstichDicEnd atIndex:einstich];
             //nasenindexA++;
             bis++;
-         }
-      }
+         } // ANZAHLEINSTICHE
+      } // mit einstich
       
       fprintf(stderr,"LibKoordinatenTabelle nach Einstich: \n");
       for (int i=0;i<LibKoordinatenTabelle.count;i++)
@@ -10002,10 +10152,12 @@ return returnInt;
          fprintf(stderr,"%d\t%d\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\n",i,[tempdic[@"index"]intValue],[tempdic[@"ax"]floatValue],[tempdic[@"ay"]floatValue],[tempdic[@"bx"]floatValue],[tempdic[@"by"]floatValue],[tempdic[@"abrax"]floatValue],[tempdic[@"abray"]floatValue],[tempdic[@"abrbx"]floatValue],[tempdic[@"abrby"]floatValue]);
          
       }
-      fprintf(stderr,"LibKoordinatenTabelle nach Einstich end: \n");
+     fprintf(stderr,"LibKoordinatenTabelle nach Einstich end: \n");
 
       // MARK: NASENEINSTICH
-      
+      maxxA = 0;
+      maxxB = 0;
+
       NSLog(@"nasenindexA: %d ",nasenindexA);
       // Nasenpunkt suchen
       

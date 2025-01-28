@@ -2148,8 +2148,8 @@ var outletdaten:[String:AnyObject] = [:]
       let zoomfaktor = ProfilTiefeFeldA.doubleValue / 1000
       outletdaten["zoom"] = zoomfaktor as AnyObject
       outletdaten["micro"] = CNC_microPop.selectedItem?.tag as AnyObject
-      outletdaten["abbrand"] = AbbrandCheckbox.state as AnyObject
-
+      outletdaten["mitabbrand"] = AbbrandCheckbox.state as AnyObject
+      outletdaten["abbrand"] = AbbrandFeld.floatValue as AnyObject
    }
     
     @objc  @IBAction func reportStopTaste(_ sender: NSButton)
@@ -3715,9 +3715,9 @@ var outletdaten:[String:AnyObject] = [:]
         datenDic["auslauftiefe"] = Auslauftiefe.integerValue
         
        let abbrandwert = AbbrandFeld.doubleValue
-        datenDic["abbrand"] = 4
+        datenDic["abbrand"] = abbrandwert
        datenDic["mitabbrand"] = AbbrandCheckbox.state.rawValue
-        
+       datenDic["abbrand"] = AbbrandFeld.doubleValue
         datenDic["mitoberseite"] = 1
         datenDic["mitunterseite"] = 0
         
@@ -3781,7 +3781,7 @@ var outletdaten:[String:AnyObject] = [:]
        
         CNC_Eingabe.profilPopTask(datenDic);
         
-        //print("HotWire reportProfilOberseiteTask NACH profilPopTask: KoordinatenTabelle")
+        print("HotWire reportProfilOberseiteTask NACH profilPopTask: KoordinatenTabelle")
         for i in 0..<KoordinatenTabelle.count
         {
             let zeile = KoordinatenTabelle[i]
@@ -3790,7 +3790,7 @@ var outletdaten:[String:AnyObject] = [:]
             let bx = zeile["bx"] ?? 30
             let by = zeile["by"] ?? 30
             //print(String(format: "a float number: %.2f", 1.0321))
-            //print(String(format:"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f ",i,ax,ay,bx,by))
+            print(String(format:"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f ",i,ax,ay,bx,by))
         }
         datenDic["koordinatentabelle"] = KoordinatenTabelle;
         
@@ -3868,183 +3868,183 @@ var outletdaten:[String:AnyObject] = [:]
     
     
     // MARK:  *** *** ***  reportProfilUnterseiteTask
-        @IBAction func reportProfilUnterseiteTask(_ sender: NSButton)
-    {
-        print("reportProfilUnterseiteTask")
-        var eingabeDic = [String:Any]()
-        if KoordinatenTabelle.count == 0
-        {
-            var zeilenDic = ["index": 0, "ax":  25, "ay": 35, "bx": 25, "by": 35, "pwm": 0.8]
-            KoordinatenTabelle.append(zeilenDic)
-        }
-        //print("KoordinatenTabelle: \(KoordinatenTabelle)")
-        CNC_Stoptaste.state = NSControl.StateValue.off
-        //self.NeuTastefunktion()
-        CNC_Starttaste.state = NSControl.StateValue.on
-        //print("KoordinatenTabelle: \(KoordinatenTabelle)")
-        //self.StopTastefunktion()
-        
-        var profil1popindex = 0
-        var profil2popindex = 0
-        
-        let offsetx = ProfilBOffsetXFeld.doubleValue
-        let offsety = ProfilBOffsetYFeld.doubleValue
-        
-        
-        var datenDic = [String:Any]()
-        
-        
-        datenDic["element"] = "Linie"
-        datenDic["startx"] = WertAXFeld.doubleValue
-        datenDic["starty"] = WertAYFeld.doubleValue
-        datenDic["einlaufrand"] = Einlaufrand.integerValue
-        datenDic["auslaufrand"] = Auslaufrand.integerValue
-        
-        datenDic["einlauflaenge"] = Einlauflaenge.integerValue
-        datenDic["einlauftiefe"] = Einlauftiefe.integerValue
-        datenDic["auslauflaenge"] = Auslauflaenge.integerValue
-        datenDic["auslauftiefe"] = Auslauftiefe.integerValue
-        
-        datenDic["abbrand"] = AbbrandFeld.doubleValue
-        
-        datenDic["mitoberseite"] = 0
-        datenDic["mitunterseite"] = 1
-        
-        datenDic["pwm"] = pwm
-        
-        let redpwm = red_pwmFeld.doubleValue
-        datenDic["redpwm"] = redpwm
-
-        datenDic["minimaldistanz"] = MinimaldistanzFeld.floatValue
-        
-        if Profil1Pop.indexOfSelectedItem > 0
-        {
-            let profil1name = Profil2Pop.titleOfSelectedItem?.components(separatedBy: ".")[0]
-            datenDic["profil1"] = profil1name
-            profil1popindex = Profil1Pop.indexOfSelectedItem
-            datenDic["profil1popindex"] = profil1popindex
-        }
-        else if ProfilNameFeldA.stringValue.count > 0
-        {
-            datenDic["profil1"] = ProfilNameFeldA.stringValue
-            datenDic["profil1popindex"] = 1
-        }
-        
-        
-        if Profil2Pop.indexOfSelectedItem > 0
-        {
-            let profil2name = Profil2Pop.titleOfSelectedItem?.components(separatedBy: ".")[0]
-            datenDic["profil2"] = profil2name
-            profil2popindex = Profil2Pop.indexOfSelectedItem
-            datenDic["profil2popindex"] = profil2popindex
-        }
-        else if ProfilNameFeldB.stringValue.count > 0
-        {
-            datenDic["profil2"] = ProfilNameFeldB.stringValue
-            datenDic["profil2popindex"] = 1
-        }
-
-        
-        OberseiteCheckbox.state = NSControl.StateValue.off
-        UnterseiteCheckbox.state = NSControl.StateValue.on
-
-        print("Hotwire reportProfilUnterseiteTask VOR doProfil: KoordinatenTabelle")
-        for i in 0..<KoordinatenTabelle.count
-        {
-            let zeile = KoordinatenTabelle[i]
-            let ax = zeile["ax"] ?? 0
-            let ay = zeile["ay"] ?? 0
-            let bx = zeile["bx"] ?? 0
-            let by = zeile["by"] ?? 0
-           // print(String(format: "a float number: %.2f", 1.0321))
-            print(String(format:"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f ",i,ax,ay,bx,by))
-        }
-        datenDic["koordinatentabelle"] = KoordinatenTabelle;
-        
-        CNC_Eingabe.setPList(CNC_PList as? [AnyHashable : Any])
-        
-        CNC_Eingabe.setDaten(datenDic)
-        
-        print("reportProfilUnterseiteTask datenDic: \(datenDic)")
-        CNC_Eingabe.profilPopTask(datenDic);
-        
-        //print("HotWire reportProfilUnterseiteTask NACH profilPopTask: KoordinatenTabelle")
-        for i in 0..<KoordinatenTabelle.count
-        {
-            let zeile = KoordinatenTabelle[i]
-            let ax = zeile["ax"] ?? 30
-            let ay = zeile["ay"] ?? 30
-            let bx = zeile["bx"] ?? 30
-            let by = zeile["by"] ?? 30
-            //print(String(format: "a float number: %.2f", 1.0321))
-            //print(String(format:"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f ",i,ax,ay,bx,by))
-        }
-        datenDic["koordinatentabelle"] = KoordinatenTabelle;
-        
-        //print("datendic vor blockanfuegenFunktion: \(datenDic)")
-        
-        KoordinatenTabelle.removeAll()
-        KoordinatenTabelle = AVR?.blockanfuegenFunktion(datenDic) as! [[String : Double]];
-        //print("reportProfilOberseiteTask KoordinatenTabelle: ")
-        // Abmessungen block
-        var minX:Double = 1000
-        var minY:Double = 1000
-        var maxX:Double = 0
-        var maxY:Double = 0
-        var maxabrX:Double = 0
-        var maxabrY:Double = 0
-        // https://forums.swift.org/t/array-of-dictionaries-get-the-values-of-a-specific-key/29001
-        let axarray = KoordinatenTabelle.compactMap { $0["ax"] }
-        let ayarray = KoordinatenTabelle.compactMap { $0["ay"] }
-        minX = axarray.min() ?? 10000
-        minY = ayarray.min() ?? 1000
-        maxX = axarray.max() ?? 0
-        maxY = ayarray.max() ?? 0
- 
-        let abraxarray = KoordinatenTabelle.compactMap { $0["abrax"] }
-        let abrayarray = KoordinatenTabelle.compactMap { $0["abray"] }
-        maxabrX = (abraxarray.max() ?? 0)
-        maxabrY = (abrayarray.max() ?? 0)
-        
-        maxX = max(maxX,maxabrX) + offsetx
-        maxY = max(maxY,maxabrY) + offsety
-        
-        
-       // print("minX: \(minX) minY: \(minY) maxX: \(maxX) maxY: \(maxY)")
-        
-        
-        for i in 0..<KoordinatenTabelle.count
-        {
-            let zeile = KoordinatenTabelle[i]
-            let ax = zeile["ax"]
-            let ay = zeile["ay"]
-            let bx = zeile["bx"]
-            let by = zeile["by"]
-  
-            let abrax = (zeile["abrax"] ?? ax)!
-            let abray = (zeile["abray"] ?? ay)!
-            let abrbx = (zeile["abrbx"] ?? bx)!
-            let abrby = (zeile["abrby"] ?? by)!
-             
-            //print(String(format: "a float number: %.2f", 1.0321))
-            //print(String(format:"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \t\t%2.4f \t  %2.4f \t  %2.4f \t %2.4f ",i,ax!,ay!,abrax,abray,bx!,by!,abrbx,abrby))
-        }
-        
-        let rahmenrect = NSMakeRect(minX, minY, maxX - minX, maxY - minY)
-        //let rahmenarray = [[minX,maxY],[maxX,maxY],[maxX,minY],[minX,minY]]
-        let rahmenarray = [NSMakePoint(minX, maxY) ,NSMakePoint(maxX,maxY),NSMakePoint(maxX,minY),NSMakePoint(minX,minY)]
-
-        CNC_Table.reloadData()
-        ProfilFeld.setRahmenArray(derRahmenArray: rahmenarray as NSArray)
-        ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
-       ProfilFeld.clearWeg()
-        ProfilFeld.needsDisplay = true
-
-        CNC_Stoptaste.isEnabled = true
-        
-
-        print("reportProfilUnterseiteTask end")
-    }
+   @IBAction func reportProfilUnterseiteTask(_ sender: NSButton)
+   {
+      print("reportProfilUnterseiteTask")
+      var eingabeDic = [String:Any]()
+      if KoordinatenTabelle.count == 0
+      {
+         var zeilenDic = ["index": 0, "ax":  25, "ay": 35, "bx": 25, "by": 35, "pwm": 0.8]
+         KoordinatenTabelle.append(zeilenDic)
+      }
+      //print("KoordinatenTabelle: \(KoordinatenTabelle)")
+      CNC_Stoptaste.state = NSControl.StateValue.off
+      //self.NeuTastefunktion()
+      CNC_Starttaste.state = NSControl.StateValue.on
+      //print("KoordinatenTabelle: \(KoordinatenTabelle)")
+      //self.StopTastefunktion()
+      
+      var profil1popindex = 0
+      var profil2popindex = 0
+      
+      let offsetx = ProfilBOffsetXFeld.doubleValue
+      let offsety = ProfilBOffsetYFeld.doubleValue
+      
+      
+      var datenDic = [String:Any]()
+      
+      
+      datenDic["element"] = "Linie"
+      datenDic["startx"] = WertAXFeld.doubleValue
+      datenDic["starty"] = WertAYFeld.doubleValue
+      datenDic["einlaufrand"] = Einlaufrand.integerValue
+      datenDic["auslaufrand"] = Auslaufrand.integerValue
+      
+      datenDic["einlauflaenge"] = Einlauflaenge.integerValue
+      datenDic["einlauftiefe"] = Einlauftiefe.integerValue
+      datenDic["auslauflaenge"] = Auslauflaenge.integerValue
+      datenDic["auslauftiefe"] = Auslauftiefe.integerValue
+      
+      datenDic["abbrand"] = AbbrandFeld.doubleValue
+      datenDic["mitabbrand"] = AbbrandCheckbox.state.rawValue
+      datenDic["mitoberseite"] = 0
+      datenDic["mitunterseite"] = 1
+      
+      datenDic["pwm"] = pwm
+      
+      let redpwm = red_pwmFeld.doubleValue
+      datenDic["redpwm"] = redpwm
+      
+      datenDic["minimaldistanz"] = MinimaldistanzFeld.floatValue
+      
+      if Profil1Pop.indexOfSelectedItem > 0
+      {
+         let profil1name = Profil2Pop.titleOfSelectedItem?.components(separatedBy: ".")[0]
+         datenDic["profil1"] = profil1name
+         profil1popindex = Profil1Pop.indexOfSelectedItem
+         datenDic["profil1popindex"] = profil1popindex
+      }
+      else if ProfilNameFeldA.stringValue.count > 0
+      {
+         datenDic["profil1"] = ProfilNameFeldA.stringValue
+         datenDic["profil1popindex"] = 1
+      }
+      
+      
+      if Profil2Pop.indexOfSelectedItem > 0
+      {
+         let profil2name = Profil2Pop.titleOfSelectedItem?.components(separatedBy: ".")[0]
+         datenDic["profil2"] = profil2name
+         profil2popindex = Profil2Pop.indexOfSelectedItem
+         datenDic["profil2popindex"] = profil2popindex
+      }
+      else if ProfilNameFeldB.stringValue.count > 0
+      {
+         datenDic["profil2"] = ProfilNameFeldB.stringValue
+         datenDic["profil2popindex"] = 1
+      }
+      
+      
+      OberseiteCheckbox.state = NSControl.StateValue.off
+      UnterseiteCheckbox.state = NSControl.StateValue.on
+      
+      print("Hotwire reportProfilUnterseiteTask VOR doProfil: KoordinatenTabelle")
+      for i in 0..<KoordinatenTabelle.count
+      {
+         let zeile = KoordinatenTabelle[i]
+         let ax = zeile["ax"] ?? 0
+         let ay = zeile["ay"] ?? 0
+         let bx = zeile["bx"] ?? 0
+         let by = zeile["by"] ?? 0
+         // print(String(format: "a float number: %.2f", 1.0321))
+         print(String(format:"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f ",i,ax,ay,bx,by))
+      }
+      datenDic["koordinatentabelle"] = KoordinatenTabelle;
+      
+      CNC_Eingabe.setPList(CNC_PList as? [AnyHashable : Any])
+      
+      CNC_Eingabe.setDaten(datenDic)
+      
+      print("reportProfilUnterseiteTask datenDic: \(datenDic)")
+      CNC_Eingabe.profilPopTask(datenDic);
+      
+      //print("HotWire reportProfilUnterseiteTask NACH profilPopTask: KoordinatenTabelle")
+      for i in 0..<KoordinatenTabelle.count
+      {
+         let zeile = KoordinatenTabelle[i]
+         let ax = zeile["ax"] ?? 30
+         let ay = zeile["ay"] ?? 30
+         let bx = zeile["bx"] ?? 30
+         let by = zeile["by"] ?? 30
+         //print(String(format: "a float number: %.2f", 1.0321))
+         //print(String(format:"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f ",i,ax,ay,bx,by))
+      }
+      datenDic["koordinatentabelle"] = KoordinatenTabelle;
+      
+      //print("datendic vor blockanfuegenFunktion: \(datenDic)")
+      
+      KoordinatenTabelle.removeAll()
+      KoordinatenTabelle = AVR?.blockanfuegenFunktion(datenDic) as! [[String : Double]];
+      //print("reportProfilOberseiteTask KoordinatenTabelle: ")
+      // Abmessungen block
+      var minX:Double = 1000
+      var minY:Double = 1000
+      var maxX:Double = 0
+      var maxY:Double = 0
+      var maxabrX:Double = 0
+      var maxabrY:Double = 0
+      // https://forums.swift.org/t/array-of-dictionaries-get-the-values-of-a-specific-key/29001
+      let axarray = KoordinatenTabelle.compactMap { $0["ax"] }
+      let ayarray = KoordinatenTabelle.compactMap { $0["ay"] }
+      minX = axarray.min() ?? 10000
+      minY = ayarray.min() ?? 1000
+      maxX = axarray.max() ?? 0
+      maxY = ayarray.max() ?? 0
+      
+      let abraxarray = KoordinatenTabelle.compactMap { $0["abrax"] }
+      let abrayarray = KoordinatenTabelle.compactMap { $0["abray"] }
+      maxabrX = (abraxarray.max() ?? 0)
+      maxabrY = (abrayarray.max() ?? 0)
+      
+      maxX = max(maxX,maxabrX) + offsetx
+      maxY = max(maxY,maxabrY) + offsety
+      
+      
+      // print("minX: \(minX) minY: \(minY) maxX: \(maxX) maxY: \(maxY)")
+      
+      
+      for i in 0..<KoordinatenTabelle.count
+      {
+         let zeile = KoordinatenTabelle[i]
+         let ax = zeile["ax"]
+         let ay = zeile["ay"]
+         let bx = zeile["bx"]
+         let by = zeile["by"]
+         
+         let abrax = (zeile["abrax"] ?? ax)!
+         let abray = (zeile["abray"] ?? ay)!
+         let abrbx = (zeile["abrbx"] ?? bx)!
+         let abrby = (zeile["abrby"] ?? by)!
+         
+         //print(String(format: "a float number: %.2f", 1.0321))
+         //print(String(format:"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \t\t%2.4f \t  %2.4f \t  %2.4f \t %2.4f ",i,ax!,ay!,abrax,abray,bx!,by!,abrbx,abrby))
+      }
+      
+      let rahmenrect = NSMakeRect(minX, minY, maxX - minX, maxY - minY)
+      //let rahmenarray = [[minX,maxY],[maxX,maxY],[maxX,minY],[minX,minY]]
+      let rahmenarray = [NSMakePoint(minX, maxY) ,NSMakePoint(maxX,maxY),NSMakePoint(maxX,minY),NSMakePoint(minX,minY)]
+      
+      CNC_Table.reloadData()
+      ProfilFeld.setRahmenArray(derRahmenArray: rahmenarray as NSArray)
+      ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
+      ProfilFeld.clearWeg()
+      ProfilFeld.needsDisplay = true
+      
+      CNC_Stoptaste.isEnabled = true
+      
+      
+      print("reportProfilUnterseiteTask end")
+   }
 
     @IBAction func reportNeuesElement(_ sender:NSButton)
     {
@@ -4070,8 +4070,9 @@ var outletdaten:[String:AnyObject] = [:]
         datenDic["auslauflaenge"] = Auslauflaenge.integerValue
         datenDic["auslauftiefe"] = Auslauftiefe.integerValue
         
-        datenDic["abbrand"] = AbbrandFeld.doubleValue
-        
+       datenDic["mitabbrand"] = AbbrandCheckbox.state.rawValue
+       datenDic["abbrand"] = AbbrandFeld.doubleValue
+         
         datenDic["mitoberseite"] = 1
         datenDic["mitunterseite"] = 1
        datenDic["home"] = 0
@@ -5222,6 +5223,16 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       {
          AbbrandFeld.doubleValue = 1.7
       }
+      
+      if (hotwireplist["mitabbrand"] != nil)
+      {
+         AbbrandCheckbox.state = NSButton.StateValue.on
+      }
+      else
+      {
+         AbbrandCheckbox.state = NSButton.StateValue.off
+      }
+
        
        if (hotwireplist["minimaldistanz"] != nil)
        {
@@ -5595,7 +5606,9 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         datenDic["einlauftiefe"] = Einlauftiefe.integerValue
         datenDic["auslauflaenge"] = Auslauflaenge.integerValue
         datenDic["auslauftiefe"] = Auslauftiefe.integerValue
-        
+       
+       datenDic["mitabbrand"] = AbbrandCheckbox.state.rawValue
+
         datenDic["abbrand"] = AbbrandFeld.doubleValue
         datenDic["mitoberseite"] = 1
         datenDic["mitunterseite"] = 1
@@ -6164,8 +6177,9 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         hotwireplist["speed"] = SpeedFeld.integerValue as AnyObject
         
  //       hotwireplist["steps"] = steps_Feld.integerValue as AnyObject
-
+       hotwireplist["mitabbrand"] = AbbrandCheckbox.state  as AnyObject
         hotwireplist["abbrand"] = AbbrandFeld.doubleValue as AnyObject
+       
         hotwireplist["minimaldistanz"] = MinimaldistanzFeld.doubleValue as AnyObject
         hotwireplist["profilnamea"] =  ProfilNameFeldA.stringValue as AnyObject
         hotwireplist["profilnameb"] =  ProfilNameFeldB.stringValue as AnyObject

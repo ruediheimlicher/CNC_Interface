@@ -3072,18 +3072,6 @@
             [ProfilDic setObject:redarray[0] forKey:@"oberseitearrayA"];
             [ProfilDic setObject:redarray[1] forKey:@"oberseitearrayB"];
             
-            for (int i=0;i<oberseitearrayA.count;i++)
-            {
-               float ax = [[[oberseitearrayA objectAtIndex:i]objectForKey:@"ax"]floatValue];
-               float ay = [[[oberseitearrayA objectAtIndex:i]objectForKey:@"ay"]floatValue];
-               
-               float bx = [[[oberseitearrayA objectAtIndex:i]objectForKey:@"bx"]floatValue];
-               float by = [[[oberseitearrayA objectAtIndex:i]objectForKey:@"by"]floatValue];
-               
-               //NSLog(@"i: %d zeile: %@",i,eingabekoordinatentabelle );
-               fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
-            }
-
 
          }
          

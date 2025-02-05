@@ -8821,7 +8821,7 @@ return returnInt;
 
 - (NSArray*)LibProfileingabeFunktion:(NSDictionary*)eingabeDic
 {
-   NSLog(@"LibProfileingabeAktion eingabeDic: %@",eingabeDic);
+   //NSLog(@"LibProfileingabeAktion eingabeDic: %@",eingabeDic);
    NSDictionary* outletdaten = [rHotwireViewController cncoutletdaten];
    if([outletdaten objectForKey:@"pwm"])
       {

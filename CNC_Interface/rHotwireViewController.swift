@@ -2094,6 +2094,8 @@ var outletdaten:[String:AnyObject] = [:]
         BlockKoordinatenTabelle.removeAll()
         CNC_DatenArray.removeAll()
         SchnittdatenArray.removeAll()
+       
+       teensy.clear_data()
         
         ProfilFeld.stepperposition = -1
         ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
@@ -2256,6 +2258,7 @@ var outletdaten:[String:AnyObject] = [:]
     @objc  @IBAction func reportStopTaste(_ sender: NSButton)
     {
         print("swift reportStopTaste")
+       teensy.clear_data()
         if CNC_Starttaste.state == NSControl.StateValue.on
         {
             CNC_Starttaste.state = NSControl.StateValue.off

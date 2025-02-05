@@ -2749,7 +2749,7 @@ return returnInt;
    */
 }
 
-
+// MARK: STOPFUNKTION
 
 - (NSArray*)stopFunktion:(NSArray*)koordinatentabelle outletdaten: (NSDictionary*)outletdic
 {
@@ -2872,9 +2872,6 @@ return returnInt;
    minimaldistanz = [MinimaldistanzFeld floatValue];
    
    //NSLog(@"count: %d minimaldistanz: %2.2f",[KoordinatenTabelle count],minimaldistanz);
-   
-   
-   
    
    for (i=0;i<[koordinatentabelle count]-1;i++)
    {
@@ -3264,7 +3261,7 @@ return returnInt;
       
       NSDictionary* tempSteuerdatenDic = [self Tool_SteuerdatenVonDic:tempDic];
       
-      //NSLog(@"reportStop i: %d nach Tool_SteuerdatenVonDic tempSteuerdatenDic: %@",i,tempSteuerdatenDic);
+      NSLog(@"reportStop i: %d nach Tool_SteuerdatenVonDic tempSteuerdatenDic: %@",i,tempSteuerdatenDic);
       //NSArray* a = [self SteuerdatenArrayVonDic: tempDic];
       
       

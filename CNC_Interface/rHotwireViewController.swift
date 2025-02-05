@@ -1965,7 +1965,7 @@ var outletdaten:[String:AnyObject] = [:]
         NeuesElementTaste.isEnabled = true
         PositionFeld.stringValue = ""
         //ProfilFeld.viewWithTag(1001).stringValue = ""
-        DC_Taste.isEnabled = false
+       // DC_Taste.isEnabled = false
         HomeTaste.state = NSControl.StateValue(rawValue: 0)
         KoordinatenTabelle.removeAll()
         CNC_Table.reloadData()
@@ -2053,7 +2053,7 @@ var outletdaten:[String:AnyObject] = [:]
         NeuesElementTaste.isEnabled = false
         PositionFeld.stringValue = ""
         //ProfilFeld.viewWithTag(1001).stringValue = ""
-        DC_Taste.isEnabled = false
+       // DC_Taste.isEnabled = false
         HomeTaste.state = NSControl.StateValue(rawValue: 0)
         KoordinatenTabelle.removeAll()
         CNC_Table.reloadData()
@@ -2315,10 +2315,10 @@ var outletdaten:[String:AnyObject] = [:]
       IndexStepper.integerValue = anzdaten
       
       CNC_Sendtaste.isEnabled = true
-      DC_Taste.state = NSControl.StateValue.off
+//      DC_Taste.state = NSControl.StateValue.off
    }
     
-    @objc func StopTastefunktion()
+    @objc func StopTastefunktion() // nicht verwendet
     {
         print("swift StopTastefunktion Koordinatentabelle: \(KoordinatenTabelle)")
         if CNC_Starttaste.state == NSControl.StateValue.on
@@ -2357,7 +2357,7 @@ var outletdaten:[String:AnyObject] = [:]
         CNC_DatenArray.removeAll()
         SchnittdatenArray.removeAll()
         HomeTaste.state = NSControl.StateValue.off
-        DC_Taste.state = NSControl.StateValue.off
+ //       DC_Taste.state = NSControl.StateValue.off
         cncposition = 0
         
         
@@ -2396,7 +2396,7 @@ var outletdaten:[String:AnyObject] = [:]
         IndexStepper.integerValue = anzdaten
         
         CNC_Sendtaste.isEnabled = true
-        DC_Taste.state = NSControl.StateValue.off
+ //       DC_Taste.state = NSControl.StateValue.off
     }
 
     @IBAction func reportUSB_sendArray(_ sender:NSButton)
@@ -2414,7 +2414,7 @@ var outletdaten:[String:AnyObject] = [:]
       
       for element in SchnittdatenArray
       {
-         print("element ramp: \(element[35])")
+         //print("element ramp: \(element[35])")
       }
       
       if SpeedFeld.integerValue == 0

@@ -842,7 +842,7 @@ class rViewController: NSViewController, NSWindowDelegate
      usb_schnittdatenarray.removeAll()
      
      let info = notification.userInfo
-     //print("VC usbschnittdatenAktion info: \(info)")
+     print("VC usbschnittdatenAktion info: \(info)")
      
      guard let usb_home = info?["home"] as? Int else 
      {

@@ -10051,7 +10051,10 @@ return returnInt;
             }
             
             NSMutableDictionary* einstichDicStart=[[LibKoordinatenTabelle objectAtIndex:einstich]mutableCopy];
+            [einstichDicStart setObject:[NSNumber numberWithInt:full_pwm] forKey:@"pwm"];
+            
             NSMutableDictionary* einstichDicEnd=[[LibKoordinatenTabelle objectAtIndex:einstich]mutableCopy];
+            [einstichDicEnd setObject:[NSNumber numberWithInt:full_pwm] forKey:@"pwm"];
             
             [einstichDicStart setObject:[NSNumber numberWithFloat:(ax + winkelhalbierende[0])] forKey:@"ax"];
             [einstichDicStart setObject:[NSNumber numberWithFloat:(ay + winkelhalbierende[1])] forKey:@"ay"];
@@ -10064,6 +10067,8 @@ return returnInt;
             
             [einstichDicStart setObject:[NSNumber numberWithFloat:(bx + winkelhalbierende[0])] forKey:@"abrbx"];
             [einstichDicStart setObject:[NSNumber numberWithFloat:(by + winkelhalbierende[1])] forKey:@"abrby"];
+
+            
             
             
             [LibKoordinatenTabelle insertObject:einstichDicStart atIndex:einstich];

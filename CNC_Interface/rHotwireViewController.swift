@@ -2500,7 +2500,7 @@ var outletdaten:[String:AnyObject] = [:]
                let dc_pwm = UInt8(DC_PWM.intValue)
                self.DC_Funktion(pwm: dc_pwm)
                DC_Taste.isEnabled = true
-               delayok = 1
+               delayok = 6
                if boardindex == 1 // down
                {
                   goStiftDown()
@@ -5022,6 +5022,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
             if self.countdowntime > 0 {
                 print("\(self.countdowntime)")
                 self.countdowntime -= 1
+               self.startdelayFeld.integerValue = self.countdowntime
             } else {
                 timer.invalidate()
                 print("Timer: Complete!")

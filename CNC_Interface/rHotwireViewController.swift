@@ -270,6 +270,9 @@ var outletdaten:[String:AnyObject] = [:]
     var RumpfdatenArray = [[String:Double]]()
     var taskfertig = 0
     
+   //var countdownTimer:Timer()
+   var countdowntime = 10
+   
     var CNC_Eingabe = rEinstellungen()
     
    var joystick_write_byteArray: Array<UInt8> = Array(repeating: 0x00, count: BUFFER_SIZE)
@@ -538,6 +541,24 @@ var outletdaten:[String:AnyObject] = [:]
           micro = notification.userInfo?["micro"] as! Int
           print("Aktion micro: \(micro)")
    //       micro_Feld.integerValue = micro
+       }
+*/
+   
+   /*
+   @objc func startdownload(delay:Int) 
+   {
+           
+      countdownTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) 
+      { delay in
+               if self.countdownTimer > 0 {
+                   print("\(self.countdownTimer)")
+                   self.countdownTimer -= 1
+               } else {
+                   timer.invalidate()
+                   print("Timer: Complete!")
+               }
+           }
+           
        }
 */
    @objc func StiftMove(dx:Int , dy:Int )
@@ -2037,7 +2058,6 @@ var outletdaten:[String:AnyObject] = [:]
         print("swift reportNeuTaste")
        if (boardindex == 1) // Teensy3, Draw
        {
-          //self.StiftUpFunktion()
           goStiftUp()
        }
         
@@ -2158,6 +2178,7 @@ var outletdaten:[String:AnyObject] = [:]
     
     @objc  @IBAction func reportStopTaste(_ sender: NSButton)
    {
+      startdelayTimer(startdelay: Int(TimeInterval(startdelayFeld.integerValue)))      
       print("swift reportStopTaste")
       if CNC_Starttaste.state == NSControl.StateValue.on
       {
@@ -2480,7 +2501,11 @@ var outletdaten:[String:AnyObject] = [:]
                self.DC_Funktion(pwm: dc_pwm)
                DC_Taste.isEnabled = true
                delayok = 1
-               goStiftDown()
+               if boardindex == 1 // down
+               {
+                  goStiftDown()
+               }
+
             case .alertSecondButtonReturn:
                print("second Button")
                // pwm entfernen
@@ -2488,7 +2513,12 @@ var outletdaten:[String:AnyObject] = [:]
                {
                   SchnittdatenArray[i][20] = 0
                }
-               goStiftDown()
+               
+               if boardindex == 1 // down
+               {
+                  goStiftDown()
+               }
+
                
             case .alertThirdButtonReturn:
                print("third")
@@ -2545,9 +2575,12 @@ var outletdaten:[String:AnyObject] = [:]
       
       if delayok > 0
       {
+         startdelayTimer(startdelay: Int(TimeInterval(startdelayFeld.integerValue)))
          print("swift reportUSB_sendArray mit delay")
-         let sel = #selector(sendDelayedArrayWithDic(schnittdatendic:))
-         self.perform(#selector(sendDelayedArrayWithDic(schnittdatendic: )), with: SchnittdatenDic, afterDelay: 6)
+         //let sel = #selector(sendDelayedArrayWithDic(schnittdatendic:))
+         self.perform(#selector(sendDelayedArrayWithDic(schnittdatendic: )), with: SchnittdatenDic, afterDelay: TimeInterval(startdelayFeld.integerValue))
+         
+         
          
       }
       else
@@ -3143,7 +3176,6 @@ var outletdaten:[String:AnyObject] = [:]
             taskfertig = 0
             if (boardindex == 1) // Teensy3, Draw
             {
-               //self.StiftUpFunktion()
                goStiftUp()
             }
          }
@@ -4850,7 +4882,6 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        
        if (boardindex == 1) // Teensy3, Draw
        {
-          //self.StiftUpFunktion()
           goStiftUp()
        }
        CNC_Halttaste.state = NSControl.StateValue.on
@@ -4968,6 +4999,36 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       print("ManRichtung richtung:m\(richtung) mousestatus: \(mousestatus) pfeilstep: \(pfeilstep)")
    }
 
+   @IBAction func startTimer(_ sender: NSButton) {
+        
+        
+        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+            if self.countdowntime > 0 {
+                print("\(self.countdowntime)")
+                self.countdowntime -= 1
+            } else {
+                timer.invalidate()
+                print("Timer: Complete!")
+            }
+        }
+        
+    }
+   
+   @objc func startdelayTimer(startdelay: Int) 
+   {
+        
+      countdowntime = startdelay
+        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+            if self.countdowntime > 0 {
+                print("\(self.countdowntime)")
+                self.countdowntime -= 1
+            } else {
+                timer.invalidate()
+                print("Timer: Complete!")
+            }
+        }
+        
+    }
    
    
    override func viewDidAppear()
@@ -5072,6 +5133,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
 
        //AndereSeiteTaste.target = objCInstance
        //AndereSeiteTaste.action = #selector(AVR?.reportAndereSeiteAnfahren(_ :))
+      //countdownTimer = startdelayFeld.integerValue
       
        setOutletdaten()
       

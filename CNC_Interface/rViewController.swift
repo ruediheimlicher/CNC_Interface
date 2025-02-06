@@ -274,6 +274,7 @@ class rViewController: NSViewController, NSWindowDelegate
    var HomeIndexCounter = 0;
     var steps = 48
     var micro = 1
+   
 
     //var Einstellungen = rEinstellungen()
     let USBATTACHED = 5
@@ -350,6 +351,8 @@ class rViewController: NSViewController, NSWindowDelegate
       //     NotificationCenter.default.removeObserver(self, name:NSNotification.Name(rawValue: "newdata"), object: nil)
       
       loadcounter += 1
+      
+      
       
       NotificationCenter.default.addObserver(self, selector:#selector(HIDInputReportReceivedAktion(_:)),name:NSNotification.Name(rawValue: "HIDInputReportReceived"),object:nil)
 
@@ -548,7 +551,8 @@ class rViewController: NSViewController, NSWindowDelegate
       myFileDialog.runModal() 
       return myFileDialog.url 
    }  
-    
+   
+     
     @objc func writeCNCAbschnitt()
     {
         cncwritecounter += 1

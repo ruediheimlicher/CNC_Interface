@@ -2035,7 +2035,11 @@ var outletdaten:[String:AnyObject] = [:]
         userInfo: NotificationDic)
        
         print("swift reportNeuTaste")
-       goStiftUp()
+       if (boardindex == 1) // Teensy3, Draw
+       {
+          //self.StiftUpFunktion()
+          goStiftUp()
+       }
         
         
         //       KoordinatenTabelle.append(AVR?.schnittdatenVonDic(tempSteuerdatenDic) as! [String : Double]  )
@@ -2530,11 +2534,11 @@ var outletdaten:[String:AnyObject] = [:]
       SchnittdatenDic["cncposition"] = 0
       if HomeTaste.state == NSControl.StateValue.off
       {
-         SchnittdatenDic["home"] = 1
+         SchnittdatenDic["home"] = 0
       }
       else
       {
-         SchnittdatenDic["home"] = 0
+         SchnittdatenDic["home"] = 1
       }
       SchnittdatenDic["art"] = 0
       SchnittdatenDic["delayok"] = delayok
@@ -3128,6 +3132,7 @@ var outletdaten:[String:AnyObject] = [:]
          ProfilFeld.stepperposition = Stepperposition
          ProfilFeld.needsDisplay = true
          CNC_busySpinner.stopAnimation(nil)
+         
          if taskfertig > 0
          {
             self.DC_Funktion(pwm: 0)
@@ -3136,22 +3141,27 @@ var outletdaten:[String:AnyObject] = [:]
             warnung.addButton(withTitle: "OK")
             warnung.runModal()
             taskfertig = 0
-            //self.StiftUpFunktion()
-            goStiftUp()
+            if (boardindex == 1) // Teensy3, Draw
+            {
+               //self.StiftUpFunktion()
+               goStiftUp()
+            }
          }
          
          
       case 0xF3:
          print("Stift stiftposition: \(stiftposition) ")
-         if stiftposition == 1 // down
+         if (boardindex == 1) // Teensy3, Draw
          {
-            goStiftDown()
+            if stiftposition == 1 // down
+            {
+               goStiftDown()
+            }
+            else if stiftposition == 2 // down
+            {
+               goStiftUp()
+            }
          }
-         else if stiftposition == 2 // down
-         {
-            goStiftUp()
-         }
-         
          //let servopos = 1
          break
       case 0xF4:
@@ -4837,7 +4847,12 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
     @IBAction func report_Home(_ sender: NSButton)
     {
         print("swift report_Home: \(sender.tag) ")
-       goStiftUp()
+       
+       if (boardindex == 1) // Teensy3, Draw
+       {
+          //self.StiftUpFunktion()
+          goStiftUp()
+       }
        CNC_Halttaste.state = NSControl.StateValue.on
        CNC_Halttaste.isEnabled = true
        

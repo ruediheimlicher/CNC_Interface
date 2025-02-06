@@ -3208,14 +3208,14 @@ return returnInt;
       {
          position |= (1<<FIRST_BIT);
       }
-      /*
+      
        // verschoben ans Ende der Loop
-       if (cncindex==[koordinatentabelle count]-2)
+       if (cncindex==[koordinatentabelle count]-1)
        {
-       position |= (1<<LAST_BIT);
+       //position |= (1<<LAST_BIT);
        }
        
-       */
+       
       
       [tempDic setObject:[NSNumber numberWithInt:position] forKey:@"position"];
       
@@ -3227,6 +3227,7 @@ return returnInt;
       if (cncindex==0 || cncindex==[koordinatentabelle count]-1)
       {
          //NSLog(@"reportStop i: %d tempDic: %@",i,[tempDic description]);
+         
       }
       
       //     if ([DC_Taste state])
@@ -16473,6 +16474,7 @@ return returnInt;
                
      
                //NSBeep();
+               /*
                NSAlert *alert = [[NSAlert alloc] init];
                [alert setMessageText:@"Task fertig"];
                //[alert setInformativeText:@"Alles ok."];
@@ -16489,7 +16491,7 @@ return returnInt;
                [alert setAlertStyle:NSAlertStyleWarning];
                
                int antwort=[alert runModal];
-               
+               */
                
                /*
                if (antwort ==  NSAlertFirstButtonReturn)

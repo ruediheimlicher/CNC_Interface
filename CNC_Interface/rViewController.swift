@@ -594,7 +594,7 @@ class rViewController: NSViewController, NSWindowDelegate
           {
              
              let aktuellezeile:[UInt8] = usb_schnittdatenarray[Stepperposition]
-             //print("VC Stepperposition: \(Stepperposition) aktuellezeile: \(aktuellezeile) count: \(aktuellezeile.count)")
+             print("VC Stepperposition: \(Stepperposition) aktuellezeile: \(aktuellezeile) count: \(aktuellezeile.count)")
              let writecode = aktuellezeile[16]
              var string:String = ""
              var index=0
@@ -602,7 +602,7 @@ class rViewController: NSViewController, NSWindowDelegate
              for wert in aktuellezeile
              {
                 teensy.write_byteArray.append(wert)
-                if index < 24
+                if index < 32
                 {
                    string.append(String(wert))
                    string.append("\t")
@@ -616,7 +616,7 @@ class rViewController: NSViewController, NSWindowDelegate
               //print("writeCNCAbschnitt boardindex: \(boardindex)")
 
              //print("writeCNCAbschnitt write_byteArray count: \(teensy.write_byteArray.count)")
-             //print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
+             print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
 
              if (globalusbstatus > 0)
              {
@@ -956,7 +956,7 @@ class rViewController: NSViewController, NSWindowDelegate
      {
         //print("teensy.read_OK ist true")
      }
-      //print("readOK vor writeCNCAbschnitt: \(teensy.read_OK.boolValue)\n usb_schnittdatenarray: \(usb_schnittdatenarray)")
+      print("readOK vor writeCNCAbschnitt: \(teensy.read_OK.boolValue)\n usb_schnittdatenarray: \(usb_schnittdatenarray)")
       writeCNCAbschnitt()
     }
    

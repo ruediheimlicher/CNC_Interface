@@ -230,7 +230,7 @@ class rViewController: NSViewController, NSWindowDelegate
    var usbattachstatus = 0
    
     
-    var viewdidloadcounter = 0
+   var viewdidloadcounter = 0
    
    var teensyboardarray:[[String:Any]] = []
    
@@ -253,6 +253,7 @@ class rViewController: NSViewController, NSWindowDelegate
    var robotPList = UserDefaults.standard 
    let defaults = UserDefaults.standard
     
+   var hotwirePList = UserDefaults.standard 
     // von CNCViewC
     var mausistdown:Int = 0
      
@@ -404,7 +405,7 @@ class rViewController: NSViewController, NSWindowDelegate
       
       let name = "John Doe"
       let robot1 = 300
-      //      robotPList.set(name, forKey: "name")
+      // robotPList.set(name, forKey: "name")
       robotPList.set(robot1, forKey: "robot1")
       
       

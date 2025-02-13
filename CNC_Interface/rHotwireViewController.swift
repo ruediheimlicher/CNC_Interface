@@ -2178,7 +2178,6 @@ var outletdaten:[String:AnyObject] = [:]
     
     @objc  @IBAction func reportStopTaste(_ sender: NSButton)
    {
-      startdelayTimer(startdelay: Int(TimeInterval(startdelayFeld.integerValue)))      
       print("swift reportStopTaste")
       if CNC_Starttaste.state == NSControl.StateValue.on
       {
@@ -2341,6 +2340,8 @@ var outletdaten:[String:AnyObject] = [:]
       
       CNC_Sendtaste.isEnabled = true
 //      DC_Taste.state = NSControl.StateValue.off
+      startdelayTimer(startdelay: Int(TimeInterval(startdelayFeld.integerValue)))      
+
    }
     
     @objc func StopTastefunktion() // nicht verwendet
@@ -3178,6 +3179,7 @@ var outletdaten:[String:AnyObject] = [:]
             {
                goStiftUp()
             }
+            //self.startdelayFeld.integerValue = startdelay
          }
          
          
@@ -5000,8 +5002,6 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
    }
 
    @IBAction func startTimer(_ sender: NSButton) {
-        
-        
         Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             if self.countdowntime > 0 {
                 print("\(self.countdowntime)")
@@ -5022,7 +5022,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
             if self.countdowntime > 0 {
                 print("\(self.countdowntime)")
                 self.countdowntime -= 1
-               self.startdelayFeld.integerValue = self.countdowntime
+               //self.startdelayFeld.integerValue = self.countdowntime
             } else {
                 timer.invalidate()
                 print("Timer: Complete!")
@@ -5208,8 +5208,14 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
        outletdaten["motorsteps"] = CNC_StepsSegControl.tag(forSegment:stepsindex)  as AnyObject
 
       
-      
-      
+      if let startdelay = hotwireplist["startdelay"]
+      {
+         startdelayFeld.integerValue = startdelay as! Int
+      }
+      else
+      {
+         startdelayFeld.integerValue = 6
+      }
       
        
        if let rumpfteildic = hotwireplist["rumpfteildic"]
@@ -6245,6 +6251,8 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         //print("readHotwire_PList: \(USBPfad)")
         var USB_URL = NSURL.fileURL(withPath:USBPfad)
         
+       hotwireplist["startdelay"] = startdelayFeld.integerValue as AnyObject
+       
         hotwireplist["einlaufrand"] = Einlaufrand.integerValue as AnyObject
         hotwireplist["auslaufrand"] = Auslaufrand.integerValue as AnyObject
         hotwireplist["blockdicke"] = Blockdicke.integerValue as AnyObject

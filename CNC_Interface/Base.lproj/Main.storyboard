@@ -2872,7 +2872,7 @@ Element</string>
                             <levelIndicator verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sI1-8d-6Zn">
                                 <rect key="frame" x="148" y="555" width="96" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <levelIndicatorCell key="cell" controlSize="mini" alignment="left" maxValue="16" numberOfMajorTickMarks="12" id="Zhq-V7-zqC"/>
+                                <levelIndicatorCell key="cell" controlSize="mini" enabled="NO" alignment="left" maxValue="16" numberOfMajorTickMarks="12" id="Zhq-V7-zqC"/>
                             </levelIndicator>
                         </subviews>
                     </view>
@@ -2998,6 +2998,7 @@ Element</string>
                         <outlet property="potBfeld" destination="mx9-U3-Gk3" id="zrU-Ks-TDi"/>
                         <outlet property="red_pwmFeld" destination="Tqy-Jh-EvD" id="9xf-hp-L5A"/>
                         <outlet property="startdelayFeld" destination="fld-or-L5W" id="IeY-c0-kVa"/>
+                        <outlet property="startdelayLevel" destination="sI1-8d-6Zn" id="2Cg-Cu-nsJ"/>
                     </connections>
                 </viewController>
                 <customObject id="r05-Ee-MTF" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

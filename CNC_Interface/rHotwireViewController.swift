@@ -176,6 +176,8 @@ var outletdaten:[String:AnyObject] = [:]
 @objc class rHotwireViewController: rViewController, NSTableViewDataSource, NSTableViewDelegate
 {
       
+   var startdelaytimer: Timer?
+   var startdelaycounter:Int = 0;
    var hintergrundfarbe:NSColor = NSColor()
    //rTSP_NN* nn;
    var nn:rTSP_NN!
@@ -276,6 +278,8 @@ var outletdaten:[String:AnyObject] = [:]
     var CNC_Eingabe = rEinstellungen()
     
    var joystick_write_byteArray: Array<UInt8> = Array(repeating: 0x00, count: BUFFER_SIZE)
+   
+   @IBOutlet weak var  startdelayLevel: NSLevelIndicator!
    
     @IBOutlet weak var  PfeilfeldLinks: rPfeil_Feld!
    @IBOutlet weak var intpos0Feld: NSStepper!
@@ -2222,7 +2226,6 @@ var outletdaten:[String:AnyObject] = [:]
       cncposition = 0
       
       
-      
       if KoordinatenTabelle.count <= 1
       {
          let warnung = NSAlert.init()
@@ -2340,7 +2343,8 @@ var outletdaten:[String:AnyObject] = [:]
       
       CNC_Sendtaste.isEnabled = true
 //      DC_Taste.state = NSControl.StateValue.off
-      startdelayTimer(startdelay: Int(TimeInterval(startdelayFeld.integerValue)))      
+//      startdelayTimer(startdelay: Int(TimeInterval(startdelayFeld.integerValue))) 
+      
 
    }
     
@@ -2576,23 +2580,30 @@ var outletdaten:[String:AnyObject] = [:]
       
       if delayok > 0
       {
-         startdelayTimer(startdelay: Int(TimeInterval(startdelayFeld.integerValue)))
+         startdelayLevel.maxValue = Double(startdelayFeld.integerValue)
+         //startdelayLevel.isEnabled = true
+        // startdelayLevel.maxValue = Double(startdelayFeld.integerValue)
+//        startdelayLevel.numberOfTickMarks = startdelayFeld.integerValue
+ //        startdelayLevel.maxValue = 0
+         //startdelayTimer(startdelay: Int(TimeInterval(startdelayFeld.integerValue)))
          print("swift reportUSB_sendArray mit delay")
          //let sel = #selector(sendDelayedArrayWithDic(schnittdatendic:))
-         self.perform(#selector(sendDelayedArrayWithDic(schnittdatendic: )), with: SchnittdatenDic, afterDelay: TimeInterval(startdelayFeld.integerValue))
+         //self.perform(#selector(sendDelayedArrayWithDic(schnittdatendic: )), with: SchnittdatenDic, afterDelay: TimeInterval(startdelayFeld.integerValue))
+         startdelaycounter = startdelayFeld.integerValue
          
          
-         
+         startdelaytimer = Timer.scheduledTimer(timeInterval:1.0, target:self,selector:#selector(startdelayAktion), userInfo:["schnittdatendic":SchnittdatenDic],repeats:true)
+         startdelayLevel.isEnabled = true
       }
       else
       {
          taskfertig = 1
          print("swift reportUSB_sendArray ohne delay")
+        // startdelayLevel.isEnabled = false
          nc.post(name:Notification.Name(rawValue:"usbschnittdaten"),
                  object: nil,
                  userInfo: SchnittdatenDic)
          CNC_busySpinner.startAnimation(nil)
-         
       }
       
       //print("swift reportUSB_sendArray NotificationDic: \(SchnittdatenDic)")
@@ -2605,6 +2616,29 @@ var outletdaten:[String:AnyObject] = [:]
       
       
    }//reportUSB_sendArray
+   
+   
+   @objc func startdelayAktion(_ timer: Timer) 
+   {
+      print("Timer triggered!")
+      startdelaycounter -= 1
+      startdelayLevel.integerValue = startdelaycounter
+      if let userInfo = timer.userInfo as? [String: Any],
+         let delayedschnittdatenDic = userInfo["schnittdatendic"] 
+      {
+         if startdelaycounter == 0
+         {
+            print("go")
+            startdelaytimer?.invalidate()
+            sendDelayedArrayWithDic(schnittdatendic:delayedschnittdatenDic as! [String : Any])
+         }
+         
+         print("Timer fired!  delaycounter: \(startdelaycounter)")
+         
+      }
+      
+   }
+
     
     @objc func sendDelayedArrayWithDic(schnittdatendic:[String:Any])
     {
@@ -5013,7 +5047,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         }
         
     }
-   
+   /*
    @objc func startdelayTimer(startdelay: Int) 
    {
         
@@ -5030,7 +5064,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         }
         
     }
-   
+   */
    
    override func viewDidAppear()
    {
@@ -5040,6 +5074,11 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       micro = CNC_microPop.selectedItem?.tag ?? 1
       //print("HW micro: \(micro)");
       CNC_microPop.selectItem(withTag: 2)
+      
+  //    startdelayLevel.integerValue = 0
+  //    startdelayLevel.maxValue = 16
+  //    startdelayLevel.maxValue = 0
+
      }
     
     // MARK: VIEWDIDLOAD
@@ -5124,8 +5163,8 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
 
         
         */
-       
-       KoordinatenFormatter.numberStyle = .decimal
+      
+        KoordinatenFormatter.numberStyle = .decimal
        KoordinatenFormatter.maximumFractionDigits = 2
        KoordinatenFormatter.groupingSeparator = "."
        KoordinatenFormatter.minimumFractionDigits = 2

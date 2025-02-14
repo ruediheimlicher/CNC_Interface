@@ -35,10 +35,36 @@ class rProfilfeldView: NSView
     var  GraphOffset :  Int  = 0
     
     
+   
+   func clearAll()
+   {
+      DatenArray  = NSArray()
+      RahmenArray   = NSArray()
+      StartPunktA   = NSZeroPoint
+      EndPunktA   = NSZeroPoint
+      StartPunktB   = NSZeroPoint
+      EndPunktB   = NSZeroPoint
+      oldMauspunkt   = NSZeroPoint
+      scale    = 4
+      mausistdown   = 0
+      Klickpunkt   = -1
+      Klickseite   = -1
+      klickrange   = NSRange()
+      KlicksetA   = NSMutableIndexSet()
+      startklickpunkt   = -1
+      stepperposition   = -1
+      anzahlmaschen   = 0
+      graphstatus   = 0
+      screen    = 0
+      GraphOffset   = 0
+
+   }
  
     func setDatenArray(derDatenArray:NSArray) 
     {
+       Swift.print("setDatenArray \(derDatenArray)")
         DatenArray=derDatenArray 
+       
        //setNeedsDisplay(YES)
     }
     func setRahmenArray(derRahmenArray:NSArray)
@@ -459,7 +485,7 @@ class rProfilfeldView: NSView
             print("screen ist 0")
          }
          
-         var  StartMarkARect:NSRect = NSMakeRect(StartPunktA.x-1.5, StartPunktA.y-1, 3, 3)
+         let  StartMarkARect:NSRect = NSMakeRect(StartPunktA.x-1.5, StartPunktA.y-1, 3, 3)
          //NSLog(@"StartMarkARect: x: %d y: %d ",StartMarkARect.origin.x, StartMarkARect.origin.y);
          var StartMarkA = NSBezierPath.init(ovalIn:StartMarkARect)
          NSColor.blue.set()
@@ -468,9 +494,9 @@ class rProfilfeldView: NSView
          let KlickLinieA = NSBezierPath()
          LinieA.move(to:StartPunktA)
          
-         var  StartMarkBRect:NSRect = NSMakeRect(StartPunktB.x-1.5, StartPunktB.y-1, 3, 3)
+         let  StartMarkBRect:NSRect = NSMakeRect(StartPunktB.x-1.5, StartPunktB.y-1, 3, 3)
          //NSLog(@"StartMarkARect: x: %d y: %d ",StartMarkARect.origin.x, StartMarkARect.origin.y);
-         var StartMarkB = NSBezierPath.init(ovalIn:StartMarkBRect)
+         let StartMarkB = NSBezierPath.init(ovalIn:StartMarkBRect)
          NSColor.blue.set()
          StartMarkB.stroke()
          let LinieB = NSBezierPath()
@@ -501,7 +527,7 @@ class rProfilfeldView: NSView
          {
             //print("i: \(i)")
             
-            var line = DatenArray[i] as! [String:Double]
+            let line = DatenArray[i] as! [String:Double]
             var ok = 0
             //print(" line: \(line)")
             if let s = line["abrax"]
@@ -591,7 +617,7 @@ class rProfilfeldView: NSView
             var PunktB = NSMakePoint(bx * scale, by * scale)
             LinieB.line(to:PunktB)
             var tempMarkB = NSBezierPath()
-            
+            Swift.print("*** draw i: \(i) klickpunkt: \(Klickpunkt) stepperposition: \(stepperposition)")
             if i == Klickpunkt && screen > 0
             {
                let tempMarkARect = NSMakeRect(PunktA.x-4.1, PunktA.y-4.1, 8.1, 8.1)
@@ -1049,6 +1075,7 @@ class rProfilfeldView: NSView
       weg.removeAllPoints()
       kreuz.removeAllPoints()
       needsDisplay = true
+      stepperposition = -1
       
    }
    /*

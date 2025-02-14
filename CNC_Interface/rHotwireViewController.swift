@@ -1710,7 +1710,7 @@ var outletdaten:[String:AnyObject] = [:]
         ProfilFeld.setNeedsDisplay(ProfilFeld.frame)
         //[Profilfeld setNeedsDisplay:YES];
         
-        //print("Mausgraphaktion end KoordinatenTabelle: \(KoordinatenTabelle) ")
+        print("Mausgraphaktion end KoordinatenTabelle: \(KoordinatenTabelle) ")
 
         CNC_Table.reloadData()
         
@@ -1978,98 +1978,98 @@ var outletdaten:[String:AnyObject] = [:]
 */
    // MARK: *** NEU-Taste
     @IBAction func reportNeuTaste(_ sender: NSButton)
-    {
-        print("swift reportNeuTaste")
-        CNC_busySpinner.stopAnimation(nil)
-        CNC_Halttaste.state = NSControl.StateValue(rawValue: 0)
-        CNC_Halttaste.isEnabled = false
-        CNC_Sendtaste.isEnabled = false
-        CNC_Starttaste.isEnabled = true
-        CNC_Starttaste.state = NSControl.StateValue(rawValue: 0)
-        CNC_Stoptaste.isEnabled = false
-        NeuesElementTaste.isEnabled = true
-        PositionFeld.stringValue = ""
-        //ProfilFeld.viewWithTag(1001).stringValue = ""
-       // DC_Taste.isEnabled = false
-        HomeTaste.state = NSControl.StateValue(rawValue: 0)
-        KoordinatenTabelle.removeAll()
-        CNC_Table.reloadData()
-        CNC_Table.needsDisplay = true
-        
-        IndexFeld.stringValue = ""
-        IndexStepper.integerValue = 0
-        WertAXFeld.stringValue = ""
-        WertAXStepper.integerValue = 0
-        
-        WertAYFeld.stringValue = ""
-        WertAYStepper.integerValue = 0
-
-        WertBXFeld.stringValue = ""
-        WertBXStepper.integerValue = 0
-
-        WertBYFeld.stringValue = ""
-        WertBYStepper.integerValue = 0
-
-        if (BlockrahmenArray != nil && BlockrahmenArray.count > 0)
-        {
-            BlockrahmenArray.removeAll()
-            ProfilFeld.setRahmenArray(derRahmenArray: BlockrahmenArray as NSArray)
-        }
-        BlockKoordinatenTabelle.removeAll()
-        CNC_DatenArray.removeAll()
-        SchnittdatenArray.removeAll()
-        
-        ProfilFeld.stepperposition = -1
-        ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
-        ProfilFeld.needsDisplay = true
-        
-        var HomeSchnittdatenArray = [String:Any]()
-        var ManArray = [String:Double]()
-        var PositionA = NSMakePoint(0, 0)
-        var PositionB = NSMakePoint(0, 0)
-        
-        ManArray["ax"] = PositionA.x
-        ManArray["ay"] = PositionA.y
-        ManArray["bx"] = PositionB.x
-        ManArray["by"] = PositionB.y
-        
-        let neucode:UInt8  = 0xF1
-        var tempDic = [String:Int]()
-        tempDic["code"] = Int(neucode)
-        tempDic["position"] = 3
-        tempDic["cncposition"] = 0
-        tempDic["home"] = 0
-     //   var tempSteuerdatenDic = [String:Any]()
+   {
+      print("swift reportNeuTaste")
+      CNC_busySpinner.stopAnimation(nil)
+      CNC_Halttaste.state = NSControl.StateValue(rawValue: 0)
+      CNC_Halttaste.isEnabled = false
+      CNC_Sendtaste.isEnabled = false
+      CNC_Starttaste.isEnabled = true
+      CNC_Starttaste.state = NSControl.StateValue(rawValue: 0)
+      CNC_Stoptaste.isEnabled = false
+      NeuesElementTaste.isEnabled = true
+      PositionFeld.stringValue = ""
+      //ProfilFeld.viewWithTag(1001).stringValue = ""
+      // DC_Taste.isEnabled = false
+      HomeTaste.state = NSControl.StateValue(rawValue: 0)
+      KoordinatenTabelle.removeAll()
+      CNC_Table.reloadData()
+      CNC_Table.needsDisplay = true
+      
+      IndexFeld.stringValue = ""
+      IndexStepper.integerValue = 0
+      WertAXFeld.stringValue = ""
+      WertAXStepper.integerValue = 0
+      
+      WertAYFeld.stringValue = ""
+      WertAYStepper.integerValue = 0
+      
+      WertBXFeld.stringValue = ""
+      WertBXStepper.integerValue = 0
+      
+      WertBYFeld.stringValue = ""
+      WertBYStepper.integerValue = 0
+      
+      if (BlockrahmenArray != nil && BlockrahmenArray.count > 0)
+      {
+         BlockrahmenArray.removeAll()
+         ProfilFeld.setRahmenArray(derRahmenArray: BlockrahmenArray as NSArray)
+      }
+      BlockKoordinatenTabelle.removeAll()
+      CNC_DatenArray.removeAll()
+      SchnittdatenArray.removeAll()
+      
+      ProfilFeld.stepperposition = -1
+      ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
+      ProfilFeld.needsDisplay = true
+      
+      var HomeSchnittdatenArray = [String:Any]()
+      var ManArray = [String:Double]()
+      var PositionA = NSMakePoint(0, 0)
+      var PositionB = NSMakePoint(0, 0)
+      
+      ManArray["ax"] = PositionA.x
+      ManArray["ay"] = PositionA.y
+      ManArray["bx"] = PositionB.x
+      ManArray["by"] = PositionB.y
+      
+      let neucode:UInt8  = 0xF1
+      var tempDic = [String:Int]()
+      tempDic["code"] = Int(neucode)
+      tempDic["position"] = 3
+      tempDic["cncposition"] = 0
+      tempDic["home"] = 0
+      //   var tempSteuerdatenDic = [String:Any]()
       // tempSteuerdatenDic = AVR?.tool_SteuerdatenVonDic(tempDic) as! [String : Double]
-       let newArray:[[Int]] = ((AVR?.tool_CNC_SchnittdatenArrayVonSteuerdaten(tempDic))) as! [[Int]]
-       
-        var tempSchnittdatenArray = [[Int]]()
-       //tempSchnittdatenArray.append(newArray)
-       let nc = NotificationCenter.default
-        var NotificationDic = [String:Any]()
-        
-        NotificationDic["cncposition"] = 0
-        NotificationDic["home"] = 0
-        
-        NotificationDic["schnittdatenarray"] = newArray
-        
-        print("swift reportNeuTaste NotificationDic: \(NotificationDic)")
-
-        nc.post(name:Notification.Name(rawValue:"usbschnittdaten"),
-        object: nil,
-        userInfo: NotificationDic)
-       
-        print("swift reportNeuTaste")
-       if (boardindex == 1) // Teensy3, Draw
-       {
-          goStiftUp()
-       }
-        
-        
-        //       KoordinatenTabelle.append(AVR?.schnittdatenVonDic(tempSteuerdatenDic) as! [String : Double]  )
-    }
+      let newArray:[[Int]] = ((AVR?.tool_CNC_SchnittdatenArrayVonSteuerdaten(tempDic))) as! [[Int]]
+      
+      var tempSchnittdatenArray = [[Int]]()
+      //tempSchnittdatenArray.append(newArray)
+      let nc = NotificationCenter.default
+      var NotificationDic = [String:Any]()
+      
+      NotificationDic["cncposition"] = 0
+      NotificationDic["home"] = 0
+      
+      NotificationDic["schnittdatenarray"] = newArray
+      
+      print("swift reportNeuTaste NotificationDic: \(NotificationDic)")
+      
+      nc.post(name:Notification.Name(rawValue:"usbschnittdaten"),
+              object: nil,
+              userInfo: NotificationDic)
+      
+      print("swift reportNeuTaste")
+      if (boardindex == 1) // Teensy3, Draw
+      {
+         goStiftUp()
+      }
+      
+      
+      //       KoordinatenTabelle.append(AVR?.schnittdatenVonDic(tempSteuerdatenDic) as! [String : Double]  )
+   }
     
-    @objc func NeuTastefunktion()
+    @objc func NeuTastefunktion() // nicht verwendet
     {
         print("swift reportNeuTaste")
         CNC_Halttaste.state = NSControl.StateValue(rawValue: 0)
@@ -2111,6 +2111,7 @@ var outletdaten:[String:AnyObject] = [:]
         SchnittdatenArray.removeAll()
         
         ProfilFeld.stepperposition = -1
+       ProfilFeld.clearWeg()
         ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
         ProfilFeld.needsDisplay = true
         
@@ -3057,7 +3058,7 @@ var outletdaten:[String:AnyObject] = [:]
       
       //print("HW USBReadAktion note: \n\(note)\n")
       let abschnittfertig = note["abschnittfertig"]  as! Int
-      //print("HW USBReadAktion note: \n\(note) abschnittfertig: \(abschnittfertig)\n")
+      print("HW USBReadAktion note: \n\(note) abschnittfertig: \(abschnittfertig)\n")
       //print("\n\t HW USBReadAktion abschnittfertig: \(int2hex(wert: UInt8(abschnittfertig)))")
       //printhex(wert: UInt8(abschnittfertig))
       let outposition = note["outposition"] as! Int
@@ -3118,7 +3119,7 @@ var outletdaten:[String:AnyObject] = [:]
          homeanschlagCount = wert as! Int
       }
       
-      if outposition > PositionFeld.integerValue
+      if (outposition > PositionFeld.integerValue) && (abschnittfertig != 0xF2)
       {
          PositionFeld.integerValue = outposition
          ProfilFeld.stepperposition = outposition

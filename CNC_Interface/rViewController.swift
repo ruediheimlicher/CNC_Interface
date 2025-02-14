@@ -1240,7 +1240,7 @@ class rViewController: NSViewController, NSWindowDelegate
              
              if abschnittfertig >= 0x80 // Code fuer Fertig: AD
              {
-                //print("VC newDataAktion abschnittfertig > 80")
+                print("VC newDataAktion abschnittfertig > 80 ")
                 let Abschnittnummer = Int(usbdata[5])
                 NotificationDic["inposition"] = Int(Abschnittnummer)
                 let ladePosition = Int(usbdata[6])

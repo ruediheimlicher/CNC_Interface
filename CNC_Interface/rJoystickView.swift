@@ -128,6 +128,7 @@ class rJoystickView: NSView
       var userinformation:[String : Any]
       if kreuz.isEmpty
       {
+         
          kreuz.move(to: lokalpunkt)
          // kreuz zeichnen
          kreuz.line(to: NSMakePoint(lokalpunkt.x, lokalpunkt.y+5))

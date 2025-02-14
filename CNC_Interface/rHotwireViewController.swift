@@ -5076,7 +5076,7 @@ print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
       AnschlagRechtsIndikator.borderColor = .clear
       AnschlagRechtsIndikator.borderWidth = 0
       
-      
+      //
       // Anschlag unten
        AnschlagUntenIndikator.wantsLayer = true
        AnschlagUntenIndikator?.layer?.backgroundColor = NSColor.clear.cgColor

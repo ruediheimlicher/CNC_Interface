@@ -1970,6 +1970,7 @@ var outletdaten:[String:AnyObject] = [:]
         KoordinatenTabelle.removeAll()
         CNC_Table.reloadData()
         CNC_Table.needsDisplay = true
+       
         
         IndexFeld.stringValue = ""
         IndexStepper.integerValue = 0
@@ -1993,10 +1994,10 @@ var outletdaten:[String:AnyObject] = [:]
         BlockKoordinatenTabelle.removeAll()
         CNC_DatenArray.removeAll()
         SchnittdatenArray.removeAll()
-        
+       
         ProfilFeld.stepperposition = -1
         ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
-        ProfilFeld.needsDisplay = true
+        ProfilFeld.clearWeg()
         
         var HomeSchnittdatenArray = [String:Any]()
         var ManArray = [String:Double]()

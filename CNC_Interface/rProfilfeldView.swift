@@ -1050,6 +1050,7 @@ class rProfilfeldView: NSView
       kreuz.removeAllPoints()
       needsDisplay = true
       
+      
    }
    /*
     override func rotate(byDegrees angle: CGFloat) 

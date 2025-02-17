@@ -9017,7 +9017,7 @@ return returnInt;
    int mitabbrand = [[eingabeDic objectForKey:@"mitabbrand"]integerValue];
    float abbranda = [[eingabeDic objectForKey:@"abbrand"]floatValue];
    float abbrandb = abbranda/(ProfilTiefeB) * (ProfilTiefeA);
-   
+   abbrandb = abbranda;
    float profilwrench = [[eingabeDic objectForKey:@"profilwrench"]floatValue];
    int wrenchradio = [[eingabeDic objectForKey:@"wrenchradio"]intValue];
    
@@ -9797,7 +9797,7 @@ return returnInt;
       int nasenindexA = 0;
       int nasenindexB = 0;
       
-      int wasserunterkiel = 10;
+      int wasserunterkiel = 8;
       
       for (int i=0;i<LibKoordinatenTabelle.count;i++)
       {
@@ -9852,8 +9852,8 @@ return returnInt;
       [firstDic setObject:[firstDic objectForKey:@"ax"]forKey:@"abrax"];
       [firstDic setObject:[firstDic objectForKey:@"ay"]forKey:@"abray"];
       
-  //    [firstDic setObject:[firstDic objectForKey:@"bx"]forKey:@"abrbx"];
-  //    [firstDic setObject:[firstDic objectForKey:@"by"]forKey:@"abrby"];
+      [firstDic setObject:[firstDic objectForKey:@"bx"]forKey:@"abrbx"];
+      [firstDic setObject:[firstDic objectForKey:@"by"]forKey:@"abrby"];
 
       
       [firstDic setObject:[NSNumber numberWithInt:11]forKey:@"teil"];
@@ -9913,7 +9913,7 @@ return returnInt;
       
       if(mitEinstrich)
       {
-         float einstichtiefe = 4;
+         float einstichtiefe = 3;
          // Nasenpunkt fuer Einstich suchen
          maxxA = 0;
          maxxB = 0;
@@ -9945,18 +9945,20 @@ return returnInt;
          float oberseiteabschnittA = oberseitebereichA / 12;
          
          float einstichxA0 = startxA + 4*oberseiteabschnittA; 
-         float einstichxA1 = startxA + 6*oberseiteabschnittA;
-         float einstichxA2 = startxA + 9*oberseiteabschnittA;
+         float einstichxA1 = startxA + 7*oberseiteabschnittA;
+         float einstichxA2 = startxA + 10*oberseiteabschnittA;
          float einstichxA3 = startxA + 11*oberseiteabschnittA;
          
          
          
          int einstichxArray[ANZAHLEINSTICHE] = {einstichxA0,einstichxA1,einstichxA2,einstichxA3}; // fuer holmindex 90
-         
+  
+         //int einstichxArray[ANZAHLEINSTICHE] = {einstichxA0,einstichxA1,einstichxA2}; // fuer holmindex 90
+
          NSLog(@"oberseitebereichA: %2.2f einstichxA0: %2.2f einstichxA1: %2.2f einstichxA2: %2.2f",oberseitebereichA,einstichxA0,einstichxA1,einstichxA2);
          
          
-         for (int i = 0;i < ANZAHLEINSTICHE; i++)
+         for (int i = 0;i < ANZAHLEINSTICHE-1; i++) // nur noch 3 einstiche
          {
             
             // Einstich
@@ -10196,17 +10198,17 @@ return returnInt;
          NSLog(@"diffvektorvor: %2.2f diffvektornach: %2.2f einheitsvektor: %2.6f einstichfaktor: %2.6f",diffvektorvor,diffvektornach,einheitsvektor,einstichfaktor);
          
          [einstichDicStart setObject:[NSNumber numberWithFloat:(ax + winkelhalbierende[0])] forKey:@"ax"];
-         [einstichDicStart setObject:[NSNumber numberWithFloat:(ay + winkelhalbierende[1]+1)] forKey:@"ay"];
+         [einstichDicStart setObject:[NSNumber numberWithFloat:(ay + winkelhalbierende[1])] forKey:@"ay"];
          
          [einstichDicStart setObject:[NSNumber numberWithFloat:(ax + winkelhalbierende[0])] forKey:@"abrax"];
-         [einstichDicStart setObject:[NSNumber numberWithFloat:(ay + winkelhalbierende[1]+1)] forKey:@"abray"];
+         [einstichDicStart setObject:[NSNumber numberWithFloat:(ay + winkelhalbierende[1])] forKey:@"abray"];
          
          
          [einstichDicStart setObject:[NSNumber numberWithFloat:(bx + winkelhalbierende[0])] forKey:@"bx"];
-         [einstichDicStart setObject:[NSNumber numberWithFloat:(by + winkelhalbierende[1]+1)] forKey:@"by"];
+         [einstichDicStart setObject:[NSNumber numberWithFloat:(by + winkelhalbierende[1])] forKey:@"by"];
          
          [einstichDicStart setObject:[NSNumber numberWithFloat:(bx + winkelhalbierende[0])] forKey:@"abrbx"];
-         [einstichDicStart setObject:[NSNumber numberWithFloat:(by + winkelhalbierende[1]+1)] forKey:@"abrby"];
+         [einstichDicStart setObject:[NSNumber numberWithFloat:(by + winkelhalbierende[1])] forKey:@"abrby"];
          
          [LibKoordinatenTabelle insertObject:einstichDicStart atIndex:nasenindexA];
          
@@ -10285,8 +10287,8 @@ return returnInt;
           
      //    fprintf(stderr,"holm startx: \t%2.2f\t nasenx %2.2f holmabstandX: %2.2f holmindex:  %d\n",startX,nasenX,holmabstandX,holmindex);
           
-         float radiusA = 3.5;
-         float radiusB = 3.5;
+         float radiusA = 3.4;
+         float radiusB = 3.4;
          float Winkel = 360;
          int anzahlPunkte = 8;
          
@@ -10520,11 +10522,13 @@ return returnInt;
       [[LibKoordinatenTabelle  objectAtIndex:(anz-2)]setObject:[NSNumber numberWithFloat:25] forKey:@"ay"];
       [[LibKoordinatenTabelle  objectAtIndex:(anz-2)]setObject:[NSNumber numberWithFloat:25] forKey:@"abray"];
 
+ 
       [[LibKoordinatenTabelle  objectAtIndex:(anz-2)]setObject:[NSNumber numberWithFloat:30] forKey:@"bx"];
       [[LibKoordinatenTabelle  objectAtIndex:(anz-2)]setObject:[NSNumber numberWithFloat:30] forKey:@"abrbx"];
 
       [[LibKoordinatenTabelle  objectAtIndex:(anz-2)]setObject:[NSNumber numberWithFloat:25] forKey:@"by"];
       [[LibKoordinatenTabelle  objectAtIndex:(anz-2)]setObject:[NSNumber numberWithFloat:25] forKey:@"abrby"];
+
 
       [[LibKoordinatenTabelle  objectAtIndex:(anz-1)]setObject:[NSNumber numberWithFloat:30] forKey:@"ax"];
       [[LibKoordinatenTabelle  objectAtIndex:(anz-1)]setObject:[NSNumber numberWithFloat:30] forKey:@"abrax"];

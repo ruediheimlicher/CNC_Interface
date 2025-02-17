@@ -3244,10 +3244,10 @@ var outletdaten:[String:AnyObject] = [:]
          }
          //let servopos = 1
          break
-      case 0xF4:
+      case 0xF4: // 250217 nicht mehr angezeigt
          print("Stift DOWN")
          //ProfilFeld.stepperposition = Stepperposition
-         ProfilFeld.needsDisplay = true
+         //ProfilFeld.needsDisplay = true
          break
          
          

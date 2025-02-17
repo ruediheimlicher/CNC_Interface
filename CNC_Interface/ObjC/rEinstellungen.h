@@ -319,6 +319,7 @@
 
 - (void)setProfilGraphDaten;
 - (void)clearProfilGraphDaten;
+- (void)printProfil:(NSArray*)profil;
 
 // von 32
 - (void)doProfil1PopTaskMitProfil:(int)profil1;

@@ -618,10 +618,10 @@ class rProfilfeldView: NSView
             var PunktB = NSMakePoint(bx * scale, by * scale)
             LinieB.line(to:PunktB)
             var tempMarkB = NSBezierPath()
-            Swift.print("*** draw i: \(i) klickpunkt: \(Klickpunkt) stepperposition: \(stepperposition)")
+            //Swift.print("*** draw i: \(i) klickpunkt: \(Klickpunkt) stepperposition: \(stepperposition)")
             if i == Klickpunkt && screen > 0
             {
-               Swift.print("*** draw i == Klickpunkt")
+               //Swift.print("*** draw i == Klickpunkt")
                let tempMarkARect = NSMakeRect(PunktA.x-4.1, PunktA.y-4.1, 8.1, 8.1)
  
                
@@ -641,8 +641,7 @@ class rProfilfeldView: NSView
             {
                //Swift.print("*** draw i != Klickpunkt")
                NSColor.gray.set()
-             //  let tempMarkARect = NSMakeRect(PunktA.x-2.5, PunktA.y-2.5, 5.1, 5.1)
-               let tempMarkARect = NSMakeRect(PunktA.x-6.1, PunktA.y-6.1, 12.1, 12.1)
+               let tempMarkARect = NSMakeRect(PunktA.x-2.5, PunktA.y-2.5, 5.1, 5.1)
                tempMarkA = NSBezierPath.init(ovalIn: tempMarkARect)
                tempMarkA.stroke()
                
@@ -654,13 +653,13 @@ class rProfilfeldView: NSView
                {
                   if i > stepperposition
                   {
-                     Swift.print("\t\t\t dot")
+                     //Swift.print("\t\t\t dot")
                      NSColor.blue.set()
                      tempMarkA.stroke()
                   }
                   else
                   {
-                     Swift.print("\t\t\t kreuz")
+                     //Swift.print("\t\t\t kreuz")
                      NSColor.red.set()
                      // Kreuz
                      NSBezierPath.strokeLine(from:NSMakePoint(PunktA.x - 4.1, PunktA.y - 4.1), to:NSMakePoint(PunktA.x + 4.1, PunktA.y + 4.1))

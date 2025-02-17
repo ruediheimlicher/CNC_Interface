@@ -3900,7 +3900,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
                   //
                   //
                   //
-                  if (radius < abbrandmassa )
+               //   if (radius < abbrandmassa )
                   {
                      //fprintf(stderr,"mittelpunkt \t%d\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\n",i,ax,ay,detvor,detnach,mittelpunkt[0],mittelpunkt[1],radius);
                   }
@@ -4018,8 +4018,6 @@ PortA=vs[n & 3]; warte10ms(); n++;
                NSLog(@"%d kein prevnorma",i);
             }
             
-            
-            
             float nextnorma[2] = {0.0,0.0};
             if (nexthypoa!=0)
             {
@@ -4031,11 +4029,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
                NSLog(@"%d kein nextnorma",i);
             }
             
-            
-            
-            
-            // Cosinus-Satz Winkel aus Skalarprodukt der Einheitsvektoren
-            
+              // Cosinus-Satz Winkel aus Skalarprodukt der Einheitsvektoren
             cosphia=prevnorma[0]*nextnorma[0]+ prevnorma[1]*nextnorma[1]; // cosinus des Zwischenwinkels
             
             
@@ -4072,11 +4066,6 @@ PortA=vs[n & 3]; warte10ms(); n++;
                }
                
             }
-            
-            
-            
-            
-            
             
             //            NSLog(@"i: %d  prevhypoa: %2.4f nexthypoa: %2.4f cosphia: %1.8f",i,prevhypoa,nexthypoa,cosphia);
             
@@ -4145,21 +4134,21 @@ PortA=vs[n & 3]; warte10ms(); n++;
             
             float prevhypob = 0;
             
-            if (prevb[0] || prevb[1])
+            if ((prevb[0] != 0) || (prevb[1] != 0))
             {
                prevhypob=hypot(prevb[0],prevb[1]); // Laenge des vorherigen Weges
             }
             
             float nexthypob= 0;
             
-            if (nextb[0] || nextb[1])
+            if ((nextb[0] != 0) || (nextb[1] != 0))
             {
                nexthypob = hypot(nextb[0],nextb[1]); // Laenge des naechsten Weges
             }
             
             float prevnormb[2] = {0.0,0.0};
             
-            if (prevhypob)
+            if (prevhypob != 0)
             {
                prevnormb[0]= -(prevb[1])/prevhypob;
                prevnormb[1] = (prevb[0])/prevhypob; // vorheriger Normalenvektor
@@ -4168,7 +4157,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
             
             
             float nextnormb[2] = {0.0,0.0};
-            if (nexthypob)
+            if (nexthypob != 0)
             {
                nextnormb[0]= -(nextb[1])/nexthypob;
                nextnormb[1] = (nextb[0])/nexthypob; // vorheriger Normalenvektor
@@ -4367,8 +4356,6 @@ PortA=vs[n & 3]; warte10ms(); n++;
          
          float profilabbrandbmass = abbrandmassa;
          if ((i<(bis-2)) &&  (i>(von+1)))
-            //if (i>von+1)
-            //if (i<bis-2)
          {
             
             profilabbrandbmass = abbrandmassb;
@@ -4376,6 +4363,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
          //NSLog(@"i: %d profilabbrandbmass: %2.2f",i,profilabbrandbmass);
          float whbhypo = hypotf(whb[0],whb[1]);
          //NSLog(@"whbhypo: %2.4f",whbhypo);
+         
          float abbrandb[2]= {whb[0]*seitenkorrekturb/whbhypo*profilabbrandbmass/cosphi2b,whb[1]*seitenkorrekturb/whbhypo*profilabbrandbmass/cosphi2b};
          //        NSLog(@"i %d orig ax %2.2f ay %2.2f bx %2.2f by %2.2f",i,ax,ay,bx,by);
          //        NSLog(@"i %d abbranda[0] %2.4f abbranda[1] %2.4f ",i,abbranda[0], abbranda[1]);

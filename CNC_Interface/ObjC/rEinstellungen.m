@@ -3847,12 +3847,12 @@
    {      
       int index=[sender indexOfSelectedItem]; // Item 0 ist Titel
       [Profile2 setEnabled:YES];
-      [Profile2 selectItemAtIndex:index];    // Profil 2 ist wahrscheinlich gleich
-      //NSLog(@"reportProfilPop Profil aus Pop: %@",[Profile1 itemTitleAtIndex:index]);
+ //     [Profile2 selectItemAtIndex:index];    // Profil 2 ist wahrscheinlich gleich
+      NSLog(@"reportProfilPop Profil aus Pop: %@",[Profile1 itemTitleAtIndex:index]);
       Profil1Name=[Profile1 itemTitleAtIndex:index];
       NSString* Profilname = [Profil1Name stringByAppendingPathExtension:@"txt"];
       NSString* Profilpfad = [ProfilLibPfad stringByAppendingPathComponent:Profilname];
-      //NSLog(@"reportProfilPop Profilpfad: %@",Profilpfad);
+      NSLog(@"reportProfilPop Profilpfad: %@",Profilpfad);
       NSFileManager *Filemanager = [NSFileManager defaultManager];
       NSDictionary* ProfilDic = [NSDictionary new];
       int ProfilOK= [Filemanager fileExistsAtPath:Profilpfad];
@@ -3865,16 +3865,18 @@
          //NSLog(@"SplinekoeffizientenVonArray profilarray: %@",[[ProfilDic objectForKey:@"profilarray"] description]);
 
          
-         if ([ProfilDic objectForKey:@"name"])
+         if ([ProfilDic objectForKey:@"profilname"])
          {
-            Profil1Name = [NSString stringWithString:[[ElementLibArray objectAtIndex:index]objectForKey:@"name"]];
+            Profil1Name = [ProfilDic objectForKey:@"profilname"];
          }
-         //NSLog(@"ProfilName1: %@",Profil1Name);
+         NSLog(@"ProfilName1: %@",Profil1Name);
+         
          if ([ProfilDic objectForKey:@"profilarray"])
          {
             [Profil1Array removeAllObjects];
             [Profil1Array addObjectsFromArray:[ProfilDic objectForKey:@"profilarray"]];
             
+            [self printProfil:Profil1Array ];
             
             if ([Profil1Array count])
             {
@@ -3889,11 +3891,11 @@
          if ([ProfilDic objectForKey:@"oberseitearray"])
          {
             Profil1OberseiteArray = [NSArray arrayWithArray:[ProfilDic objectForKey:@"oberseitearray"]];
-            if((Profil2OberseiteArray = nil) || (Profil2OberseiteArray.count == 0))
+            if((Profil2OberseiteArray == nil) || (Profil2OberseiteArray.count == 0))
                
               // if (![ProfilDic objectForKey:@"unterseitearray"])
                {
-                  Profil2OberseiteArray = Profil1OberseiteArray;
+ //                 Profil2OberseiteArray = Profil1OberseiteArray;
                }
          }
          
@@ -3901,11 +3903,11 @@
          {
             Profil1UnterseiteArray = [NSArray arrayWithArray:[ProfilDic objectForKey:@"unterseitearray"]];
             
-            if((Profil2UnterseiteArray = nil) || (Profil2UnterseiteArray.count == 0))
+            if((Profil2UnterseiteArray == nil) || (Profil2UnterseiteArray.count == 0))
                
               // if (![ProfilDic objectForKey:@"unterseitearray"])
                {
-                  Profil2UnterseiteArray = Profil1UnterseiteArray;
+ //                 Profil2UnterseiteArray = Profil1UnterseiteArray;
                }
            
             
@@ -3937,7 +3939,7 @@
       Profil2Name=[Profile2 itemTitleAtIndex:index];
       NSString* Profilname = [Profil2Name stringByAppendingPathExtension:@"txt"];
       NSString* Profilpfad = [ProfilLibPfad stringByAppendingPathComponent:Profilname];
-      //NSLog(@"reportProfilPop Profilpfad: %@",Profilpfad);
+      NSLog(@"reportProfilPop Profilpfad: %@",Profilpfad);
       NSFileManager *Filemanager = [NSFileManager defaultManager];
       NSDictionary* ProfilDic = [NSDictionary new];
       int ProfilOK= [Filemanager fileExistsAtPath:Profilpfad];
@@ -3946,8 +3948,13 @@
          
          ProfilDic = [Utils ProfilDatenAnPfad:Profilpfad];
          //NSLog(@"reportProfil2Pop ProfilDic: %@",[ProfilDic description]);
-         //Profil1Array = [ProfilDic objectForKey:@"profilArray"];
          
+         //Profil1Array = [ProfilDic objectForKey:@"profilArray"];
+         if ([ProfilDic objectForKey:@"profilname"])
+         {
+            Profil2Name = [ProfilDic objectForKey:@"profilname"];
+         }
+         NSLog(@"ProfilName2: %@",Profil2Name);
          
          NSLog(@"Profil2Name: %@",Profil2Name);
          if ([ProfilDic objectForKey:@"profilarray"])
@@ -3955,7 +3962,8 @@
             [Profil2Array removeAllObjects];
             [Profil2Array addObjectsFromArray:[ProfilDic objectForKey:@"profilarray"]];
             
-            
+            [self printProfil:Profil2Array];
+             
             if ([Profil2Array count])
             {
                [ProfilStartpunktX setFloatValue:[[[Profil2Array objectAtIndex:0]objectForKey:@"x"]floatValue]];
@@ -3969,9 +3977,9 @@
          if ([ProfilDic objectForKey:@"oberseitearray"])
          {
             Profil2OberseiteArray = [NSArray arrayWithArray:[ProfilDic objectForKey:@"oberseitearray"]];
-            if((Profil1OberseiteArray = nil) || (Profil1OberseiteArray.count == 0))
+            if((Profil1OberseiteArray == nil) || (Profil1OberseiteArray.count == 0))
                {
-                  Profil1OberseiteArray = Profil2OberseiteArray;
+  //                Profil1OberseiteArray = Profil2OberseiteArray;
                }
 
             
@@ -3982,10 +3990,10 @@
          {
             Profil2UnterseiteArray = [NSArray arrayWithArray:[ProfilDic objectForKey:@"unterseitearray"]];
             
-            if((Profil1UnterseiteArray = nil) || (Profil1UnterseiteArray.count == 0))
+            if((Profil1UnterseiteArray == nil) || (Profil1UnterseiteArray.count == 0))
                
                {
-                  Profil1UnterseiteArray = Profil2UnterseiteArray;
+  //                Profil1UnterseiteArray = Profil2UnterseiteArray;
                }
 
          }
@@ -3995,6 +4003,17 @@
          [ProfilGraph setNeedsDisplay:YES];
       }
    }
+}
+
+- (void)printProfil:(NSArray*)profil
+{
+   //NSLog(@"printProfil");
+   for (int i=0;i<profil.count;i++)
+   {
+       fprintf(stderr, "%d\t%2.4f\t%2.4f\n",i,[[[profil objectAtIndex:i]objectForKey:@"x"] floatValue],[[[profil objectAtIndex:i]objectForKey:@"y"] floatValue]);
+       
+   } // alle Punkte dabei
+
 }
 
 - (IBAction)reportProfilEinfuegen:(id)sender
@@ -4008,7 +4027,12 @@
    int Nasenindex = 0;
    float minx = 0;
 
-   
+   /*
+   fprintf(stderr,"Profil1Array\n");
+   [self printProfil:Profil1Array];
+   fprintf(stderr,"Profil2Array\n");
+   [self printProfil:Profil2Array];
+*/
    
    if (Profil1Array.count && Profil2Array.count)
    {
@@ -4031,7 +4055,11 @@
       }
       
    }
-   
+   fprintf(stderr,"Profil1OberseiteArray\n");
+   [self printProfil:Profil1OberseiteArray];
+   fprintf(stderr,"Profil2OberseiteArray\n");
+   [self printProfil:Profil2OberseiteArray];
+  
    
    if ([Profil1Array count])
    {

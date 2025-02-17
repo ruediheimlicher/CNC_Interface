@@ -2581,7 +2581,7 @@ var outletdaten:[String:AnyObject] = [:]
       }
       SchnittdatenDic["art"] = 0
       SchnittdatenDic["delayok"] = delayok
-      usbstatus |= (1<<schnittdatenstatus)
+      cncstatus |= (1<<schnittdatenstatus)
       if delayok > 0
       {
          startdelayLevel.maxValue = Double(startdelayFeld.integerValue)
@@ -3067,7 +3067,7 @@ var outletdaten:[String:AnyObject] = [:]
       let tempinpos = note["inposition"]  as! Int
       let tempoutpos = note["outposition"]  as! Int
       
-      print("HW USBReadAktion stepperposition: \(tempstepperpos) inposition: \(tempinpos) outposition: \(tempoutpos)")
+      print("HW USBReadAktion code: \(abschnittfertig)\t\t stepperposition: \(tempstepperpos) inposition: \(tempinpos) outposition: \(tempoutpos)")
       //print("\n\t HW USBReadAktion abschnittfertig: \(int2hex(wert: UInt8(abschnittfertig)))")
       //printhex(wert: UInt8(abschnittfertig))
       let outposition = note["outposition"] as! Int
@@ -3093,7 +3093,7 @@ var outletdaten:[String:AnyObject] = [:]
          
       }
       
-      CNCPositionFeld.integerValue = Stepperposition
+      //CNCPositionFeld.integerValue = Stepperposition
       //      print("USBReadAktion abschnittfertig: \(abschnittfertig) pfeilrichtung: \(pfeilrichtung)")
       let anzsteps = SchnittdatenArray.count
       
@@ -3130,11 +3130,13 @@ var outletdaten:[String:AnyObject] = [:]
       
       if (outposition > PositionFeld.integerValue) && (cncstatus & (1<<schnittdatenstatus)>0)
       {
+         
          PositionFeld.integerValue = outposition
          ProfilFeld.stepperposition = outposition
          ProfilFeld.needsDisplay = true
          
       }
+      CNCPositionFeld.integerValue = Stepperposition
       
       switch abschnittfertig
       {
@@ -3244,7 +3246,8 @@ var outletdaten:[String:AnyObject] = [:]
          break
       case 0xF4:
          print("Stift DOWN")
-         
+         //ProfilFeld.stepperposition = Stepperposition
+         ProfilFeld.needsDisplay = true
          break
          
          
@@ -3253,7 +3256,7 @@ var outletdaten:[String:AnyObject] = [:]
          
       } // switch abschnittfertig
       
-      print("HW USBReadAktion HomeAnschlagSet: \(HomeAnschlagSet)")
+      //print("HW USBReadAktion HomeAnschlagSet: \(HomeAnschlagSet)")
       
       
    }

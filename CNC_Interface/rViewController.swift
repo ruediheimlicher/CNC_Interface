@@ -967,7 +967,7 @@ class rViewController: NSViewController, NSWindowDelegate
      {
         //print("teensy.read_OK ist true")
      }
-      print("readOK vor writeCNCAbschnitt: \(teensy.read_OK.boolValue)\n usb_schnittdatenarray: \(usb_schnittdatenarray)")
+      //print("readOK vor writeCNCAbschnitt: \(teensy.read_OK.boolValue)\n usb_schnittdatenarray: \(usb_schnittdatenarray)")
       writeCNCAbschnitt()
     }
    

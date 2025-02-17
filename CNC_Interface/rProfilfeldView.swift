@@ -67,6 +67,7 @@ class rProfilfeldView: NSView
        
        //setNeedsDisplay(YES)
     }
+   
     func setRahmenArray(derRahmenArray:NSArray)
     {
         RahmenArray=derRahmenArray
@@ -620,6 +621,7 @@ class rProfilfeldView: NSView
             Swift.print("*** draw i: \(i) klickpunkt: \(Klickpunkt) stepperposition: \(stepperposition)")
             if i == Klickpunkt && screen > 0
             {
+               Swift.print("*** draw i == Klickpunkt")
                let tempMarkARect = NSMakeRect(PunktA.x-4.1, PunktA.y-4.1, 8.1, 8.1)
                tempMarkA = NSBezierPath.init(ovalIn: tempMarkARect)
                NSColor.gray.set()
@@ -634,6 +636,7 @@ class rProfilfeldView: NSView
             }// i == Klickpunkt
             else
             {
+               Swift.print("*** draw i != Klickpunkt")
                NSColor.gray.set()
                let tempMarkARect = NSMakeRect(PunktA.x-2.5, PunktA.y-2.5, 5.1, 5.1)
                tempMarkA = NSBezierPath.init(ovalIn: tempMarkARect)
@@ -647,11 +650,13 @@ class rProfilfeldView: NSView
                {
                   if i > stepperposition
                   {
+                     Swift.print("*** draw i > stepperposition")
                      NSColor.blue.set()
                      tempMarkA.stroke()
                   }
                   else
                   {
+                     Swift.print("*** draw i <= stepperposition")
                      NSColor.red.set()
                      // Kreuz
                      NSBezierPath.strokeLine(from:NSMakePoint(PunktA.x - 4.1, PunktA.y - 4.1), to:NSMakePoint(PunktA.x + 4.1, PunktA.y + 4.1))
@@ -1075,7 +1080,7 @@ class rProfilfeldView: NSView
       weg.removeAllPoints()
       kreuz.removeAllPoints()
       needsDisplay = true
-      stepperposition = -1
+      //stepperposition = -1
       
    }
    /*

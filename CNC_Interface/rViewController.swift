@@ -22,6 +22,12 @@ var loadcounter = 0
 
 var globalusbstatus = 0
 
+var cncstatus:UInt8 = 0
+let stopstatus = 1
+let schnittdatenstatus = 2
+let hotstatus = 3
+let ignorestatus = 4
+
 func printhex(wert:UInt8)
 {
    print(String(wert, radix:16, uppercase:true))
@@ -599,7 +605,7 @@ class rViewController: NSViewController, NSWindowDelegate
           {
              
              let aktuellezeile:[UInt8] = usb_schnittdatenarray[Stepperposition]
-             print("VC Stepperposition: \(Stepperposition) aktuellezeile: \(aktuellezeile) count: \(aktuellezeile.count)")
+             //print("VC Stepperposition: \(Stepperposition) aktuellezeile: \(aktuellezeile) count: \(aktuellezeile.count)")
              let writecode = aktuellezeile[16]
              var string:String = ""
              var index=0
@@ -621,7 +627,7 @@ class rViewController: NSViewController, NSWindowDelegate
               //print("writeCNCAbschnitt boardindex: \(boardindex)")
 
              //print("writeCNCAbschnitt write_byteArray count: \(teensy.write_byteArray.count)")
-             print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
+             //print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
 
              if (globalusbstatus > 0)
              {
@@ -847,7 +853,7 @@ class rViewController: NSViewController, NSWindowDelegate
      usb_schnittdatenarray.removeAll()
      
      let info = notification.userInfo
-     print("VC usbschnittdatenAktion info: \(info)")
+     //print("VC usbschnittdatenAktion info: \(info)")
      
      guard let usb_home = info?["home"] as? Int else 
      {
@@ -906,7 +912,7 @@ class rViewController: NSViewController, NSWindowDelegate
         }
         else
         {
-           print("zeilenindex: \(zeilenindex) zeile: \(zeile) usbschnittdatenaktion keine Richtung")
+           //print("zeilenindex: \(zeilenindex) zeile: \(zeile) usbschnittdatenaktion keine Richtung")
         }
          
         //print("usbschnittdatenaktion micro: \(micro)")
@@ -1221,7 +1227,7 @@ class rViewController: NSViewController, NSWindowDelegate
              // https://useyourloaf.com/blog/swift-string-cheat-sheet/
              let home = Int(usbdata[13])
              let anschlagcheck = Int(usbdata[9])
-             print("VC newDataAktion abschnittfertig: \(hex(abschnittfertig)) anschlagcheck: \(anschlagcheck)")
+             //print("VC newDataAktion abschnittfertig: \(hex(abschnittfertig)) anschlagcheck: \(anschlagcheck)")
              NotificationDic["abschnittfertig"] = Int(abschnittfertig)
              let pfeiltastenrichtung = Int(usbdata[29])
              NotificationDic["stiftposition"] = Int(usbdata[10])
@@ -1233,14 +1239,14 @@ class rViewController: NSViewController, NSWindowDelegate
              
              let Tastaturwert = usbdata[57]
              let Taste = usbdata[58]
-             print("VC newDataAktion Tastaturwert: \(Tastaturwert) Taste: \(Taste)")
+             //print("VC newDataAktion Tastaturwert: \(Tastaturwert) Taste: \(Taste)")
              NotificationDic["tastaturwert"] = Int(Tastaturwert)
              NotificationDic["taste"] = Int(Taste)
   
              
              if abschnittfertig >= 0x80 // Code fuer Fertig: AD
              {
-                print("VC newDataAktion abschnittfertig > 80 ")
+                //print("VC newDataAktion abschnittfertig > 80 ")
                 let Abschnittnummer = Int(usbdata[5])
                 NotificationDic["inposition"] = Int(Abschnittnummer)
                 let ladePosition = Int(usbdata[6])
@@ -1469,7 +1475,7 @@ class rViewController: NSViewController, NSWindowDelegate
                    break;
                    
                 case 0xBD:
-                   print("BD cncstatus: \(usbdata[22]) ")
+                   print("VC BD cncstatus: \(usbdata[22]) ")
                    
   
                     

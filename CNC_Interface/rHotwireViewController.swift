@@ -1418,7 +1418,7 @@ var outletdaten:[String:AnyObject] = [:]
      @objc func DC_Funktion(pwm:UInt8 )
      {
         usb_schnittdatenarray.removeAll()
-          print("HW DC_Funktion  pwm: \(pwm)")
+          //print("HW DC_Funktion  pwm: \(pwm)")
         Stepperposition = 0;
         if(pwm == 0)
         {
@@ -1474,10 +1474,10 @@ var outletdaten:[String:AnyObject] = [:]
         
         var oldax:Double = MausPunkt.x;
         var olday:Double = MausPunkt.y;
-        print("mausgraphaktion oldax: \(oldax) olday: \(olday)")
+        //print("mausgraphaktion oldax: \(oldax) olday: \(olday)")
         var  oldbx:Double = oldax + offsetx;
         var  oldby:Double = olday + offsety;
-        print("mausgraphaktion oldbx: \(oldbx) oldby: \(oldby)")
+        //print("mausgraphaktion oldbx: \(oldbx) oldby: \(oldby)")
         var  oldpwm :Double =  DC_PWM.doubleValue
         //print("KoordinatenTabelle: \(KoordinatenTabelle) count: \(KoordinatenTabelle.count)")
         
@@ -1493,8 +1493,8 @@ var outletdaten:[String:AnyObject] = [:]
             oldbx = oldPosDic["bx"] ?? 0
             oldby = oldPosDic["by"] ?? 0
             
-            print("mausgraphaktion oldax a: \(oldax) olday: \(olday)")
-            print("mausgraphaktion oldbx b: \(oldbx) oldby: \(oldby)")
+            //print("mausgraphaktion oldax a: \(oldax) olday: \(olday)")
+            //print("mausgraphaktion oldbx b: \(oldbx) oldby: \(oldby)")
             
             if (oldPosDic["pwm"]! > 0)
             {
@@ -1661,7 +1661,7 @@ var outletdaten:[String:AnyObject] = [:]
             tempDic["by"] = MausPunkt.y + offsety
             tempDic["index"] = Double(KoordinatenTabelle.count)
             tempDic["pwm"] = oldpwm
-            print("tempDic 3: \(tempDic)")
+            //print("tempDic 3: \(tempDic)")
             /*
              NSDictionary* tempDic = [NSDictionary dictionaryWithObjectsAndKeys:
              [NSNumber numberWithFloat:MausPunkt.x], @"ax",
@@ -1710,7 +1710,7 @@ var outletdaten:[String:AnyObject] = [:]
         ProfilFeld.setNeedsDisplay(ProfilFeld.frame)
         //[Profilfeld setNeedsDisplay:YES];
         
-        print("Mausgraphaktion end KoordinatenTabelle: \(KoordinatenTabelle) ")
+        //print("Mausgraphaktion end KoordinatenTabelle: \(KoordinatenTabelle) ")
 
         CNC_Table.reloadData()
         
@@ -1995,6 +1995,8 @@ var outletdaten:[String:AnyObject] = [:]
       KoordinatenTabelle.removeAll()
       CNC_Table.reloadData()
       CNC_Table.needsDisplay = true
+      
+      cncstatus = 0
       
       IndexFeld.stringValue = ""
       IndexStepper.integerValue = 0
@@ -2458,6 +2460,7 @@ var outletdaten:[String:AnyObject] = [:]
          return
       }
       //       usbstatus = 1
+      
       var delayok = 0
       if usbstatus > 0 || globalusbstatus > 0
       {
@@ -2578,7 +2581,7 @@ var outletdaten:[String:AnyObject] = [:]
       }
       SchnittdatenDic["art"] = 0
       SchnittdatenDic["delayok"] = delayok
-      
+      usbstatus |= (1<<schnittdatenstatus)
       if delayok > 0
       {
          startdelayLevel.maxValue = Double(startdelayFeld.integerValue)
@@ -2595,6 +2598,7 @@ var outletdaten:[String:AnyObject] = [:]
          
          startdelaytimer = Timer.scheduledTimer(timeInterval:1.0, target:self,selector:#selector(startdelayAktion), userInfo:["schnittdatendic":SchnittdatenDic],repeats:true)
          startdelayLevel.isEnabled = true
+         startdelayLevel.integerValue = startdelaycounter
       }
       else
       {
@@ -2877,7 +2881,7 @@ var outletdaten:[String:AnyObject] = [:]
                     break;
                     
                  case 0xBD:
-                    print("BD cncstatus: \(usbdata[22]) ")
+                    print("HW BD  cncstatus: \(usbdata[22]) ")
                     
                     if Int(usbdata[63]) == 1
                     {
@@ -3058,7 +3062,12 @@ var outletdaten:[String:AnyObject] = [:]
       
       //print("HW USBReadAktion note: \n\(note)\n")
       let abschnittfertig = note["abschnittfertig"]  as! Int
-      print("HW USBReadAktion note: \n\(note) abschnittfertig: \(abschnittfertig)\n")
+    //  print("HW USBReadAktion note: \n\(note) abschnittfertig: \(abschnittfertig)\n")
+      let tempstepperpos = note["stepperposition"]  as! Int
+      let tempinpos = note["inposition"]  as! Int
+      let tempoutpos = note["outposition"]  as! Int
+      
+      print("HW USBReadAktion stepperposition: \(tempstepperpos) inposition: \(tempinpos) outposition: \(tempoutpos)")
       //print("\n\t HW USBReadAktion abschnittfertig: \(int2hex(wert: UInt8(abschnittfertig)))")
       //printhex(wert: UInt8(abschnittfertig))
       let outposition = note["outposition"] as! Int
@@ -3119,7 +3128,7 @@ var outletdaten:[String:AnyObject] = [:]
          homeanschlagCount = wert as! Int
       }
       
-      if (outposition > PositionFeld.integerValue) && (abschnittfertig != 0xF2)
+      if (outposition > PositionFeld.integerValue) && (cncstatus & (1<<schnittdatenstatus)>0)
       {
          PositionFeld.integerValue = outposition
          ProfilFeld.stepperposition = outposition

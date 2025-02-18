@@ -4364,9 +4364,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
          //NSLog(@"whbhypo: %2.4f",whbhypo);
          
          float abbrandb[2]= {whb[0]*seitenkorrekturb/whbhypo*profilabbrandbmass/cosphi2b,whb[1]*seitenkorrekturb/whbhypo*profilabbrandbmass/cosphi2b};
-         //        NSLog(@"i %d orig ax %2.2f ay %2.2f bx %2.2f by %2.2f",i,ax,ay,bx,by);
-         //        NSLog(@"i %d abbranda[0] %2.4f abbranda[1] %2.4f ",i,abbranda[0], abbranda[1]);
-         if (isnan(abbrandb[0]) || isnan(abbrandb[1]))
+          if (isnan(abbrandb[0]) || isnan(abbrandb[1]))
          {
             NSLog(@"i %d abbranda[0] , abbranda[1] ist nan ",i);
          }
@@ -4410,7 +4408,6 @@ PortA=vs[n & 3]; warte10ms(); n++;
          [tempDic setObject:[NSNumber numberWithFloat:(prevay + lastabbrandA[1])] forKey:@"abray"];
          [tempDic setObject:[NSNumber numberWithFloat:(bx)] forKey:@"abrbx"];
          [tempDic setObject:[NSNumber numberWithFloat:(prevby + lastabbrandB[1])] forKey:@"abrby"];
-
          
       }
       else

@@ -4627,7 +4627,7 @@ var outletdaten:[String:AnyObject] = [:]
         
         RumpfelementDic["rumpfhoehea"] = hoeheA
         RumpfelementDic["rumpfhoeheb"] = hoeheB
-print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
+       //print("2 radiusAraw: \(radiusAraw) radiusBraw: \(radiusBraw)")
         RumpfelementDic["rumpfradiusa"] = radiusAraw
         RumpfelementDic["rumpfradiusb"] = radiusBraw
 

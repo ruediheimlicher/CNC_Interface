@@ -4124,14 +4124,6 @@ PortA=vs[n & 3]; warte10ms(); n++;
             float prevb[2]= {bx-prevbx,by-prevby};
             float nextb[2]= {nextbx-bx,nextby-by};
             
-            /*
-             float prevhypob=hypotf(prevb[0],prevb[1]);
-             float nexthypob=hypotf(nextb[0],nextb[1]);
-             
-             float prevnormb[2]= {prevb[0]/prevhypob,prevb[1]/prevhypob};
-             float nextnormb[2]= {nextb[0]/nexthypob,nextb[1]/nexthypob};
-             */
-            
             float prevhypob = 0;
             
             if ((prevb[0] != 0) || (prevb[1] != 0))
@@ -4145,6 +4137,10 @@ PortA=vs[n & 3]; warte10ms(); n++;
             {
                nexthypob = hypot(nextb[0],nextb[1]); // Laenge des naechsten Weges
             }
+            else
+            {
+               NSLog(@"%d  kein nexthypob",i);
+            }
             
             float prevnormb[2] = {0.0,0.0};
             
@@ -4153,7 +4149,10 @@ PortA=vs[n & 3]; warte10ms(); n++;
                prevnormb[0]= -(prevb[1])/prevhypob;
                prevnormb[1] = (prevb[0])/prevhypob; // vorheriger Normalenvektor
             }
-            
+            else
+            {
+               NSLog(@"%d  kein prevhypob",i);
+            }
             
             
             float nextnormb[2] = {0.0,0.0};
@@ -4379,13 +4378,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
             [tempDic setObject:[NSNumber numberWithFloat:ay+abbranda[1]] forKey:@"abray"];
             [tempDic setObject:[NSNumber numberWithFloat:bx+abbrandb[0]] forKey:@"abrbx"];
             [tempDic setObject:[NSNumber numberWithFloat:by+abbrandb[1]] forKey:@"abrby"];
-            /*
-             [tempDic setObject:[NSNumber numberWithFloat:ax-abbranda[0]] forKey:@"abrax"];
-             [tempDic setObject:[NSNumber numberWithFloat:ay-abbranda[1]] forKey:@"abray"];
-             [tempDic setObject:[NSNumber numberWithFloat:bx-abbrandb[0]] forKey:@"abrbx"];
-             [tempDic setObject:[NSNumber numberWithFloat:by-abbrandb[1]] forKey:@"abrby"];
-             */
-         }
+          }
          //       float hypa = hypotf(ax, ay);
          //       float hypb = hypotf(bx, by);
          //       float abrhypa = hypotf(ax+abbranda[0], ay+abbranda[1]);
@@ -4406,11 +4399,12 @@ PortA=vs[n & 3]; warte10ms(); n++;
          lastabbrandA[0] = abbranda[0];
          lastabbrandA[1] = abbranda[1];
          lastabbrandB[0] = abbrandb[0];
-         lastabbrandB[0] = abbrandb[1];
+         // korr 250218: lastabbrandB[1] war lastabbrandB[0]!!!
+         lastabbrandB[1] = abbrandb[1];
       } // i im Bereich
       else if (i==bis-1)
       {
-         printf("i ist  bis-1");
+         printf("i ist  bis - 1");
          
          [tempDic setObject:[NSNumber numberWithFloat:(ax )] forKey:@"abrax"];
          [tempDic setObject:[NSNumber numberWithFloat:(prevay + lastabbrandA[1])] forKey:@"abray"];
@@ -4422,9 +4416,14 @@ PortA=vs[n & 3]; warte10ms(); n++;
       else
       {
          [tempDic setObject:[NSNumber numberWithFloat:ax] forKey:@"abrax"];
-         [tempDic setObject:[NSNumber numberWithFloat:ay] forKey:@"abray"];
+         //[tempDic setObject:[NSNumber numberWithFloat:ay] forKey:@"abray"];
+        // 250218: Ganzes profil, letzter Punkt
+         [tempDic setObject:[NSNumber numberWithFloat:(prevay + lastabbrandA[1])] forKey:@"abray"];
+
          [tempDic setObject:[NSNumber numberWithFloat:bx] forKey:@"abrbx"];
-         [tempDic setObject:[NSNumber numberWithFloat:by] forKey:@"abrby"];
+         //[tempDic setObject:[NSNumber numberWithFloat:by] forKey:@"abrby"];
+         [tempDic setObject:[NSNumber numberWithFloat:(prevby + lastabbrandB[1])] forKey:@"abrby"];
+
       }
       
        printf("%d\t %2.2f \t %2.2f \t %2.2f \t %2.2f \n",i,ax,ay,[[tempDic objectForKey:@"abrax"]floatValue],[[tempDic objectForKey:@"abray"]floatValue]);
@@ -4434,8 +4433,8 @@ PortA=vs[n & 3]; warte10ms(); n++;
    } // for i
    
    //NSLog(@"addAbbrandVonKoordinaten end: %@",[AbbrandArray  description]);
-   NSLog(@"addAbbrandVonKoordinaten end: %@",[[AbbrandArray  objectAtIndex:0] description]);
-   NSLog(@"addAbbrandVonKoordinaten end: %@",[[AbbrandArray  lastObject] description]);
+   NSLog(@"addAbbrandVonKoordinaten end first: %@",[[AbbrandArray  objectAtIndex:0] description]);
+   NSLog(@"addAbbrandVonKoordinaten end last: %@",[[AbbrandArray  lastObject] description]);
 
    return AbbrandArray;
    

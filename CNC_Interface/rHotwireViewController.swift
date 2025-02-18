@@ -4304,7 +4304,8 @@ var outletdaten:[String:AnyObject] = [:]
     {
        print("reportIndexStepper IntVal: \(sender.integerValue)")
         IndexFeld.integerValue = sender.integerValue
-        
+       let datenzeile = KoordinatenTabelle[sender.integerValue]
+        print("IndexStepper zeile: \(datenzeile)")
         self.setDatenVonZeile(zeile: sender.integerValue)
         let StepperIndexSet = IndexSet(integer: sender.integerValue)
         
@@ -4317,7 +4318,8 @@ var outletdaten:[String:AnyObject] = [:]
 
     @IBAction  func reportWertStepper(_ sender: NSStepper) //
     {
-        print("reportWertStepper IntVal: \(sender.integerValue) wert: \(sender.doubleValue)")
+       let wertstring = String(format: "%.2f", sender.doubleValue)
+        print("reportWertStepper IntVal: \(sender.integerValue) wert: \(wertstring)")
         let steppertag = sender.tag
         let stepperwert = sender.doubleValue
         

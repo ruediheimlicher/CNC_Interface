@@ -62,7 +62,7 @@ class rProfilfeldView: NSView
  
     func setDatenArray(derDatenArray:NSArray) 
     {
-       Swift.print("setDatenArray \(derDatenArray)")
+       //Swift.print("setDatenArray \(derDatenArray)")
         DatenArray=derDatenArray 
        
        //setNeedsDisplay(YES)
@@ -368,6 +368,32 @@ class rProfilfeldView: NSView
    override func draw(_ dirtyRect: NSRect) 
    {
       //Swift.print("Profilfeld drawRect dirtyRect: \(dirtyRect) Datearray: \(DatenArray)")
+      //Swift.print("Profilfeld drawRect")
+      for i in 0..<DatenArray.count
+      {
+         
+         let tempdic = DatenArray[i] as! [String:Double]        
+         
+         
+       /*  
+       Swift.print("",i,
+                     tempdic["index"]!,
+                     tempdic["ax"]!,
+                     tempdic["ay"]!,
+                     tempdic["bx"]!,
+                     tempdic["by"]!,
+                     
+                     tempdic["abrax"]!,
+                     tempdic["abray"]!,
+                     tempdic["abrbx"]!,
+                     tempdic["abrby"]!
+          );
+         */
+      }
+      
+      
+      
+      
       let bgcolor:NSColor = NSColor.init(calibratedRed:1.0, green:1.0, blue: 1.0, alpha: 1.0)
       bgcolor.setFill()
       if scale == 0

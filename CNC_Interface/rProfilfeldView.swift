@@ -1106,10 +1106,11 @@ class rProfilfeldView: NSView
    
    func clearWeg()
    {
+      stepperposition = -1
       weg.removeAllPoints()
       kreuz.removeAllPoints()
       needsDisplay = true
-      //stepperposition = -1
+     
       
    }
    /*

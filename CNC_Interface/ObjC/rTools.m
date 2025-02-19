@@ -23,7 +23,7 @@
 }
 - (NSArray*)Tool_SchnittdatenVonDic:(NSDictionary*)derDatenDic
 {
-    NSLog(@"****  Tool_SchnittdatenVonDic start  derDatenDic: %@",derDatenDic);
+    //NSLog(@"****  Tool_SchnittdatenVonDic start  derDatenDic: %@",derDatenDic);
 
    /*
     Bereitet die Angaben im Steuerdatenarray für die Uebergabe an den USB vor.
@@ -103,7 +103,7 @@
    //NSLog(@"tempData int: %d tempDataL int: %d  tempDataH int: %d ",tempData,tempDataL,tempDataH);
    
    // Seite A
-   [tempArray addObject:[derDatenDic objectForKey:@"schritteaxl"]];
+    [tempArray addObject:[derDatenDic objectForKey:@"schritteaxl"]];
     [tempArray addObject:[derDatenDic objectForKey:@"schritteaxh"]];
     [tempArray addObject:[derDatenDic objectForKey:@"schritteayl"]];
     [tempArray addObject:[derDatenDic objectForKey:@"schritteayh"]];
@@ -145,6 +145,7 @@
    
    if ([derDatenDic objectForKey:@"pwm"])
    {
+      NSLog(@"tool pwm: %2.2f",[[derDatenDic objectForKey:@"pwm"]floatValue]);
       [tempArray addObject:[derDatenDic objectForKey:@"pwm"]];
    }
    else
@@ -276,7 +277,7 @@
 {
 // Aufbereitung der Werte für die Uebergabe an Teensy, als uint8_t-Werte
    uint16_t dicindex = [[derDatenDic objectForKey:@"index"]intValue];
-   NSLog(@"Tool_SteuerdatenVonDic start index: %d SteuerdatenVonDic: %@",dicindex, [derDatenDic description]);
+   //NSLog(@"Tool_SteuerdatenVonDic start index: %d SteuerdatenVonDic: %@",dicindex, [derDatenDic description]);
     int  anzSchritte;
    int  anzaxplus=0;
    int  anzaxminus=0;
@@ -649,6 +650,7 @@
    //NSLog(@"SteuerdatenVonDic index: %d indexl: %d indexh: %d", index, indexl, indexh);
    //NSLog(@"SteuerdatenVonDic ZeitA: %1.5f  ZeitB: %1.5f relSeite: %d code: %d",ZeitA,ZeitB,relevanteSeite,code);
     //NSLog(@"Tool_SteuerdatenVonDic end index: %d tempDatenDic: %@",index,[tempDatenDic description]);
+   NSLog(@"Tool_SteuerdatenVonDic end index: %d pwm: %d",index,[[derDatenDic objectForKey:@"pwm"]intValue]);
     return tempDatenDic;
 }
 

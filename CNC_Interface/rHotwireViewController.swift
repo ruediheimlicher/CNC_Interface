@@ -2448,6 +2448,7 @@ var outletdaten:[String:AnyObject] = [:]
       for element in SchnittdatenArray
       {
          //print("element ramp: \(element[35])")
+         //print("element pwm: \(element[20])")
       }
       
       if SpeedFeld.integerValue == 0
@@ -2664,7 +2665,7 @@ var outletdaten:[String:AnyObject] = [:]
         let lastDataArray = [UInt8](lastData)
         //print("HW newDataAktion notification: \n\(notification)\n lastData:\n \(lastData)")
         
-   //     print("newDataAktion start")
+        print("newDataAktion start")
   /*
         var ii = 0
    //    while ii < 10
@@ -2685,6 +2686,8 @@ var outletdaten:[String:AnyObject] = [:]
         
         
         //print("lastDataRead: \(lastDataRead)   ")
+        
+        print("lastDataRead pwm: \(lastDataRead[23])   ")
         var i = 0
         while i < 10
         {
@@ -3225,6 +3228,8 @@ var outletdaten:[String:AnyObject] = [:]
             {
                goStiftUp()
             }
+            ProfilFeld.clearWeg()
+            //ProfilFeld.needsDisplay = true
             //self.startdelayFeld.integerValue = startdelay
          }
          

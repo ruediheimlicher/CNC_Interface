@@ -627,7 +627,9 @@ class rViewController: NSViewController, NSWindowDelegate
               //print("writeCNCAbschnitt boardindex: \(boardindex)")
 
              //print("writeCNCAbschnitt write_byteArray count: \(teensy.write_byteArray.count)")
-             //print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray)")
+             let temppwm = teensy.write_byteArray[20]
+             //print("writeCNCAbschnitt write_byteArray: \(teensy.write_byteArray) pwm: \(temppwm)")
+             print("writeCNCAbschnitt pwm: \(temppwm)")
 
              if (globalusbstatus > 0)
              {
@@ -1205,7 +1207,7 @@ class rViewController: NSViewController, NSWindowDelegate
           
           i = i+1
        }
-       
+       print("VC lastDataRead pwm: \(lastDataRead[23])   ")
        if let d = info!["contdata"] // Data vorhanden
        {
  //         print("newDataAktion if let d ok")

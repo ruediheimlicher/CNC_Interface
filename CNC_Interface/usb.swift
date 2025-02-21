@@ -91,6 +91,7 @@ func getProductID(device: IOHIDDevice) -> Int? {
 // Callback: Called when a device is connected
 func deviceConnectedCallback(context: UnsafeMutableRawPointer?, result: IOReturn, sender: UnsafeMutableRawPointer?, device: IOHIDDevice)
 {
+   print("USB deviceConnectedCallback")
    if let vendorID = getVendorID(device: device),
        let productID = getProductID(device: device)
   

@@ -711,10 +711,10 @@
                                 </textFieldCell>
                             </textField>
                             <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="XSL-Tj-hAW">
-                                <rect key="frame" x="53" y="643" width="70" height="23"/>
+                                <rect key="frame" x="55" y="643" width="66" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <segmentedCell key="cell" borderStyle="border" alignment="left" tag="200" style="texturedSquare" trackingMode="selectOne" id="ZCh-wQ-o87">
-                                    <font key="font" metaFont="systemBold" size="12"/>
+                                <segmentedCell key="cell" borderStyle="border" alignment="left" tag="200" style="separated" trackingMode="selectOne" id="ZCh-wQ-o87">
+                                    <font key="font" metaFont="system"/>
                                     <segments>
                                         <segment label="48" width="30" selected="YES" tag="48"/>
                                         <segment label="200" width="29" tag="200"/>

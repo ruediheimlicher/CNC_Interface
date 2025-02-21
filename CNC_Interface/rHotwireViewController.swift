@@ -568,15 +568,15 @@ var outletdaten:[String:AnyObject] = [:]
    @objc func StiftMove(dx:Int , dy:Int )
    {
       print("StiftMove dx: \(dx) dy: \(dy)")
-     //let stiftframe = CNC_Stift.frame
+      //let stiftframe = CNC_Stift.frame
       print("StiftMove stiftframe x: \(CNC_Stift_frame.origin.x) dy: \(CNC_Stift_frame.origin.y)")
       
       StiftUp
-     
+      
       let neuepos = NSPoint(x: Int(CNC_Stift_frame.origin.x) + dx, y:  Int(CNC_Stift_frame.origin.y) + dy)
       NSAnimationContext.runAnimationGroup { _ in
-                  CNC_Stift.animator().setFrameOrigin(neuepos) // Smooth animation
-              }
+         CNC_Stift.animator().setFrameOrigin(neuepos) // Smooth animation
+      }
    }
    @objc func StiftUpFunktion()
    {
@@ -5088,12 +5088,12 @@ var outletdaten:[String:AnyObject] = [:]
    
    override func viewDidAppear()
    {
-      //rint ("Hotwire viewDidAppear new")
+      //print ("Hotwire viewDidAppear new")
       // AndereSeiteTaste.target = self
       // AndereSeiteTaste.action = #selector(AVR?.reportAndereSeiteAnfahren(_ :))
       micro = CNC_microPop.selectedItem?.tag ?? 1
       //print("HW micro: \(micro)");
-      CNC_microPop.selectItem(withTag: 2)
+      //CNC_microPop.selectItem(withTag: 2)
       
   //    startdelayLevel.integerValue = 0
   //    startdelayLevel.maxValue = 16
@@ -5257,6 +5257,8 @@ var outletdaten:[String:AnyObject] = [:]
   
       Auslauftiefe.integerValue = 13
       
+      //MARK: hotwireplist
+      print("HW read hotwireplist")
        hotwireplist =  readHotwire_PList()
       
        outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
@@ -5265,6 +5267,35 @@ var outletdaten:[String:AnyObject] = [:]
        var stepsindex = CNC_StepsSegControl.selectedSegment
        motorsteps = CNC_StepsSegControl.tag(forSegment:stepsindex)
        outletdaten["motorsteps"] = CNC_StepsSegControl.tag(forSegment:stepsindex)  as AnyObject
+      let nc = NotificationCenter.default
+      var userinformation = [String : Any]()
+
+      if let steps = hotwireplist["steps"]
+      {
+         CNC_StepsSegControl.selectSegment(withTag: steps as! Int) 
+         userinformation["steps"] = steps
+         
+      }
+      else
+      {
+         CNC_StepsSegControl.selectSegment(withTag: 200)
+         userinformation["steps"] = 200
+      }
+      
+      
+      if let micro = hotwireplist["micro"]
+      {
+         CNC_microPop.selectItem(withTag: micro as! Int)
+         userinformation["micro"] = micro
+      }
+      else
+      {
+         CNC_microPop.selectItem(withTag: 1)
+         userinformation["micro"] = 1
+      }
+      nc.post(name:Notification.Name(rawValue:"plist" ),
+               object: nil,
+               userInfo: userinformation)
 
       
       if let startdelay = hotwireplist["startdelay"]
@@ -5612,7 +5643,6 @@ var outletdaten:[String:AnyObject] = [:]
        NotificationDic["motorsteps"] = motorsteps
        
        
-       let nc = NotificationCenter.default
        nc.post(name:Notification.Name(rawValue:"micro"),
        object: nil,
        userInfo: NotificationDic)
@@ -6320,8 +6350,13 @@ var outletdaten:[String:AnyObject] = [:]
         hotwireplist["redpwm"] = red_pwmFeld.doubleValue as AnyObject
 
         hotwireplist["speed"] = SpeedFeld.integerValue as AnyObject
-        
- //       hotwireplist["steps"] = steps_Feld.integerValue as AnyObject
+        let seg = CNC_StepsSegControl.selectedSegment
+       hotwireplist["steps"] = CNC_StepsSegControl.tag(forSegment: seg) as AnyObject
+       
+       let men:NSMenuItem = CNC_microPop.selectedItem!
+       hotwireplist["micro"] = men.tag as AnyObject
+  
+       
        hotwireplist["mitabbrand"] = AbbrandCheckbox.state  as AnyObject
         hotwireplist["abbrand"] = AbbrandFeld.doubleValue as AnyObject
        

@@ -347,8 +347,8 @@ class rViewController: NSViewController, NSWindowDelegate
        let TEENSY2_PID = 0x0480
        
        */
-      var ringbufferarray = [UInt16]()
-      var ringbufferindex = 0
+      //var ringbufferarray = [UInt16]()
+      //var ringbufferindex = 0
       
       
       //USB_OK.backgroundColor = NSColor.greenColor()
@@ -391,6 +391,10 @@ class rViewController: NSViewController, NSWindowDelegate
       NotificationCenter.default.removeObserver(self, name: Notification.Name("micro"), object: nil)
       
       NotificationCenter.default.addObserver(self, selector: #selector(microAktion), name:NSNotification.Name(rawValue: "micro"), object: nil)
+      
+      NotificationCenter.default.addObserver(self, selector: #selector(plistAktion), name:NSNotification.Name(rawValue: "plist"), object: nil)
+
+      
       
       NotificationCenter.default.addObserver(self, selector: #selector(stoptimerAktion), name:NSNotification.Name(rawValue: "stoptimer"), object: nil)
       
@@ -534,10 +538,20 @@ class rViewController: NSViewController, NSWindowDelegate
       print("teensy.read_OK status ist: \(result)")
    }
 
+   @objc func plistAktion(_ notification:Notification)
+   {
+      print("VC plistAktion: \(notification)")
+      steps = notification.userInfo?["steps"] as! Int
+      print("plistAktion steps: \(steps)")
+      steps_Feld.integerValue = steps
+      micro = notification.userInfo?["micro"] as! Int
+      print("Aktion micro: \(micro)")
+      micro_Feld.integerValue = micro
+   }
     
     @objc func stepsAktion(_ notification:Notification)
         {
-           print("stepsAktion: \(notification)")
+           print("VC stepsAktion: \(notification)")
            steps = notification.userInfo?["motorsteps"] as! Int
            print("stepsAktion steps: \(steps)")
            steps_Feld.integerValue = steps
@@ -548,7 +562,7 @@ class rViewController: NSViewController, NSWindowDelegate
            //print("VC microAktion: \(notification)")
            micro = notification.userInfo?["micro"] as! Int
            //print("Aktion micro: \(micro)")
-           micro_Feld.integerValue = micro
+          // micro_Feld.integerValue = micro
         }
 
      
@@ -658,23 +672,7 @@ class rViewController: NSViewController, NSWindowDelegate
     }
     
    
- /*
-    @objc func stepsAktion(_ notification:Notification)
-     {
-        print("stepsAktion: \(notification)")
-        steps = notification.userInfo?["motorsteps"] as! Int
-        print("stepsAktion steps: \(steps)")
-        steps_Feld.integerValue = steps
-     }
 
-     @objc func microAktion(_ notification:Notification)
-     {
-        print("microAktion: \(notification)")
-        micro = notification.userInfo?["micro"] as! Int
-        print("Aktion micro: \(micro)")
-        micro_Feld.integerValue = micro
-     }
-*/
     @objc func stoptimerAktion(_ notification:Notification)
      {
         print("stoptimerAktion: \(notification)")
@@ -1463,7 +1461,7 @@ class rViewController: NSViewController, NSWindowDelegate
                       //DC_Aktion(pwm:0)
                       teensy.stop_timer()
                       let warnung = NSAlert.init()
-                      warnung.messageText = "VC Home erreicht"
+                      warnung.messageText = "VC Home erreicht 0xF1"
                       warnung.addButton(withTitle: "OK")
                       warnung.runModal()
 
@@ -1769,7 +1767,7 @@ class rViewController: NSViewController, NSWindowDelegate
                          //DC_Aktion(pwm:0)
                          teensy.stop_timer()
                          let warnung = NSAlert.init()
-                         warnung.messageText = "VC Home erreicht"
+                         warnung.messageText = "VC NewDatktion Home erreicht count = 4"
                          warnung.addButton(withTitle: "OK")
                          warnung.runModal()
                          HomeAnschlagSet.removeAll()

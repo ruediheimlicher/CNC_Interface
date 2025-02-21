@@ -650,7 +650,7 @@
    //NSLog(@"SteuerdatenVonDic index: %d indexl: %d indexh: %d", index, indexl, indexh);
    //NSLog(@"SteuerdatenVonDic ZeitA: %1.5f  ZeitB: %1.5f relSeite: %d code: %d",ZeitA,ZeitB,relevanteSeite,code);
     //NSLog(@"Tool_SteuerdatenVonDic end index: %d tempDatenDic: %@",index,[tempDatenDic description]);
-   NSLog(@"Tool_SteuerdatenVonDic end index: %d pwm: %d",index,[[derDatenDic objectForKey:@"pwm"]intValue]);
+   //NSLog(@"Tool_SteuerdatenVonDic end index: %d pwm: %d",index,[[derDatenDic objectForKey:@"pwm"]intValue]);
     return tempDatenDic;
 }
 

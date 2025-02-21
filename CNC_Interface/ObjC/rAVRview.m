@@ -9923,7 +9923,7 @@ return returnInt;
       
       if(mitEinstrich)
       {
-         float einstichtiefe = 3;
+         float einstichtiefe = 4;
          // Nasenpunkt fuer Einstich suchen
          maxxA = 0;
          maxxB = 0;
@@ -10314,8 +10314,8 @@ return returnInt;
           
      //    fprintf(stderr,"holm startx: \t%2.2f\t nasenx %2.2f holmabstandX: %2.2f holmindex:  %d\n",startX,nasenX,holmabstandX,holmindex);
           
-         float radiusA = 3.4;
-         float radiusB = 3.4;
+         float radiusA = 3.45;
+         float radiusB = 3.45;
          float Winkel = 360;
          int anzahlPunkte = 8;
          
@@ -14924,14 +14924,14 @@ return returnInt;
    {
       case MANDOWN:
       {
-         NSLog(@"ManFeldRichtung MANDOWN");
+         //NSLog(@"ManFeldRichtung MANDOWN");
          PositionA.y -=200;
          PositionB.y -=200;
          
       }break;
       case MANUP:
       {
-         NSLog(@"ManFeldRichtung MANUP 2");
+         //NSLog(@"ManFeldRichtung MANUP 2");
          PositionA.y  =200;
          PositionB.y  =200;
          
@@ -14941,7 +14941,7 @@ return returnInt;
       }break;
       case MANLEFT:
       {
-         NSLog(@"ManFeldRichtung MANLEFT 3");
+         //NSLog(@"ManFeldRichtung MANLEFT 3");
          PositionA.x -=200;
          PositionB.x -=200;
          
@@ -14949,7 +14949,7 @@ return returnInt;
       case MANRIGHT:
       {
          //printf("G/n");
-         NSLog(@"ManFeldRichtung MANRIGHT 1");
+         //NSLog(@"ManFeldRichtung MANRIGHT 1");
          PositionA.x =200;
          PositionB.x =200;
          

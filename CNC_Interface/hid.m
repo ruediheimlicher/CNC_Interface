@@ -565,7 +565,7 @@ int rawhid_open(int max, int vid, int pid, int usage_page, int usage)
 
 static void hid_close(hid_t *hid)
 {
-   printf("hid_close hid->ref: %d",hid->open);
+   //printf("hid_close hid->ref: %d",hid->open);
    if (hid->open > 0)
    {
       printf("hid_close return ");

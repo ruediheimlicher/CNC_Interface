@@ -91,7 +91,7 @@ func getProductID(device: IOHIDDevice) -> Int? {
 // Callback: Called when a device is connected
 func deviceConnectedCallback(context: UnsafeMutableRawPointer?, result: IOReturn, sender: UnsafeMutableRawPointer?, device: IOHIDDevice)
 {
-   print("USB deviceConnectedCallback")
+   //print("USB deviceConnectedCallback")
    if let vendorID = getVendorID(device: device),
        let productID = getProductID(device: device)
   
@@ -99,7 +99,7 @@ func deviceConnectedCallback(context: UnsafeMutableRawPointer?, result: IOReturn
       // print("Vendor ID: \(vendorID)")       
        if vendorID   == VID
       {
-          print("deviceConnectedCallback Vendor ID : \(vendorID) productID: \(productID)")
+          //print("deviceConnectedCallback Vendor ID : \(vendorID) productID: \(productID)")
           if let productName = IOHIDDeviceGetProperty(device, kIOHIDProductKey as CFString) as? String 
           {
              print("Product Name: \(productName)")
@@ -124,7 +124,7 @@ func deviceConnectedCallback(context: UnsafeMutableRawPointer?, result: IOReturn
 // Callback: Called when a device is disconnected
 func deviceDisconnectedCallback(context: UnsafeMutableRawPointer?, result: IOReturn, sender: UnsafeMutableRawPointer?, device: IOHIDDevice)
 {
-    print("deviceConnectedCallback Device disconnected: \(device)")
+    //print("deviceConnectedCallback Device disconnected: \(device)")
    if let vendorID = getVendorID(device: device)
    {
       if vendorID   == VID

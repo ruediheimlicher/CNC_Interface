@@ -976,19 +976,19 @@ class rViewController: NSViewController, NSWindowDelegate
     @objc func usbattachAktion(_ note:Notification) //von hid attach_callback
    {
       let info = note.userInfo
-      print("ViewController usbattachAktion info: \(info )")
+      //print("ViewController usbattachAktion info: \(info )")
       let status = info?["attach"] as! Int
       
       var usbattachstatus = info?["usbattachstatus"] as! Int
       
-      print("ViewController usbattachAktion status: \(status) globalusbstatus: \(globalusbstatus) usbattachstatus: \(usbattachstatus)");
+      //print("ViewController usbattachAktion status: \(status) globalusbstatus: \(globalusbstatus) usbattachstatus: \(usbattachstatus)");
       
       if  (status == USBATTACHED)
       {
          //print("ViewController usbattachAktion USBATTACHED");
-         print("\nViewController usbattachAktion USBATTACHED  globalusbstatus: \(globalusbstatus)")
+         //print("\nViewController usbattachAktion USBATTACHED  globalusbstatus: \(globalusbstatus)")
          let anzahlusb = teensy.dev_present()
-         print("ViewController usbattachAktion anzahlusb: \(anzahlusb) usbattachstatus: \(usbattachstatus)")
+         //print("ViewController usbattachAktion anzahlusb: \(anzahlusb) usbattachstatus: \(usbattachstatus)")
          
          if ((anzahlusb == 1) && (usbattachstatus == 0))
          {

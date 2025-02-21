@@ -2345,7 +2345,7 @@ var outletdaten:[String:AnyObject] = [:]
       IndexStepper.integerValue = anzdaten
       
       CNC_Sendtaste.isEnabled = true
-//      DC_Taste.state = NSControl.StateValue.off
+      DC_Taste.state = NSControl.StateValue.off
 //      startdelayTimer(startdelay: Int(TimeInterval(startdelayFeld.integerValue))) 
       
 
@@ -3143,6 +3143,45 @@ var outletdaten:[String:AnyObject] = [:]
       
       switch abschnittfertig
       {
+         
+         // Anschlag home first
+      case 0xB5:
+         print("HW  newDataAktion +++++++++  Anschlag A home first")
+         HomeAnschlagSet.insert(0xB5)
+         print("HomeAnschlagSet count: \(HomeAnschlagSet.count)")
+         break
+      case 0xB6:
+         print("HW  newDataAktion +++++++++  Anschlag B home first")
+         HomeAnschlagSet.insert(0xB6)
+         print("HomeAnschlagSet count: \(HomeAnschlagSet.count)")
+         break
+      case 0xB7:
+         print("HW  newDataAktion +++++++++  Anschlag C home first")
+         HomeAnschlagSet.insert(0xB7)
+         print("HomeAnschlagSet count: \(HomeAnschlagSet.count)")
+         break
+      case 0xB8:
+         print("HW  newDataAktion +++++++++ HW  Anschlag D home first")
+         HomeAnschlagSet.insert(0xB8)
+         print("HomeAnschlagSet count: \(HomeAnschlagSet.count)")
+         break
+         
+         // Anschlag Second
+      case 0xC5:
+         print("HW  newDataAktion Anschlag A home  second")
+         break
+      case 0xC6:
+         print("HW  newDataAktion Anschlag B home  second")
+         break
+      case 0xC7:
+         print("HW  newDataAktion Anschlag C home  second")
+         break
+      case 0xC8:
+         print("HW  newDataAktion Anschlag D home  second")
+         break
+
+         
+         
       case 0xA5:
          print("\n\t++++ ++++ ++++ HW USBReadAktion 0xA5 A0")
          AnschlagLinksIndikator.isTransparent = false
@@ -3166,6 +3205,8 @@ var outletdaten:[String:AnyObject] = [:]
          AnschlagUntenIndikator.isTransparent = false
          AnschlagUntenIndikator?.layer?.backgroundColor = NSColor.red.cgColor
          CNC_busySpinner.stopAnimation(nil)
+         
+         
          break
          
          
@@ -3215,6 +3256,7 @@ var outletdaten:[String:AnyObject] = [:]
          ProfilFeld.stepperposition = Stepperposition
          ProfilFeld.needsDisplay = true
          CNC_busySpinner.stopAnimation(nil)
+         DC_Taste.state = NSControl.StateValue.off
          
          if taskfertig > 0
          {
@@ -3229,8 +3271,8 @@ var outletdaten:[String:AnyObject] = [:]
                goStiftUp()
             }
             ProfilFeld.clearWeg()
-            //ProfilFeld.needsDisplay = true
-            //self.startdelayFeld.integerValue = startdelay
+            
+           
          }
          
          

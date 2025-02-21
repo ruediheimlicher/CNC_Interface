@@ -14862,7 +14862,7 @@ return returnInt;
    NSLog(@"AVR  reportHome HomeSchnittdatenArray: %@",[HomeSchnittdatenArray[0] description]);
    
    HomeSchnittdatenArray[i][24] = [NSNumber numberWithInt:homecode];
-   HomeSchnittdatenArray[i][26] = [NSNumber numberWithInt:micro]; // home
+   HomeSchnittdatenArray[i][26] = [NSNumber numberWithInt:micro]; // 
    [CNC setSpeed:10];
    NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
   

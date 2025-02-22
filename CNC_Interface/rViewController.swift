@@ -1255,6 +1255,7 @@ class rViewController: NSViewController, NSWindowDelegate
                 NotificationDic["mausistdown"] = mausistdown
                 
                 NotificationDic["home"] = Int(usbdata[13])
+                print("newDataAktion home [13]: \(usbdata[13])")
                 NotificationDic["cncstatus"] = Int(usbdata[22])
                 NotificationDic["anschlagstatus"] = Int(usbdata[19])
                 NotificationDic["abschnittfertig"] = Int(abschnittfertig)
@@ -1263,7 +1264,7 @@ class rViewController: NSViewController, NSWindowDelegate
                 NotificationDic["taste"] = Int(usbdata[58])
                 NotificationDic["pfeiltastenrichtung"] = Int(usbdata[29])
 
-                //print("newDataAktion cncstatus: \(usbdata[22])")
+                print("newDataAktion cncstatus [22]: \(usbdata[22])")
                 var AnschlagSet = IndexSet()
                 
                 //print("newDataAktion potwert A: \(Int(usbdata[59])) potwert B: \(Int(usbdata[60]))")

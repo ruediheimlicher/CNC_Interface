@@ -2825,6 +2825,7 @@ var outletdaten:[String:AnyObject] = [:]
                     AnschlagSet.insert(11) // schritteby hb
                     AnschlagSet.insert(14) // delayby lb
                     AnschlagSet.insert(15) // delayby lb
+                    
                     break;
                     
                     // Anschlag home first
@@ -3063,13 +3064,13 @@ var outletdaten:[String:AnyObject] = [:]
       
       let note = notification.userInfo as![String:Any]
       
-      //print("HW USBReadAktion note: \n\(note)\n")
+      print("HW USBReadAktion note: \n\(note)\n")
       let abschnittfertig = note["abschnittfertig"]  as! Int
     //  print("HW USBReadAktion note: \n\(note) abschnittfertig: \(abschnittfertig)\n")
       let tempstepperpos = note["stepperposition"]  as! Int
       let tempinpos = note["inposition"]  as! Int
       let tempoutpos = note["outposition"]  as! Int
-      
+      let usbhome = note["home"]  as! Int
       print("HW USBReadAktion code: \(abschnittfertig)\t\t stepperposition: \(tempstepperpos) inposition: \(tempinpos) outposition: \(tempoutpos)")
       //print("\n\t HW USBReadAktion abschnittfertig: \(int2hex(wert: UInt8(abschnittfertig)))")
       //printhex(wert: UInt8(abschnittfertig))
@@ -3129,7 +3130,9 @@ var outletdaten:[String:AnyObject] = [:]
       if let wert = note["homeanschlagset"]
       {
          homeanschlagCount = wert as! Int
+         print("USBReadAktion homeanschlagCount: \(homeanschlagCount)")
       }
+      
       
       if (outposition > PositionFeld.integerValue) && (cncstatus & (1<<schnittdatenstatus)>0)
       {
@@ -3187,6 +3190,7 @@ var outletdaten:[String:AnyObject] = [:]
          AnschlagLinksIndikator.isTransparent = false
          AnschlagLinksIndikator?.layer?.backgroundColor = NSColor.red.cgColor
          CNC_busySpinner.stopAnimation(nil)
+         
          break
       case 0xA6:
          print("\n\t++++ ++++ ++++HW USBReadAktion 0xA6 C0")
@@ -3201,10 +3205,11 @@ var outletdaten:[String:AnyObject] = [:]
          CNC_busySpinner.stopAnimation(nil)
          break
       case 0xA8:
-         print("\n\t++++ ++++ ++++HW USBReadAktion 0xA8 D0")
+         print("\n\t++++ ++++ ++++HW USBReadAktion 0xA8 D0 ")
          AnschlagUntenIndikator.isTransparent = false
          AnschlagUntenIndikator?.layer?.backgroundColor = NSColor.red.cgColor
          CNC_busySpinner.stopAnimation(nil)
+         
          
          
          break
@@ -3302,6 +3307,27 @@ var outletdaten:[String:AnyObject] = [:]
          break
          
       } // switch abschnittfertig
+      
+      if usbhome == 1
+      {
+         print("VC home erreicht")
+         AVR?.setBusy(0)
+         AVR?.dc_(on: 0);
+         //DC_Aktion(pwm:0)
+         teensy.stop_timer()
+         let warnung = NSAlert.init()
+         warnung.messageText = "VC Home erreicht A8"
+         warnung.addButton(withTitle: "OK")
+         warnung.runModal()
+
+         
+      }
+      else
+         
+      {
+         print("VC kein home")
+      }
+      
       
       //print("HW USBReadAktion HomeAnschlagSet: \(HomeAnschlagSet)")
       
@@ -4972,7 +4998,7 @@ var outletdaten:[String:AnyObject] = [:]
     }
     
    
-   // MARK: *** report_Home
+   // MARK: *** *** *** report_HOME
 
     @IBAction func report_Home(_ sender: NSButton)
     {
@@ -4981,6 +5007,18 @@ var outletdaten:[String:AnyObject] = [:]
        if (boardindex == 1) // Teensy3, Draw
        {
           goStiftUp()
+          
+          outletdaten["speed"] = 14 as AnyObject  // SpeedFeld.integerValue as AnyObject
+          outletdaten["micro"] = 2 as AnyObject
+          outletdaten["home"] = 1 as AnyObject
+
+          
+       }
+       else // teensy2
+       {
+          outletdaten["speed"] = SpeedFeld.integerValue as AnyObject
+          outletdaten["micro"] = 1 as AnyObject
+
        }
        CNC_Halttaste.state = NSControl.StateValue.on
        CNC_Halttaste.isEnabled = true
@@ -4989,8 +5027,6 @@ var outletdaten:[String:AnyObject] = [:]
        cnc_seite2check = CNC_Seite2Check.state.rawValue as Int
        outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
        outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
-       outletdaten["speed"] = SpeedFeld.integerValue as AnyObject
-       outletdaten["micro"] = 1 as AnyObject
        
        outletdaten["home"] = 1 as AnyObject
        

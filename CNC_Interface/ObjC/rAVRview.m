@@ -10194,7 +10194,7 @@ return returnInt;
          // MARK: NASENEINSTICH
          
          //Naseneinstich einsetzen
-         int naseneinstichtiefe = 5;
+         float naseneinstichtiefe = 4.5;
          // Winkelhalbierende berechnen
          float diffvor[2] = {prevax-ax, prevay - ay};   // dx,dy
          float diffnach[2] = {nextax-ax, nextay-ay};
@@ -10221,17 +10221,17 @@ return returnInt;
          NSLog(@"diffvektorvor: %2.2f diffvektornach: %2.2f einheitsvektor: %2.6f einstichfaktor: %2.6f",diffvektorvor,diffvektornach,einheitsvektor,einstichfaktor);
          
          [einstichDicStart setObject:[NSNumber numberWithFloat:(ax + winkelhalbierende[0])] forKey:@"ax"];
-         [einstichDicStart setObject:[NSNumber numberWithFloat:(ay + winkelhalbierende[1])] forKey:@"ay"];
+         [einstichDicStart setObject:[NSNumber numberWithFloat:(ay + winkelhalbierende[1])+0.8] forKey:@"ay"];
          
          [einstichDicStart setObject:[NSNumber numberWithFloat:(ax + winkelhalbierende[0])] forKey:@"abrax"];
-         [einstichDicStart setObject:[NSNumber numberWithFloat:(ay + winkelhalbierende[1])] forKey:@"abray"];
+         [einstichDicStart setObject:[NSNumber numberWithFloat:(ay + winkelhalbierende[1])+0.8] forKey:@"abray"];
          
          
          [einstichDicStart setObject:[NSNumber numberWithFloat:(bx + winkelhalbierende[0])] forKey:@"bx"];
-         [einstichDicStart setObject:[NSNumber numberWithFloat:(by + winkelhalbierende[1])] forKey:@"by"];
+         [einstichDicStart setObject:[NSNumber numberWithFloat:(by + winkelhalbierende[1])+0.8] forKey:@"by"];
          
          [einstichDicStart setObject:[NSNumber numberWithFloat:(bx + winkelhalbierende[0])] forKey:@"abrbx"];
-         [einstichDicStart setObject:[NSNumber numberWithFloat:(by + winkelhalbierende[1])] forKey:@"abrby"];
+         [einstichDicStart setObject:[NSNumber numberWithFloat:(by + winkelhalbierende[1])+0.8] forKey:@"abrby"];
          
          [LibKoordinatenTabelle insertObject:einstichDicStart atIndex:nasenindexA];
          
@@ -14761,7 +14761,7 @@ return returnInt;
 {
    // von ManFeldRichtung left
    NSDictionary* outletdaten = [rHotwireViewController cncoutletdaten];
-   //NSLog(@"home_Horizontal outletdaten: %@",outletdaten);
+   NSLog(@"home_Horizontal outletdaten: %@",outletdaten);
    int zoomfaktor=1.0;
    int code=0;
    int i=0;

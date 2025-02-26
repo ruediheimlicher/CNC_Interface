@@ -1228,9 +1228,9 @@
                                                                 </textFieldCell>
                                                             </textField>
                                                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8ou-jl-SUg">
-                                                                <rect key="frame" x="29" y="8" width="129" height="34"/>
+                                                                <rect key="frame" x="32" y="12" width="123" height="27"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES"/>
-                                                                <buttonCell key="cell" type="bevel" title="Profil O" bezelStyle="regularSquare" image="Taste_green breit" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="axesIndependently" inset="2" id="OyB-kh-VYk">
+                                                                <buttonCell key="cell" type="bevel" title="Profil O" bezelStyle="regularSquare" image="Taste_green breit" imagePosition="overlaps" alignment="center" state="on" imageScaling="axesIndependently" inset="2" id="OyB-kh-VYk">
                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                     <font key="font" metaFont="cellTitle"/>
                                                                 </buttonCell>
@@ -1239,9 +1239,9 @@
                                                                 </connections>
                                                             </button>
                                                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0JL-ny-yHY">
-                                                                <rect key="frame" x="225" y="7" width="143" height="34"/>
+                                                                <rect key="frame" x="228" y="11" width="137" height="27"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <buttonCell key="cell" type="bevel" title="Profil U" bezelStyle="regularSquare" image="Taste_green breit" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="axesIndependently" inset="2" id="Sr8-bP-OQw">
+                                                                <buttonCell key="cell" type="bevel" title="Profil U" bezelStyle="regularSquare" image="Taste_green breit" imagePosition="overlaps" alignment="center" state="on" imageScaling="axesIndependently" inset="2" id="Sr8-bP-OQw">
                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                     <font key="font" metaFont="cellTitle"/>
                                                                 </buttonCell>
@@ -1893,17 +1893,17 @@
                                 </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n43-Kv-SFf">
-                                <rect key="frame" x="213" y="403" width="46" height="45"/>
+                                <rect key="frame" x="222" y="406" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="bevel" title="Start" alternateTitle="Klick" bezelStyle="regularSquare" image="Taste_green" imagePosition="overlaps" alignment="center" alternateImage="home" borderStyle="border" imageScaling="axesIndependently" inset="2" id="xhV-1j-nsi">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
-                                    <font key="font" metaFont="system" size="16"/>
+                                <buttonCell key="cell" type="bevel" title="Start" alternateTitle="Klick" bezelStyle="regularSquare" image="Taste_green" imagePosition="overlaps" alignment="center" alternateImage="home" imageScaling="axesIndependently" inset="2" id="xhV-1j-nsi">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Uuk-HH-4dU">
-                                <rect key="frame" x="261" y="401" width="50" height="47"/>
+                                <rect key="frame" x="270" y="406" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="bevel" title="Stop" alternateTitle="Stopp" bezelStyle="regularSquare" image="Taste_red" imagePosition="overlaps" alignment="center" enabled="NO" borderStyle="border" imageScaling="axesIndependently" inset="2" id="rlb-aa-0uh">
+                                <buttonCell key="cell" type="bevel" title="Stop" alternateTitle="Stopp" bezelStyle="regularSquare" image="Taste_red" imagePosition="overlaps" alignment="center" enabled="NO" imageScaling="axesIndependently" inset="2" id="rlb-aa-0uh">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system" size="16"/>
                                 </buttonCell>
@@ -1912,9 +1912,9 @@
                                 </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UWG-pU-oa5">
-                                <rect key="frame" x="480" y="401" width="46" height="47"/>
+                                <rect key="frame" x="483" y="406" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="bevel" title="Neu" alternateTitle="Stop" bezelStyle="regularSquare" image="Taste_blue" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="axesIndependently" inset="2" id="w5n-Lh-VHs">
+                                <buttonCell key="cell" type="bevel" title="Neu" alternateTitle="Stop" bezelStyle="regularSquare" image="Taste_blue" imagePosition="overlaps" alignment="center" imageScaling="axesIndependently" inset="2" id="w5n-Lh-VHs">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
@@ -1971,9 +1971,9 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </progressIndicator>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g4I-Uw-NSh">
-                                <rect key="frame" x="313" y="401" width="167" height="47"/>
+                                <rect key="frame" x="316" y="406" width="160" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="bevel" title="Schnittdaten senden" alternateTitle="Stop" bezelStyle="regularSquare" image="Taste_green breit" imagePosition="overlaps" alignment="center" enabled="NO" borderStyle="border" imageScaling="axesIndependently" inset="2" id="1t1-hV-euq">
+                                <buttonCell key="cell" type="bevel" title="Schnittdaten senden" alternateTitle="Stop" bezelStyle="regularSquare" image="Taste_green breit" imagePosition="overlaps" alignment="center" enabled="NO" imageScaling="axesIndependently" inset="2" id="1t1-hV-euq">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system" size="16"/>
                                 </buttonCell>
@@ -2587,20 +2587,6 @@
                                     </subviews>
                                 </view>
                             </box>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kmm-eU-K0J">
-                                <rect key="frame" x="525" y="401" width="69" height="47"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="Taste_green breit" imagePosition="overlaps" alignment="center" lineBreakMode="charWrapping" state="on" borderStyle="border" imageScaling="axesIndependently" inset="2" id="0RV-fi-52L">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <string key="title">neues 
-Element</string>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <color key="contentTintColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
-                                <connections>
-                                    <action selector="reportNeueFigur:" target="3j8-Mp-cP5" id="5Hf-zl-ASE"/>
-                                </connections>
-                            </button>
                             <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Wx-FY-cgc">
                                 <rect key="frame" x="1002" y="400" width="31" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -2757,12 +2743,15 @@ Element</string>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="dreieck_right" id="ErD-Hi-GFT"/>
                             </imageView>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cQO-hQ-Uky">
-                                <rect key="frame" x="596" y="400" width="76" height="77"/>
+                                <rect key="frame" x="599" y="404" width="70" height="64"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="bevel" alternateTitle="Stop" bezelStyle="regularSquare" image="Halt" imagePosition="overlaps" alignment="center" alternateImage="Halt_alt" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="y7K-gY-oDa">
+                                <buttonCell key="cell" type="bevel" alternateTitle="Stop" bezelStyle="regularSquare" image="Halt" imagePosition="overlaps" alignment="center" alternateImage="Halt_alt" imageScaling="proportionallyDown" inset="2" id="y7K-gY-oDa">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="report_HALT:" target="3j8-Mp-cP5" id="gdt-sd-R5v"/>
+                                </connections>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lAD-dZ-emb">
                                 <rect key="frame" x="195" y="613" width="111" height="32"/>
@@ -2874,6 +2863,20 @@ Element</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <levelIndicatorCell key="cell" controlSize="mini" enabled="NO" alignment="left" maxValue="16" numberOfMajorTickMarks="12" id="Zhq-V7-zqC"/>
                             </levelIndicator>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kmm-eU-K0J">
+                                <rect key="frame" x="531" y="406" width="63" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="Taste_green breit" imagePosition="overlaps" alignment="center" lineBreakMode="charWrapping" state="on" imageScaling="axesIndependently" inset="2" id="0RV-fi-52L">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <string key="title">neues 
+Element</string>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <color key="contentTintColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
+                                <connections>
+                                    <action selector="reportNeueFigur:" target="3j8-Mp-cP5" id="5Hf-zl-ASE"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <connections>

@@ -170,7 +170,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 - (NSDictionary*)floatProfilDatenAnPfad:(NSString*)profilpfad
 {
    NSMutableArray* ProfilArray=[NSMutableArray new];
-   NSLog(@"ProfilDatenAnPfad: URL: %@",profilpfad);
+   //NSLog(@"ProfilDatenAnPfad: URL: %@",profilpfad);
    NSError* err=0;
    NSString* ProfilString=[NSString stringWithContentsOfURL:[NSURL fileURLWithPath:profilpfad] encoding:NSUTF8StringEncoding error:&err]; // String des Speicherpfads
    //NSLog(@"Utils openProfil ProfilString: \n%@ err: %@",ProfilString, [err description]);
@@ -331,7 +331,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 - (NSDictionary*)ProfilDatenAnPfad:(NSString*)profilpfad
 {
 	NSMutableArray* ProfilArray=[[NSMutableArray alloc]initWithCapacity:0];
-   NSLog(@"ProfilDatenAnPfad: URL: %@",profilpfad);
+   //NSLog(@"ProfilDatenAnPfad: URL: %@",profilpfad);
 	NSError* err=0;
 	NSString* ProfilString=[NSString stringWithContentsOfURL:[NSURL fileURLWithPath:profilpfad] encoding:NSUTF8StringEncoding error:&err]; // String des Speicherpfads
 	//NSLog(@"Utils openProfil ProfilString: \n%@ err: %@",ProfilString, [err description]);
@@ -543,7 +543,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    
    //NSLog(@"count: %d Nasenindex: %d",[ProfilArray count],Nasenindex);
    
-   NSLog(@"OberseiteArray");
+   //NSLog(@"OberseiteArray");
    NSArray* OberseiteArray=[NSArray arrayWithArray:[ProfilArray subarrayWithRange:NSMakeRange(0, Nasenindex+1)]];
    //NSLog(@"OberseiteArray count: %d",OberseiteArray.count);
    for (int i=0;i<OberseiteArray.count;i++)
@@ -561,7 +561,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
     }
     
     
-   NSLog(@"UnterseiteArray");
+   //NSLog(@"UnterseiteArray");
    NSArray* UnterseiteArray=[NSArray arrayWithArray:[ProfilArray subarrayWithRange:NSMakeRange(Nasenindex, [ProfilArray count]-Nasenindex)]];
    NSMutableArray * revUnterseiteArray = [NSMutableArray new];
    //int i=0;
@@ -573,7 +573,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
        */
       [revUnterseiteArray addObject:[UnterseiteArray objectAtIndex:[UnterseiteArray count] - i - 1]];
    }
-   NSLog(@"revUnterseiteArray");
+   //NSLog(@"revUnterseiteArray");
    
    //NSLog(@"Spline Unterseite");
    
@@ -1329,7 +1329,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 
 - (NSArray*)abstandcheckenVonarrayA:(NSArray*) profilarrayA arrayB:(NSArray*) profilarrayB teil: (int)teil abstand:(float) minimaldistanz
 {
-   NSLog(@"abstandcheckenVon start");
+   //NSLog(@"abstandcheckenVon start");
    NSMutableArray* rawarray = [NSMutableArray new];
    
     //startwerte setzen
@@ -1354,7 +1354,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
     //NSLog(@"index: %d  distanz OK  distA: %2.2f distB: %2.2f",index,cncindex,distA,distB);
     [rawarray addObject:tempZeilenDic];
 
-    NSLog(@"Werte des ersten Datensatzes: prevax: %2.2f prevay: %2.2f teil: %d",prevax,prevay, teil);
+    //NSLog(@"Werte des ersten Datensatzes: prevax: %2.2f prevay: %2.2f teil: %d",prevax,prevay, teil);
 
    
    float nowax = 0;
@@ -1509,7 +1509,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
       }
       else
       {
-         NSLog(@"Datensatz distanz zu kurz index: %d distA: %2.2f distB: %2.2f",index,distA,distB);
+         //NSLog(@"Datensatz distanz zu kurz index: %d distA: %2.2f distB: %2.2f",index,distA,distB);
          [[rawarray objectAtIndex:index]setObject:[NSNumber numberWithInt:0] forKey:@"datensatzok"] ;
          [[rawarray objectAtIndex:index]setObject:[NSNumber numberWithFloat:distA] forKey:@"dista"] ;
          // next datensatz ueberspringen

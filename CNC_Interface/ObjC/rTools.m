@@ -145,7 +145,7 @@
    
    if ([derDatenDic objectForKey:@"pwm"])
    {
-      NSLog(@"tool pwm: %2.2f",[[derDatenDic objectForKey:@"pwm"]floatValue]);
+      //NSLog(@"tool pwm: %2.2f",[[derDatenDic objectForKey:@"pwm"]floatValue]);
       [tempArray addObject:[derDatenDic objectForKey:@"pwm"]];
    }
    else

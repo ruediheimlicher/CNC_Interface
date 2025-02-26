@@ -2424,7 +2424,7 @@
          //NSLog(@"reportProfilPop Profil1Dic: %@",[ProfilDic description]);
          //NSLog(@"SplinekoeffizientenVonArray profilarray: %@",[[ProfilDic objectForKey:@"profilarray"] description]);
          
-         NSLog(@"doProfil1PopTaskMitProfil ProfilName1: %@",Profil1Name);
+         //NSLog(@"doProfil1PopTaskMitProfil ProfilName1: %@",Profil1Name);
          
          if ([Profil1Dic objectForKey:@"oberseitearray"]) 
          {
@@ -2666,7 +2666,7 @@
          //NSLog(@"reportProfilPop Profil1Dic: %@",[ProfilDic description]);
          //NSLog(@"SplinekoeffizientenVonArray profilarray: %@",[[ProfilDic objectForKey:@"profilarray"] description]);
          
-         NSLog(@"doProfil1PopTaskMitProfil ProfilName1: %@",Profil1Name);
+         //NSLog(@"doProfil1PopTaskMitProfil ProfilName1: %@",Profil1Name);
          
          if ([Profil1Dic objectForKey:@"oberseitearray"]) 
          {
@@ -2946,7 +2946,7 @@
          //NSLog(@"reportProfilPop Profil1Dic: %@",[ProfilDic description]);
          //NSLog(@"SplinekoeffizientenVonArray profilarray: %@",[[ProfilDic objectForKey:@"profilarray"] description]);
          
-         NSLog(@"doProfil1PopTaskMitProfil ProfilName1: %@",Profil1Name);
+         //NSLog(@"doProfil1PopTaskMitProfil ProfilName1: %@",Profil1Name);
          
          if ([Profil1Dic objectForKey:@"oberseitearray"])
          {
@@ -3848,11 +3848,11 @@
       int index=[sender indexOfSelectedItem]; // Item 0 ist Titel
       [Profile2 setEnabled:YES];
  //     [Profile2 selectItemAtIndex:index];    // Profil 2 ist wahrscheinlich gleich
-      NSLog(@"reportProfilPop Profil aus Pop: %@",[Profile1 itemTitleAtIndex:index]);
+      //NSLog(@"reportProfilPop Profil aus Pop: %@",[Profile1 itemTitleAtIndex:index]);
       Profil1Name=[Profile1 itemTitleAtIndex:index];
       NSString* Profilname = [Profil1Name stringByAppendingPathExtension:@"txt"];
       NSString* Profilpfad = [ProfilLibPfad stringByAppendingPathComponent:Profilname];
-      NSLog(@"reportProfilPop Profilpfad: %@",Profilpfad);
+     // NSLog(@"reportProfilPop Profilpfad: %@",Profilpfad);
       NSFileManager *Filemanager = [NSFileManager defaultManager];
       NSDictionary* ProfilDic = [NSDictionary new];
       int ProfilOK= [Filemanager fileExistsAtPath:Profilpfad];
@@ -3869,14 +3869,14 @@
          {
             Profil1Name = [ProfilDic objectForKey:@"profilname"];
          }
-         NSLog(@"ProfilName1: %@",Profil1Name);
+         //NSLog(@"ProfilName1: %@",Profil1Name);
          
          if ([ProfilDic objectForKey:@"profilarray"])
          {
             [Profil1Array removeAllObjects];
             [Profil1Array addObjectsFromArray:[ProfilDic objectForKey:@"profilarray"]];
             
-            [self printProfil:Profil1Array ];
+            //[self printProfil:Profil1Array ];
             
             if ([Profil1Array count])
             {
@@ -3935,11 +3935,11 @@
    if ([sender indexOfSelectedItem])
    {
       int index=[sender indexOfSelectedItem]; // Item 0 ist Titel
-      NSLog(@"reportProfil2Pop Profil aus Pop: %@",[Profile2 itemTitleAtIndex:index]);
+      //NSLog(@"reportProfil2Pop Profil aus Pop: %@",[Profile2 itemTitleAtIndex:index]);
       Profil2Name=[Profile2 itemTitleAtIndex:index];
       NSString* Profilname = [Profil2Name stringByAppendingPathExtension:@"txt"];
       NSString* Profilpfad = [ProfilLibPfad stringByAppendingPathComponent:Profilname];
-      NSLog(@"reportProfilPop Profilpfad: %@",Profilpfad);
+      //NSLog(@"reportProfilPop Profilpfad: %@",Profilpfad);
       NSFileManager *Filemanager = [NSFileManager defaultManager];
       NSDictionary* ProfilDic = [NSDictionary new];
       int ProfilOK= [Filemanager fileExistsAtPath:Profilpfad];
@@ -3954,15 +3954,15 @@
          {
             Profil2Name = [ProfilDic objectForKey:@"profilname"];
          }
-         NSLog(@"ProfilName2: %@",Profil2Name);
+         //NSLog(@"ProfilName2: %@",Profil2Name);
          
-         NSLog(@"Profil2Name: %@",Profil2Name);
+         //NSLog(@"Profil2Name: %@",Profil2Name);
          if ([ProfilDic objectForKey:@"profilarray"])
          {
             [Profil2Array removeAllObjects];
             [Profil2Array addObjectsFromArray:[ProfilDic objectForKey:@"profilarray"]];
             
-            [self printProfil:Profil2Array];
+            //[self printProfil:Profil2Array];
              
             if ([Profil2Array count])
             {
@@ -4055,10 +4055,10 @@
       }
       
    }
-   fprintf(stderr,"Profil1OberseiteArray\n");
-   [self printProfil:Profil1OberseiteArray];
-   fprintf(stderr,"Profil2OberseiteArray\n");
-   [self printProfil:Profil2OberseiteArray];
+   //fprintf(stderr,"Profil1OberseiteArray\n");
+   //[self printProfil:Profil1OberseiteArray];
+   //fprintf(stderr,"Profil2OberseiteArray\n");
+   //[self printProfil:Profil2OberseiteArray];
   
    
    if ([Profil1Array count])

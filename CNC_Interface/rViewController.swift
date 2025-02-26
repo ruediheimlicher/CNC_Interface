@@ -401,7 +401,8 @@ class rViewController: NSViewController, NSWindowDelegate
       NotificationCenter.default.addObserver(self, selector: #selector(haltAktion), name:NSNotification.Name(rawValue: "halt"), object: nil)
       
       NotificationCenter.default.addObserver(self, selector: #selector(DCAktion), name:NSNotification.Name(rawValue: "dc_pwm"), object: nil)
-      
+ 
+ 
       
       // end CNCViewC
       
@@ -648,7 +649,7 @@ class rViewController: NSViewController, NSWindowDelegate
              if (globalusbstatus > 0)
              {
                 let senderfolg = teensy.send_USB()
-                //print("VC writeCNCAbschnitt senderfolg: \(senderfolg)")
+                print("VC writeCNCAbschnitt senderfolg: \(senderfolg)")
              }
              // print("Stepperposition: \(Stepperposition) \n\(schnittdatenstring)");
              var ausschlussindex:[UInt8] = [0xE2]
@@ -701,7 +702,7 @@ class rViewController: NSViewController, NSWindowDelegate
         wertarray[20]=pwm as! UInt8; // pwm
         
         usb_schnittdatenarray.append(wertarray)
-         print("VC DC_Funktion writeCNCAbschnitt ")
+         print("VC DC_Aktion writeCNCAbschnitt ")
         
         writeCNCAbschnitt()
         teensy.clear_data()
@@ -861,12 +862,9 @@ class rViewController: NSViewController, NSWindowDelegate
         return
      }
         
-              
-  //   let usb_home =  info?["home"] as! UInt8
-     
-     if usb_home == 1
+      if usb_home == 1
      {
-        //print("viewcontroller usbschnittdatenAktion usb_home: \(usb_home)")
+        print("viewcontroller usbschnittdatenAktion usb_home: \(usb_home)")
         Stepperposition = 0
         
      }

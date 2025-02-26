@@ -946,7 +946,7 @@ var outletdaten:[String:AnyObject] = [:]
       setOutletdaten()
       
       let info = notification.userInfo
-      print("HW LibProfileingabeAktion: \(info)")
+      //print("HW LibProfileingabeAktion: \(info)")
       var infodic = notification.userInfo as? [String:Any]
        
       
@@ -967,7 +967,7 @@ var outletdaten:[String:AnyObject] = [:]
        */
       // chat
       
-      print("LibProfileingabeAktion KoordinatenTabelle Start: \(KoordinatenTabelle)")
+      //print("LibProfileingabeAktion KoordinatenTabelle Start: \(KoordinatenTabelle)")
       if KoordinatenTabelle.count == 1
       {
          let firstzeile = KoordinatenTabelle.first
@@ -994,8 +994,8 @@ var outletdaten:[String:AnyObject] = [:]
       
       infodic!["minimaldistanz"] = MinimaldistanzFeld.floatValue
       
-      print("HW LibProfilEingabeAktion holm: \(infodic!["holm"])")
-      print("HW LibProfilEingabeAktion einstich: \(infodic!["einstich"])")
+      //print("HW LibProfilEingabeAktion holm: \(infodic!["holm"])")
+      //print("HW LibProfilEingabeAktion einstich: \(infodic!["einstich"])")
       
       infodic!["wertax"] = 35
       infodic!["wertay"] = 25
@@ -1436,6 +1436,29 @@ var outletdaten:[String:AnyObject] = [:]
         teensy.clear_data()
 
      }
+
+   // MARK: *** *** *** report_HALT
+   @IBAction func report_HALT(_ sender: NSButton)
+   {
+      usb_schnittdatenarray.removeAll()
+      print("HW HALT_Funktion")
+      
+      if(pwm == 0)
+      {
+         DC_Taste.state = NSControl.StateValue.off
+      }
+      var wertarray = [UInt8](repeating: 0, count: Int(BufferSize()))
+      
+      wertarray[16] = 0xE0
+      wertarray[24] = 0xE0 
+      wertarray[20] = 0  // pwm
+      
+      usb_schnittdatenarray.append(wertarray)
+      Stepperposition = 0
+      writeCNCAbschnitt()
+      teensy.clear_data()
+
+   }
 
     
     @objc func MausGraphAktion(_ notification:Notification)
@@ -2255,7 +2278,7 @@ var outletdaten:[String:AnyObject] = [:]
          let ax = punktdaten["ax"] ?? 0
          let ay = punktdaten["ay"] ?? 0.0
          
-         print("index: \(index)\tax: \t\(ax)\tay: \t\(ay)")
+        // print("index: \(index)\tax: \t\(ax)\tay: \t\(ay)")
          if ((i > 0) && (i < Int(KoordinatenTabelle.count - 1)))
                
          {
@@ -3064,14 +3087,14 @@ var outletdaten:[String:AnyObject] = [:]
       
       let note = notification.userInfo as![String:Any]
       
-      print("HW USBReadAktion note: \n\(note)\n")
+      //print("HW USBReadAktion note: \n\(note)\n")
       let abschnittfertig = note["abschnittfertig"]  as! Int
     //  print("HW USBReadAktion note: \n\(note) abschnittfertig: \(abschnittfertig)\n")
       let tempstepperpos = note["stepperposition"]  as! Int
       let tempinpos = note["inposition"]  as! Int
       let tempoutpos = note["outposition"]  as! Int
-      let usbhome = note["home"]  as! Int
-      print("HW USBReadAktion code: \(abschnittfertig)\t\t stepperposition: \(tempstepperpos) inposition: \(tempinpos) outposition: \(tempoutpos)")
+      var usbhome = note["home"]  as! Int
+      //print("HW USBReadAktion code: \(abschnittfertig)\t\t stepperposition: \(tempstepperpos) inposition: \(tempinpos) outposition: \(tempoutpos)")
       //print("\n\t HW USBReadAktion abschnittfertig: \(int2hex(wert: UInt8(abschnittfertig)))")
       //printhex(wert: UInt8(abschnittfertig))
       let outposition = note["outposition"] as! Int
@@ -3090,6 +3113,7 @@ var outletdaten:[String:AnyObject] = [:]
          print("pfeilrichtung OK: \(rawpfeilrichtung)")
          pfeilrichtung = rawpfeilrichtung
       }
+      
       if let rawdeleteindikator = note["deleteindikator"] as? Int
       {
          print("deleteindikator OK: \(rawdeleteindikator)")
@@ -3279,8 +3303,10 @@ var outletdaten:[String:AnyObject] = [:]
             
            
          }
-         
-         
+      
+      case 0xF1:
+         usbhome = usbhome + 1
+         break
       case 0xF3:
          print("Stift stiftposition: \(stiftposition) ")
          if (boardindex == 1) // Teensy3, Draw
@@ -3308,15 +3334,16 @@ var outletdaten:[String:AnyObject] = [:]
          
       } // switch abschnittfertig
       
-      if usbhome == 1
+      if usbhome == 2
       {
-         print("VC home erreicht")
+         print("HW home erreicht A8")
+         
          AVR?.setBusy(0)
          AVR?.dc_(on: 0);
          //DC_Aktion(pwm:0)
          teensy.stop_timer()
          let warnung = NSAlert.init()
-         warnung.messageText = "VC Home erreicht A8"
+         warnung.messageText = "HW Home erreicht A8"
          warnung.addButton(withTitle: "OK")
          warnung.runModal()
 
@@ -4790,7 +4817,7 @@ var outletdaten:[String:AnyObject] = [:]
         
         print("reportRumpfteilTaste rumpfteilDic")
         let zeile = RumpfdatenArray[rumpfteilindex] as [String:Double]
-        print("index: \(rumpfteilindex) breitea: \(zeile["breitea"])")
+        //print("index: \(rumpfteilindex) breitea: \(zeile["breitea"])")
         let zeilenkeys = zeile.keys
         var i=0
         for k in zeilenkeys
@@ -4996,7 +5023,9 @@ var outletdaten:[String:AnyObject] = [:]
         ProfilFeld.needsDisplay = true
         
     }
-    
+   
+   
+     
    
    // MARK: *** *** *** report_HOME
 
@@ -5010,7 +5039,6 @@ var outletdaten:[String:AnyObject] = [:]
           
           outletdaten["speed"] = 14 as AnyObject  // SpeedFeld.integerValue as AnyObject
           outletdaten["micro"] = 2 as AnyObject
-          outletdaten["home"] = 1 as AnyObject
 
           
        }
@@ -5018,7 +5046,7 @@ var outletdaten:[String:AnyObject] = [:]
        {
           outletdaten["speed"] = SpeedFeld.integerValue as AnyObject
           outletdaten["micro"] = 1 as AnyObject
-
+          outletdaten["ramp"] = 0 as AnyObject
        }
        CNC_Halttaste.state = NSControl.StateValue.on
        CNC_Halttaste.isEnabled = true
@@ -5871,7 +5899,7 @@ var outletdaten:[String:AnyObject] = [:]
         if Profil1Pop.indexOfSelectedItem > 0
         {
             let profil1name = Profil1Pop.titleOfSelectedItem?.components(separatedBy: ".")[0]
-            print("profil1name: \(profil1name)")
+            //print("profil1name: \(profil1name)")
             datenDic["profil1"] = profil1name
         }
         else
@@ -5882,7 +5910,7 @@ var outletdaten:[String:AnyObject] = [:]
         if Profil2Pop.indexOfSelectedItem > 0
         {
             let profil2name = Profil2Pop.titleOfSelectedItem?.components(separatedBy: ".")[0]
-            print("profil2name: \(profil2name)")
+            //print("profil2name: \(profil2name)")
             datenDic["profil2"] = profil2name
         }
         else
@@ -5952,6 +5980,7 @@ var outletdaten:[String:AnyObject] = [:]
         }
         //
     }
+   
 
     @objc func DCAktion(datadic:[String:Int])
     {

@@ -2902,7 +2902,7 @@ return returnInt;
          nowabray=[[tempNowDic objectForKey:@"abray"]floatValue];
          nowabrbx=[[tempNowDic objectForKey:@"abrbx"]floatValue];
          nowabrby=[[tempNowDic objectForKey:@"abrby"]floatValue];
-         fprintf(stderr,"nowabr   %d\t%2.3f\t%2.3f\t%2.3f\t%2.3f\n",i,nowabrax,nowabray,nowabrbx,nowabrby);
+         //fprintf(stderr,"nowabr   %d\t%2.3f\t%2.3f\t%2.3f\t%2.3f\n",i,nowabrax,nowabray,nowabrbx,nowabrby);
          
          // Rechteck auf Ueberschlagung testen: determinante muss in allen Ecken gleiches VZ haben. Vektoren im Gegenuhrzeigersinn
          // Vektor 0: prev zu now
@@ -3109,7 +3109,7 @@ return returnInt;
       if (mitabbrand && [tempPrevDic objectForKey:@"abrax"]) //
       {
          // Seite A
-         NSLog(@"Seite A prev abbrand i: %d ",i);
+         //NSLog(@"Seite A prev abbrand i: %d ",i);
          //tempStartPunktA= NSMakePoint([[tempNowDic objectForKey:@"abrax"]floatValue]*zoomfaktor,[[tempNowDic objectForKey:@"abray"]floatValue]*zoomfaktor);
          //tempStartPunktA= NSMakePoint(prevabrax*zoomfaktor, prevabray*zoomfaktor);
          tempStartPunktA= NSMakePoint(prevabrax, prevabray);
@@ -3121,7 +3121,7 @@ return returnInt;
       else
       {
          // Seite A
-         NSLog(@"Seite A prev kein abbrand i: %d ",i);
+         //NSLog(@"Seite A prev kein abbrand i: %d ",i);
          tempStartPunktA= NSMakePoint(prevax, prevay);
          
          // Seite B
@@ -3131,7 +3131,7 @@ return returnInt;
       if (mitabbrand && [tempNowDic objectForKey:@"abrax"])
       {
          // Seite A
-         NSLog(@"Seite A now abbrand i: %d ",i);
+         //NSLog(@"Seite A now abbrand i: %d ",i);
          tempEndPunktA= NSMakePoint(nowabrax, nowabray);
          // Seite B
          tempEndPunktB= NSMakePoint(nowabrbx, nowabrby);
@@ -3295,7 +3295,7 @@ return returnInt;
       
       [tempcncdatenarray addObject:tempSteuerdatenDic];
       
-      NSLog(@"stopFunktion cncindex: %d tempSteuerdatenDic: %@",cncindex,tempSteuerdatenDic);
+      //NSLog(@"stopFunktion cncindex: %d tempSteuerdatenDic: %@",cncindex,tempSteuerdatenDic);
       
       
       
@@ -3306,7 +3306,7 @@ return returnInt;
       cncindex++;
    } // for i
    
-   NSLog(@"tempschnittdatenarray: %@",tempschnittdatenarray);
+   //NSLog(@"tempschnittdatenarray: %@",tempschnittdatenarray);
    
    //NSLog(@"wegaoben: %2.2f wegaunten: %2.2f wegboben: %2.2f wegbunten: %2.2f",wegaoben,wegaunten, wegboben, wegbunten);
    
@@ -3475,7 +3475,7 @@ return returnInt;
       lastby = by;
       
    }
-   fprintf(stderr,"rev\n");
+  // fprintf(stderr,"rev\n");
    
    for(int i=0;i<revKoordinatenTabelle.count;i++)
    {
@@ -3488,7 +3488,7 @@ return returnInt;
       //NSMutableDictionary* tempdic = [revKoordinatenTabelle objectAtIndex:i];
       //[tempdic setObject:[NSNumber numberWithInt:i] forKey:@"index"];
       //[[revKoordinatenTabelle objectAtIndex:i]setObject:[NSNumber numberWithInt:i]forKey:@"index“];
-      fprintf(stderr,"%d\t %.2f\t %.2f \t %.2f\t %.2f\t %.2f\n",i,ax,ay,abrax,abray,pwm);
+      //fprintf(stderr,"%d\t %.2f\t %.2f \t %.2f\t %.2f\t %.2f\n",i,ax,ay,abrax,abray,pwm);
    }
    
    [tempkoordinatentabelle setArray:revKoordinatenTabelle];//index, pwm, ax,bx,ay,by
@@ -4394,7 +4394,7 @@ return returnInt;
      
       
       
-      NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+      //NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
       index++;
       [ManArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",nil]];
       //NSLog(@"A");
@@ -8018,7 +8018,7 @@ return returnInt;
    /*
     for(int index = 0;index < KoordinatenTabelle.count;index++)
     {
-    NSLog(@"index: %d * %d %2.2f  %2.2f ",index,[[[KoordinatenTabelle objectAtIndex:index]objectForKey:@"index"]intValue],[[[KoordinatenTabelle objectAtIndex:index]objectForKey:@"ax"]floatValue],[[[KoordinatenTabelle objectAtIndex:index]objectForKey:@"ay"]floatValue]);
+    //NSLog(@"index: %d * %d %2.2f  %2.2f ",index,[[[KoordinatenTabelle objectAtIndex:index]objectForKey:@"index"]intValue],[[[KoordinatenTabelle objectAtIndex:index]objectForKey:@"ax"]floatValue],[[[KoordinatenTabelle objectAtIndex:index]objectForKey:@"ay"]floatValue]);
     //     NSMutableDictionary* tempdic = (NSMutableDictionary*)[KoordinatenTabelle objectAtIndex:index];
     //     [tempdic setObject:[NSNumber numberWithInt:index] forKey:@"index"];
     //     [KoordinatenTabelle replaceObjectAtIndex:index withObject:tempdic];
@@ -8315,7 +8315,7 @@ return returnInt;
          rahmenindex++;
          NSMutableDictionary* tempZeilenDicA = [NSMutableDictionary dictionaryWithDictionary:[HolmArrayA objectAtIndex:index]];
          //NSLog(@"A index: %d x: %1.3f",index,[[[HolmArrayA objectAtIndex:index]objectForKey:@"x"]floatValue]);
-         NSLog(@"index: %d tempZeilenDicA: %@",index, tempZeilenDicA);
+         //NSLog(@"index: %d tempZeilenDicA: %@",index, tempZeilenDicA);
          NSMutableDictionary* tempZeilenDicB = [NSMutableDictionary dictionaryWithDictionary:[HolmArrayB objectAtIndex:index]];
          //NSLog(@"B index: %d x: %1.3f",index,[[[HolmArrayB objectAtIndex:index]objectForKey:@"x"]floatValue]);
          NSLog(@"tempZeilenDicB: %@",tempZeilenDicB);
@@ -8889,9 +8889,9 @@ return returnInt;
 
 - (NSArray*)LibProfileingabeFunktion:(NSDictionary*)eingabeDic
 {
-   NSLog(@"LibProfileingabeAktion eingabeDic: %@",eingabeDic);
+   //NSLog(@"LibProfileingabeAktion eingabeDic: %@",eingabeDic);
    NSDictionary* outletdaten = [rHotwireViewController cncoutletdaten];
-   NSLog(@"LibProfileingabeFunktion outletdaten; %@",outletdaten);
+   //NSLog(@"LibProfileingabeFunktion outletdaten; %@",outletdaten);
    if([outletdaten objectForKey:@"pwm"])
    {
       full_pwm = [[outletdaten objectForKey:@"pwm"]intValue];
@@ -8908,7 +8908,7 @@ return returnInt;
       abbrand = 1;
       
    }
-   NSLog(@"LibProfileingabeAktion abbrand: %d",abbrand);
+   //NSLog(@"LibProfileingabeAktion abbrand: %d",abbrand);
    
    
    NSMutableArray* LibKoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
@@ -8959,7 +8959,7 @@ return returnInt;
     */
    
    
-   NSLog(@"LibProfileingabeFunktion start LibKoordinatenTabelle" );// %@",[eingabeDic objectForKey:@"koordinatentabelle"]);
+   //NSLog(@"LibProfileingabeFunktion start LibKoordinatenTabelle" );// %@",[eingabeDic objectForKey:@"koordinatentabelle"]);
    
    for (int i=0;i<LibKoordinatenTabelle.count;i++)
    {
@@ -8969,7 +8969,7 @@ return returnInt;
       float ay = [[tempPrevDic objectForKey:@"ay"]floatValue];
       float bx = [[tempPrevDic objectForKey:@"bx"]floatValue];
       float by = [[tempPrevDic objectForKey:@"by"]floatValue];
-      fprintf(stderr,"%d \t%2.2f \t%2.2f \t%2.2f \t%2.2f\n",i,ax,ay,bx,by);
+      //fprintf(stderr,"%d \t%2.2f \t%2.2f \t%2.2f \t%2.2f\n",i,ax,ay,bx,by);
    }
    
    LibKoordinatenTabelle = [NSMutableArray arrayWithArray:[eingabeDic objectForKey:@"koordinatentabelle"]];
@@ -9080,7 +9080,7 @@ return returnInt;
       float bx = [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
       float by = [[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
       
-      fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
+     // fprintf(stderr,"%d \t%2.4f \t  %2.4f \t  %2.4f \t %2.4f \n",i,ax,ay,bx,by);
    }
    
    NSMutableDictionary* ProfilDic;
@@ -9223,11 +9223,11 @@ return returnInt;
    {
       
       // Endleistenwinkel bestimmen
-      NSLog(@"Endleistenwinkel A:");
+      //NSLog(@"Endleistenwinkel A:");
       //      float winkelA = [CNC EndleistenwinkelvonProfil:[ProfilDic objectForKey:@"profil1array"]];
       
       float oberseitenwinkelA = [CNC EndleistenwinkelvonOberseite:Profil1OberseiteArray];
-      NSLog(@"oberseitenwinkelA: %2.4f Grad:  %2.2f",oberseitenwinkelA,oberseitenwinkelA*180/M_PI);
+      //NSLog(@"oberseitenwinkelA: %2.4f Grad:  %2.2f",oberseitenwinkelA,oberseitenwinkelA*180/M_PI);
       
       float unterseitenwinkelA = [CNC EndleistenwinkelvonUnterseite:Profil1UnterseiteArray];
       NSLog(@"unterseitenwinkelA: %2.4f Grad:  %2.2f",unterseitenwinkelA,unterseitenwinkelA*180/M_PI);
@@ -9444,9 +9444,9 @@ return returnInt;
     Profil1OberseiteArray=(NSMutableArray*)[CNC ProfilArrayVonPunkt:StartpunktA mitProfil:Profil1OberseiteArray mitProfiltiefe:ProfiltiefeA mitScale:[[ScalePop selectedItem]tag]];
     NSLog(@" Profil2UnterseiteArray start");
     Profil2UnterseiteArray=(NSMutableArray*)[CNC ProfilArrayVonPunkt:StartpunktB mitProfil:Profil2UnterseiteArray mitProfiltiefe:ProfiltiefeB mitScale:[[ScalePop selectedItem]tag]];
-    NSLog(@" Profil2OberseiteArray start");
+    //NSLog(@" Profil2OberseiteArray start");
     Profil2OberseiteArray=(NSMutableArray*)[CNC ProfilArrayVonPunkt:StartpunktB mitProfil:Profil2OberseiteArray mitProfiltiefe:ProfiltiefeB mitScale:[[ScalePop selectedItem]tag]];
-    NSLog(@" ProfilArray end");
+    //NSLog(@" ProfilArray end");
     */
    
    //int tag = [[ScalePop selectedItem]tag];
@@ -9496,7 +9496,7 @@ return returnInt;
    //if ([OberseiteCheckbox state])
    if (mitOberseite)
    {
-      NSLog(@"Oberseite einfuegen Profil1OberseiteArray count: %d Profil2OberseiteArray count: %d",Profil1OberseiteArray.count,Profil2OberseiteArray.count);
+     // NSLog(@"Oberseite einfuegen Profil1OberseiteArray count: %d Profil2OberseiteArray count: %d",Profil1OberseiteArray.count,Profil2OberseiteArray.count);
       
       int flipfaktor = 1;
       if (!(mitUnterseite))
@@ -9506,7 +9506,7 @@ return returnInt;
       // Startindex fixieren, wird fuer Abbrand gebraucht fuer 'von'
       //profilstartindex = [[[LibKoordinatenTabelle lastObject]objectForKey:@"index"]intValue];
       
-      NSLog(@"oberseite profilstartindex 1: %d",profilstartindex);
+      //NSLog(@"oberseite profilstartindex 1: %d",profilstartindex);
       profilstartindex =[LibKoordinatenTabelle count];
       // mit unter/oberseitearrayA/B abarbeiten
       NSLog(@"profilstartindex 2: %d",profilstartindex);
@@ -9563,11 +9563,11 @@ return returnInt;
    
    if (mitUnterseite)
    {
-      NSLog(@"Unterseite einfuegen Profil1UnterseiteArray count: %d Profil2UnterseiteArray count: %d",Profil1UnterseiteArray.count,Profil2UnterseiteArray.count);
+      //NSLog(@"Unterseite einfuegen Profil1UnterseiteArray count: %d Profil2UnterseiteArray count: %d",Profil1UnterseiteArray.count,Profil2UnterseiteArray.count);
       
       NSArray* redUnterseiteArray = [Utils abstandcheckenVonarrayA:Profil1UnterseiteArray arrayB:Profil2UnterseiteArray teil: 20 abstand:minimaldistanz];
       
-      NSLog(@"redUnterseiteArray count: %d",redUnterseiteArray.count);
+     // NSLog(@"redUnterseiteArray count: %d",redUnterseiteArray.count);
       
       nasenindexA = redUnterseiteArray.count;
       
@@ -9620,10 +9620,10 @@ return returnInt;
       // Endindex fixieren, wird fuer Abbrand gebraucht fuer 'bis'
       profilendindex = [[[LibKoordinatenTabelle lastObject]objectForKey:@"index"]intValue];
       
-      NSLog(@"profilendindex 1: %d",profilendindex);
+     // NSLog(@"profilendindex 1: %d",profilendindex);
       bis = profilendindex;
       profilendindex = [LibKoordinatenTabelle count];
-      NSLog(@"profilendindex 2: %d",profilendindex);
+      //NSLog(@"profilendindex 2: %d",profilendindex);
       
    } // mit Unterseite
    
@@ -9735,7 +9735,7 @@ return returnInt;
    //int bis=[LibKoordinatenTabelle count];
    
    
-   NSLog(@"bis def: %d",bis);
+   //NSLog(@"bis def: %d",bis);
    
    //  if ((mitUnterseite ||  mitOberseite) &&! (mitOberseite && mitUnterseite)) // nur eine Seite
    
@@ -9755,7 +9755,7 @@ return returnInt;
    
    if (mitOberseite && mitUnterseite) // ganzes Profil, Einlauf manuell: von, bis an Anfang und Ende des Profils
    {
-      NSLog(@"mitOberseite && mitUnterseite startindex: %d endindex: %d",profilstartindex, profilendindex );
+      //NSLog(@"mitOberseite && mitUnterseite startindex: %d endindex: %d",profilstartindex, profilendindex );
       von = profilstartindex;
       bis = profilendindex;
       
@@ -9829,10 +9829,10 @@ return returnInt;
 
       }
       
-      NSLog(@"minyA: %2.2f maxyA: %2.2f, diffA: %2.2f ",minyA,maxyA,(maxyA - minyA));
-      NSLog(@"minyB: %2.2f maxyB: %2.2f, diffB: %2.2f ",minyB,maxyB,(maxyB - minyB));
+      //NSLog(@"minyA: %2.2f maxyA: %2.2f, diffA: %2.2f ",minyA,maxyA,(maxyA - minyA));
+      //NSLog(@"minyB: %2.2f maxyB: %2.2f, diffB: %2.2f ",minyB,maxyB,(maxyB - minyB));
       
-      NSLog(@"nasenindexA: %d nasenindexB: %d Nasenindex: %d",nasenindexA,nasenindexB, Nasenindex);
+      //NSLog(@"nasenindexA: %d nasenindexB: %d Nasenindex: %d",nasenindexA,nasenindexB, Nasenindex);
       
       // erstes Element
       
@@ -9896,28 +9896,28 @@ return returnInt;
       //von++;
       bis++;
       
-      fprintf(stderr,"LibKoordinatenTabelle vor addabbrand: \n");
+      //fprintf(stderr,"LibKoordinatenTabelle vor addabbrand: \n");
       for (int i=0;i<LibKoordinatenTabelle.count;i++)
       {
          [LibKoordinatenTabelle[i] setObject:[NSNumber numberWithInt:i]forKey:@"index"];
          NSMutableDictionary* tempdic = [NSMutableDictionary dictionaryWithDictionary:LibKoordinatenTabelle[i]];
-         fprintf(stderr,"%d\t%d\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\n",i,[tempdic[@"index"]intValue],[tempdic[@"ax"]floatValue],[tempdic[@"ay"]floatValue],[tempdic[@"bx"]floatValue],[tempdic[@"by"]floatValue],[tempdic[@"abrax"]floatValue],[tempdic[@"abray"]floatValue],[tempdic[@"abrbx"]floatValue],[tempdic[@"abrby"]floatValue]);
-         
+        /* fprintf(stderr,"%d\t%d\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\n",i,[tempdic[@"index"]intValue],[tempdic[@"ax"]floatValue],[tempdic[@"ay"]floatValue],[tempdic[@"bx"]floatValue],[tempdic[@"by"]floatValue],[tempdic[@"abrax"]floatValue],[tempdic[@"abray"]floatValue],[tempdic[@"abrbx"]floatValue],[tempdic[@"abrby"]floatValue]);
+         */
       }
-      fprintf(stderr,"LibKoordinatenTabelle vor addabbrand end \n");
+     // fprintf(stderr,"LibKoordinatenTabelle vor addabbrand end \n");
 
       
       LibKoordinatenTabelle = [CNC addAbbrandVonKoordinaten:LibKoordinatenTabelle mitAbbrandA:abbranda  mitAbbrandB:abbrandb aufSeite:1 von:von bis:bis];
       
-      fprintf(stderr,"LibKoordinatenTabelle nach addabbrand: \n");
+      //fprintf(stderr,"LibKoordinatenTabelle nach addabbrand: \n");
       for (int i=0;i<LibKoordinatenTabelle.count;i++)
       {
          [LibKoordinatenTabelle[i] setObject:[NSNumber numberWithInt:i]forKey:@"index"];
          NSMutableDictionary* tempdic = [NSMutableDictionary dictionaryWithDictionary:LibKoordinatenTabelle[i]];
-         fprintf(stderr,"%d\t%d\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\n",i,[tempdic[@"index"]intValue],[tempdic[@"ax"]floatValue],[tempdic[@"ay"]floatValue],[tempdic[@"bx"]floatValue],[tempdic[@"by"]floatValue],[tempdic[@"abrax"]floatValue],[tempdic[@"abray"]floatValue],[tempdic[@"abrbx"]floatValue],[tempdic[@"abrby"]floatValue]);
+         //fprintf(stderr,"%d\t%d\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\n",i,[tempdic[@"index"]intValue],[tempdic[@"ax"]floatValue],[tempdic[@"ay"]floatValue],[tempdic[@"bx"]floatValue],[tempdic[@"by"]floatValue],[tempdic[@"abrax"]floatValue],[tempdic[@"abray"]floatValue],[tempdic[@"abrbx"]floatValue],[tempdic[@"abrby"]floatValue]);
          
       }
-      fprintf(stderr,"LibKoordinatenTabelle nach abbrand end: \n");
+      //fprintf(stderr,"LibKoordinatenTabelle nach abbrand end: \n");
       
       // MARK: EINSTICH
       
@@ -9934,7 +9934,7 @@ return returnInt;
          float startxA = [[[LibKoordinatenTabelle objectAtIndex:von]objectForKey:@"ax"]floatValue];
          float nasenxA = [[[LibKoordinatenTabelle objectAtIndex:nasenindexA]objectForKey:@"ax"]floatValue];
          
-         NSLog(@"Nasenpunkt fuer Einstich");
+         //NSLog(@"Nasenpunkt fuer Einstich");
          for (int i=0;i<LibKoordinatenTabelle.count;i++)
          {
             if([[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue] > maxxA)
@@ -9949,26 +9949,25 @@ return returnInt;
             }
          }
          
-         NSLog(@"startxA: %2.2f maxxA: %2.2f nasenindexA: %d",startxA,maxxA,nasenindexA);
+         //NSLog(@"startxA: %2.2f maxxA: %2.2f nasenindexA: %d",startxA,maxxA,nasenindexA);
          
          float oberseitebereichA = maxxA - startxA;
          float oberseiteabschnittA = oberseitebereichA / 12;
          
-         float einstichxA0 = startxA + 4*oberseiteabschnittA; 
-         float einstichxA1 = startxA + 7*oberseiteabschnittA;
-         float einstichxA2 = startxA + 10*oberseiteabschnittA;
-         float einstichxA3 = startxA + 11*oberseiteabschnittA;
+         float einstichxA0 = startxA + 6*oberseiteabschnittA; 
+         float einstichxA1 = startxA + 10*oberseiteabschnittA;
+         float einstichxA2 = startxA + 10*oberseiteabschnittA; // nicht verwendet
+         float einstichxA3 = startxA + 11*oberseiteabschnittA; // nicht verwendet
          
          
          
-         int einstichxArray[ANZAHLEINSTICHE] = {einstichxA0,einstichxA1,einstichxA2,einstichxA3}; // fuer holmindex 90
+         int einstichxArray[ANZAHLEINSTICHE] = {einstichxA0,einstichxA1,einstichxA2,einstichxA3}; // 
   
-         //int einstichxArray[ANZAHLEINSTICHE] = {einstichxA0,einstichxA1,einstichxA2}; // fuer holmindex 90
 
-         NSLog(@"oberseitebereichA: %2.2f einstichxA0: %2.2f einstichxA1: %2.2f einstichxA2: %2.2f",oberseitebereichA,einstichxA0,einstichxA1,einstichxA2);
+         //NSLog(@"oberseitebereichA: %2.2f einstichxA0: %2.2f einstichxA1: %2.2f einstichxA2: %2.2f",oberseitebereichA,einstichxA0,einstichxA1,einstichxA2);
          
          
-         for (int i = 0;i < ANZAHLEINSTICHE-1; i++) // nur noch 3 einstiche
+         for (int i = 0;i < ANZAHLEINSTICHE-2; i++) // nur noch 3 einstiche
          {
             
             // Einstich
@@ -9979,17 +9978,17 @@ return returnInt;
                //NSLog(@"i: %d ax: %2.2f",i,[[[LibKoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue]);
                if(([[[LibKoordinatenTabelle objectAtIndex:k]objectForKey:@"ax"]floatValue] > einstichxArray[i]) && ([[[LibKoordinatenTabelle objectAtIndex:k-1]objectForKey:@"ax"]floatValue] < einstichxArray[i]))
                {
-                  NSLog(@"einstich passt bei: %d ax: %2.2f",k,[[[LibKoordinatenTabelle objectAtIndex:k]objectForKey:@"ax"]floatValue]);
+                  //NSLog(@"einstich passt bei: %d ax: %2.2f",k,[[[LibKoordinatenTabelle objectAtIndex:k]objectForKey:@"ax"]floatValue]);
                   einstich = k;
                   break;
                }
             }
             
             
-            NSLog(@"i: %d einstich: %d",i,einstich);
+           // NSLog(@"i: %d einstich: %d",i,einstich);
             NSDictionary* zeilendic = [LibKoordinatenTabelle objectAtIndex:einstich];
-            NSLog(@"zeile: %@",zeilendic);
-            fprintf(stderr,"raw einstich: %d \t ax: %2.2f\tay: %2.2f\tbx: %2.2f\tby: %2.2f pwm: %.2f\n",einstich,[[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"ax"]floatValue],[[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"ay"]floatValue],[[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"bx"]floatValue],[[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"by"]floatValue],[[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"pwm"]floatValue]);
+            //NSLog(@"zeile: %@",zeilendic);
+            //fprintf(stderr,"raw einstich: %d \t ax: %2.2f\tay: %2.2f\tbx: %2.2f\tby: %2.2f pwm: %.2f\n",einstich,[[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"ax"]floatValue],[[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"ay"]floatValue],[[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"bx"]floatValue],[[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"by"]floatValue],[[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"pwm"]floatValue]);
             
             float ax = [[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"ax"]floatValue];
             float ay = [[[LibKoordinatenTabelle objectAtIndex:einstich]objectForKey:@"ay"]floatValue];
@@ -10015,14 +10014,14 @@ return returnInt;
             prevbx = [[[LibKoordinatenTabelle objectAtIndex:einstich-1]objectForKey:@"bx"]floatValue];
             prevby = [[[LibKoordinatenTabelle objectAtIndex:einstich-1]objectForKey:@"by"]floatValue];
             p = [[[LibKoordinatenTabelle objectAtIndex:einstich-1]objectForKey:@"pwm"]floatValue];
-            fprintf(stderr,"revax: %2.2f\tprevay: %2.2f\tprevbx: %2.2f\tprevby: %2.2f\tpwm: %.2f\n",prevax,prevay,prevbx,prevby,p);
+            //fprintf(stderr,"revax: %2.2f\tprevay: %2.2f\tprevbx: %2.2f\tprevby: %2.2f\tpwm: %.2f\n",prevax,prevay,prevbx,prevby,p);
 
             nextax = [[[LibKoordinatenTabelle objectAtIndex:(einstich+1)]objectForKey:@"ax"]floatValue];
             nextay = [[[LibKoordinatenTabelle objectAtIndex:(einstich+1)]objectForKey:@"ay"]floatValue];
             nextbx = [[[LibKoordinatenTabelle objectAtIndex:(einstich+1)]objectForKey:@"bx"]floatValue];
             nextby = [[[LibKoordinatenTabelle objectAtIndex:(einstich+1)]objectForKey:@"by"]floatValue];
             p = [[[LibKoordinatenTabelle objectAtIndex:einstich+1]objectForKey:@"pwm"]floatValue];
-            fprintf(stderr,"nextax: %2.2f\tnextay: %2.2f\tnextbx: %2.2f\tnextby: %2.2f \tpwm: %.2f\n",nextax,nextay,nextbx,nextby,p);
+            //fprintf(stderr,"nextax: %2.2f\tnextay: %2.2f\tnextbx: %2.2f\tnextby: %2.2f \tpwm: %.2f\n",nextax,nextay,nextbx,nextby,p);
           
             
               
@@ -10049,23 +10048,23 @@ return returnInt;
             
             if(einheitsvektor > 0.02) // noch nicht in line
             {
-               NSLog(@"einheitsvektor > 0.02 index: %d",i);
+               //NSLog(@"einheitsvektor > 0.02 index: %d",i);
                einstichfaktor = einstichtiefe / einheitsvektor;
                winkelhalbierende[0] *= einstichfaktor;
                winkelhalbierende[1] *= einstichfaktor;
-               NSLog(@"diffvektorvor: %2.2f diffvektornach: %2.2f einheitsvektor: %2.6f einstichfaktor: %2.6f",diffvektorvor,diffvektornach,einheitsvektor,einstichfaktor);
+               //NSLog(@"diffvektorvor: %2.2f diffvektornach: %2.2f einheitsvektor: %2.6f einstichfaktor: %2.6f",diffvektorvor,diffvektornach,einheitsvektor,einstichfaktor);
             }
             else // fast in line -> senkrechte zu prevax,y zu ax,y suchen
             {
-               NSLog(@"einheitsvektor < 0.02 i: %d einstichindex: %d",i,einstich );
-               fprintf(stderr,"index: \t%d\t%2.4f\t%2.4f\t%2.4f\t%2.4f\n",einstich,ax,ay,prevax, prevay );
+               //NSLog(@"einheitsvektor < 0.02 i: %d einstichindex: %d",i,einstich );
+               //fprintf(stderr,"index: \t%d\t%2.4f\t%2.4f\t%2.4f\t%2.4f\n",einstich,ax,ay,prevax, prevay );
                winkelhalbierende[0] =   (ay - prevay);
                winkelhalbierende[1] = - (ax - prevax);
                float vektorbetrag = sqrt(winkelhalbierende[0]*winkelhalbierende[0] + winkelhalbierende[1]*winkelhalbierende[1]);
                einstichfaktor = einstichtiefe / vektorbetrag;
                winkelhalbierende[0] *= einstichfaktor;
                winkelhalbierende[1] *= einstichfaktor;
-               fprintf(stderr,"%2.4f\t%2.4f\t%2.4f\t%2.4f\n",winkelhalbierende[0],winkelhalbierende[1],vektorbetrag, einstichfaktor );
+               //fprintf(stderr,"%2.4f\t%2.4f\t%2.4f\t%2.4f\n",winkelhalbierende[0],winkelhalbierende[1],vektorbetrag, einstichfaktor );
             }
             
             NSMutableDictionary* einstichDicStart=[[LibKoordinatenTabelle objectAtIndex:einstich]mutableCopy];
@@ -10095,21 +10094,21 @@ return returnInt;
             
             [LibKoordinatenTabelle insertObject:einstichDicEnd atIndex:einstich];
             //nasenindexA++;
-            fprintf(stderr,"red pwm einstich: %d",einstich);
+            //fprintf(stderr,"red pwm einstich: %d",einstich);
             [[LibKoordinatenTabelle objectAtIndex:einstich+2]setObject:[NSNumber numberWithInt:red_pwm * full_pwm] forKey:@"pwm"];
             
          } // ANZAHLEINSTICHE
          // } // mit einstich
          
-         fprintf(stderr,"LibKoordinatenTabelle nach Einstich: \n");
+         //fprintf(stderr,"LibKoordinatenTabelle nach Einstich: \n");
          for (int i=0;i<LibKoordinatenTabelle.count;i++)
          {
             [LibKoordinatenTabelle[i] setObject:[NSNumber numberWithInt:i]forKey:@"index"];
             NSMutableDictionary* tempdic = [NSMutableDictionary dictionaryWithDictionary:LibKoordinatenTabelle[i]];
-            fprintf(stderr,"%d\t%d\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\n",i,[tempdic[@"index"]intValue],[tempdic[@"ax"]floatValue],[tempdic[@"ay"]floatValue],[tempdic[@"bx"]floatValue],[tempdic[@"by"]floatValue],[tempdic[@"abrax"]floatValue],[tempdic[@"abray"]floatValue],[tempdic[@"abrbx"]floatValue],[tempdic[@"abrby"]floatValue]);
+            //fprintf(stderr,"%d\t%d\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\n",i,[tempdic[@"index"]intValue],[tempdic[@"ax"]floatValue],[tempdic[@"ay"]floatValue],[tempdic[@"bx"]floatValue],[tempdic[@"by"]floatValue],[tempdic[@"abrax"]floatValue],[tempdic[@"abray"]floatValue],[tempdic[@"abrbx"]floatValue],[tempdic[@"abrby"]floatValue]);
             
          }
-         fprintf(stderr,"LibKoordinatenTabelle nach Einstich end: \n");
+         //fprintf(stderr,"LibKoordinatenTabelle nach Einstich end: \n");
          
          
          
@@ -10118,7 +10117,7 @@ return returnInt;
          maxxA = 0;
          maxxB = 0;
          
-         NSLog(@"nasenindexA: %d ",nasenindexA);
+         //NSLog(@"nasenindexA: %d ",nasenindexA);
          // Nasenpunkt suchen
          
          
@@ -10136,7 +10135,7 @@ return returnInt;
             }
             
          }
-         NSLog(@"vor ausstich nasenindexA: %d nasenindexB: %d Nasenindex: %d",nasenindexA,nasenindexB, Nasenindex);
+         //NSLog(@"vor ausstich nasenindexA: %d nasenindexB: %d Nasenindex: %d",nasenindexA,nasenindexB, Nasenindex);
          
          float ax = [[[LibKoordinatenTabelle objectAtIndex:nasenindexA]objectForKey:@"ax"]floatValue];
          float  ay = [[[LibKoordinatenTabelle objectAtIndex:nasenindexA]objectForKey:@"ay"]floatValue];
@@ -10187,7 +10186,7 @@ return returnInt;
          NSLog(@"nasenindexA: %d ",nasenindexA);
          
          // Nasenpunkt suchen
-         NSLog(@"vor einstich nasenindexA: %d nasenindexB: %d Nasenindex: %d",nasenindexA,nasenindexB, Nasenindex);
+         //NSLog(@"vor einstich nasenindexA: %d nasenindexB: %d Nasenindex: %d",nasenindexA,nasenindexB, Nasenindex);
          
          
          
@@ -10218,17 +10217,17 @@ return returnInt;
          winkelhalbierende[0] *= einstichfaktor;
          winkelhalbierende[1] *= einstichfaktor;
          
-         NSLog(@"diffvektorvor: %2.2f diffvektornach: %2.2f einheitsvektor: %2.6f einstichfaktor: %2.6f",diffvektorvor,diffvektornach,einheitsvektor,einstichfaktor);
+         //NSLog(@"diffvektorvor: %2.2f diffvektornach: %2.2f einheitsvektor: %2.6f einstichfaktor: %2.6f",diffvektorvor,diffvektornach,einheitsvektor,einstichfaktor);
          
          [einstichDicStart setObject:[NSNumber numberWithFloat:(ax + winkelhalbierende[0])] forKey:@"ax"];
          [einstichDicStart setObject:[NSNumber numberWithFloat:(ay + winkelhalbierende[1])+0.8] forKey:@"ay"];
          
          [einstichDicStart setObject:[NSNumber numberWithFloat:(ax + winkelhalbierende[0])] forKey:@"abrax"];
-         [einstichDicStart setObject:[NSNumber numberWithFloat:(ay + winkelhalbierende[1])+0.8] forKey:@"abray"];
+         [einstichDicStart setObject:[NSNumber numberWithFloat:(ay + winkelhalbierende[1])+0.5] forKey:@"abray"];
          
          
          [einstichDicStart setObject:[NSNumber numberWithFloat:(bx + winkelhalbierende[0])] forKey:@"bx"];
-         [einstichDicStart setObject:[NSNumber numberWithFloat:(by + winkelhalbierende[1])+0.8] forKey:@"by"];
+         [einstichDicStart setObject:[NSNumber numberWithFloat:(by + winkelhalbierende[1])+0.5] forKey:@"by"];
          
          [einstichDicStart setObject:[NSNumber numberWithFloat:(bx + winkelhalbierende[0])] forKey:@"abrbx"];
          [einstichDicStart setObject:[NSNumber numberWithFloat:(by + winkelhalbierende[1])+0.8] forKey:@"abrby"];
@@ -10262,7 +10261,7 @@ return returnInt;
       {
          // MARK: HOLM
          // Holm
-         NSLog(@"maxxA: %2.2f nasenindexA: %d von: %d bis: %d",maxxA,nasenindexA,von,bis);
+         //NSLog(@"maxxA: %2.2f nasenindexA: %d von: %d bis: %d",maxxA,nasenindexA,von,bis);
          int holmindex = 0;//(bis - von)/3*2;
          float startX = [[[LibKoordinatenTabelle objectAtIndex:von]objectForKey:@"ax"]floatValue];
          float nasenX = [[[LibKoordinatenTabelle objectAtIndex:nasenindexA]objectForKey:@"ax"]floatValue];
@@ -10323,7 +10322,7 @@ return returnInt;
          float holmtiefeA = (holmoaY  - holmuaY)/2 -  radiusA;
          float holmtiefeB = (holmobY  - holmubY)/2 -  radiusB;
          
-         fprintf(stderr,"holmtiefeA: \t%2.2f\tholmtiefeB %2.2f\n",holmtiefeA,holmtiefeB);
+         //fprintf(stderr,"holmtiefeA: \t%2.2f\tholmtiefeB %2.2f\n",holmtiefeA,holmtiefeB);
                  
          NSMutableDictionary* holmDicStart=[[LibKoordinatenTabelle objectAtIndex:holmindex]mutableCopy];
          [holmDicStart setObject:[NSNumber numberWithInt:12] forKey:@"teil"];
@@ -10372,7 +10371,7 @@ return returnInt;
          float einstichfaktorA = holmtiefeA / einheitsvektor;
          
          float einstichfaktorB = holmtiefeB / einheitsvektor;
-         NSLog(@"LibProfileingabeFunktion holm diffvektorvor: %2.2f diffvektornach: %2.2f einheitsvektor: %2.6f einstichfaktorA: %2.6f  einstichfaktorB: %2.6f  profiltiefefaktor: %2.6f",diffvektorvor,diffvektornach,einheitsvektor,einstichfaktorA,einstichfaktorB,profiltiefefaktor);
+         //NSLog(@"LibProfileingabeFunktion holm diffvektorvor: %2.2f diffvektornach: %2.2f einheitsvektor: %2.6f einstichfaktorA: %2.6f  einstichfaktorB: %2.6f  profiltiefefaktor: %2.6f",diffvektorvor,diffvektornach,einheitsvektor,einstichfaktorA,einstichfaktorB,profiltiefefaktor);
           
          float einstichxA = winkelhalbierende[0] * einstichfaktorA;
          //float einstichyA = winkelhalbierende[1] * einstichfaktorA;
@@ -10443,11 +10442,12 @@ return returnInt;
          
       }
       
-      fprintf(stderr,"LibKoordinatenTabelle nach holm: \n");
+      //fprintf(stderr,"LibKoordinatenTabelle nach holm: \n");
       for (int i=0;i<LibKoordinatenTabelle.count;i++)
       {
          [LibKoordinatenTabelle[i] setObject:[NSNumber numberWithInt:i]forKey:@"index"];
          NSMutableDictionary* tempdic = [NSMutableDictionary dictionaryWithDictionary:LibKoordinatenTabelle[i]];
+       /*
          fprintf(stderr,"%d\t%d\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\t%2.2f\t%2.2f\t%2.2f\t%2.2f\t\n",i,[tempdic[@"index"]intValue],
                  [tempdic[@"ax"]floatValue],
                  [tempdic[@"ay"]floatValue],
@@ -10457,8 +10457,9 @@ return returnInt;
                  [tempdic[@"abray"]floatValue],
                  [tempdic[@"abrbx"]floatValue],
                  [tempdic[@"abrby"]floatValue]);
-        
+        */
       }
+         
   //    fprintf(stderr,"LibKoordinatenTabelle nach holm end: \n");
 
       // MARK: AUSLAUF  
@@ -10531,7 +10532,7 @@ return returnInt;
       //NSLog(@"i: %d teil: %d",i,teil);
       if(teil == 11 || teil == 12 ) //Einlauf, Auslauf
       {
-         NSLog(@"abr weg i: %d",i);
+         //NSLog(@"abr weg i: %d",i);
          float ax = [[[LibKoordinatenTabelle  objectAtIndex:i]objectForKey:@"ax"]floatValue];
          float ay = [[[LibKoordinatenTabelle  objectAtIndex:i]objectForKey:@"ay"]floatValue];
          float bx = [[[LibKoordinatenTabelle  objectAtIndex:i]objectForKey:@"bx"]floatValue];
@@ -10564,7 +10565,7 @@ return returnInt;
  //    fprintf(stderr,"%d \t %d \t%2.2f \t%2.2f \t%2.2f \t%2.2f\t%2.2f \t%2.2f \t%2.2f \t%2.2f\t\n",i,index,ax,ay,bx,by,abrax,abray,abrbx,abrby);
       
    }
-   fprintf(stderr,"LibKoordinatenTabelle end\n");
+   //fprintf(stderr,"LibKoordinatenTabelle end\n");
    int anz = LibKoordinatenTabelle.count;
    
    if (mitOberseite && mitUnterseite) // Brigt sonst Block bei Ober/Unterseite durcheinander
@@ -10607,7 +10608,7 @@ return returnInt;
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
    [nc postNotificationName:@"eingabedaten" object:self userInfo:StartwertDic];
    
-   NSLog(@"LibProfileingabeFunktion vor Abbrand von: %d bis: %d",von,bis);
+   //NSLog(@"LibProfileingabeFunktion vor Abbrand von: %d bis: %d",von,bis);
    if (mitabbrand)
    {
       if (mitEinstrich)
@@ -10625,7 +10626,7 @@ return returnInt;
    
    if(mitOberseite && mitUnterseite) // ganzes Profil
    {
-      NSLog(@"LibProfileingabeFunktion mitOberseite && mitUnterseite first: %@",[LibKoordinatenTabelle firstObject]);
+      //NSLog(@"LibProfileingabeFunktion mitOberseite && mitUnterseite first: %@",[LibKoordinatenTabelle firstObject]);
       
       
       for(int i=0;i<LibKoordinatenTabelle.count;i++)
@@ -11145,7 +11146,7 @@ return returnInt;
    Profil1OberseiteArray=(NSMutableArray*)[CNC ProfilArrayVonPunkt:StartpunktA mitProfil:Profil1OberseiteArray mitProfiltiefe:ProfiltiefeA mitScale:[[ScalePop selectedItem]tag]];
    NSLog(@" Profil2UnterseiteArray start");
    Profil2UnterseiteArray=(NSMutableArray*)[CNC ProfilArrayVonPunkt:StartpunktB mitProfil:Profil2UnterseiteArray mitProfiltiefe:ProfiltiefeB mitScale:[[ScalePop selectedItem]tag]];
-   NSLog(@" Profil2OberseiteArray start");
+   //NSLog(@" Profil2OberseiteArray start");
    Profil2OberseiteArray=(NSMutableArray*)[CNC ProfilArrayVonPunkt:StartpunktB mitProfil:Profil2OberseiteArray mitProfiltiefe:ProfiltiefeB mitScale:[[ScalePop selectedItem]tag]];
    NSLog(@" ProfilArray end");
   */ 
@@ -11198,7 +11199,7 @@ return returnInt;
    
    if (mitOberseite)
    {
-      NSLog(@"Oberseite einfuegen Profil1OberseiteArray count: %d Profil2OberseiteArray count: %d",Profil1OberseiteArray.count,Profil2OberseiteArray.count);
+      //NSLog(@"Oberseite einfuegen Profil1OberseiteArray count: %d Profil2OberseiteArray count: %d",Profil1OberseiteArray.count,Profil2OberseiteArray.count);
 
       int flipfaktor = 1;
       if (!(mitUnterseite))
@@ -11260,11 +11261,11 @@ return returnInt;
    
    if (mitUnterseite)
    {
-      NSLog(@"Unterseite einfuegen Profil1UnterseiteArray count: %d Profil2UnterseiteArray count: %d",Profil1UnterseiteArray.count,Profil2UnterseiteArray.count);
+      //NSLog(@"Unterseite einfuegen Profil1UnterseiteArray count: %d Profil2UnterseiteArray count: %d",Profil1UnterseiteArray.count,Profil2UnterseiteArray.count);
   
       NSArray* redUnterseiteArray = [Utils abstandcheckenVonarrayA:Profil1UnterseiteArray arrayB:Profil2UnterseiteArray teil: 20 abstand:minimaldistanz];
 
-      NSLog(@"Unterseite einfuegen red redUnterseiteArray count: %d ",redUnterseiteArray.count);
+     // NSLog(@"Unterseite einfuegen red redUnterseiteArray count: %d ",redUnterseiteArray.count);
      
       //for (index = Profil1UnterseiteArray.count-1;index >= 0; index--)
       
@@ -11288,7 +11289,7 @@ return returnInt;
       // Endindex fixieren, wird fuer Abbrand gebraucht fuer 'bis'
       profilendindex = [[[KoordinatenTabelle lastObject]objectForKey:@"index"]intValue];
       
-      NSLog(@"profilendindex 1: %d",profilendindex);
+     // NSLog(@"profilendindex 1: %d",profilendindex);
       bis = profilendindex;
       profilendindex = [KoordinatenTabelle count];
       NSLog(@"profilendindex 2: %d",profilendindex);
@@ -11409,7 +11410,7 @@ return returnInt;
    //int bis=[KoordinatenTabelle count];
    
   
-   NSLog(@"bis def: %d",bis);
+  // NSLog(@"bis def: %d",bis);
    
    //  if ((mitUnterseite ||  mitOberseite) &&! (mitOberseite && mitUnterseite)) // nur eine Seite
    
@@ -14505,7 +14506,7 @@ return returnInt;
    //Horizontal bis Anschlag
    PositionA.x -= 500; // sicher ist sicher
    PositionB.x -= 500;
-   NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+   //NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
    index++;
    [AnfahrtArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:3],@"lage",nil]];
    int i=0;
@@ -14771,7 +14772,7 @@ return returnInt;
    int seite1check = [outletdaten[@"cnc_seite1check"]intValue];
    int seite2check = [outletdaten[@"cnc_seite2check"]intValue];
    micro  = 1;//[outletdaten[@"micro"]integerValue];
-   int home = [outletdaten[@"home"]intValue];
+   int home = 1;//[outletdaten[@"home"]intValue];
    
    
    NSMutableArray* AnfahrtArray = [[NSMutableArray alloc]initWithCapacity:0];
@@ -14847,12 +14848,12 @@ return returnInt;
    
    position |= (1<<LAST_BIT);
    
-   
+   position = 3;
    [tempDic setObject:[NSNumber numberWithInt:position] forKey:@"position"];
    [tempDic setObject:[NSNumber numberWithInt:speed] forKey:@"speed"];
    [tempDic setObject:[NSNumber numberWithInt:micro] forKey:@"micro"];
    [tempDic setObject:[NSNumber numberWithInt:1] forKey:@"home"];
-   [tempDic setObject:[NSNumber numberWithInt:1] forKey:@"ramp"];
+   [tempDic setObject:[NSNumber numberWithInt:0] forKey:@"ramp"];
     
    NSDictionary* tempSteuerdatenDic=[self Tool_SteuerdatenVonDic:tempDic];
    //NSLog(@"AVR  reportHome tempSteuerdatenDic: %@",[tempSteuerdatenDic description]);
@@ -14866,6 +14867,9 @@ return returnInt;
    [CNC setSpeed:10];
    NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
   
+   [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:1] forKey:@"zoom"];
+   [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:1] forKey:@"zoomfaktor"];
+   [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:1] forKey:@"zoom"];
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:1] forKey:@"home"];
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:1] forKey:@"micro"];
    [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
@@ -14876,7 +14880,7 @@ return returnInt;
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"art"]; //
 
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-   [nc postNotificationName:@"usbschnittdaten" object:self userInfo:HomeSchnittdatenDic];
+   [nc postNotificationName:@"usbschnittdaten" object:self userInfo:HomeSchnittdatenDic]; // > ViewController
 
 }
 

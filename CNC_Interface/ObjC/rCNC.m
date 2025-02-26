@@ -2881,7 +2881,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
       [ProfilpunktArray addObject: tempDic];
        
    } // for i
-   NSLog(@" Profil end");
+   //NSLog(@" Profil end");
    //NSLog(@"minIndex: %d minX: %2.2f ",minIndex, minX);
    // Profillinie schliessen:
    
@@ -2896,7 +2896,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
 
    //NSLog(@"ProfilpunktArray x: %@",[[ProfilpunktArray valueForKey:@"x"]description]);
    gfkweg -= neg;
-   NSLog(@"ProfilArrayVonPunkt gfkweg: %2.2f", gfkweg);
+   //NSLog(@"ProfilArrayVonPunkt gfkweg: %2.2f", gfkweg);
    return [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:gfkweg],@"gfkweg",ProfilpunktArray,@"profilpunktarray", nil] ;
 }
 
@@ -3012,7 +3012,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    //NSLog(@"MittellinieArray x: %@",[MittellinieArray description]);
 
    //NSLog(@"ProfilpunktArray x: %@",[[ProfilpunktArray valueForKey:@"x"]description]);
-   NSLog(@"ProfilArrayVonPunkt gfkweg: %2.2f", gfkweg - neg);
+   //NSLog(@"ProfilArrayVonPunkt gfkweg: %2.2f", gfkweg - neg);
    return ProfilpunktArray;
 }
 
@@ -4402,7 +4402,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
       } // i im Bereich
       else if (i==bis-1)
       {
-         printf("i ist  bis - 1");
+         //printf("i ist  bis - 1");
          
          [tempDic setObject:[NSNumber numberWithFloat:(ax )] forKey:@"abrax"];
          [tempDic setObject:[NSNumber numberWithFloat:(prevay + lastabbrandA[1])] forKey:@"abray"];
@@ -4423,15 +4423,15 @@ PortA=vs[n & 3]; warte10ms(); n++;
 
       }
       
-       printf("%d\t %2.2f \t %2.2f \t %2.2f \t %2.2f \n",i,ax,ay,[[tempDic objectForKey:@"abrax"]floatValue],[[tempDic objectForKey:@"abray"]floatValue]);
+       //printf("%d\t %2.2f \t %2.2f \t %2.2f \t %2.2f \n",i,ax,ay,[[tempDic objectForKey:@"abrax"]floatValue],[[tempDic objectForKey:@"abray"]floatValue]);
       
       [AbbrandArray addObject:tempDic];
       
    } // for i
    
    //NSLog(@"addAbbrandVonKoordinaten end: %@",[AbbrandArray  description]);
-   NSLog(@"addAbbrandVonKoordinaten end first: %@",[[AbbrandArray  objectAtIndex:0] description]);
-   NSLog(@"addAbbrandVonKoordinaten end last: %@",[[AbbrandArray  lastObject] description]);
+   //NSLog(@"addAbbrandVonKoordinaten end first: %@",[[AbbrandArray  objectAtIndex:0] description]);
+   //NSLog(@"addAbbrandVonKoordinaten end last: %@",[[AbbrandArray  lastObject] description]);
 
    return AbbrandArray;
    

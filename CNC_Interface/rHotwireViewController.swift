@@ -4402,10 +4402,10 @@ var outletdaten:[String:AnyObject] = [:]
    }
     @IBAction  func reportIndexStepper(_ sender: NSStepper) //
     {
-       print("reportIndexStepper IntVal: \(sender.integerValue)")
+       //print("reportIndexStepper IntVal: \(sender.integerValue)")
         IndexFeld.integerValue = sender.integerValue
        let datenzeile = KoordinatenTabelle[sender.integerValue]
-        print("IndexStepper zeile: \(datenzeile)")
+        //print("IndexStepper zeile: \(datenzeile)")
         self.setDatenVonZeile(zeile: sender.integerValue)
         let StepperIndexSet = IndexSet(integer: sender.integerValue)
         
@@ -4419,7 +4419,7 @@ var outletdaten:[String:AnyObject] = [:]
     @IBAction  func reportWertStepper(_ sender: NSStepper) //
     {
        let wertstring = String(format: "%.2f", sender.doubleValue)
-        print("reportWertStepper IntVal: \(sender.integerValue) wert: \(wertstring)")
+        //print("reportWertStepper IntVal: \(sender.integerValue) wert: \(wertstring)")
         let steppertag = sender.tag
         let stepperwert = sender.doubleValue
         
@@ -4442,7 +4442,7 @@ var outletdaten:[String:AnyObject] = [:]
         {
             wertpwm = Int(temp)
         }
-        let bind = ABBindCheck.state == NSControl.StateValue.on
+        let bind = (ABBindCheck.state == NSControl.StateValue.on)
         
         switch steppertag
         {
@@ -5223,6 +5223,11 @@ var outletdaten:[String:AnyObject] = [:]
       
       self.view.layer?.backgroundColor = hintergrundfarbe.cgColor
       
+      WertAXFeld.formatter = KoordinatenFormatter
+      WertAYFeld.formatter = KoordinatenFormatter
+      WertBXFeld.formatter = KoordinatenFormatter
+      WertBYFeld.formatter = KoordinatenFormatter
+
       
       // Anschlag links
        AnschlagLinksIndikator.wantsLayer = true
@@ -5366,6 +5371,7 @@ var outletdaten:[String:AnyObject] = [:]
       //MARK: hotwireplist
       print("HW read hotwireplist")
        hotwireplist =  readHotwire_PList()
+      //print("hotwireplist: \(hotwireplist)")
       
        outletdaten["cnc_seite1check"] = CNC_Seite1Check.state.rawValue as Int as AnyObject
        outletdaten["cnc_seite2check"] = CNC_Seite2Check.state.rawValue as Int as AnyObject
@@ -5402,6 +5408,15 @@ var outletdaten:[String:AnyObject] = [:]
       nc.post(name:Notification.Name(rawValue:"plist" ),
                object: nil,
                userInfo: userinformation)
+
+      if let red_pwm  = hotwireplist["redpwm"]
+      {
+         red_pwmFeld.doubleValue = red_pwm as! Double
+      }
+      else
+      {
+         red_pwmFeld.doubleValue = 0.7
+      }
 
       
       if let startdelay = hotwireplist["startdelay"]

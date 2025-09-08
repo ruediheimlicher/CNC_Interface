@@ -2540,19 +2540,30 @@ return returnInt;
    //NSURL* LibURL=[NSURL fileURLWithPath:LibPfad];
    LibOK= ([Filemanager fileExistsAtPath:ProfilLibPfad isDirectory:&istOrdner]&&istOrdner);
    //NSLog(@"readProfilLib:    LibPfad: %@ LibOK: %d",ProfilLibPfad, LibOK );
-    
    //NSLog(@"LibPfad: %@",LibPfad);
    if (LibOK)
    {
-      ProfilnamenArray = (NSMutableArray*)[Filemanager contentsOfDirectoryAtPath:ProfilLibPfad error:NULL];
-      [ProfilnamenArray removeObject:@".DS_Store"];
-      [ProfilnamenArray removeObject:@" Profile ReadMe.txt"];
+      NSMutableArray* tempProfilnamenArray = (NSMutableArray*)[Filemanager contentsOfDirectoryAtPath:ProfilLibPfad error:NULL];
+      
+      
+      //[ProfilnamenArray removeObject:@".DS_Store"];
+      
+      //[ProfilnamenArray removeObject:@" Profile ReadMe.txt"];
       //NSLog(@"readProfilLib ProfilnamenArray: %@",[ProfilnamenArray description]);
-      for (int i=0;i<ProfilnamenArray.count;i++)
+      NSMutableArray* profilnamenarraycopy = [ProfilnamenArray mutableCopy];
+      for (int i=tempProfilnamenArray.count-1;i>=0;i--)
       {
-         NSString* t =  [[ProfilnamenArray objectAtIndex:i]stringByDeletingPathExtension];
-         [ProfilnamenArray replaceObjectAtIndex:i withObject:t] ; 
+         NSString* tempstring = [tempProfilnamenArray objectAtIndex:i];
+         if([[tempProfilnamenArray objectAtIndex:i] isEqualToString:@".DS_Store" ] || [[tempProfilnamenArray objectAtIndex:i] isEqualToString:@" Profile ReadMe.txt" ])
+             {
+            continue;
+         }
+        
+         NSString* t =  [[tempProfilnamenArray objectAtIndex:i]stringByDeletingPathExtension];
+         
+         [ProfilnamenArray addObject:t] ; 
       }
+      
       return ProfilnamenArray;
       
       
@@ -8123,8 +8134,8 @@ return returnInt;
    if (LibOK)
    {
       ProfilnamenArray = (NSMutableArray*)[Filemanager contentsOfDirectoryAtPath:ProfilLibPfad error:NULL];
-      [ProfilnamenArray removeObject:@".DS_Store"];
-      [ProfilnamenArray removeObject:@" Profile ReadMe.txt"];
+      //[ProfilnamenArray removeObject:@".DS_Store"];
+     // [ProfilnamenArray removeObject:@" Profile ReadMe.txt"];
       //NSLog(@"readProfilLib ProfilnamenArray: %@ selected: %@",[ProfilnamenArray description], [[ProfilnamenArray objectAtIndex:[Profil1Pop indexOfSelectedItem]+1] description]); // item 0 ist Titel
       
    }//LIBOK
@@ -10069,6 +10080,9 @@ return returnInt;
             
             NSMutableDictionary* einstichDicStart=[[LibKoordinatenTabelle objectAtIndex:einstich]mutableCopy];
             [einstichDicStart setObject:[NSNumber numberWithInt:full_pwm] forKey:@"pwm"];
+     
+            NSMutableDictionary* einstichDicSecure=[[LibKoordinatenTabelle objectAtIndex:einstich]mutableCopy];
+
             
             NSMutableDictionary* einstichDicEnd=[[LibKoordinatenTabelle objectAtIndex:einstich]mutableCopy];
             //[einstichDicEnd setObject:[NSNumber numberWithFloat:full_pwm*red_pwm] forKey:@"pwm"];
@@ -10084,13 +10098,24 @@ return returnInt;
             
             [einstichDicStart setObject:[NSNumber numberWithFloat:(bx + winkelhalbierende[0])] forKey:@"abrbx"];
             [einstichDicStart setObject:[NSNumber numberWithFloat:(by + winkelhalbierende[1])] forKey:@"abrby"];
-
-            
-            
             
             [LibKoordinatenTabelle insertObject:einstichDicStart atIndex:einstich];
+    
+            [einstichDicSecure setObject:[NSNumber numberWithFloat:(ax - 0.8* winkelhalbierende[0])] forKey:@"ax"];
+            [einstichDicSecure setObject:[NSNumber numberWithFloat:(ay - 0.8*  winkelhalbierende[1])] forKey:@"ay"];
             
-            //[einstichDicEnd setObject:[NSNumber numberWithInt:red_pwm * full_pwm] forKey:@"pwm"];
+            [einstichDicSecure setObject:[NSNumber numberWithFloat:(ax - 0.8*  winkelhalbierende[0])] forKey:@"abrax"];
+            [einstichDicSecure setObject:[NSNumber numberWithFloat:(ay - 0.5*  winkelhalbierende[1])] forKey:@"abray"];
+            
+            [einstichDicSecure setObject:[NSNumber numberWithFloat:(bx - 0.8*  winkelhalbierende[0])] forKey:@"bx"];
+            [einstichDicSecure setObject:[NSNumber numberWithFloat:(by - 0.8*  winkelhalbierende[1])] forKey:@"by"];
+            
+            [einstichDicSecure setObject:[NSNumber numberWithFloat:(bx - 0.8*  winkelhalbierende[0])] forKey:@"abrbx"];
+            [einstichDicSecure setObject:[NSNumber numberWithFloat:(by - 0.8*  winkelhalbierende[1])] forKey:@"abrby"];
+            
+            [LibKoordinatenTabelle insertObject:einstichDicSecure atIndex:einstich+1];
+
+            
             
             [LibKoordinatenTabelle insertObject:einstichDicEnd atIndex:einstich];
             //nasenindexA++;

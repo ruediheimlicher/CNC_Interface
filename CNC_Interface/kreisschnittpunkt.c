@@ -24,6 +24,9 @@
  */
 #include <stdio.h>
 #include <math.h>
+
+#include <_types/_uint8_t.h>
+
 void kreispunkte(void);
 
 int circle_circle_intersection(double x0, double y0, double r0,

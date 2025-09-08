@@ -3810,8 +3810,8 @@
 	if (LibOK)
 	{
       NSMutableArray* ProfilnamenArray = (NSMutableArray*)[Filemanager contentsOfDirectoryAtPath:ProfilLibPfad error:NULL];
-      [ProfilnamenArray removeObject:@".DS_Store"];
-      [ProfilnamenArray removeObject:@" Profile ReadMe.txt"];
+      //[ProfilnamenArray removeObject:@".DS_Store"];
+      //[ProfilnamenArray removeObject:@" Profile ReadMe.txt"];
 		//NSLog(@"readProfilLib ProfilnamenArray: %@",[ProfilnamenArray description]);
       
       return ProfilnamenArray;
@@ -4654,7 +4654,7 @@
    NSLog(@"E readSVGAktion ");
    NSDictionary* info = [note userInfo];
    NSArray* SVGArray = [info objectForKey:@"svgdaten"];
-   NSLog(@"svgarray %@",SVGArray);
+   //NSLog(@"svgarray %@",SVGArray);
    NSMutableDictionary* ElementDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [ElementDic setObject:@"SVGElement"  forKey:@"quelle"];
    [ElementDic setObject:SVGArray forKey:@"elementarray"];

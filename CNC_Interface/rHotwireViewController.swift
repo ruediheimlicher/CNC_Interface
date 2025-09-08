@@ -697,7 +697,7 @@ var outletdaten:[String:AnyObject] = [:]
    @objc func FigElementeingabeAktion(_ notification:Notification)
    {
       let info = notification.userInfo
-      print("swift FigElementeingabeAktion: \(info)")
+      //print("swift FigElementeingabeAktion: \(info)")
       let infoDic = notification.userInfo as? [String:Any]
       
       
@@ -1086,7 +1086,7 @@ var outletdaten:[String:AnyObject] = [:]
     @objc func FormeingabeAktion(_ notification:Notification)
     {
         let info = notification.userInfo
-        print("FormeingabeAktion: \(info)")
+        //print("FormeingabeAktion: \(info)")
         var infoDic = notification.userInfo as? [String:Any]
   
         print("LibElementeingabeAktion KoordinatenTabelle Start: \(KoordinatenTabelle)")
@@ -3478,7 +3478,7 @@ var outletdaten:[String:AnyObject] = [:]
       
       
       //print (okstringarray)
-      print("txtpunktarray: \(txtpunktarray)")
+      //print("txtpunktarray: \(txtpunktarray)")
       
       var mill_floatarray = [[Double]]() //
       /*
@@ -3762,6 +3762,7 @@ var outletdaten:[String:AnyObject] = [:]
       circledicarray.removeAll()
       circlefloatarray.removeAll()
       circlefloatdicarray.removeAll()
+      
        //ablaufzeitFeld.stringValue = zeitformatter.string(from: TimeInterval(0))!
       //reading
       do {
@@ -3794,13 +3795,29 @@ var outletdaten:[String:AnyObject] = [:]
             var circle = 0
             var circlenummer = 0
             
+            var k:Int = 0
+            for punkt in SVG_array
+            {
+               print("\(k)\t\(SVG_array[k])")
+               k += 1
+            }
+
+            
+            
             punktarray = punktarrayvonSGV(sgvarray:SVG_array)
             if punktarray.count == 0
             {
                
                return punktarray
             }
-            print("punktarray: \(punktarray)")
+            k = 0
+            for punkt in punktarray
+            {
+               print("\(k)\t\(punktarray[k][0])\t\(punktarray[k][1])")
+               k += 1
+            }
+            
+            //print("punktarray: \(punktarray)")
             break
             
          case "txt":
@@ -5995,6 +6012,11 @@ var outletdaten:[String:AnyObject] = [:]
         }
         //
     }
+   
+   @objc @IBAction func reportRumpfrohr(datadic:[String:Int])
+   {
+      AVR?.reportKreis(nil)
+   }
    
 
     @objc func DCAktion(datadic:[String:Int])

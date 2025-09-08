@@ -1466,7 +1466,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
 		[KreispunktArray addObject:NSStringFromPoint(tempKreisPunkt)];
 		
 	}// for index
-	NSLog(@"KreispunktArray: %@",[KreispunktArray description]);
+	//NSLog(@"KreisVonPunkt mKreispunktArray: %@",[KreispunktArray description]);
 	
 	for(index=0;index<anzSchritte-1;index++)
 	{
@@ -1687,7 +1687,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    [KreispunktKoordinatenArray addObject:[KreispunktKoordinatenArray objectAtIndex:0]];
    
 	//NSLog(@"KreispunktArray count: %d",[KreispunktKoordinatenArray count]);
-	NSLog(@"KreispunktArray: %@",[KreispunktKoordinatenArray description]);
+	NSLog(@"KreisKoordinatenMitRadius KreispunktArray: %@",[KreispunktKoordinatenArray description]);
 	
    return KreispunktKoordinatenArray;
    

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24128" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22690"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24128"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -988,7 +988,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="445" id="443">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="menu"/>
+                                                <font key="font" metaFont="message"/>
                                                 <menu key="menu" title="OtherViews" id="444">
                                                     <items>
                                                         <menuItem title="Item 1" state="on" id="445"/>

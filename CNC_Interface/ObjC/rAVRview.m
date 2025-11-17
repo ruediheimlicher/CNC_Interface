@@ -2544,11 +2544,7 @@ return returnInt;
    if (LibOK)
    {
       NSMutableArray* tempProfilnamenArray = (NSMutableArray*)[Filemanager contentsOfDirectoryAtPath:ProfilLibPfad error:NULL];
-      
-      
-      //[ProfilnamenArray removeObject:@".DS_Store"];
-      
-      //[ProfilnamenArray removeObject:@" Profile ReadMe.txt"];
+
       //NSLog(@"readProfilLib ProfilnamenArray: %@",[ProfilnamenArray description]);
       NSMutableArray* profilnamenarraycopy = [ProfilnamenArray mutableCopy];
       for (int i=tempProfilnamenArray.count-1;i>=0;i--)
@@ -8133,11 +8129,20 @@ return returnInt;
    
    if (LibOK)
    {
-      ProfilnamenArray = (NSMutableArray*)[Filemanager contentsOfDirectoryAtPath:ProfilLibPfad error:NULL];
+      NSMutableArray* tempProfilnamenArray = (NSMutableArray*)[Filemanager contentsOfDirectoryAtPath:ProfilLibPfad error:NULL];
       //[ProfilnamenArray removeObject:@".DS_Store"];
      // [ProfilnamenArray removeObject:@" Profile ReadMe.txt"];
       //NSLog(@"readProfilLib ProfilnamenArray: %@ selected: %@",[ProfilnamenArray description], [[ProfilnamenArray objectAtIndex:[Profil1Pop indexOfSelectedItem]+1] description]); // item 0 ist Titel
-      
+      for (int i=0;i<tempProfilnamenArray.count;i++)
+      {
+         if([[tempProfilnamenArray objectAtIndex:i] isEqualToString:@".DS_Store" ] || [[tempProfilnamenArray objectAtIndex:i] isEqualToString:@" Profile ReadMe.txt" ])
+             {
+            continue;
+         }
+        
+        // NSString* t =  [tempProfilnamenArray objectAtIndex:i];
+         [ProfilnamenArray addObject:[tempProfilnamenArray objectAtIndex:i]] ; 
+      }
    }//LIBOK
    
   NSArray* Profil1Array;

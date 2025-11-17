@@ -3791,28 +3791,31 @@
 	BOOL istOrdner;
    
 	NSFileManager *Filemanager = [NSFileManager defaultManager];
+   NSMutableArray* ProfilnamenArray = [[NSMutableArray alloc]initWithCapacity:0];
+   
 	ProfilLibPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@%@",@"/Documents",@"/CNCDaten",@"/ProfilLib"];
    //NSURL* LibURL=[NSURL fileURLWithPath:LibPfad];
    LibOK= ([Filemanager fileExistsAtPath:ProfilLibPfad isDirectory:&istOrdner]&&istOrdner);
    //NSLog(@"readProfilLib:    LibPfad: %@ LibOK: %d",ProfilLibPfad, LibOK );	
-   if (LibOK)
-   {
-      ;
-   }
-   else
-   {
-      //Lib ist noch leer
-      
-      
-   }
+  
    
    //NSLog(@"LibPfad: %@",LibPfad);	
 	if (LibOK)
 	{
-      NSMutableArray* ProfilnamenArray = (NSMutableArray*)[Filemanager contentsOfDirectoryAtPath:ProfilLibPfad error:NULL];
-      //[ProfilnamenArray removeObject:@".DS_Store"];
-      //[ProfilnamenArray removeObject:@" Profile ReadMe.txt"];
-		//NSLog(@"readProfilLib ProfilnamenArray: %@",[ProfilnamenArray description]);
+      NSMutableArray* tempProfilnamenArray = (NSMutableArray*)[Filemanager contentsOfDirectoryAtPath:ProfilLibPfad error:NULL];
+      for (int i=tempProfilnamenArray.count-1;i>=0;i--)
+      {
+         NSString* tempstring = [tempProfilnamenArray objectAtIndex:i];
+         if([[tempProfilnamenArray objectAtIndex:i] isEqualToString:@".DS_Store" ] || [[tempProfilnamenArray objectAtIndex:i] isEqualToString:@" Profile ReadMe.txt" ])
+             {
+            continue;
+         }
+        
+         NSString* t =  [[tempProfilnamenArray objectAtIndex:i]stringByDeletingPathExtension];
+         
+         [ProfilnamenArray addObject:t] ; 
+      }
+
       
       return ProfilnamenArray;
       
@@ -3847,7 +3850,9 @@
    {      
       int index=[sender indexOfSelectedItem]; // Item 0 ist Titel
       [Profile2 setEnabled:YES];
- //     [Profile2 selectItemAtIndex:index];    // Profil 2 ist wahrscheinlich gleich
+ 
+      [Profile2 selectItemAtIndex:index];    // Profil 2 ist wahrscheinlich gleich
+      
       //NSLog(@"reportProfilPop Profil aus Pop: %@",[Profile1 itemTitleAtIndex:index]);
       Profil1Name=[Profile1 itemTitleAtIndex:index];
       NSString* Profilname = [Profil1Name stringByAppendingPathExtension:@"txt"];
@@ -3893,9 +3898,9 @@
             Profil1OberseiteArray = [NSArray arrayWithArray:[ProfilDic objectForKey:@"oberseitearray"]];
             if((Profil2OberseiteArray == nil) || (Profil2OberseiteArray.count == 0))
                
-              // if (![ProfilDic objectForKey:@"unterseitearray"])
+               if ([ProfilDic objectForKey:@"oberseitearray"])
                {
- //                 Profil2OberseiteArray = Profil1OberseiteArray;
+                  Profil2OberseiteArray = Profil1OberseiteArray;
                }
          }
          
@@ -3905,9 +3910,9 @@
             
             if((Profil2UnterseiteArray == nil) || (Profil2UnterseiteArray.count == 0))
                
-              // if (![ProfilDic objectForKey:@"unterseitearray"])
+               if ([ProfilDic objectForKey:@"unterseitearray"])
                {
- //                 Profil2UnterseiteArray = Profil1UnterseiteArray;
+                  Profil2UnterseiteArray = Profil1UnterseiteArray;
                }
            
             

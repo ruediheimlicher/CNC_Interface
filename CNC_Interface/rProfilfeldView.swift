@@ -64,6 +64,9 @@ class rProfilfeldView: NSView
     {
        //Swift.print("setDatenArray \(derDatenArray)")
         DatenArray=derDatenArray 
+       setKlickpunkt(derPunkt: 0)
+       setStepperposition(pos: 0)
+       
        
        //setNeedsDisplay(YES)
     }
@@ -368,29 +371,29 @@ class rProfilfeldView: NSView
    override func draw(_ dirtyRect: NSRect) 
    {
       //Swift.print("Profilfeld drawRect dirtyRect: \(dirtyRect) Datearray: \(DatenArray)")
-      //Swift.print("Profilfeld drawRect")
+      Swift.print("Profilfeld drawRect")
       for i in 0..<DatenArray.count
       {
-         
          let tempdic = DatenArray[i] as! [String:Double]        
-         
-         
-       /*  
-       Swift.print("",i,
-                     tempdic["index"]!,
-                     tempdic["ax"]!,
-                     tempdic["ay"]!,
-                     tempdic["bx"]!,
-                     tempdic["by"]!,
-                     
-                     tempdic["abrax"]!,
-                     tempdic["abray"]!,
-                     tempdic["abrbx"]!,
-                     tempdic["abrby"]!
-          );
-         */
+
+        if i < 5
+         {
+           Swift.print("",i,
+                       tempdic["index"]!,
+                       tempdic["ax"]!,
+                       tempdic["ay"]!,
+                       tempdic["bx"]!,
+                       tempdic["by"]!,
+                       
+                       tempdic["abrax"] ?? tempdic["ax"]!,
+                       tempdic["abray"] ?? tempdic["ay"]!,
+                       tempdic["abrbx"] ?? tempdic["bx"]!,
+                       tempdic["abrby"] ?? tempdic["by"]!,
+                       "\n"
+           );
+        }
       }
-      
+      Swift.print("Profilfeld drawRect tempdic end")
       
       
       

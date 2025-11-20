@@ -31,5 +31,6 @@
 - (NSArray*)wrenchProfil:(NSArray*)profilArray mitWrench:(float)wrench;
 - (NSMutableArray*)wrenchProfilschnittlinie:(NSArray*)profilArray mitWrench:(float)wrench;
 - (NSArray*)readFigur;
+- (NSArray*)convertNN:(NSArray*)figarray startat:(int)startindex withpropfaktor:(float)propfaktor;
 - (NSArray*)readSVGFigur;
 @end

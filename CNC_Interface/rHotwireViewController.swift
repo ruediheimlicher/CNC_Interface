@@ -811,120 +811,129 @@ var outletdaten:[String:AnyObject] = [:]
    } // FigElementeingabeAktion
    
     @objc func LibElementeingabeAktion(_ notification:Notification)
-    {
-        let info = notification.userInfo
-        print("swift LibElementeingabeAktion: \(info)")
-        var infoDic = notification.userInfo as? [String:Any]
-        
-        
-        print("LibElementeingabeAktion KoordinatenTabelle Start: \(KoordinatenTabelle)")
-
-        var ax:Double = 0
-        var ay:Double = 0
-        var bx:Double = 0
-        var by:Double = 0
-
-        var StartpunktA:NSPoint
-        var StartpunktB:NSPoint
- 
-        // letztes Element der Koordinatentabelle
-        if KoordinatenTabelle.count > 0
-        {
-            ax = (KoordinatenTabelle.last?["ax"])!
-            ay = (KoordinatenTabelle.last?["ay"])!
-            bx = (KoordinatenTabelle.last?["bx"])!
-            by = (KoordinatenTabelle.last?["by"])!
-            
-            StartpunktA = NSMakePoint(ax,ay)
-            StartpunktB = NSMakePoint(bx,by)
-        }
-        else
-        {
-            ax = 25
-            ay = 55
-            bx = 25
-            by = 55
-            StartpunktA = NSMakePoint(ax,ay)
-            StartpunktB = NSMakePoint(bx,by)
-        }
-        let offsetx:Double = ProfilBOffsetXFeld.doubleValue
-        let offsety:Double = ProfilBOffsetYFeld.doubleValue
-        var startx:Double = 0
-        var starty:Double = 0
-        
-        if let tempstartx = infoDic?["startx"]
-        {
-            startx = tempstartx as! Double
-        }
-        else
-        {
-        }
- 
-        if let tempstarty = infoDic?["starty"]
-        {
-            starty = tempstarty as! Double
-        }
-        else
-        {
-        }
-        
-        
-       var pwm:Int = 0
-       if let tempwert = infoDic?["pwm"]
-       {
-           pwm = tempwert as! Int
-       }
-       else
-       {
-          pwm = DC_PWM.integerValue 
-       }
-
-        
-        
-        var oldax:Double? = 0
-        var olday:Double? = 0
-        var oldbx:Double? = offsetx
-        var oldby:Double? = offsety
-        
-        
-        if KoordinatenTabelle.count > 0
-        {
-            oldax = (KoordinatenTabelle.last?["ax"] ?? 0) - startx
-            olday = (KoordinatenTabelle.last?["ay"] ?? 0) - starty
-            oldbx = (KoordinatenTabelle.last?["bx"] ?? 0) - startx
-            oldby = (KoordinatenTabelle.last?["by"] ?? 0) - starty
-        }
-
-        var tempElementKoordinatenArray = infoDic?["koordinatentabelle"] as? [[Double]]
-        let anz:Int = tempElementKoordinatenArray!.count
-        for i in 0..<anz
-        {
-            let zeile = tempElementKoordinatenArray?[i]
-        //    let dx:Double = tempElementKoordinatenArray?[i][0] ?? 0
-        //    let dy:Double = tempElementKoordinatenArray?[i][1] ?? 0
-            let ax:Double = tempElementKoordinatenArray?[i][0] ?? 0
-            let ay:Double = tempElementKoordinatenArray?[i][1] ?? 0
-
-            
-            var tempDic = [String:Double]()
-            tempDic["ax"] = (oldax ?? 0) + ax
-            tempDic["ay"] = (olday ?? 0) + ay
-            tempDic["bx"] = (oldbx ?? 0) + ax
-            tempDic["by"] = (oldby ?? 0) + ay
-            tempDic["index"] = Double(i)
-            tempDic["pwm"] = Double(pwm)
-            tempDic["teil"] = 60
-
-            KoordinatenTabelle.append(tempDic)
-        } // for i
-        
-        CNC_Table.reloadData()
-        CNC_Table.scrollRowToVisible(KoordinatenTabelle.count - 1)
-        ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
-       ProfilFeld.clearWeg()
-        ProfilFeld.needsDisplay = true
-        CNC_Stoptaste.isEnabled = true
-    } // LibElementeingabeAktion
+   {
+      let info = notification.userInfo
+      print("swift LibElementeingabeAktion: \(info)")
+      var infoDic = notification.userInfo as? [String:Any]
+      
+      
+      print("LibElementeingabeAktion KoordinatenTabelle Start: \(KoordinatenTabelle)")
+      
+      var ax:Double = 0
+      var ay:Double = 0
+      var bx:Double = 0
+      var by:Double = 0
+      
+      
+      var StartpunktA:NSPoint
+      var StartpunktB:NSPoint
+      var startindex:Double = 0;
+      // letztes Element der Koordinatentabelle
+      if KoordinatenTabelle.count > 0
+      {
+         ax = (KoordinatenTabelle.last?["ax"])!
+         ay = (KoordinatenTabelle.last?["ay"])!
+         bx = (KoordinatenTabelle.last?["bx"])!
+         by = (KoordinatenTabelle.last?["by"])!
+         startindex = Double(KoordinatenTabelle.count);
+         
+         StartpunktA = NSMakePoint(ax,ay)
+         StartpunktB = NSMakePoint(bx,by)
+      }
+      else
+      {
+         ax = 25
+         ay = 55
+         bx = 25
+         by = 55
+         StartpunktA = NSMakePoint(ax,ay)
+         StartpunktB = NSMakePoint(bx,by)
+      }
+      let offsetx:Double = ProfilBOffsetXFeld.doubleValue
+      let offsety:Double = ProfilBOffsetYFeld.doubleValue
+      var startx:Double = 0
+      var starty:Double = 0
+      
+      if let tempstartx = infoDic?["startx"]
+      {
+         startx = tempstartx as! Double
+      }
+      else
+      {
+      }
+      
+      if let tempstarty = infoDic?["starty"]
+      {
+         starty = tempstarty as! Double
+      }
+      else
+      {
+      }
+      
+      
+      var pwm:Int = 0
+      if let tempwert = infoDic?["pwm"]
+      {
+         pwm = tempwert as! Int
+      }
+      else
+      {
+         pwm = DC_PWM.integerValue 
+      }
+      
+      
+      
+      var oldax:Double? = 0
+      var olday:Double? = 0
+      var oldbx:Double? = offsetx
+      var oldby:Double? = offsety
+      
+      
+      if KoordinatenTabelle.count > 0
+      {
+         oldax = (KoordinatenTabelle.last?["ax"] ?? 0) - startx
+         olday = (KoordinatenTabelle.last?["ay"] ?? 0) - starty
+         oldbx = (KoordinatenTabelle.last?["bx"] ?? 0) - startx
+         oldby = (KoordinatenTabelle.last?["by"] ?? 0) - starty
+      }
+      
+      var tempElementKoordinatenArray = infoDic?["koordinatentabelle"] as? [[Double]]
+      let anz:Int = tempElementKoordinatenArray!.count
+      for i in 0..<anz
+      {
+         let zeile = tempElementKoordinatenArray?[i]
+         //    let dx:Double = tempElementKoordinatenArray?[i][0] ?? 0
+         //    let dy:Double = tempElementKoordinatenArray?[i][1] ?? 0
+         let ax:Double = tempElementKoordinatenArray?[i][0] ?? 0
+         let ay:Double = tempElementKoordinatenArray?[i][1] ?? 0
+         
+         
+         var tempDic = [String:Double]()
+         tempDic["ax"] = (oldax ?? 0) + ax
+         tempDic["ay"] = (olday ?? 0) + ay
+         tempDic["bx"] = (oldbx ?? 0) + ax
+         tempDic["by"] = (oldby ?? 0) + ay
+         tempDic["index"] = Double(i ) + startindex
+         tempDic["pwm"] = Double(pwm)
+         tempDic["teil"] = 60
+         
+         KoordinatenTabelle.append(tempDic)
+      } // for i
+      
+      IndexFeld.integerValue = 0
+      IndexStepper.integerValue = 0
+      IndexStepper.maxValue = Double(KoordinatenTabelle.count)
+      
+      
+      CNC_Table.reloadData()
+      CNC_Table.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
+      CNC_Table.scrollRowToVisible(0)
+      
+      ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
+      ProfilFeld.clearWeg()
+      ProfilFeld.needsDisplay = true
+      CNC_Stoptaste.isEnabled = true
+   } // LibElementeingabeAktion
     
     
     @objc func LibProfileingabeAktion(_ notification:Notification)
@@ -3386,6 +3395,14 @@ var outletdaten:[String:AnyObject] = [:]
       
    }
    
+   @objc func convertNNAktion(_ notification:Notification)
+   {
+      print("HW convertNNAktion")
+      
+      
+   }
+   
+   
    func punktarrayvonTXT(txtarray: [String])->[[Double]]
    {
       let minabstand = 1.8
@@ -4419,18 +4436,21 @@ var outletdaten:[String:AnyObject] = [:]
    }
     @IBAction  func reportIndexStepper(_ sender: NSStepper) //
     {
-       //print("reportIndexStepper IntVal: \(sender.integerValue)")
-        IndexFeld.integerValue = sender.integerValue
-       let datenzeile = KoordinatenTabelle[sender.integerValue]
-        //print("IndexStepper zeile: \(datenzeile)")
-        self.setDatenVonZeile(zeile: sender.integerValue)
-        let StepperIndexSet = IndexSet(integer: sender.integerValue)
-        
-        CNC_Table.scrollRowToVisible(sender.integerValue)
-
-        
-        CNC_Table.reloadData()
-        CNC_Table.selectRowIndexes(StepperIndexSet, byExtendingSelection: false)
+       print("reportIndexStepper IntVal: \(sender.integerValue)")
+       if(sender.integerValue < KoordinatenTabelle.count)
+       {
+          IndexFeld.integerValue = sender.integerValue
+          let datenzeile = KoordinatenTabelle[sender.integerValue]
+          //print("IndexStepper zeile: \(datenzeile)")
+          self.setDatenVonZeile(zeile: sender.integerValue)
+          let StepperIndexSet = IndexSet(integer: sender.integerValue)
+          
+          CNC_Table.scrollRowToVisible(sender.integerValue)
+          
+          
+          CNC_Table.reloadData()
+          CNC_Table.selectRowIndexes(StepperIndexSet, byExtendingSelection: false)
+       }
     }
 
     @IBAction  func reportWertStepper(_ sender: NSStepper) //

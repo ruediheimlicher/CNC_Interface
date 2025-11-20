@@ -267,6 +267,9 @@
    IBOutlet id          FigEndpunktX;
    IBOutlet id          FigEndpunktY;
    IBOutlet id          Konvex;
+   IBOutlet id          convertNNCheck;
+   
+   
    
    NSMutableArray*      FigElementArray;
    NSString*            FigElementPfad;
@@ -344,6 +347,7 @@
 - (IBAction)reportOberkanteStepper:(id)sender;
 
 // Extern
+
 - (IBAction)reportReadFigur:(id)sender;
 - (NSArray*)readFigur;
 //- (int)SetFigElemente:(NSArray*)LibArray;
@@ -356,6 +360,7 @@
 - (void)setFigGraphDaten;
 
 - (IBAction)reportFigElementKonvex:(id)sender;
+- (NSArray*)convertNN:(NSArray*)coordarray;
 
 
 - (void)setPList:(NSDictionary*)plist;

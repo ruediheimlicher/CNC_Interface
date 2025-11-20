@@ -71,6 +71,7 @@
                 <outlet property="Winkel2" destination="1102" id="1119"/>
                 <outlet property="WinkelMatrix" destination="504" id="505"/>
                 <outlet property="WinkelStepper" destination="272" id="347"/>
+                <outlet property="convertNNCheck" destination="uQl-Ye-Zi5" id="Lwz-c7-CiE"/>
                 <outlet property="deltaX" destination="274" id="332"/>
                 <outlet property="deltaXSlider" destination="459" id="462"/>
                 <outlet property="deltaXStepper" destination="450" id="463"/>
@@ -88,7 +89,7 @@
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="601" height="517"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1512" height="944"/>
             <view key="contentView" wantsLayer="YES" id="2">
                 <rect key="frame" x="0.0" y="0.0" width="601" height="517"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -1842,8 +1843,19 @@
                                                 <action selector="reportFigElementKonvex:" target="-2" id="v7n-bw-hNP"/>
                                             </connections>
                                         </button>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uQl-Ye-Zi5">
+                                            <rect key="frame" x="268" y="272" width="74" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" title="conv NN" bezelStyle="regularSquare" imagePosition="left" inset="2" id="JGF-5Y-tDn">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="reportconvertNN:" target="-2" id="yus-CF-jhI"/>
+                                            </connections>
+                                        </button>
                                         <button imageHugsTitle="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tnH-U5-Z28">
-                                            <rect key="frame" x="-1" y="256" width="134" height="32"/>
+                                            <rect key="frame" x="10" y="256" width="134" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="SVG-Figur laden" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="WRm-Ww-qdc">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1863,7 +1875,7 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="LRq-Jz-aCp"/>
             </connections>
-            <point key="canvasLocation" x="17" y="-619"/>
+            <point key="canvasLocation" x="16.5" y="-619.5"/>
         </window>
     </objects>
 </document>

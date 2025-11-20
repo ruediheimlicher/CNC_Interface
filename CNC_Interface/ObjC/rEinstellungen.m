@@ -3549,8 +3549,8 @@
    // Offset x,y einsetzen
    
    NSMutableArray* Koordinatentabelle=[[NSMutableArray alloc]initWithCapacity:0];
-   //startx=0;
-   //starty=0;
+   //startx = [[[LibElementArray objectAtIndex:0]objectForKey:@"x"]floatValue];
+   //starty = [[[LibElementArray objectAtIndex:0]objectForKey:@"y"]floatValue];
    int i=0;
    
    for (i=1;i<[LibElementArray count];i++) // Erstes Element ist Startpunkt und schon im Array
@@ -3560,6 +3560,8 @@
       [Koordinatentabelle addObject:[NSArray arrayWithObjects:[NSNumber numberWithFloat:tempx],[NSNumber numberWithFloat:tempy], nil]];
    //   fprintf(stderr,"tempx: %2.2f tempy: %2.2f\n",tempx, tempy);
    }
+   
+   
 	[ElementDic setObject:Koordinatentabelle forKey:@"koordinatentabelle"];
    [ElementDic setObject:[NSNumber numberWithFloat:startx] forKey:@"startx"];
    [ElementDic setObject:[NSNumber numberWithFloat:starty] forKey:@"starty"];
@@ -4603,6 +4605,13 @@
    return FigurArray;
 }
 
+- (NSArray*)nearestneighbourPfad:(NSArray*) coordarray
+{
+   NSMutableArray* nnarray = NSMutableArray.new;
+   
+   return nnarray;
+}
+
 - (IBAction)reportReadFigur:(id)sender
 {
    /*
@@ -4629,6 +4638,31 @@
    //NSLog(@"CNC_Eingbe readFigur FigurArray: \n%@",[FigurArray description]);
    FigElementArray= [NSMutableArray arrayWithArray:[Utils readFigur]]; // 
    NSLog(@"CNC_Eingabe readFigur FigElementArray: \n%@",[FigElementArray description]);
+   float leftx = MAXFLOAT;
+   float lefty = 0;
+   int leftindex = 0;
+   if([convertNNCheck state])
+   {
+      // find leftmost point
+      for(int i=0;i<FigElementArray.count;i++)
+      {
+         float lx = [[[FigElementArray objectAtIndex:i]objectForKey:@"x"]floatValue];
+         if (lx < leftx)
+         {
+            lefty = [[[FigElementArray objectAtIndex:i]objectForKey:@"y"]floatValue];
+            leftindex = [[[FigElementArray objectAtIndex:i]objectForKey:@"index"]intValue];
+            leftx = lx;
+            
+         }
+      }
+      NSLog(@"leftindex: %d leftx: %2.2f lefty: %2.2f",leftindex, leftx,lefty);
+      FigElementArray = [NSMutableArray arrayWithArray:[Utils convertNN:FigElementArray startat:leftindex withpropfaktor:0.2]]; // 3.5
+      
+      
+      
+  //- (NSArray*)convertNN:(NSArray*)figarray startat:(int)startindex withpropfaktor:(float)propfaktor
+
+   }
    
      
    [self setFigGraphDaten];
@@ -4652,6 +4686,11 @@
 
    
    //NSMutableArray* SVGArray = [rHotwireViewController  updateIndex]();
+}
+
+- (IBAction)reportconvertNN:(id)sender
+{
+   NSLog(@"E reportconvertNN ");
 }
 
 - (void)readSVGAktion:(NSNotification*)note

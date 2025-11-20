@@ -2112,6 +2112,124 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 
 
 
+
+- (NSArray*)convertNN:(NSArray*)figarray startat:(int)startindex withpropfaktor:(float)propfaktor
+
+{
+   
+   
+   NSMutableArray* NNArray = NSMutableArray.new;
+   int anz = (int)figarray.count;
+   
+   int distarray[anz]={}; // Liste mit kurzem Abstand
+   int distcounter = 0;
+   int nearestarray[anz]={};
+   int besucht[anz] = {};
+   for(int i=0;i<anz;i++)
+   {
+      
+      besucht[i] = 0;
+      distarray[i] = 0;
+      
+   }
+   int current = startindex; // startpunkt
+   
+   besucht[current]  = 1;
+   nearestarray[0] = current;
+   
+   // find next zu current
+   int counter = 0;
+   
+   for(int i=1;i<anz;i++)
+   {
+      
+      int next = -1;
+      int best = INT_MAX;
+      
+      
+      bool distok = true;
+      
+      for(int k=0;k<anz;k++)
+      {
+         
+         if(besucht[k] || distarray[k])
+         {
+            continue;
+         }
+         distok = true;
+         double ax = [[[figarray objectAtIndex:k]objectForKey:@"x"]doubleValue];
+         double ay = [[[figarray objectAtIndex:k]objectForKey:@"y"]doubleValue];
+ 
+         double bx = [[[figarray objectAtIndex:current]objectForKey:@"x"]doubleValue];
+         double by = [[[figarray objectAtIndex:current]objectForKey:@"y"]doubleValue];
+ 
+         
+         
+         double dx = ax - bx;
+         double dy = ay - by;
+         double dist = dx*dx + dy*dy; //Abstand im Quadrat
+         
+         if(dist < 20)
+         {
+           // NSLog(@"dist kurz i: %d dist: %2.2f data: %@",k,dist,[figarray[nearestarray[i]]]);
+            NSLog(@"dist kurz i: %d dist: %2.2f data k: %@ data curr: %@",k,dist,[figarray objectAtIndex:k],[figarray objectAtIndex:current]);
+            distok = false;
+            distarray[k] = 1; // Punkt auslassen
+            distcounter++;
+            //continue;
+         }
+         else if (dist < best)
+         {
+            best = dist;
+            next = k;
+            
+         }// if dist
+      } // for k: nearest gefunden bei next
+      
+      
+     
+      //if(distok == true)
+      {
+         nearestarray[i] = next;
+         besucht[next] = 1;
+         current = next;
+         counter++;
+      }
+      
+   } // for i
+   
+   //anz = [figarray count];
+   
+   
+   for (int i = 0;i<(counter-distcounter+1);i++)
+   {
+      //NSLog(@"nearestarray: %d",nearestarray[i]);
+      
+      //[NNArray addObject:figarray[nearestarray[i]]];
+      int j = nearestarray[i];
+      if(figarray[j])
+      {
+         double ax = [[figarray[nearestarray[i]]objectForKey:@"x"]doubleValue] * propfaktor;
+         double ay = [[figarray[nearestarray[i]]objectForKey:@"y"]doubleValue] * propfaktor;
+         NSDictionary* tempDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                  [NSNumber numberWithFloat:ax],@"x", 
+                                  [NSNumber numberWithFloat:ay],@"y",
+                                  [NSNumber numberWithInt:i],@"index", nil];
+         
+         [NNArray addObject:tempDic];
+         
+         
+         fprintf(stderr,"%d\t  %2.2f \t %2.2f\n",i,ax,ay);
+      
+      }
+      
+   }
+   [NNArray addObject:[NNArray objectAtIndex:0]];
+   
+   //NSLog(@"NNArray: %@",NNArray);
+   return NNArray;
+}
+
 - (IBAction)ok:(id)sender
 {
 NSLog(@"ok");

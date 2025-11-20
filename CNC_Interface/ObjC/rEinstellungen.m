@@ -3551,6 +3551,8 @@
    NSMutableArray* Koordinatentabelle=[[NSMutableArray alloc]initWithCapacity:0];
    //startx = [[[LibElementArray objectAtIndex:0]objectForKey:@"x"]floatValue];
    //starty = [[[LibElementArray objectAtIndex:0]objectForKey:@"y"]floatValue];
+   
+   
    int i=0;
    
    for (i=1;i<[LibElementArray count];i++) // Erstes Element ist Startpunkt und schon im Array
@@ -4745,8 +4747,8 @@
    [ElementDic setObject:FigElementArray forKey:@"elementarray"];
 
    NSMutableArray* Koordinatentabelle=[[NSMutableArray alloc]initWithCapacity:0];
-   startx=0;
-   starty=0;
+   //startx=0;
+   //starty=0;
    int i=0;
    
    
@@ -4758,6 +4760,8 @@
    }
    
 	[ElementDic setObject:Koordinatentabelle forKey:@"koordinatentabelle"];
+   [ElementDic setObject:[NSNumber numberWithFloat:startx] forKey:@"startx"];
+   [ElementDic setObject:[NSNumber numberWithFloat:starty] forKey:@"starty"];
    //NSLog(@"reportFigElementEinfuegen ElementDic: %@",[ElementDic description]);
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
    [nc postNotificationName:@"figelementeingabe" object:self userInfo:ElementDic];

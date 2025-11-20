@@ -709,7 +709,8 @@ var outletdaten:[String:AnyObject] = [:]
 
       var StartpunktA:NSPoint
       var StartpunktB:NSPoint
-
+      var startindex:Double = 0;
+      
       // letztes Element der vorhandenen Koordinatentabelle
       if KoordinatenTabelle.count > 0
       {
@@ -717,7 +718,7 @@ var outletdaten:[String:AnyObject] = [:]
           ay = (KoordinatenTabelle.last?["ay"])!
           bx = (KoordinatenTabelle.last?["bx"])!
           by = (KoordinatenTabelle.last?["by"])!
-          
+         startindex = Double(KoordinatenTabelle.count);
           StartpunktA = NSMakePoint(ax,ay)
           StartpunktB = NSMakePoint(bx,by)
       }
@@ -793,15 +794,21 @@ var outletdaten:[String:AnyObject] = [:]
           tempDic["ay"] = (olday ?? 0) + ay
           tempDic["bx"] = (oldbx ?? 0) + ax
           tempDic["by"] = (oldby ?? 0) + ay
-          tempDic["index"] = Double(i)
+          tempDic["index"] = Double(i)  + startindex
           tempDic["pwm"] = Double(pwm)
           tempDic["teil"] = 60
 
           KoordinatenTabelle.append(tempDic)
       } // for i
+
+      IndexFeld.integerValue = 0
+      IndexStepper.integerValue = 0
+      IndexStepper.maxValue = Double(KoordinatenTabelle.count)
       
       CNC_Table.reloadData()
-      CNC_Table.scrollRowToVisible(KoordinatenTabelle.count - 1)
+      CNC_Table.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
+      CNC_Table.scrollRowToVisible(0)
+     // CNC_Table.scrollRowToVisible(KoordinatenTabelle.count - 1)
       ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
       ProfilFeld.clearWeg()
       ProfilFeld.needsDisplay = true

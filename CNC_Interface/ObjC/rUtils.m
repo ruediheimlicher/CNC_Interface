@@ -2226,7 +2226,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    }
    [NNArray addObject:[NNArray objectAtIndex:0]];
    
-   //NSLog(@"NNArray: %@",NNArray);
+   NSLog(@"NNArray: %@",NNArray);
    return NNArray;
 }
 

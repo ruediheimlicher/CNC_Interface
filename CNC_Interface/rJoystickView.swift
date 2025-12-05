@@ -232,5 +232,13 @@ class rJoystickView: NSView
       Swift.print(theEvent.keyCode)
    }
    
+   func printView() {
+           let printInfo = NSPrintInfo.shared
+           let operation = NSPrintOperation(view: self, printInfo: printInfo)
+           operation.showsPrintPanel = true
+           operation.showsProgressPanel = true
+           operation.run()
+       }
+   
 } // rJoystickView
 

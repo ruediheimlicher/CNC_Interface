@@ -8927,7 +8927,7 @@ return returnInt;
    //NSLog(@"LibProfileingabeAktion abbrand: %d",abbrand);
    
    
-   NSMutableArray* LibKoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
+   NSMutableArray* LibKoordinatenTabelle = [NSMutableArray new];
    //NSLog(@"LibProfileingabeFunktion start fullpwm: %d redpwm: %2.2F",full_pwm, red_pwm);
    //NSLog(@"eingabeDic: %@",eingabeDic);
    //[self KT];

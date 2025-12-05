@@ -4658,11 +4658,10 @@
          }
       }
       NSLog(@"leftindex: %d leftx: %2.2f lefty: %2.2f",leftindex, leftx,lefty);
-      FigElementArray = [NSMutableArray arrayWithArray:[Utils convertNN:FigElementArray startat:leftindex withpropfaktor:0.2]]; // 3.5
+      FigElementArray = [NSMutableArray arrayWithArray:[Utils convertNN:FigElementArray startat:leftindex withpropfaktor:0.36]]; // 3.5
       
       
       
-  //- (NSArray*)convertNN:(NSArray*)figarray startat:(int)startindex withpropfaktor:(float)propfaktor
 
    }
    

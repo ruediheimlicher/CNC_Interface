@@ -383,6 +383,8 @@ var outletdaten:[String:AnyObject] = [:]
     
    @IBOutlet  var IndexFeld: NSTextField!
    @IBOutlet  var IndexStepper: NSStepper!
+   
+   @IBOutlet  var AnzahlStepsFeld: NSTextField!
 
    @IBOutlet  var WertAXFeld: NSTextField!
    @IBOutlet  var WertAXStepper: NSStepper!
@@ -664,7 +666,12 @@ var outletdaten:[String:AnyObject] = [:]
       self.StiftDownFunktion()
    }
    
-    
+   @IBAction func report_Print(_ sender:NSButton)
+   {
+      print("HW Print")
+      self.ProfilFeld.printView()
+      
+   }
  
    
     @objc func vertikalspiegelnVonProfil(profilarray:[[String:Double]]) -> [[String:Double]]
@@ -700,8 +707,30 @@ var outletdaten:[String:AnyObject] = [:]
       //print("swift FigElementeingabeAktion: \(info)")
       let infoDic = notification.userInfo as? [String:Any]
       
+      var tempElementKoordinatenArray = infoDic?["koordinatentabelle"] as? [[Double]]
       
-      print("FigElementeingabeAktion KoordinatenTabelle Start: \(KoordinatenTabelle)")
+      var zeile = tempElementKoordinatenArray?[0]
+     
+ 
+      var firstax:Double = tempElementKoordinatenArray?.first?[0] ?? 0
+      var firstay:Double = tempElementKoordinatenArray?.first?[1] ?? 0
+      
+      let rightoffset:Double = 10.0
+      let downoffset:Double = firstay
+      let wasserunterkiel:Double = 10.0
+      let einstichx = 10.0
+      // links
+      var shiftrightzeile:[Double] = [0.0,0.0]
+      shiftrightzeile[0] = firstax - rightoffset
+      shiftrightzeile[1] = (firstay)
+      
+      //= ((firstax - rightoffset) , (firstay - downoffset) )
+      
+      tempElementKoordinatenArray?.insert(shiftrightzeile, at: 0)
+      
+
+      
+      //print("FigElementeingabeAktion KoordinatenTabelle Start: \(KoordinatenTabelle)")
       var ax:Double = 0
       var ay:Double = 0
       var bx:Double = 0
@@ -739,6 +768,7 @@ var outletdaten:[String:AnyObject] = [:]
       if let tempstartx = infoDic?["startx"]
       {
           startx = tempstartx as! Double
+         startx -=  rightoffset
       }
       else
       {
@@ -746,7 +776,8 @@ var outletdaten:[String:AnyObject] = [:]
 
       if let tempstarty = infoDic?["starty"]
       {
-          starty = tempstarty as! Double
+          starty = (tempstarty as! Double) + starty - wasserunterkiel
+         
       }
       else
       {
@@ -774,19 +805,19 @@ var outletdaten:[String:AnyObject] = [:]
       if KoordinatenTabelle.count > 0
       {
           oldax = (KoordinatenTabelle.last?["ax"] ?? 0) - startx
-          olday = (KoordinatenTabelle.last?["ay"] ?? 0) - starty
+          olday = (KoordinatenTabelle.last?["ay"] ?? 0) - starty 
           oldbx = (KoordinatenTabelle.last?["bx"] ?? 0) - startx
           oldby = (KoordinatenTabelle.last?["by"] ?? 0) - starty
       }
-      var tempElementKoordinatenArray = infoDic?["koordinatentabelle"] as? [[Double]]
+      
       let anz:Int = tempElementKoordinatenArray!.count
       for i in 0..<anz
       {
           let zeile = tempElementKoordinatenArray?[i]
       //    let dx:Double = tempElementKoordinatenArray?[i][0] ?? 0
       //    let dy:Double = tempElementKoordinatenArray?[i][1] ?? 0
-          let ax:Double = tempElementKoordinatenArray?[i][0] ?? 0
-          let ay:Double = tempElementKoordinatenArray?[i][1] ?? 0
+          let ax:Double = tempElementKoordinatenArray?[i][0] ?? 0 
+          let ay:Double = tempElementKoordinatenArray?[i][1] ?? 0 
 
           
           var tempDic = [String:Double]()
@@ -810,6 +841,7 @@ var outletdaten:[String:AnyObject] = [:]
       CNC_Table.scrollRowToVisible(0)
      // CNC_Table.scrollRowToVisible(KoordinatenTabelle.count - 1)
       ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
+      AnzahlFeld.integerValue = KoordinatenTabelle.count
       ProfilFeld.clearWeg()
       ProfilFeld.needsDisplay = true
       CNC_Stoptaste.isEnabled = true
@@ -937,6 +969,7 @@ var outletdaten:[String:AnyObject] = [:]
       CNC_Table.scrollRowToVisible(0)
       
       ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
+      AnzahlFeld.integerValue = KoordinatenTabelle.count
       ProfilFeld.clearWeg()
       ProfilFeld.needsDisplay = true
       CNC_Stoptaste.isEnabled = true
@@ -1076,6 +1109,7 @@ var outletdaten:[String:AnyObject] = [:]
       
       ProfilFeld.setScale(derScalefaktor:CGFloat(scalefaktor))
       ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
+      AnzahlFeld.integerValue = KoordinatenTabelle.count
       ProfilFeld.clearWeg()
       ProfilFeld.needsDisplay = true
       CNC_Table.reloadData()
@@ -1228,6 +1262,7 @@ var outletdaten:[String:AnyObject] = [:]
        CNC_Table.scrollRowToVisible(0)
        
         ProfilFeld.setDatenArray(derDatenArray: KoordinatenTabelle as NSArray)
+       AnzahlFeld.integerValue = KoordinatenTabelle.count
        ProfilFeld.clearWeg()
         ProfilFeld.needsDisplay = true
         CNC_Stoptaste.isEnabled = true
@@ -4977,6 +5012,19 @@ var outletdaten:[String:AnyObject] = [:]
         ProfilFeld.setKlickpunkt(derPunkt: IndexFeld.integerValue)
         ProfilFeld.needsDisplay = true
     }
+   
+   @IBAction func report_Rotate_right(_ sender: NSButton)
+   {
+      print("swift report_Rotate_right: \(sender.tag)")
+      /*
+      +90:
+       x' = -y
+       y' =  x
+        -90:
+       x' =  y
+       y' = -x
+       */
+   }
     
 
     
@@ -6151,8 +6199,8 @@ var outletdaten:[String:AnyObject] = [:]
 */
       return plistData
    }
-    
-    
+   
+      
     // MARK: Rumpf
     @objc func setStartRumpfteilDic()
     {

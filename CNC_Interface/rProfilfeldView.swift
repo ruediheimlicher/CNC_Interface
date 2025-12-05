@@ -1169,5 +1169,22 @@ class rProfilfeldView: NSView
         
     }
    
+   @objc func printView() 
+   {
+      let printInfo = NSPrintInfo.shared
+      printInfo.orientation = .landscape          // Querformat
+      printInfo.horizontalPagination = .autoPagination
+      printInfo.verticalPagination = .autoPagination
+          printInfo.isVerticallyCentered = false
+
+      let operation = NSPrintOperation(view: self, printInfo: printInfo)
+      
+      operation.showsPrintPanel = true
+      operation.showsProgressPanel = true
+      operation.run()
+   }
+    
+
+   
 } // rJoystickView
 
